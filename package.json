@@ -1,0 +1,44 @@
+{
+  "name": "console-painter",
+  "version": "1.0.0",
+  "description": "Toolkit to produce a fancy console output (boxes, tables, colors).",
+  "type": "module",
+  "main": "index.js",
+  "module": "index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "scripts": {
+    "test": "tape6 --flags FO"
+  },
+  "github": "http://github.com/uhop/console-painter",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uhop/console-painter.git"
+  },
+  "keywords": [
+    "console",
+    "color",
+    "colors",
+    "box",
+    "boxes"
+  ],
+  "author": "Eugene Lazutkin <eugene.lazutkin@gmail.com> (https://www.lazutkin.com/)",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/uhop/console-painter/issues"
+  },
+  "homepage": "https://github.com/uhop/console-painter#readme",
+  "files": [
+    "index.js",
+    "src"
+  ],
+  "tape6": {
+    "tests": [
+      "/tests/test-*.*js"
+    ]
+  },
+  "devDependencies": {
+    "tape-six": "^0.9.3"
+  }
+}
