@@ -1,5 +1,7 @@
 export const findEscSequence = /\x1B\[([\d;]+)m/g;
 
+export const colors = {BLACK: 0, RED: 1, GREEN: 2, YELLOW: 3, BLUE: 4, MAGENTA: 5, CYAN: 6, WHITE: 7, DEFAULT: 9};
+
 export const Commands = {
   RESET_ALL: '0',
   BOLD: '1',
@@ -23,20 +25,41 @@ export const Commands = {
   COLOR_EXTENDED: '38',
   BG_COLOR_EXTENDED: '48',
   COLOR_DEFAULT: '39',
-  BG_COLOR_DEFAULT: '49'
+  BG_COLOR_DEFAULT: '49',
+  RESET_COLOR: '39',
+  RESET_BG_COLOR: '49'
 };
 
 export const FORMAT_COLOR256 = '5';
 export const FORMAT_TRUE_COLOR = '2';
 
-const resetCommands = ['0', '22', '22', '23', '24', '25', , '27', '28', '29'];
-resetCommands['21'] = '24';
+const resetCommands = {};
+resetCommands[Commands.BOLD] = Commands.RESET_BOLD;
+resetCommands[Commands.DIM] = Commands.RESET_DIM;
+resetCommands[Commands.ITALIC] = Commands.RESET_ITALIC;
+resetCommands[Commands.UNDERLINE] = Commands.RESET_UNDERLINE;
+resetCommands[Commands.DOUBLE_UNDERLINE] = Commands.RESET_DOUBLE_UNDERLINE;
+resetCommands[Commands.BLINKING] = Commands.RESET_BLINKING;
+resetCommands[Commands.INVERSE] = Commands.RESET_INVERSE;
+resetCommands[Commands.HIDDEN] = Commands.HIDDEN;
+resetCommands[Commands.STRIKETHROUGH] = Commands.STRIKETHROUGH;
+resetCommands[Commands.COLOR_EXTENDED] = Commands.RESET_COLOR;
+resetCommands[Commands.BG_COLOR_EXTENDED] = Commands.RESET_BG_COLOR;
 
-export const reset = command => resetCommands[typeof command == 'string' ? Commands[command.toUpperCase()] : command] || 0;
+export const reset = command => {
+  if (typeof command == 'string') {
+    command = command.toUpperCase();
+    const value = Commands['RESET_' + command];
+    if (typeof value == 'string') return value;
+    command = Commands[command];
+  }
+  const value = resetCommands[command];
+  if (typeof value == 'string') return value;
+  if (value >= '30' && value <= '37' || value >= '90' && value <= '97') return Commands.RESET_COLOR;
+  if (value >= '40' && value <= '47' || value >= '100' && value <= '107') return Commands.RESET_BG_COLOR;
+};
 
 export const setCommands = commands => `\x1B[${Array.isArray(commands) ? commands.join(';') : commands}m`;
-
-export const colors = {BLACK: 0, RED: 1, GREEN: 2, YELLOW: 3, BLUE: 4, MAGENTA: 5, CYAN: 6, WHITE: 7, DEFAULT: 9};
 
 export const colorNumber = color => {
   if (typeof color == 'number' && color >= 0 && color <= 9) return color;
