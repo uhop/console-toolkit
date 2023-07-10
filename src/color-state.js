@@ -1,53 +1,51 @@
 import {Commands} from './colors.js';
 
-const newState = (commands, oldState = {}) => {
+export const newState = (commands, oldState = {}) => {
   if (commands.length < 1) return oldState;
   const currentCommand = commands[0];
   switch (currentCommand) {
     case Commands.RESET_ALL:
       return newState(commands.slice(1), {});
     case Commands.BOLD:
-      return newState(commands.slice(1), {...oldState, bold: true, dim: false});
     case Commands.DIM:
-      return newState(commands.slice(1), {...oldState, bold: false, dim: true});
+      return newState(commands.slice(1), {...oldState, bold: currentCommand});
     case Commands.ITALIC:
-      return newState(commands.slice(1), {...oldState, italic: true});
+      return newState(commands.slice(1), {...oldState, italic: currentCommand});
     case Commands.UNDERLINE:
-      return newState(commands.slice(1), {...oldState, underline: true, doubleUnderline: false});
     case Commands.DOUBLE_UNDERLINE:
-      return newState(commands.slice(1), {...oldState, underline: false, doubleUnderline: true});
+      return newState(commands.slice(1), {...oldState, underline: currentCommand});
     case Commands.BLINKING:
-      return newState(commands.slice(1), {...oldState, blinking: true});
+      return newState(commands.slice(1), {...oldState, blinking: currentCommand});
     case Commands.INVERSE:
-      return newState(commands.slice(1), {...oldState, inverse: true});
+      return newState(commands.slice(1), {...oldState, inverse: currentCommand});
     case Commands.HIDDEN:
-      return newState(commands.slice(1), {...oldState, hidden: true});
+      return newState(commands.slice(1), {...oldState, hidden: currentCommand});
     case Commands.STRIKETHROUGH:
-      return newState(commands.slice(1), {...oldState, strikethrough: true});
+      return newState(commands.slice(1), {...oldState, strikethrough: currentCommand});
     case Commands.RESET_BOLD:
-      return newState(commands.slice(1), {...oldState, bold: false, dim: false});
-    // case Commands.RESET_DIM: return newState(commands.slice(1), {...oldState, bold: false, dim: false});
+      return newState(commands.slice(1), {...oldState, bold: undefined});
+    // case Commands.RESET_DIM: return newState(commands.slice(1), {...oldState, bold: undefined});
     case Commands.RESET_ITALIC:
-      return newState(commands.slice(1), {...oldState, italic: false});
+      return newState(commands.slice(1), {...oldState, italic: undefined});
     case Commands.RESET_UNDERLINE:
-      return newState(commands.slice(1), {...oldState, underline: false, doubleUnderline: false});
-    // case Commands.RESET_DOUBLE_UNDERLINE: return newState(commands.slice(1), {...oldState, underline: false, doubleUnderline: false});
+      return newState(commands.slice(1), {...oldState, underline: undefined});
+    // case Commands.RESET_DOUBLE_UNDERLINE: return newState(commands.slice(1), {...oldState, underline: undefined});
     case Commands.RESET_BLINKING:
-      return newState(commands.slice(1), {...oldState, blinking: false});
+      return newState(commands.slice(1), {...oldState, blinking: undefined});
     case Commands.RESET_INVERSE:
-      return newState(commands.slice(1), {...oldState, inverse: false});
+      return newState(commands.slice(1), {...oldState, inverse: undefined});
     case Commands.RESET_HIDDEN:
-      return newState(commands.slice(1), {...oldState, hidden: false});
+      return newState(commands.slice(1), {...oldState, hidden: undefined});
     case Commands.RESET_STRIKETHROUGH:
-      return newState(commands.slice(1), {...oldState, strikethrough: false});
+      return newState(commands.slice(1), {...oldState, strikethrough: undefined});
     case Commands.COLOR_EXTENDED: {
       const next = commands[1] === FORMAT_COLOR256 ? 3 : 5,
-        color = commands.slice(1, next);
+        color = commands.slice(0, next);
       return newState(commands.slice(next), {...oldState, foreground: color});
     }
     case Commands.BG_COLOR_EXTENDED: {
       const next = commands[1] === FORMAT_COLOR256 ? 3 : 5,
-        color = commands.slice(1, next);
+        color = commands.slice(0, next);
       return newState(commands.slice(next), {...oldState, background: color});
     }
     case COLOR_DEFAULT:
@@ -64,4 +62,77 @@ const newState = (commands, oldState = {}) => {
   return oldState;
 };
 
-export default newState;
+const equalColors = (a, b) => {
+  if (a === b) return true;
+  if (Array.isArray(a) && Array.isArray(b)) return a.length === b.length && a.every((value, index) => value === b[index]);
+  return false;
+};
+
+export const stateCommand = (prev, next) => {
+  const commands = [];
+  let resetCount = 0;
+
+  if (!next.bold) ++resetCount;
+  if (prev.bold !== next.bold) {
+    commands.push(next.bold || Commands.RESET_BOLD);
+  }
+
+  if (!next.italic) ++resetCount;
+  if (prev.italic !== next.italic) {
+    commands.push(next.italic || Commands.RESET_ITALIC);
+  }
+
+  if (!next.underline) ++resetCount;
+  if (prev.underline != next.underline) {
+    commands.push(next.underline || Commands.RESET_UNDERLINE);
+  }
+
+  if (!next.blinking) ++resetCount;
+  if (prev.blinking !== next.blinking) {
+    commands.push(next.blinking || Commands.RESET_BLINKING);
+  }
+
+  if (!next.inverse) ++resetCount;
+  if (prev.inverse !== next.inverse) {
+    commands.push(next.inverse || Commands.RESET_INVERSE);
+  }
+
+  if (!next.hidden) ++resetCount;
+  if (prev.hidden !== next.hidden) {
+    commands.push(next.hidden || Commands.RESET_HIDDEN);
+  }
+
+  if (!next.strikethrough) ++resetCount;
+  if (prev.strikethrough !== next.strikethrough) {
+    commands.push(next.strikethrough || Commands.RESET_STRIKETHROUGH);
+  }
+
+  if (!next.foreground) ++resetCount;
+  if (!equalColors(prev.foreground, next.foreground)) {
+    if (next.foreground) {
+      if (!next.foreground) {
+        commands.push(Commands.RESET_COLOR);
+      } else if (Array.isArray(next.foreground)) {
+        commands.push(...next.foreground);
+      } else {
+        commands.push(next.foreground);
+      }
+    }
+  }
+
+  if (!next.background) ++resetCount;
+  if (!equalColors(prev.background, next.background)) {
+    if (next.background) {
+      if (!next.background) {
+        commands.push(Commands.RESET_BG_COLOR);
+      } else if (Array.isArray(next.background)) {
+        commands.push(...next.background);
+      } else {
+        commands.push(next.background);
+      }
+    }
+  }
+
+  // if all properties should be reset and we issued a few reset commands => RESET_ALL
+  return resetCount == 9 && commands.length ? [Commands.RESET_ALL] : commands;
+};
