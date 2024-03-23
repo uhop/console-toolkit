@@ -13,6 +13,7 @@ export const newState = (commands, oldState = {}) => {
       return newState(commands.slice(1), {...oldState, italic: currentCommand});
     case Commands.UNDERLINE:
     case Commands.DOUBLE_UNDERLINE:
+    case Commands.CURLY_UNDERLINE:
       return newState(commands.slice(1), {...oldState, underline: currentCommand});
     case Commands.BLINKING:
       return newState(commands.slice(1), {...oldState, blinking: currentCommand});
@@ -22,6 +23,8 @@ export const newState = (commands, oldState = {}) => {
       return newState(commands.slice(1), {...oldState, hidden: currentCommand});
     case Commands.STRIKETHROUGH:
       return newState(commands.slice(1), {...oldState, strikethrough: currentCommand});
+    case Commands.OVERLINE:
+      return newState(commands.slice(1), {...oldState, overline: currentCommand});
     case Commands.RESET_BOLD:
       return newState(commands.slice(1), {...oldState, bold: undefined});
     // case Commands.RESET_DIM: return newState(commands.slice(1), {...oldState, bold: undefined});
@@ -30,6 +33,7 @@ export const newState = (commands, oldState = {}) => {
     case Commands.RESET_UNDERLINE:
       return newState(commands.slice(1), {...oldState, underline: undefined});
     // case Commands.RESET_DOUBLE_UNDERLINE: return newState(commands.slice(1), {...oldState, underline: undefined});
+    // case Commands.RESET_CURLY_UNDERLINE: return newState(commands.slice(1), {...oldState, underline: undefined});
     case Commands.RESET_BLINKING:
       return newState(commands.slice(1), {...oldState, blinking: undefined});
     case Commands.RESET_INVERSE:
@@ -38,6 +42,10 @@ export const newState = (commands, oldState = {}) => {
       return newState(commands.slice(1), {...oldState, hidden: undefined});
     case Commands.RESET_STRIKETHROUGH:
       return newState(commands.slice(1), {...oldState, strikethrough: undefined});
+    case Commands.RESET_OVERLINE:
+      return newState(commands.slice(1), {...oldState, overline: undefined});
+    case Commands.RESET_COLOR_DECORATION:
+      return newState(commands.slice(1), {...oldState, decoration: undefined});
     case Commands.COLOR_EXTENDED: {
       const next = commands[1] === FORMAT_COLOR256 ? 3 : 5,
         color = commands.slice(0, next);
@@ -48,9 +56,14 @@ export const newState = (commands, oldState = {}) => {
         color = commands.slice(0, next);
       return newState(commands.slice(next), {...oldState, background: color});
     }
-    case COLOR_DEFAULT:
+    case Commands.COLOR_DECORATION: {
+      const next = commands[1] === FORMAT_COLOR256 ? 3 : 5,
+        color = commands.slice(0, next);
+      return newState(commands.slice(next), {...oldState, decoration: color});
+    }
+    case Commands.COLOR_DEFAULT:
       return newState(commands.slice(1), {...oldState, foreground: undefined});
-    case BG_COLOR_DEFAULT:
+    case Commands.BG_COLOR_DEFAULT:
       return newState(commands.slice(1), {...oldState, background: undefined});
   }
   if ((currentCommand >= '30' && currentCommand <= '37') || (currentCommand >= '90' && currentCommand <= '97')) {
@@ -107,6 +120,11 @@ export const stateCommand = (prev, next) => {
     commands.push(next.strikethrough || Commands.RESET_STRIKETHROUGH);
   }
 
+  if (!next.overline) ++resetCount;
+  if (prev.overline !== next.overline) {
+    commands.push(next.overline || Commands.RESET_OVERLINE);
+  }
+
   if (!next.foreground) ++resetCount;
   if (!equalColors(prev.foreground, next.foreground)) {
     if (next.foreground) {
@@ -133,6 +151,19 @@ export const stateCommand = (prev, next) => {
     }
   }
 
+  if (!next.decoration) ++resetCount;
+  if (!equalColors(prev.decoration, next.decoration)) {
+    if (next.decoration) {
+      if (!next.decoration) {
+        commands.push(Commands.RESET_COLOR_DECORATION);
+      } else if (Array.isArray(next.decoration)) {
+        commands.push(...next.decoration);
+      } else {
+        commands.push(next.decoration);
+      }
+    }
+  }
+
   // if all properties should be reset and we issued a few reset commands => RESET_ALL
-  return resetCount == 9 && commands.length ? [Commands.RESET_ALL] : commands;
+  return resetCount == 11 && commands.length ? [Commands.RESET_ALL] : commands;
 };

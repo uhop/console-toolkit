@@ -1,4 +1,4 @@
-export const findEscSequence = /\x1B\[([\d;]+)m/g;
+export const findEscSequence = /\x1B\[([\d;:]+)m/g;
 
 export const colors = {BLACK: 0, RED: 1, GREEN: 2, YELLOW: 3, BLUE: 4, MAGENTA: 5, CYAN: 6, WHITE: 7, DEFAULT: 9};
 
@@ -20,6 +20,8 @@ export const Commands = {
   RESET_INVERSE: '27',
   RESET_HIDDEN: '28',
   RESET_STRIKETHROUGH: '29',
+  CURLY_UNDERLINE: '4:3',
+  RESET_CURLY_UNDERLINE: '24',
   DOUBLE_UNDERLINE: '21',
   RESET_DOUBLE_UNDERLINE: '24',
   COLOR_EXTENDED: '38',
@@ -27,7 +29,11 @@ export const Commands = {
   COLOR_DEFAULT: '39',
   BG_COLOR_DEFAULT: '49',
   RESET_COLOR: '39',
-  RESET_BG_COLOR: '49'
+  RESET_BG_COLOR: '49',
+  OVERLINE: '53',
+  RESET_OVERLINE: '55',
+  COLOR_DECORATION: '58',
+  RESET_COLOR_DECORATION: '59'
 };
 
 export const FORMAT_COLOR256 = '5';
@@ -54,17 +60,23 @@ export const reset = command => {
     command = Commands[command];
   }
   const value = resetCommands[command];
-  if (typeof value == 'string') return value;
-  if (value >= '30' && value <= '37' || value >= '90' && value <= '97') return Commands.RESET_COLOR;
-  if (value >= '40' && value <= '47' || value >= '100' && value <= '107') return Commands.RESET_BG_COLOR;
+  if ((value >= '30' && value <= '37') || (value >= '90' && value <= '97')) return Commands.RESET_COLOR;
+  if ((value >= '40' && value <= '47') || (value >= '100' && value <= '107')) return Commands.RESET_BG_COLOR;
+  // return undefined
 };
 
 export const setCommands = commands => `\x1B[${Array.isArray(commands) ? commands.join(';') : commands}m`;
 
 export const colorNumber = color => {
-  if (typeof color == 'number' && color >= 0 && color <= 9) return color;
-  if (typeof color == 'string') return colors[color.toUpperCase()] || 0;
-  return 0;
+  if (typeof color == 'string') {
+    if (/^\d+$/.test(color)) {
+      color = parseInt(color);
+    } else {
+      color = color.toUpperCase();
+      return colors.hasOwnProperty(color) ? colors[color] : 0;
+    }
+  }
+  return typeof color == 'number' && color >= 0 && color <= 9 ? color : 0;
 };
 
 export const getColor = color => 30 + colorNumber(color);
@@ -105,3 +117,16 @@ export const getTrueBgColor = (r, g, b) => [Commands.BG_COLOR_EXTENDED, FORMAT_T
 
 export const setTrueColor = (r, g, b) => setCommands(getTrueColor(r, g, b));
 export const setTrueBgColor = (r, g, b) => setCommands(getTrueBgColor(r, g, b));
+
+export const getDecorationStdColor256 = color => [Commands.COLOR_DECORATION, FORMAT_COLOR256, colorNumber(color)];
+export const getDecorationBrightStdColor256 = color => [Commands.COLOR_DECORATION, FORMAT_COLOR256, 8 + colorNumber(color)];
+export const getDecorationColor256 = (r, g, b) => [Commands.COLOR_DECORATION, FORMAT_COLOR256, 16 + 36 * get6(r) + 6 * get6(g) + get6(b)];
+export const getDecorationGrayColor256 = i => [Commands.COLOR_DECORATION, FORMAT_COLOR256, 232 + get24(i)];
+
+export const setDecorationStdColor256 = color => setCommands(getDecorationStdColor256(color));
+export const setDecorationBrightStdColor256 = color => setCommands(getDecorationBrightStdColor256(color));
+export const setDecorationColor256 = (r, g, b) => setCommands(getDecorationColor256(r, g, b));
+export const setDecorationGrayColor256 = i => setCommands(getDecorationGrayColor256(i));
+
+export const getDecorationTrueColor = (r, g, b) => [Commands.COLOR_DECORATION, FORMAT_TRUE_COLOR, r, g, b];
+export const setDecorationTrueColor = (r, g, b) => setCommands(getDecorationTrueColor(r, g, b));
