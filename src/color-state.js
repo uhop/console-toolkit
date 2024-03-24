@@ -1,4 +1,4 @@
-import {Commands} from './colors.js';
+import {Commands, FORMAT_COLOR256, isFgColorCommand, isBgColorCommand} from './colors.js';
 
 export const newState = (commands, oldState = {}) => {
   if (commands.length < 1) return oldState;
@@ -15,8 +15,8 @@ export const newState = (commands, oldState = {}) => {
     case Commands.DOUBLE_UNDERLINE:
     case Commands.CURLY_UNDERLINE:
       return newState(commands.slice(1), {...oldState, underline: currentCommand});
-    case Commands.BLINKING:
-      return newState(commands.slice(1), {...oldState, blinking: currentCommand});
+    case Commands.BLINK:
+      return newState(commands.slice(1), {...oldState, blink: currentCommand});
     case Commands.INVERSE:
       return newState(commands.slice(1), {...oldState, inverse: currentCommand});
     case Commands.HIDDEN:
@@ -34,8 +34,8 @@ export const newState = (commands, oldState = {}) => {
       return newState(commands.slice(1), {...oldState, underline: undefined});
     // case Commands.RESET_DOUBLE_UNDERLINE: return newState(commands.slice(1), {...oldState, underline: undefined});
     // case Commands.RESET_CURLY_UNDERLINE: return newState(commands.slice(1), {...oldState, underline: undefined});
-    case Commands.RESET_BLINKING:
-      return newState(commands.slice(1), {...oldState, blinking: undefined});
+    case Commands.RESET_BLINK:
+      return newState(commands.slice(1), {...oldState, blink: undefined});
     case Commands.RESET_INVERSE:
       return newState(commands.slice(1), {...oldState, inverse: undefined});
     case Commands.RESET_HIDDEN:
@@ -66,10 +66,10 @@ export const newState = (commands, oldState = {}) => {
     case Commands.BG_COLOR_DEFAULT:
       return newState(commands.slice(1), {...oldState, background: undefined});
   }
-  if ((currentCommand >= '30' && currentCommand <= '37') || (currentCommand >= '90' && currentCommand <= '97')) {
+  if (isFgColorCommand(currentCommand)) {
     return newState(commands.slice(1), {...oldState, foreground: currentCommand});
   }
-  if ((currentCommand >= '40' && currentCommand <= '47') || (currentCommand >= '100' && currentCommand <= '107')) {
+  if (isBgColorCommand(currentCommand)) {
     return newState(commands.slice(1), {...oldState, background: currentCommand});
   }
   return oldState;
@@ -77,93 +77,96 @@ export const newState = (commands, oldState = {}) => {
 
 const equalColors = (a, b) => {
   if (a === b) return true;
-  if (Array.isArray(a) && Array.isArray(b)) return a.length === b.length && a.every((value, index) => value === b[index]);
-  return false;
+  if (!Array.isArray(a) || !Array.isArray(b)) return false;
+  return a.length === b.length && a.every((value, index) => value === b[index]);
+};
+
+const pushColor = (commands, color) => {
+  if (Array.isArray(color)) {
+    commands.push(...color);
+  } else {
+    commands.push(color);
+  }
+  return commands;
+};
+
+export const stateToCommands = state => {
+  const commands = [];
+
+  if (state.bold) commands.push(state.bold);
+  if (state.italic) commands.push(state.italic);
+  if (state.underline) commands.push(state.underline);
+  if (state.blink) commands.push(state.blink);
+  if (state.inverse) commands.push(state.inverse);
+  if (state.inverse) commands.push(state.inverse);
+  if (state.strikethrough) commands.push(state.strikethrough);
+  if (state.overline) commands.push(state.overline);
+
+  if (state.foreground) pushColor(commands, state.foreground);
+  if (state.background) pushColor(commands, state.background);
+  if (state.decoration) pushColor(commands, state.decoration);
+
+  return commands;
+};
+
+const TOTAL_RESETS = 11;
+
+const getStateResets = state => {
+  let resetCount = 0;
+
+  if (!state.bold) ++resetCount;
+  if (!state.italic) ++resetCount;
+  if (!state.underline) ++resetCount;
+  if (!state.blink) ++resetCount;
+  if (!state.inverse) ++resetCount;
+  if (!state.hidden) ++resetCount;
+  if (!state.strikethrough) ++resetCount;
+  if (!state.overline) ++resetCount;
+  if (!state.foreground) ++resetCount;
+  if (!state.background) ++resetCount;
+  if (!state.decoration) ++resetCount;
+
+  return resetCount;
+};
+
+const addCommands = (commands, prev, next, property, resetCommand) => {
+  if (next[property]) {
+    if (prev[property] !== next[property]) commands.push(next[property]);
+  } else {
+    if (prev[property]) commands.push(resetCommand);
+  }
+};
+
+const addColorCommands = (commands, prev, next, property, resetCommand) => {
+  if (next[property]) {
+    if (!equalColors(prev[property], next[property])) pushColor(commands, next[property]);
+  } else {
+    if (prev[property]) commands.push(resetCommand);
+  }
 };
 
 export const stateCommand = (prev, next) => {
-  const commands = [];
-  let resetCount = 0;
+  const commands = [],
+    prevResets = getStateResets(prev),
+    nextResets = getStateResets(next);
 
-  if (!next.bold) ++resetCount;
-  if (prev.bold !== next.bold) {
-    commands.push(next.bold || Commands.RESET_BOLD);
+  if (nextResets === TOTAL_RESETS) {
+    if (prevResets !== TOTAL_RESETS) commands.push(Commands.RESET_ALL);
+    return commands;
   }
 
-  if (!next.italic) ++resetCount;
-  if (prev.italic !== next.italic) {
-    commands.push(next.italic || Commands.RESET_ITALIC);
-  }
+  addCommands(commands, prev, next, 'bold', Commands.RESET_BOLD);
+  addCommands(commands, prev, next, 'italic', Commands.RESET_ITALIC);
+  addCommands(commands, prev, next, 'underline', Commands.RESET_UNDERLINE);
+  addCommands(commands, prev, next, 'blink', Commands.RESET_BLINK);
+  addCommands(commands, prev, next, 'inverse', Commands.RESET_INVERSE);
+  addCommands(commands, prev, next, 'hidden', Commands.RESET_HIDDEN);
+  addCommands(commands, prev, next, 'strikethrough', Commands.RESET_STRIKETHROUGH);
+  addCommands(commands, prev, next, 'overline', Commands.RESET_OVERLINE);
 
-  if (!next.underline) ++resetCount;
-  if (prev.underline != next.underline) {
-    commands.push(next.underline || Commands.RESET_UNDERLINE);
-  }
+  addColorCommands(commands, prev, next, 'foreground', Commands.RESET_COLOR);
+  addColorCommands(commands, prev, next, 'background', Commands.RESET_BG_COLOR);
+  addColorCommands(commands, prev, next, 'decoration', Commands.RESET_COLOR_DECORATION);
 
-  if (!next.blinking) ++resetCount;
-  if (prev.blinking !== next.blinking) {
-    commands.push(next.blinking || Commands.RESET_BLINKING);
-  }
-
-  if (!next.inverse) ++resetCount;
-  if (prev.inverse !== next.inverse) {
-    commands.push(next.inverse || Commands.RESET_INVERSE);
-  }
-
-  if (!next.hidden) ++resetCount;
-  if (prev.hidden !== next.hidden) {
-    commands.push(next.hidden || Commands.RESET_HIDDEN);
-  }
-
-  if (!next.strikethrough) ++resetCount;
-  if (prev.strikethrough !== next.strikethrough) {
-    commands.push(next.strikethrough || Commands.RESET_STRIKETHROUGH);
-  }
-
-  if (!next.overline) ++resetCount;
-  if (prev.overline !== next.overline) {
-    commands.push(next.overline || Commands.RESET_OVERLINE);
-  }
-
-  if (!next.foreground) ++resetCount;
-  if (!equalColors(prev.foreground, next.foreground)) {
-    if (next.foreground) {
-      if (!next.foreground) {
-        commands.push(Commands.RESET_COLOR);
-      } else if (Array.isArray(next.foreground)) {
-        commands.push(...next.foreground);
-      } else {
-        commands.push(next.foreground);
-      }
-    }
-  }
-
-  if (!next.background) ++resetCount;
-  if (!equalColors(prev.background, next.background)) {
-    if (next.background) {
-      if (!next.background) {
-        commands.push(Commands.RESET_BG_COLOR);
-      } else if (Array.isArray(next.background)) {
-        commands.push(...next.background);
-      } else {
-        commands.push(next.background);
-      }
-    }
-  }
-
-  if (!next.decoration) ++resetCount;
-  if (!equalColors(prev.decoration, next.decoration)) {
-    if (next.decoration) {
-      if (!next.decoration) {
-        commands.push(Commands.RESET_COLOR_DECORATION);
-      } else if (Array.isArray(next.decoration)) {
-        commands.push(...next.decoration);
-      } else {
-        commands.push(next.decoration);
-      }
-    }
-  }
-
-  // if all properties should be reset and we issued a few reset commands => RESET_ALL
-  return resetCount == 11 && commands.length ? [Commands.RESET_ALL] : commands;
+  return commands;
 };

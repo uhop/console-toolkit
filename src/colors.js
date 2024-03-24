@@ -8,7 +8,7 @@ export const Commands = {
   DIM: '2',
   ITALIC: '3',
   UNDERLINE: '4',
-  BLINKING: '5',
+  BLINK: '5',
   INVERSE: '7',
   HIDDEN: '8',
   STRIKETHROUGH: '9',
@@ -16,7 +16,7 @@ export const Commands = {
   RESET_DIM: '22',
   RESET_ITALIC: '23',
   RESET_UNDERLINE: '24',
-  RESET_BLINKING: '25',
+  RESET_BLINK: '25',
   RESET_INVERSE: '27',
   RESET_HIDDEN: '28',
   RESET_STRIKETHROUGH: '29',
@@ -40,29 +40,25 @@ export const FORMAT_COLOR256 = '5';
 export const FORMAT_TRUE_COLOR = '2';
 
 const resetCommands = {};
-resetCommands[Commands.BOLD] = Commands.RESET_BOLD;
-resetCommands[Commands.DIM] = Commands.RESET_DIM;
-resetCommands[Commands.ITALIC] = Commands.RESET_ITALIC;
-resetCommands[Commands.UNDERLINE] = Commands.RESET_UNDERLINE;
-resetCommands[Commands.DOUBLE_UNDERLINE] = Commands.RESET_DOUBLE_UNDERLINE;
-resetCommands[Commands.BLINKING] = Commands.RESET_BLINKING;
-resetCommands[Commands.INVERSE] = Commands.RESET_INVERSE;
-resetCommands[Commands.HIDDEN] = Commands.HIDDEN;
-resetCommands[Commands.STRIKETHROUGH] = Commands.STRIKETHROUGH;
-resetCommands[Commands.COLOR_EXTENDED] = Commands.RESET_COLOR;
-resetCommands[Commands.BG_COLOR_EXTENDED] = Commands.RESET_BG_COLOR;
+for (const [k, v] of Commands.entries()) {
+  if (!k.startsWith('RESET_')) continue;
+  const cmd = k.substring(6);
+  if (!Commands.hasOwnProperty(cmd)) continue;
+  resetCommands[Commands[cmd]] = v;
+}
+
+export const isFgColorCommand = command => (command >= '30' && command <= '37') || (command >= '90' && command <= '97');
+export const isBgColorCommand = command => (command >= '40' && command <= '47') || (command >= '100' && command <= '107');
 
 export const reset = command => {
-  if (typeof command == 'string') {
-    command = command.toUpperCase();
-    const value = Commands['RESET_' + command];
-    if (typeof value == 'string') return value;
+  command = String(command).toUpperCase();
+  if (Commands.hasOwnProperty(command)) {
     command = Commands[command];
   }
-  const value = resetCommands[command];
-  if ((value >= '30' && value <= '37') || (value >= '90' && value <= '97')) return Commands.RESET_COLOR;
-  if ((value >= '40' && value <= '47') || (value >= '100' && value <= '107')) return Commands.RESET_BG_COLOR;
-  // return undefined
+  if (resetCommands.hasOwnProperty(command)) return resetCommands[command];
+  if (isFgColorCommand(command)) return Commands.RESET_COLOR;
+  if (isBgColorCommand(command)) return Commands.RESET_BG_COLOR;
+  // return undefined in all other cases
 };
 
 export const setCommands = commands => `\x1B[${Array.isArray(commands) ? commands.join(';') : commands}m`;
