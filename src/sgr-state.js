@@ -1,4 +1,6 @@
-import {Commands, FORMAT_COLOR256, isFgColorCommand, isBgColorCommand} from './colors.js';
+// Support for states based on SGR commands. See https://en.wikipedia.org/wiki/ANSI_escape_code for more details.
+
+import {Commands, FORMAT_COLOR256, isFgColorCommand, isBgColorCommand} from './sgr.js';
 
 export const newState = (commands, oldState = {}) => {
   if (commands.length < 1) return oldState;
