@@ -1,6 +1,6 @@
 // Support for states based on SGR commands. See https://en.wikipedia.org/wiki/ANSI_escape_code for more details.
 
-import {Commands, FORMAT_COLOR256, isFgColorCommand, isBgColorCommand} from './sgr.js';
+import {Commands, FORMAT_COLOR256, isFgColorCommand, isBgColorCommand, isFontCommand} from './sgr.js';
 
 export const newState = (commands, oldState = {}) => {
   if (commands.length < 1) return oldState;
@@ -67,12 +67,17 @@ export const newState = (commands, oldState = {}) => {
       return newState(commands.slice(1), {...oldState, foreground: undefined});
     case Commands.BG_COLOR_DEFAULT:
       return newState(commands.slice(1), {...oldState, background: undefined});
+    case Commands.FONT_DEFAULT:
+      return newState(commands.slice(1), {...oldState, font: undefined});
   }
   if (isFgColorCommand(currentCommand)) {
     return newState(commands.slice(1), {...oldState, foreground: currentCommand});
   }
   if (isBgColorCommand(currentCommand)) {
     return newState(commands.slice(1), {...oldState, background: currentCommand});
+  }
+  if (isFontCommand(currentCommand)) {
+    return newState(commands.slice(1), {...oldState, font: currentCommand});
   }
   return oldState;
 };
@@ -100,9 +105,11 @@ export const stateToCommands = state => {
   if (state.underline) commands.push(state.underline);
   if (state.blink) commands.push(state.blink);
   if (state.inverse) commands.push(state.inverse);
-  if (state.inverse) commands.push(state.inverse);
+  if (state.hidden) commands.push(state.hidden);
   if (state.strikethrough) commands.push(state.strikethrough);
   if (state.overline) commands.push(state.overline);
+
+  if (state.font) commands.push(state.font);
 
   if (state.foreground) pushColor(commands, state.foreground);
   if (state.background) pushColor(commands, state.background);
@@ -111,7 +118,7 @@ export const stateToCommands = state => {
   return commands;
 };
 
-const TOTAL_RESETS = 11;
+const TOTAL_RESETS = 12;
 
 const getStateResets = state => {
   let resetCount = 0;
@@ -124,6 +131,7 @@ const getStateResets = state => {
   if (!state.hidden) ++resetCount;
   if (!state.strikethrough) ++resetCount;
   if (!state.overline) ++resetCount;
+  if (!state.font) ++resetCount;
   if (!state.foreground) ++resetCount;
   if (!state.background) ++resetCount;
   if (!state.decoration) ++resetCount;
@@ -165,6 +173,7 @@ export const stateCommand = (prev, next) => {
   addCommands(commands, prev, next, 'hidden', Commands.RESET_HIDDEN);
   addCommands(commands, prev, next, 'strikethrough', Commands.RESET_STRIKETHROUGH);
   addCommands(commands, prev, next, 'overline', Commands.RESET_OVERLINE);
+  addCommands(commands, prev, next, 'font', Commands.RESET_FONT);
 
   addColorCommands(commands, prev, next, 'foreground', Commands.RESET_COLOR);
   addColorCommands(commands, prev, next, 'background', Commands.RESET_BG_COLOR);

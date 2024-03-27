@@ -15,14 +15,19 @@ export const Commands = {
   ITALIC: '3',
   UNDERLINE: '4',
   BLINK: '5',
+  RAPID_BLINK: '6',
   INVERSE: '7',
   HIDDEN: '8',
   STRIKETHROUGH: '9',
+  FONT_DEFAULT: '10',
+  RESET_FONT: '10',
+  FONT_GOTHIC: '20',
   RESET_BOLD: '22',
   RESET_DIM: '22',
   RESET_ITALIC: '23',
   RESET_UNDERLINE: '24',
   RESET_BLINK: '25',
+  RESET_RAPID_BLINK: '25',
   RESET_INVERSE: '27',
   RESET_HIDDEN: '28',
   RESET_STRIKETHROUGH: '29',
@@ -55,6 +60,7 @@ for (const [k, v] of Commands.entries()) {
 
 export const isFgColorCommand = command => (command >= '30' && command <= '37') || (command >= '90' && command <= '97');
 export const isBgColorCommand = command => (command >= '40' && command <= '47') || (command >= '100' && command <= '107');
+export const isFontCommand = command => command >= '10' && command <= '20';
 
 export const reset = command => {
   command = String(command).toUpperCase();
@@ -64,6 +70,7 @@ export const reset = command => {
   if (resetCommands.hasOwnProperty(command)) return resetCommands[command];
   if (isFgColorCommand(command)) return Commands.RESET_COLOR;
   if (isBgColorCommand(command)) return Commands.RESET_BG_COLOR;
+  if (isFontCommand(command)) return Commands.RESET_FONT;
   // return undefined in all other cases
 };
 
@@ -90,6 +97,11 @@ export const setColor = color => setCommands(getColor(color));
 export const setBgColor = color => setCommands(getBgColor(color));
 export const setBrightColor = color => setCommands(getBrightColor(color));
 export const setBrightBgColor = color => setCommands(getBrightBgColor(color));
+
+export const fontNumber = font => (typeof font == 'number' && font >= 0 && font <= 10 ? font : 0);
+
+export const getFont = font => 10 + fontNumber(font);
+export const setFont = font => setCommands(setFont(font));
 
 const get6 = colorComponent => Math.round(colorComponent / 17);
 const get24 = intensity => Math.max(0, Math.min(23, Math.round((intensity - 8) / 10)));
