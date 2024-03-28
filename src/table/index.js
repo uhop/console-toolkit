@@ -26,10 +26,11 @@ export const draw = (tableStyle, xAxis, yAxis, symbol = ' ') => {
   verifyAxis(yAxis);
   return yAxis
     .map((y, row) => {
+      if (!y) return [];
       if (row & 1) {
-        if (!y) return [];
         const line = xAxis
           .map((x, column) => {
+            if (!x) return '';
             if (column & 1) return symbol.repeat(x);
             const xSymbol = column == 0 ? 't' : column + 1 == xAxis.length ? 'b' : 'm';
             return tableStyle['v' + x + xSymbol];
@@ -40,6 +41,7 @@ export const draw = (tableStyle, xAxis, yAxis, symbol = ' ') => {
       const ySymbol = row == 0 ? 't' : row + 1 == yAxis.length ? 'b' : 'm';
       return xAxis
         .map((x, column) => {
+          if (!x) return '';
           if (column & 1) return tableStyle['h' + y].repeat(x);
           const xSymbol = column == 0 ? 't' : column + 1 == xAxis.length ? 'b' : 'm';
           return tableStyle[xSymbol + y + ySymbol + x];
