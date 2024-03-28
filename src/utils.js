@@ -6,37 +6,48 @@ export const getLength = str => String(str).replace(findEscSequence, '').length;
 // m is middle
 // b is bottom
 
-// The matrix to define a table is 9 symbols (3x3).
-// Each symbol is defined like that: 'xNyM', where:
-// x and y are of 'tmb', x is for a horizontal dimension, y is for a vertical one.
-// N and M are numbers. They can be 1 or 2 for a line style (single/double).
+const lineSymbols = ['t', 'm', 'b', 'h', 'v'];
 
-const table11 = ['┌┬┐', '├┼┤', '└┴┘'],
-  table12 = ['╓╥╖', '╟╫╢', '╙╨╜'],
-  table21 = ['╒╤╕', '╞╪╡', '╘╧╛'],
-  table22 = ['╔╦╗', '╠╬╣', '╚╩╝'],
-  h1 = '─',
-  h2 = '═',
-  v1 = '│',
-  v2 = '║',
-  lineSymbols = ['t', 'm', 'b'];
-
-export const tableSymbols = {h1, h2, v1, v2},
-  symbolParams = {[h1]: {n: 1, m: 0}, [h2]: {n: 2, m: 0}, [v1]: {n: 0, m: 1}, [v2]: {n: 0, m: 2}};
-
-const splitTable = (table, n, m) => {
+export const populateTableSymbols = (tableSymbols, tableDefinition, hLineStyle, vLineStyle) => {
+  const symbolWidth = tableDefinition.w || [1, 1, 1];
   for (let i = 0; i < 3; ++i) {
     const y = lineSymbols[i],
-      yM = y + m;
-    for (let j = 0; j < 3; ++j) {
-      const symbol = table[i][j],
+      yM = y + vLineStyle,
+      definition = tableDefinition[y];
+    for (let start = 0, j = 0; j < 3; ++j) {
+      const width = symbolWidth[j],
+        symbol = definition.substring(start, start + width),
         x = lineSymbols[j];
-      tableSymbols[x + n + yM] = symbol;
-      symbolParams[symbol] = {x, y, n, m};
+      tableSymbols[x + hLineStyle + yM] = symbol;
+      start += width;
     }
   }
+  for (let start = 0, j = 0; j < 3; ++j) {
+    const width = symbolWidth[j],
+      symbol = tableDefinition.v.substring(start, start + width),
+      x = lineSymbols[j];
+    tableSymbols['v' + vLineStyle + x] = symbol;
+    start += width;
+  }
+  tableSymbols['h' + hLineStyle] = tableDefinition.h;
+  return tableSymbols;
 };
-splitTable(table11, 1, 1);
-splitTable(table12, 1, 2);
-splitTable(table21, 2, 1);
-splitTable(table22, 2, 2);
+
+// A table definition matrix should define six properties:
+//   - 't': top row (3 symbols),
+//   - 'm': middle row (3 symbols),
+//   - 'b': bottom row (3 symbols),
+//   - 'v': vertical separators (3 symbols),
+//   - 'h': a horizontal separator (1 symbol),
+//   - 'w': an numeric array that defines width of every corresponding symbol (default: [1,1,1]).
+// t/m/b/v lines should have the same width for a corresponding symbol.
+// h should be one character long (visually).
+
+// Each table symbol is defined like that: 'xNyM', where:
+// x and y are of 'tmb', x is for a horizontal dimension, y is for a vertical one.
+// N and M are line styles (numbers or characters).
+// Example: they can be 1 or 2 for a line style (single/double).
+
+// A table defines horizontal and vertical symbols: hN and vMx.
+// N and M are line styles. See above.
+// x is of 'tmb' as before. h is 'h'. v is 'v'.
