@@ -1,5 +1,5 @@
 import {draw as drawTable} from '../../src/table/index.js';
-import {style} from '../../src/table/style-ascii-simple.js';
+import {style} from '../../src/table/style-ascii.js';
 
 const draw = box => box.forEach(line => console.log(line));
 

@@ -1,5 +1,5 @@
 import {draw as drawTable} from '../../src/table/index.js';
-import {style} from '../../src/table/style-unicode.js';
+import {style} from '../../src/table/style-unicode-bold.js';
 
 const draw = box => box.forEach(line => console.log(line));
 
@@ -14,6 +14,3 @@ draw(box3);
 
 const box4 = drawTable(style, [1, 1, 2, 0, 2], [1, 1, 2, 0, 2]);
 draw(box4);
-
-const box5 = drawTable(style, ['r', 1, 'r', 0, 'r'], ['r', 1, 'r', 0, 'r']);
-draw(box5);
