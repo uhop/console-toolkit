@@ -75,6 +75,21 @@ class Screen {
   extract(x, y, width, height) {
     // normalize arguments
 
+    if (typeof x != 'number') {
+      x = y = 0;
+      width = this.width;
+      height = this.height;
+    } else if (typeof y != 'number') {
+      y = 0;
+      width = this.width;
+      height = this.height;
+    } else if (typeof width != 'number') {
+      width = this.width;
+      height = this.height;
+    } else if (typeof height != 'number') {
+      height = this.height;
+    }
+
     if (x < 0) x = 0;
     if (x >= this.width) return null;
     if (x + width > this.width) {
@@ -208,6 +223,21 @@ class Screen {
   clear(x, y, width, height) {
     // normalize arguments
 
+    if (typeof x != 'number') {
+      x = y = 0;
+      width = this.width;
+      height = this.height;
+    } else if (typeof y != 'number') {
+      y = 0;
+      width = this.width;
+      height = this.height;
+    } else if (typeof width != 'number') {
+      width = this.width;
+      height = this.height;
+    } else if (typeof height != 'number') {
+      height = this.height;
+    }
+
     if (x < 0) x = 0;
     if (x >= this.width) return this;
     if (x + width > this.width) {
@@ -321,7 +351,5 @@ class Screen {
     }
 
     return this.padLeftRight(l, r).padTopBottom(t, b);
-
-    return this;
   }
 }
