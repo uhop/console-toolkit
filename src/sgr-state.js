@@ -8,7 +8,20 @@ export const newState = (commands, oldState = {}) => {
   switch (currentCommand) {
     case '': // reset
     case Commands.RESET_ALL:
-      return newState(commands.slice(1), {});
+      return newState(commands.slice(1), {
+        bold: null,
+        italic: null,
+        underline: null,
+        blink: null,
+        inverse: null,
+        hidden: null,
+        strikethrough: null,
+        overline: null,
+        foreground: null,
+        background: null,
+        decoration: null,
+        font: null
+      });
     case Commands.BOLD:
     case Commands.DIM:
       return newState(commands.slice(1), {...oldState, bold: currentCommand});
@@ -29,26 +42,26 @@ export const newState = (commands, oldState = {}) => {
     case Commands.OVERLINE:
       return newState(commands.slice(1), {...oldState, overline: currentCommand});
     case Commands.RESET_BOLD:
-      return newState(commands.slice(1), {...oldState, bold: undefined});
-    // case Commands.RESET_DIM: return newState(commands.slice(1), {...oldState, bold: undefined});
+      return newState(commands.slice(1), {...oldState, bold: null});
+    // case Commands.RESET_DIM: return newState(commands.slice(1), {...oldState, bold: null});
     case Commands.RESET_ITALIC:
-      return newState(commands.slice(1), {...oldState, italic: undefined});
+      return newState(commands.slice(1), {...oldState, italic: null});
     case Commands.RESET_UNDERLINE:
-      return newState(commands.slice(1), {...oldState, underline: undefined});
-    // case Commands.RESET_DOUBLE_UNDERLINE: return newState(commands.slice(1), {...oldState, underline: undefined});
-    // case Commands.RESET_CURLY_UNDERLINE: return newState(commands.slice(1), {...oldState, underline: undefined});
+      return newState(commands.slice(1), {...oldState, underline: null});
+    // case Commands.RESET_DOUBLE_UNDERLINE: return newState(commands.slice(1), {...oldState, underline: null});
+    // case Commands.RESET_CURLY_UNDERLINE: return newState(commands.slice(1), {...oldState, underline: null});
     case Commands.RESET_BLINK:
-      return newState(commands.slice(1), {...oldState, blink: undefined});
+      return newState(commands.slice(1), {...oldState, blink: null});
     case Commands.RESET_INVERSE:
-      return newState(commands.slice(1), {...oldState, inverse: undefined});
+      return newState(commands.slice(1), {...oldState, inverse: null});
     case Commands.RESET_HIDDEN:
-      return newState(commands.slice(1), {...oldState, hidden: undefined});
+      return newState(commands.slice(1), {...oldState, hidden: null});
     case Commands.RESET_STRIKETHROUGH:
-      return newState(commands.slice(1), {...oldState, strikethrough: undefined});
+      return newState(commands.slice(1), {...oldState, strikethrough: null});
     case Commands.RESET_OVERLINE:
-      return newState(commands.slice(1), {...oldState, overline: undefined});
+      return newState(commands.slice(1), {...oldState, overline: null});
     case Commands.RESET_COLOR_DECORATION:
-      return newState(commands.slice(1), {...oldState, decoration: undefined});
+      return newState(commands.slice(1), {...oldState, decoration: null});
     case Commands.COLOR_EXTENDED: {
       const next = commands[1] === FORMAT_COLOR256 ? 3 : 5,
         color = commands.slice(0, next);
@@ -65,11 +78,11 @@ export const newState = (commands, oldState = {}) => {
       return newState(commands.slice(next), {...oldState, decoration: color});
     }
     case Commands.COLOR_DEFAULT:
-      return newState(commands.slice(1), {...oldState, foreground: undefined});
+      return newState(commands.slice(1), {...oldState, foreground: null});
     case Commands.BG_COLOR_DEFAULT:
-      return newState(commands.slice(1), {...oldState, background: undefined});
+      return newState(commands.slice(1), {...oldState, background: null});
     case Commands.FONT_DEFAULT:
-      return newState(commands.slice(1), {...oldState, font: undefined});
+      return newState(commands.slice(1), {...oldState, font: null});
   }
   if (isFgColorCommand(currentCommand)) {
     return newState(commands.slice(1), {...oldState, foreground: currentCommand});
@@ -102,19 +115,31 @@ export const stateToCommands = state => {
   const commands = [];
 
   if (state.bold) commands.push(state.bold);
+  else if (state.bold === null) commands.push(Commands.RESET_BOLD);
   if (state.italic) commands.push(state.italic);
+  else if (state.italic === null) commands.push(Commands.RESET_ITALIC);
   if (state.underline) commands.push(state.underline);
+  else if (state.underline === null) commands.push(Commands.RESET_UNDERLINE);
   if (state.blink) commands.push(state.blink);
+  else if (state.blink === null) commands.push(Commands.RESET_BLINK);
   if (state.inverse) commands.push(state.inverse);
+  else if (state.inverse === null) commands.push(Commands.RESET_INVERSE);
   if (state.hidden) commands.push(state.hidden);
+  else if (state.hidden === null) commands.push(Commands.RESET_HIDDEN);
   if (state.strikethrough) commands.push(state.strikethrough);
+  else if (state.strikethrough === null) commands.push(Commands.RESET_STRIKETHROUGH);
   if (state.overline) commands.push(state.overline);
+  else if (state.overline === null) commands.push(Commands.RESET_OVERLINE);
 
   if (state.font) commands.push(state.font);
+  else if (state.font === null) commands.push(Commands.RESET_FONT);
 
   if (state.foreground) pushColor(commands, state.foreground);
+  else if (state.foreground === null) commands.push(Commands.RESET_COLOR);
   if (state.background) pushColor(commands, state.background);
+  else if (state.background === null) commands.push(Commands.RESET_BG_COLOR);
   if (state.decoration) pushColor(commands, state.decoration);
+  else if (state.decoration === null) commands.push(Commands.RESET_COLOR_DECORATION);
 
   return commands;
 };
@@ -124,18 +149,18 @@ const TOTAL_RESETS = 12;
 const getStateResets = state => {
   let resetCount = 0;
 
-  if (!state.bold) ++resetCount;
-  if (!state.italic) ++resetCount;
-  if (!state.underline) ++resetCount;
-  if (!state.blink) ++resetCount;
-  if (!state.inverse) ++resetCount;
-  if (!state.hidden) ++resetCount;
-  if (!state.strikethrough) ++resetCount;
-  if (!state.overline) ++resetCount;
-  if (!state.font) ++resetCount;
-  if (!state.foreground) ++resetCount;
-  if (!state.background) ++resetCount;
-  if (!state.decoration) ++resetCount;
+  if (state.bold === null) ++resetCount;
+  if (state.italic === null) ++resetCount;
+  if (state.underline === null) ++resetCount;
+  if (state.blink === null) ++resetCount;
+  if (state.inverse === null) ++resetCount;
+  if (state.hidden === null) ++resetCount;
+  if (state.strikethrough === null) ++resetCount;
+  if (state.overline === null) ++resetCount;
+  if (state.font === null) ++resetCount;
+  if (state.foreground === null) ++resetCount;
+  if (state.background === null) ++resetCount;
+  if (state.decoration === null) ++resetCount;
 
   return resetCount;
 };
@@ -143,25 +168,25 @@ const getStateResets = state => {
 const addCommands = (commands, prev, next, property, resetCommand) => {
   if (next[property]) {
     if (prev[property] !== next[property]) commands.push(next[property]);
-  } else {
-    if (prev[property]) commands.push(resetCommand);
+  } else if (next[property] === null) {
+    if (prev[property] !== null) commands.push(resetCommand);
   }
 };
 
 const addColorCommands = (commands, prev, next, property, resetCommand) => {
   if (next[property]) {
     if (!equalColors(prev[property], next[property])) pushColor(commands, next[property]);
-  } else {
-    if (prev[property]) commands.push(resetCommand);
+  } else if (next[property] === null) {
+    if (prev[property] !== null) commands.push(resetCommand);
   }
 };
 
 export const stateCommand = (prev, next) => {
   const commands = [],
-    prevResets = getStateResets(prev),
     nextResets = getStateResets(next);
 
   if (nextResets === TOTAL_RESETS) {
+    const prevResets = getStateResets(prev);
     if (prevResets !== TOTAL_RESETS) commands.push(Commands.RESET_ALL);
     return commands;
   }
