@@ -7,18 +7,26 @@ export const makeBox = (width, height, symbol = ' ') => {
 
 export const normalizeBox = (strings, symbol = ' ', align = 'right') => {
   const maxLength = strings.reduce((acc, s) => Math.max(acc, getLength(s)), 0);
+  switch (align) {
+    case 'left':
+      return strings.map(s => {
+        const n = maxLength - getLength(s);
+        return n > 0 ? symbol.repeat(n) + s : s;
+      });
+    case 'right':
+      return strings.map(s => {
+        const n = maxLength - getLength(s);
+        return n > 0 ? s + symbol.repeat(n) : s;
+      });
+  }
+  // center
   return strings.map(s => {
     const n = maxLength - getLength(s);
     if (!n) return s;
-    if (align === 'center') {
-      const half = padding.length >> 1,
-        padding = symbol.repeat(half),
-        result = padding + s + padding;
-      return n & 1 ? result + symbol : result;
-    }
-    const padding = symbol.repeat(maxLength - getLength(s));
-    if (align === 'left') return padding + s;
-    return s + padding;
+    const half = n >> 1,
+      padding = symbol.repeat(half),
+      result = padding + s + padding;
+    return n & 1 ? result + symbol : result;
   });
 };
 
