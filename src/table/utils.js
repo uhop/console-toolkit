@@ -1,5 +1,3 @@
-export const getLength = (matcher, s) = String(s).replace(matcher, '').length;
-
 // The line symbols are indexed in this order: tmb
 // t is top
 // m is middle
