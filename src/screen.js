@@ -352,4 +352,116 @@ class Screen {
 
     return this.padLeftRight(l, r).padTopBottom(t, b);
   }
+
+  addRight(screen, alignment = 'top') {
+    const diff = this.height - screen.height;
+
+    if (alignment === 'bottom') {
+      if (diff >= 0) {
+        for (let i = 0; i < diff; ++i) {
+          this.box[i] = this.box[i].concat(new Array(screen.width).fill(null));
+        }
+        for (let i = diff; i < this.height; ++i) {
+          this.box[i] = this.box[i].concat(screen.box[i - diff]);
+        }
+        return this;
+      }
+      const box = new Array(screen.height);
+      for (let i = 0, n = -diff; i < n; ++i) {
+        box[i] = new Array(screen.width).fill(null).concat().concat(screen.box[i]);
+      }
+      for (let i = -diff; i < screen.height; ++i) {
+        box[i] = this.box[i + diff].concat(screen.box[i]);
+      }
+      this.box = box;
+      return this;
+    }
+
+    if (alignment === 'top') {
+      if (diff >= 0) {
+        for (let i = 0; i < screen.height; ++i) {
+          this.box[i] = this.box[i].concat(screen.box[i]);
+        }
+        for (let i = screen.height; i < this.height; ++i) {
+          this.box[i] = this.box[i].concat(new Array(screen.width).fill(null));
+        }
+        return this;
+      }
+      const box = new Array(screen.height);
+      for (let i = 0; i < this.height; ++i) {
+        box[i] = this.box[i].concat(screen.box[i]);
+      }
+      for (let i = this.height; i < screen.height; ++i) {
+        box[i] = new Array(screen.width).fill(null).concat().concat(screen.box[i]);
+      }
+      this.box = box;
+      return this;
+    }
+
+    // alignment === 'center'
+
+    if (diff >= 0) {
+      const half = diff >> 1;
+      for (let i = 0; i < half; ++i) {
+        this.box[i] = this.box[i].concat(new Array(screen.width).fill(null));
+      }
+      for (let i = 0; i < screen.height; ++i) {
+        this.box[i + half] = this.box[i + half].concat(screen.box[i]);
+      }
+      for (let i = screen.height + half; i < this.height; ++i) {
+        this.box[i] = this.box[i].concat(new Array(screen.width).fill(null));
+      }
+      return this;
+    }
+
+    const half = -diff >> 1,
+      box = new Array(screen.height);
+    for (let i = 0; i < half; ++i) {
+      box[i] = new Array(screen.width).fill(null).concat(screen.box[i]);
+    }
+    for (let i = 0; i < this.height; ++i) {
+      box[i + half] = this.box[i].concat(screen.box[i + half]);
+    }
+    for (let i = this.height + half; i < screen.height; ++i) {
+      box[i] = new Array(screen.width).fill(null).concat(screen.box[i]);
+    }
+    this.box = box;
+    return this;
+  }
+
+  addBottom(screen, alignment = 'left') {
+    const diff = this.width - screen.width;
+
+    if (alignment === 'left') {
+      if (diff >= 0) {
+        this.box.splice(this.height, 0, ...screen.box.map(row => row.concat(new Array(diff).fill(null))));
+        return this;
+      }
+      this.box = this.box.map(row => row.concat(new Array(diff).fill(null))).concat(screen.box);
+      return this;
+    }
+
+    if (alignment === 'right') {
+      if (diff >= 0) {
+        this.box.splice(this.height, 0, ...screen.box.map(row => new Array(diff).fill(null).concat(row)));
+        return this;
+      }
+      this.box = this.box.map(row => new Array(diff).fill(null).concat(row)).concat(screen.box);
+      return this;
+    }
+
+    // alignment === 'center'
+
+    if (diff >= 0) {
+      const half = diff >> 1;
+      this.box.splice(this.height, 0, ...screen.box.map(row => new Array(half).fill(null).concat(row, new Array(diff - half).fill(null))));
+      return this;
+    }
+
+    const half = -diff >> 1;
+    this.box = this.box.map(row => new Array(half).fill(null).concat(row, new Array(-diff - half).fill(null))).concat(screen.box);
+    return this;
+
+    return this;
+  }
 }
