@@ -11,3 +11,5 @@ populateTableSymbols(style, table11, 1, 1);
 populateTableSymbols(style, table12, 1, 2);
 populateTableSymbols(style, table21, 2, 1);
 populateTableSymbols(style, table22, 2, 2);
+
+export default style;
