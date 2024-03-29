@@ -14,7 +14,7 @@ class Screen {
     }
   }
 
-  static fromBox(box, ignore = 'a') {
+  static fromBox(box, ignore = '\x07') {
     // box should be normalized
     if (!box || !box.length || !box[0].length) return null;
 
@@ -26,7 +26,7 @@ class Screen {
       let start = 0,
         pos = 0,
         state = {};
-      matchSgr.lastIndex = 0;
+      matchCsi.lastIndex = 0;
       for (const match of row.matchAll(matchCsi)) {
         for (let j = start, n = match.index; j < n; ++j) {
           screenRow[pos++] = row[j] === ignore ? null : {symbol: row[j], state};
@@ -44,7 +44,7 @@ class Screen {
     return screen;
   }
 
-  toBox(endOfLineCommand = '', ignore = 'a') {
+  toBox(endOfLineCommand = '', ignore = '\x07') {
     if (!this.height || !this.width) return null;
 
     const box = new Array(this.height);
@@ -130,6 +130,44 @@ class Screen {
       for (let j = 0; j < width; ++j) {
         row[x + j] = screenRow[x1 + j];
       }
+    }
+
+    return true;
+  }
+
+  put(x, y, s, ignore = '\x07') {
+    // normalize arguments
+
+    let length = s.length;
+
+    if (x < 0) x = 0;
+    if (x >= this.width) return false;
+    if (x + length > this.width) {
+      length = this.width - x;
+    }
+
+    if (y < 0) y = 0;
+    if (y >= this.height) return false;
+
+    // copy cells
+    const row = this.box[y];
+    let start = 0,
+      pos = 0,
+      state = x > 0 ? row[x - 1].state : {};
+    matchCsi.lastIndex = 0;
+    for (const match of s.matchAll(matchCsi)) {
+      for (let j = start, n = match.index; j < n; ++j, ++pos) {
+        if (x + pos >= row.length) break;
+        row[x + pos] = s[j] === ignore ? null : {symbol: s[j], state};
+      }
+      start = match.index + match[0].length;
+      if (match[3] === 'm') {
+        state = newState(match[1].split(';'), state);
+      }
+    }
+    for (let j = start, n = row.length; j < n; ++j, ++row) {
+      if (x + pos >= row.length) break;
+      row[x + pos] = s[j] === ignore ? null : {symbol: s[j], state};
     }
 
     return true;
