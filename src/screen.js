@@ -106,21 +106,21 @@ class Screen {
     // normalize arguments
 
     if (x < 0) x = 0;
-    if (x >= this.width) return false;
+    if (x >= this.width) return this;
     if (x + width > this.width) {
       width = this.width - x;
     }
     if (x1 < 0) x1 = 0;
-    if (x1 >= screen.width) return false;
+    if (x1 >= screen.width) return this;
     width = Math.min(width, screen.width - x1);
 
     if (y < 0) y = 0;
-    if (y >= this.height) return false;
+    if (y >= this.height) return this;
     if (y + height > this.height) {
       height = this.height - y;
     }
     if (y1 < 0) y1 = 0;
-    if (y1 >= screen.height) return false;
+    if (y1 >= screen.height) return this;
     height = Math.min(height, screen.height - y1);
 
     // copy cells
@@ -132,7 +132,7 @@ class Screen {
       }
     }
 
-    return true;
+    return this;
   }
 
   put(x, y, s, ignore = '\x07') {
@@ -141,13 +141,13 @@ class Screen {
     let length = s.length;
 
     if (x < 0) x = 0;
-    if (x >= this.width) return false;
+    if (x >= this.width) return this;
     if (x + length > this.width) {
       length = this.width - x;
     }
 
     if (y < 0) y = 0;
-    if (y >= this.height) return false;
+    if (y >= this.height) return this;
 
     // copy cells
     const row = this.box[y];
@@ -170,6 +170,158 @@ class Screen {
       row[x + pos] = s[j] === ignore ? null : {symbol: s[j], state};
     }
 
-    return true;
+    return this;
+  }
+
+  fill(x, y, width, height, symbol, state = {}) {
+    // normalize arguments
+
+    if (x < 0) x = 0;
+    if (x >= this.width) return this;
+    if (x + width > this.width) {
+      width = this.width - x;
+    }
+
+    if (y < 0) y = 0;
+    if (y >= this.height) return this;
+    if (y + height > this.height) {
+      height = this.height - y;
+    }
+
+    if (typeof state == 'string') {
+      state = newState(state.split(';'));
+    } else if (Array.isArray(state)) {
+      state = newState(state);
+    }
+
+    // fill cells
+    for (let i = 0; i < height; ++i) {
+      const row = this.box[y + i];
+      for (let j = 0; j < width; ++j) {
+        row[x + j] = {symbol, state};
+      }
+    }
+
+    return this;
+  }
+
+  clear(x, y, width, height) {
+    // normalize arguments
+
+    if (x < 0) x = 0;
+    if (x >= this.width) return this;
+    if (x + width > this.width) {
+      width = this.width - x;
+    }
+
+    if (y < 0) y = 0;
+    if (y >= this.height) return this;
+    if (y + height > this.height) {
+      height = this.height - y;
+    }
+
+    // clear cells
+    for (let i = 0; i < height; ++i) {
+      const row = this.box[y + i];
+      for (let j = 0; j < width; ++j) {
+        row[x + j] = null;
+      }
+    }
+
+    return this;
+  }
+
+  padLeft(n) {
+    if (n <= 0) return this;
+
+    for (let i = 0; i < this.height; ++i) {
+      this.box[i] = new Array(n).fill(null).concat(this.box[i]);
+    }
+    this.width += n;
+
+    return this;
+  }
+
+  padRight(n) {
+    if (n <= 0) return this;
+
+    for (let i = 0; i < this.height; ++i) {
+      this.box[i] = this.box[i].concat(new Array(n).fill(null));
+    }
+    this.width += n;
+
+    return this;
+  }
+
+  padLeftRight(n, m) {
+    if (n <= 0) return this.padRight(m);
+    if (m <= 0) return this.padLeft(n);
+
+    for (let i = 0; i < this.height; ++i) {
+      this.box[i] = new Array(n).fill(null).concat(this.box[i], new Array(m).fill(null));
+    }
+    this.width += n + m;
+
+    return this;
+  }
+
+  padTop(n) {
+    if (n <= 0) return this;
+
+    const pad = new Array(n);
+    for (let i = 0; i < n; ++i) {
+      pad[i] = new Array(this.width).fill(null);
+    }
+    this.box = pad.concat(this.box);
+    this.height += n;
+
+    return this;
+  }
+
+  padBottom(n) {
+    if (n <= 0) return this;
+
+    const pad = new Array(n);
+    for (let i = 0; i < n; ++i) {
+      pad[i] = new Array(this.width).fill(null);
+    }
+    this.box = this.box.concat(pad);
+    this.height += n;
+
+    return this;
+  }
+
+  padTopBottom(n, m) {
+    if (n <= 0) return this.padBottom(m);
+    if (m <= 0) return this.padTop(n);
+
+    const top = new Array(n);
+    for (let i = 0; i < n; ++i) {
+      top[i] = new Array(this.width).fill(null);
+    }
+    const bottom = new Array(m);
+    for (let i = 0; i < m; ++i) {
+      bottom[i] = new Array(this.width).fill(null);
+    }
+    this.box = top.concat(this.box, bottom);
+    this.height += n + m;
+
+    return this;
+  }
+
+  pad(t, r, b, l) {
+    // use values according to CSS rules
+    if (typeof r != 'number') {
+      r = b = l = t;
+    } else if (typeof b != 'number') {
+      l = r;
+      b = t;
+    } else if (typeof l != 'number') {
+      l = r;
+    }
+
+    return this.padLeftRight(l, r).padTopBottom(t, b);
+
+    return this;
   }
 }
