@@ -1,5 +1,4 @@
-export const findEscSequence = /\x1B(?:\[[\x30-\x3F]*[\x20-\x2F]*[\x40-\x7E]|[\x20-\x2F]*[\x30-\x7E])/g;
-export const getLength = str => String(str).replace(findEscSequence, '').length;
+export const getLength = (matcher, s) = String(s).replace(matcher, '').length;
 
 // The line symbols are indexed in this order: tmb
 // t is top

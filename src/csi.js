@@ -6,6 +6,9 @@
 
 export * from './sgr.js';
 
+// matcher
+export const matchCsi = /\x1B\[([\x30-\x3F]*)([\x20-\x2F]*)([\x40-\x7E])/g;
+
 const CSI = '\x1B[';
 
 export const CURSOR_UP1 = CSI + 'A';

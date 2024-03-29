@@ -1,4 +1,4 @@
-import {populateTableSymbols} from '../utils.js';
+import {populateTableSymbols} from './utils.js';
 
 export const style = {};
 

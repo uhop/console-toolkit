@@ -4,7 +4,8 @@
 // Type Fe is supported by C1 control codes.
 // See https://en.wikipedia.org/wiki/ANSI_escape_code for more details.
 
-export const findEscSequence = /\x1B\[([\d;:]+)m/g;
+// matcher
+export const matchSgr = /\x1B\[([\x30-\x3F]*)([\x20-\x2F]*)m/g;
 
 export const colors = {BLACK: 0, RED: 1, GREEN: 2, YELLOW: 3, BLUE: 4, MAGENTA: 5, CYAN: 6, WHITE: 7, DEFAULT: 9};
 
