@@ -461,7 +461,5 @@ class Screen {
     const half = -diff >> 1;
     this.box = this.box.map(row => new Array(half).fill(null).concat(row, new Array(-diff - half).fill(null))).concat(screen.box);
     return this;
-
-    return this;
   }
 }
