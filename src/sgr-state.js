@@ -6,6 +6,7 @@ export const newState = (commands, oldState = {}) => {
   if (commands.length < 1) return oldState;
   const currentCommand = commands[0];
   switch (currentCommand) {
+    case '': // reset
     case Commands.RESET_ALL:
       return newState(commands.slice(1), {});
     case Commands.BOLD:
