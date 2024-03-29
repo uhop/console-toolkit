@@ -4,7 +4,6 @@
 export * from './csi.js';
 
 export const ESC = '\x1B';
-export const DEL = '\x7F';
 
 export const CURSOR_DELETE = '\x7F';
 
