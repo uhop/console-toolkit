@@ -3,7 +3,7 @@ import {matchCsi} from './csi.js';
 import {setCommands} from './sgr.js';
 import {newState, stateCommand} from './sgr-state.js';
 
-class Screen {
+export class Screen {
   constructor(width, height) {
     this.width = width;
     this.height = height;
@@ -463,3 +463,5 @@ class Screen {
     return this;
   }
 }
+
+export default Screen;
