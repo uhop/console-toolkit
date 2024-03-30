@@ -1,7 +1,7 @@
 import {getLength} from './utils.js';
 import {matchCsi} from './csi.js';
 import {setCommands} from './sgr.js';
-import {newState, stateCommand} from './sgr-state.js';
+import {newState, stateCommand, RESET_STATE} from './sgr-state.js';
 
 export class Screen {
   constructor(width, height) {
@@ -47,19 +47,16 @@ export class Screen {
   toBox(endOfLineCommand = '', ignore = '\x07') {
     if (!this.height || !this.width) return null;
 
-    const box = new Array(this.height);
+    const box = new Array(this.height),
+      emptyCell = {symbol: ignore, state: RESET_STATE};
 
     for (let i = 0; i < this.height; ++i) {
       const screenRow = this.box[i];
       let row = '',
         state = {};
       for (let j = 0; j < this.width; ++j) {
-        const cell = screenRow[j];
-        if (!cell) {
-          row += ignore;
-          continue;
-        }
-        const commands = stateCommand(state, cell.state);
+        const cell = screenRow[j] || emptyCell,
+          commands = stateCommand(state, cell.state);
         if (commands.length) {
           row += setCommands(commands);
         }
