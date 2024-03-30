@@ -1,12 +1,11 @@
 import {log} from '../../src/show.js';
 import Screen from '../../src/screen.js';
 import {getBgColor, getBrightBgColor, Colors, Commands} from '../../src/sgr.js';
-import {newState} from '../../src/sgr-state.js';
+import {newState, RESET_STATE} from '../../src/sgr-state.js';
 
 const screen = new Screen(8, 4);
 
-const defaultState = newState([Commands.RESET_ALL]);
-screen.put(0, 0, '12345678').put(0, 1, '12345678').put(0, 2, '12345678').put(0, 3, '12345678').fillState(0, 0, 8, 4, defaultState);
+screen.put(0, 0, '12345678').put(0, 1, '12345678').put(0, 2, '12345678').put(0, 3, '12345678').fillState(0, 0, 8, 4, RESET_STATE);
 log(screen);
 console.log('==');
 

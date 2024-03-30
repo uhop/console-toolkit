@@ -2,26 +2,28 @@
 
 import {Commands, FORMAT_COLOR256, isFgColorCommand, isBgColorCommand, isFontCommand} from './sgr.js';
 
+export const RESET_STATE = {
+  bold: null,
+  italic: null,
+  underline: null,
+  blink: null,
+  inverse: null,
+  hidden: null,
+  strikethrough: null,
+  overline: null,
+  foreground: null,
+  background: null,
+  decoration: null,
+  font: null
+};
+
 export const newState = (commands, oldState = {}) => {
   if (commands.length < 1) return oldState;
   const currentCommand = commands[0];
   switch (currentCommand) {
     case '': // reset
     case Commands.RESET_ALL:
-      return newState(commands.slice(1), {
-        bold: null,
-        italic: null,
-        underline: null,
-        blink: null,
-        inverse: null,
-        hidden: null,
-        strikethrough: null,
-        overline: null,
-        foreground: null,
-        background: null,
-        decoration: null,
-        font: null
-      });
+      return newState(commands.slice(1), RESET_STATE);
     case Commands.BOLD:
     case Commands.DIM:
       return newState(commands.slice(1), {...oldState, bold: currentCommand});
