@@ -220,6 +220,39 @@ export class Screen {
     return this;
   }
 
+  fillState(x, y, width, height, state = {}, ignore = '\x07') {
+    // normalize arguments
+
+    if (x < 0) x = 0;
+    if (x >= this.width) return this;
+    if (x + width > this.width) {
+      width = this.width - x;
+    }
+
+    if (y < 0) y = 0;
+    if (y >= this.height) return this;
+    if (y + height > this.height) {
+      height = this.height - y;
+    }
+
+    if (typeof state == 'string') {
+      state = newState(state.split(';'));
+    } else if (Array.isArray(state)) {
+      state = newState(state);
+    }
+
+    // fill cells
+    for (let i = 0; i < height; ++i) {
+      const row = this.box[y + i];
+      for (let j = 0; j < width; ++j) {
+        const cell = row[x + j];
+        row[x + j] = {symbol: cell ? cell.symbol : ignore, state};
+      }
+    }
+
+    return this;
+  }
+
   clear(x, y, width, height) {
     // normalize arguments
 
