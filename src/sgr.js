@@ -7,7 +7,7 @@
 // matcher
 export const matchSgr = /\x1B\[([\x30-\x3F]*)([\x20-\x2F]*)m/g;
 
-export const colors = {BLACK: 0, RED: 1, GREEN: 2, YELLOW: 3, BLUE: 4, MAGENTA: 5, CYAN: 6, WHITE: 7, DEFAULT: 9};
+export const Colors = {BLACK: 0, RED: 1, GREEN: 2, YELLOW: 3, BLUE: 4, MAGENTA: 5, CYAN: 6, WHITE: 7, DEFAULT: 9};
 
 export const Commands = {
   RESET_ALL: '0',
@@ -52,7 +52,7 @@ export const FORMAT_COLOR256 = '5';
 export const FORMAT_TRUE_COLOR = '2';
 
 const resetCommands = {};
-for (const [k, v] of Commands.entries()) {
+for (const [k, v] of Object.entries(Commands)) {
   if (!k.startsWith('RESET_')) continue;
   const cmd = k.substring(6);
   if (!Commands.hasOwnProperty(cmd)) continue;
@@ -83,7 +83,7 @@ export const colorNumber = color => {
       color = parseInt(color);
     } else {
       color = color.toUpperCase();
-      return colors.hasOwnProperty(color) ? colors[color] : 0;
+      return Colors.hasOwnProperty(color) ? Colors[color] : 0;
     }
   }
   return typeof color == 'number' && color >= 0 && color <= 9 ? color : 0;
