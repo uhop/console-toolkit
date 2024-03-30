@@ -180,7 +180,7 @@ export class Screen {
         state = newState(match[1].split(';'), state);
       }
     }
-    for (let j = start, n = row.length; j < n; ++j, ++row) {
+    for (let j = start, n = row.length; j < n; ++j, ++pos) {
       if (x + pos >= row.length) break;
       row[x + pos] = s[j] === ignore ? null : {symbol: s[j], state};
     }
