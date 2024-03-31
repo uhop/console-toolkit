@@ -3,6 +3,10 @@ import {matchCsi} from './csi.js';
 import {setCommands} from './sgr.js';
 import {newState, stateCommand, RESET_STATE} from './sgr-state.js';
 
+// TODO: Some methods rely on a previous state. It can be `null` => verify that it is handled appropriately.
+// TODO: When copying and filling areas accept a state that finishes a row. The same goes for `addRight()`.
+// TODO: We need a mechanism to add/remove rows/columns. It can be similar to padding methods.
+
 export class Panel {
   constructor(width, height) {
     this.width = width;
