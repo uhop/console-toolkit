@@ -217,7 +217,7 @@ export class Panel {
     return this;
   }
 
-  fillState(x, y, width, height, state = {}, ignore = '\x07') {
+  fillState(x, y, width, height, state = {}, ignore = ' ') {
     // normalize arguments
 
     if (x < 0) x = 0;
