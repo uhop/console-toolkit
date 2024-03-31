@@ -3,7 +3,7 @@ import {matchCsi} from './csi.js';
 import {setCommands} from './sgr.js';
 import {newState, stateCommand, RESET_STATE} from './sgr-state.js';
 
-export class Screen {
+export class Panel {
   constructor(width, height) {
     this.width = width;
     this.height = height;
@@ -18,18 +18,18 @@ export class Screen {
     // box should be normalized
     if (!box || !box.length || !box[0].length) return null;
 
-    const screen = new Screen(getLength(box[0]), box.length);
+    const panel = new Panel(getLength(box[0]), box.length);
 
     for (let i = 0; i < box.length; ++i) {
       const row = box[i],
-        screenRow = screen.box[i];
+        panelRow = panel.box[i];
       let start = 0,
         pos = 0,
         state = {};
       matchCsi.lastIndex = 0;
       for (const match of row.matchAll(matchCsi)) {
         for (let j = start, n = match.index; j < n; ++j) {
-          screenRow[pos++] = row[j] === ignore ? null : {symbol: row[j], state};
+          panelRow[pos++] = row[j] === ignore ? null : {symbol: row[j], state};
         }
         start = match.index + match[0].length;
         if (match[3] === 'm') {
@@ -37,11 +37,11 @@ export class Screen {
         }
       }
       for (let j = start, n = row.length; j < n; ++j) {
-        screenRow[pos++] = row[j] === ignore ? null : {symbol: row[j], state};
+        panelRow[pos++] = row[j] === ignore ? null : {symbol: row[j], state};
       }
     }
 
-    return screen;
+    return panel;
   }
 
   toBox(endOfLineCommand = '', ignore = '\x07') {
@@ -51,11 +51,11 @@ export class Screen {
       emptyCell = {symbol: ignore, state: RESET_STATE};
 
     for (let i = 0; i < this.height; ++i) {
-      const screenRow = this.box[i];
+      const panelRow = this.box[i];
       let row = '',
         state = {};
       for (let j = 0; j < this.width; ++j) {
-        const cell = screenRow[j] || emptyCell,
+        const cell = panelRow[j] || emptyCell,
           commands = stateCommand(state, cell.state);
         if (commands.length) {
           row += setCommands(commands);
@@ -100,21 +100,21 @@ export class Screen {
     }
 
     // create new instance
-    const screen = new Screen(width, height);
+    const panel = new Panel(width, height);
 
     // copy cells
     for (let i = 0; i < height; ++i) {
-      const screenRow = screen.box[i],
+      const panelRow = panel.box[i],
         row = this.box[y + i];
       for (let j = 0; j < width; ++j) {
-        screenRow[j] = row[x + j];
+        panelRow[j] = row[x + j];
       }
     }
 
-    return screen;
+    return panel;
   }
 
-  copyFrom(x, y, width, height, screen, x1, y1) {
+  copyFrom(x, y, width, height, panel, x1, y1) {
     // normalize arguments
 
     if (x < 0) x = 0;
@@ -123,8 +123,8 @@ export class Screen {
       width = this.width - x;
     }
     if (x1 < 0) x1 = 0;
-    if (x1 >= screen.width) return this;
-    width = Math.min(width, screen.width - x1);
+    if (x1 >= panel.width) return this;
+    width = Math.min(width, panel.width - x1);
 
     if (y < 0) y = 0;
     if (y >= this.height) return this;
@@ -132,15 +132,15 @@ export class Screen {
       height = this.height - y;
     }
     if (y1 < 0) y1 = 0;
-    if (y1 >= screen.height) return this;
-    height = Math.min(height, screen.height - y1);
+    if (y1 >= panel.height) return this;
+    height = Math.min(height, panel.height - y1);
 
     // copy cells
     for (let i = 0; i < height; ++i) {
-      const screenRow = screen.box[y1 + i],
+      const panelRow = panel.box[y1 + i],
         row = this.box[y + i];
       for (let j = 0; j < width; ++j) {
-        row[x + j] = screenRow[x1 + j];
+        row[x + j] = panelRow[x1 + j];
       }
     }
 
@@ -383,25 +383,25 @@ export class Screen {
     return this.padLeftRight(l, r).padTopBottom(t, b);
   }
 
-  addRight(screen, alignment = 'top') {
-    const diff = this.height - screen.height;
+  addRight(panel, alignment = 'top') {
+    const diff = this.height - panel.height;
 
     if (alignment === 'bottom') {
       if (diff >= 0) {
         for (let i = 0; i < diff; ++i) {
-          this.box[i] = this.box[i].concat(new Array(screen.width).fill(null));
+          this.box[i] = this.box[i].concat(new Array(panel.width).fill(null));
         }
         for (let i = diff; i < this.height; ++i) {
-          this.box[i] = this.box[i].concat(screen.box[i - diff]);
+          this.box[i] = this.box[i].concat(panel.box[i - diff]);
         }
         return this;
       }
-      const box = new Array(screen.height);
+      const box = new Array(panel.height);
       for (let i = 0, n = -diff; i < n; ++i) {
-        box[i] = new Array(screen.width).fill(null).concat().concat(screen.box[i]);
+        box[i] = new Array(panel.width).fill(null).concat().concat(panel.box[i]);
       }
-      for (let i = -diff; i < screen.height; ++i) {
-        box[i] = this.box[i + diff].concat(screen.box[i]);
+      for (let i = -diff; i < panel.height; ++i) {
+        box[i] = this.box[i + diff].concat(panel.box[i]);
       }
       this.box = box;
       return this;
@@ -409,20 +409,20 @@ export class Screen {
 
     if (alignment === 'top') {
       if (diff >= 0) {
-        for (let i = 0; i < screen.height; ++i) {
-          this.box[i] = this.box[i].concat(screen.box[i]);
+        for (let i = 0; i < panel.height; ++i) {
+          this.box[i] = this.box[i].concat(panel.box[i]);
         }
-        for (let i = screen.height; i < this.height; ++i) {
-          this.box[i] = this.box[i].concat(new Array(screen.width).fill(null));
+        for (let i = panel.height; i < this.height; ++i) {
+          this.box[i] = this.box[i].concat(new Array(panel.width).fill(null));
         }
         return this;
       }
-      const box = new Array(screen.height);
+      const box = new Array(panel.height);
       for (let i = 0; i < this.height; ++i) {
-        box[i] = this.box[i].concat(screen.box[i]);
+        box[i] = this.box[i].concat(panel.box[i]);
       }
-      for (let i = this.height; i < screen.height; ++i) {
-        box[i] = new Array(screen.width).fill(null).concat().concat(screen.box[i]);
+      for (let i = this.height; i < panel.height; ++i) {
+        box[i] = new Array(panel.width).fill(null).concat().concat(panel.box[i]);
       }
       this.box = box;
       return this;
@@ -433,50 +433,50 @@ export class Screen {
     if (diff >= 0) {
       const half = diff >> 1;
       for (let i = 0; i < half; ++i) {
-        this.box[i] = this.box[i].concat(new Array(screen.width).fill(null));
+        this.box[i] = this.box[i].concat(new Array(panel.width).fill(null));
       }
-      for (let i = 0; i < screen.height; ++i) {
-        this.box[i + half] = this.box[i + half].concat(screen.box[i]);
+      for (let i = 0; i < panel.height; ++i) {
+        this.box[i + half] = this.box[i + half].concat(panel.box[i]);
       }
-      for (let i = screen.height + half; i < this.height; ++i) {
-        this.box[i] = this.box[i].concat(new Array(screen.width).fill(null));
+      for (let i = panel.height + half; i < this.height; ++i) {
+        this.box[i] = this.box[i].concat(new Array(panel.width).fill(null));
       }
       return this;
     }
 
     const half = -diff >> 1,
-      box = new Array(screen.height);
+      box = new Array(panel.height);
     for (let i = 0; i < half; ++i) {
-      box[i] = new Array(screen.width).fill(null).concat(screen.box[i]);
+      box[i] = new Array(panel.width).fill(null).concat(panel.box[i]);
     }
     for (let i = 0; i < this.height; ++i) {
-      box[i + half] = this.box[i].concat(screen.box[i + half]);
+      box[i + half] = this.box[i].concat(panel.box[i + half]);
     }
-    for (let i = this.height + half; i < screen.height; ++i) {
-      box[i] = new Array(screen.width).fill(null).concat(screen.box[i]);
+    for (let i = this.height + half; i < panel.height; ++i) {
+      box[i] = new Array(panel.width).fill(null).concat(panel.box[i]);
     }
     this.box = box;
     return this;
   }
 
-  addBottom(screen, alignment = 'left') {
-    const diff = this.width - screen.width;
+  addBottom(panel, alignment = 'left') {
+    const diff = this.width - panel.width;
 
     if (alignment === 'left') {
       if (diff >= 0) {
-        this.box.splice(this.height, 0, ...screen.box.map(row => row.concat(new Array(diff).fill(null))));
+        this.box.splice(this.height, 0, ...panel.box.map(row => row.concat(new Array(diff).fill(null))));
         return this;
       }
-      this.box = this.box.map(row => row.concat(new Array(diff).fill(null))).concat(screen.box);
+      this.box = this.box.map(row => row.concat(new Array(diff).fill(null))).concat(panel.box);
       return this;
     }
 
     if (alignment === 'right') {
       if (diff >= 0) {
-        this.box.splice(this.height, 0, ...screen.box.map(row => new Array(diff).fill(null).concat(row)));
+        this.box.splice(this.height, 0, ...panel.box.map(row => new Array(diff).fill(null).concat(row)));
         return this;
       }
-      this.box = this.box.map(row => new Array(diff).fill(null).concat(row)).concat(screen.box);
+      this.box = this.box.map(row => new Array(diff).fill(null).concat(row)).concat(panel.box);
       return this;
     }
 
@@ -484,14 +484,14 @@ export class Screen {
 
     if (diff >= 0) {
       const half = diff >> 1;
-      this.box.splice(this.height, 0, ...screen.box.map(row => new Array(half).fill(null).concat(row, new Array(diff - half).fill(null))));
+      this.box.splice(this.height, 0, ...panel.box.map(row => new Array(half).fill(null).concat(row, new Array(diff - half).fill(null))));
       return this;
     }
 
     const half = -diff >> 1;
-    this.box = this.box.map(row => new Array(half).fill(null).concat(row, new Array(-diff - half).fill(null))).concat(screen.box);
+    this.box = this.box.map(row => new Array(half).fill(null).concat(row, new Array(-diff - half).fill(null))).concat(panel.box);
     return this;
   }
 }
 
-export default Screen;
+export default Panel;
