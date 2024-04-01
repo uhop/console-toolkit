@@ -3,7 +3,6 @@ import {matchCsi} from './csi.js';
 import {setCommands} from './sgr.js';
 import {newState, stateCommand, RESET_STATE} from './sgr-state.js';
 
-// TODO: Some methods rely on a previous state. It can be `null` => verify that it is handled appropriately.
 // TODO: When copying and filling areas accept a state that finishes a row. The same goes for `addRight()`.
 // TODO: We need a mechanism to add/remove rows/columns. It can be similar to padding methods.
 
@@ -29,16 +28,15 @@ export class Panel {
         panelRow = panel.box[i];
       let start = 0,
         pos = 0,
-        state = {};
+        state = RESET_STATE;
       matchCsi.lastIndex = 0;
       for (const match of row.matchAll(matchCsi)) {
         for (let j = start, n = match.index; j < n; ++j) {
           panelRow[pos++] = row[j] === ignore ? null : {symbol: row[j], state};
         }
         start = match.index + match[0].length;
-        if (match[3] === 'm') {
-          state = newState(match[1].split(';'), state);
-        }
+        if (match[3] !== 'm') continue;
+        state = newState(match[1].split(';'), state);
       }
       for (let j = start, n = row.length; j < n; ++j) {
         panelRow[pos++] = row[j] === ignore ? null : {symbol: row[j], state};
@@ -57,7 +55,7 @@ export class Panel {
     for (let i = 0; i < this.height; ++i) {
       const panelRow = this.box[i];
       let row = '',
-        state = {};
+        state = RESET_STATE;
       for (let j = 0; j < this.width; ++j) {
         const cell = panelRow[j] || emptyCell,
           commands = stateCommand(state, cell.state);
@@ -169,7 +167,7 @@ export class Panel {
     const row = this.box[y];
     let start = 0,
       pos = 0,
-      state = x > 0 ? row[x - 1].state : {};
+      state = x > 0 && row[x - 1] ? row[x - 1].state : RESET_STATE;
     matchCsi.lastIndex = 0;
     for (const match of s.matchAll(matchCsi)) {
       for (let j = start, n = match.index; j < n; ++j, ++pos) {
@@ -177,9 +175,8 @@ export class Panel {
         row[x + pos] = s[j] === ignore ? null : {symbol: s[j], state};
       }
       start = match.index + match[0].length;
-      if (match[3] === 'm') {
-        state = newState(match[1].split(';'), state);
-      }
+      if (match[3] !== 'm') continue;
+      state = newState(match[1].split(';'), state);
     }
     for (let j = start, n = row.length; j < n; ++j, ++pos) {
       if (x + pos >= row.length) break;

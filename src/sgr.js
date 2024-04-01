@@ -4,9 +4,6 @@
 // Type Fe is supported by C1 control codes.
 // See https://en.wikipedia.org/wiki/ANSI_escape_code for more details.
 
-// TODO: Add support for hex color values and direct ANSI 256 color values.
-// TODO: Add a helper for styling text.
-
 // matcher
 export const matchSgr = /\x1B\[([\x30-\x3F]*)([\x20-\x2F]*)m/g;
 
@@ -114,37 +111,50 @@ export const getStdColor256 = color => [Commands.COLOR_EXTENDED, FORMAT_COLOR256
 export const getBrightStdColor256 = color => [Commands.COLOR_EXTENDED, FORMAT_COLOR256, 8 + colorNumber(color)];
 export const getColor256 = (r, g, b) => [Commands.COLOR_EXTENDED, FORMAT_COLOR256, 16 + 36 * get6(r) + 6 * get6(g) + get6(b)];
 export const getGrayColor256 = i => [Commands.COLOR_EXTENDED, FORMAT_COLOR256, 232 + get24(i)];
+export const getRawColor256 = color => [Commands.COLOR_EXTENDED, FORMAT_COLOR256, color];
 
 export const setStdColor256 = color => setCommands(getStdColor256(color));
 export const setBrightStdColor256 = color => setCommands(getBrightStdColor256(color));
 export const setColor256 = (r, g, b) => setCommands(getColor256(r, g, b));
 export const setGrayColor256 = i => setCommands(getGrayColor256(i));
+export const setRawColor256 = color => setCommands(getRawColor256(color));
 
 export const getStdBgColor256 = color => [Commands.BG_COLOR_EXTENDED, FORMAT_COLOR256, colorNumber(color)];
 export const getBrightStdBgColor256 = color => [Commands.BG_COLOR_EXTENDED, FORMAT_COLOR256, 8 + colorNumber(color)];
 export const getBgColor256 = (r, g, b) => [Commands.BG_COLOR_EXTENDED, FORMAT_COLOR256, 16 + 36 * get6(r) + 6 * get6(g) + get6(b)];
 export const getGrayBgColor256 = i => [Commands.BG_COLOR_EXTENDED, FORMAT_COLOR256, 232 + get24(i)];
+export const getRawBgColor256 = color => [Commands.BG_COLOR_EXTENDED, FORMAT_COLOR256, color];
 
 export const setStdBgColor256 = color => setCommands(getStdColor256(color));
 export const setBrightStdBgColor256 = color => setCommands(getBrightStdBgColor256(color));
 export const setBgColor256 = (r, g, b) => setCommands(getBgColor256(r, g, b));
 export const setGrayBgColor256 = i => setCommands(getGrayBgColor256(i));
+export const setRawBgColor256 = color => setCommands(getRawBgColor256(color));
 
 export const getTrueColor = (r, g, b) => [Commands.COLOR_EXTENDED, FORMAT_TRUE_COLOR, r, g, b];
 export const getTrueBgColor = (r, g, b) => [Commands.BG_COLOR_EXTENDED, FORMAT_TRUE_COLOR, r, g, b];
+export const getHexTrueColor = hex => [Commands.COLOR_EXTENDED, FORMAT_TRUE_COLOR, (hex >> 16) & 0xff, (hex >> 8) & 0xff, hex & 0xff];
+export const getHexTrueBgColor = hex => [Commands.BG_COLOR_EXTENDED, FORMAT_TRUE_COLOR, (hex >> 16) & 0xff, (hex >> 8) & 0xff, hex & 0xff];
 
 export const setTrueColor = (r, g, b) => setCommands(getTrueColor(r, g, b));
 export const setTrueBgColor = (r, g, b) => setCommands(getTrueBgColor(r, g, b));
+export const setHexTrueColor = hex => setCommands(getHexTrueColor(hex));
+export const setHexTrueBgColor = hex => setCommands(getHexTrueBgColor(hex));
 
 export const getDecorationStdColor256 = color => [Commands.COLOR_DECORATION, FORMAT_COLOR256, colorNumber(color)];
 export const getDecorationBrightStdColor256 = color => [Commands.COLOR_DECORATION, FORMAT_COLOR256, 8 + colorNumber(color)];
 export const getDecorationColor256 = (r, g, b) => [Commands.COLOR_DECORATION, FORMAT_COLOR256, 16 + 36 * get6(r) + 6 * get6(g) + get6(b)];
 export const getDecorationGrayColor256 = i => [Commands.COLOR_DECORATION, FORMAT_COLOR256, 232 + get24(i)];
+export const getDecorationRawColor256 = color => [Commands.COLOR_DECORATION, FORMAT_COLOR256, color];
 
 export const setDecorationStdColor256 = color => setCommands(getDecorationStdColor256(color));
 export const setDecorationBrightStdColor256 = color => setCommands(getDecorationBrightStdColor256(color));
 export const setDecorationColor256 = (r, g, b) => setCommands(getDecorationColor256(r, g, b));
 export const setDecorationGrayColor256 = i => setCommands(getDecorationGrayColor256(i));
+export const setDecorationRawColor256 = color => setCommands(getDecorationRawColor256(color));
 
 export const getDecorationTrueColor = (r, g, b) => [Commands.COLOR_DECORATION, FORMAT_TRUE_COLOR, r, g, b];
+export const getDecorationHexTrueColor = hex => [Commands.COLOR_DECORATION, FORMAT_TRUE_COLOR, (hex >> 16) & 0xff, (hex >> 8) & 0xff, hex & 0xff];
+
 export const setDecorationTrueColor = (r, g, b) => setCommands(getDecorationTrueColor(r, g, b));
+export const setDecorationHexTrueColor = hex => setCommands(getDecorationHexTrueColor(hex));
