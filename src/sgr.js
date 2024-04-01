@@ -4,6 +4,9 @@
 // Type Fe is supported by C1 control codes.
 // See https://en.wikipedia.org/wiki/ANSI_escape_code for more details.
 
+// TODO: Add support for hex color values and direct ANSI 256 color values.
+// TODO: Add a helper for styling text.
+
 // matcher
 export const matchSgr = /\x1B\[([\x30-\x3F]*)([\x20-\x2F]*)m/g;
 
