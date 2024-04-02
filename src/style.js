@@ -18,7 +18,7 @@ import {
   getTrueBgColor,
   getHexTrueBgColor
 } from './sgr.js';
-import {RESET_STATE, newState, stateToCommands, stateCommand} from './sgr-state.js';
+import {RESET_STATE, newState, stateToCommands, stateTransition} from './sgr-state.js';
 import {matchCsi} from './csi.js';
 
 const styleSymbol = Symbol('styleObject'),
@@ -180,8 +180,8 @@ export class Style {
       if (match[3] !== 'm') continue;
       state = newState(match[1].split(';'), state);
     }
-    const initialCommands = stateCommand(this[initStateSymbol], state),
-      finalCommands = stateCommand(state, this[initStateSymbol]);
+    const initialCommands = stateTransition(this[initStateSymbol], state),
+      finalCommands = stateTransition(state, this[initStateSymbol]);
     return (
       (initialCommands.length ? setCommands(initialCommands) : '') +
       s +

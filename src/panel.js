@@ -1,7 +1,7 @@
 import {getLength} from './utils.js';
 import {matchCsi} from './csi.js';
 import {setCommands} from './sgr.js';
-import {newState, stateCommand, RESET_STATE} from './sgr-state.js';
+import {newState, stateTransition, RESET_STATE} from './sgr-state.js';
 
 // TODO: When copying and filling areas accept a state that finishes a row. The same goes for `addRight()`.
 
@@ -57,7 +57,7 @@ export class Panel {
         state = RESET_STATE;
       for (let j = 0; j < this.width; ++j) {
         const cell = panelRow[j] || emptyCell,
-          commands = stateCommand(state, cell.state);
+          commands = stateTransition(state, cell.state);
         if (commands.length) {
           row += setCommands(commands);
         }

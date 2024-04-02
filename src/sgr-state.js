@@ -183,7 +183,7 @@ const addColorCommands = (commands, prev, next, property, resetCommand) => {
   }
 };
 
-export const stateCommand = (prev, next) => {
+export const stateTransition = (prev, next) => {
   const commands = [],
     nextResets = getStateResets(next);
 
