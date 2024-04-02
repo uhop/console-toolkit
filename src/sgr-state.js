@@ -17,7 +17,7 @@ export const RESET_STATE = {
   font: null
 };
 
-const TOTAL_RESETS = 12;
+const TOTAL_RESETS = Array.from(Object.keys(RESET_STATE)).length;
 
 const getStateResets = state => {
   let resetCount = 0;
@@ -199,20 +199,15 @@ export const stateToCommands = state => {
 };
 
 export const stateTransition = (prev, next) => {
-  const commands = [],
-    nextResets = getStateResets(next);
-
-  if (nextResets === TOTAL_RESETS) {
-    const prevResets = getStateResets(prev);
-    if (prevResets !== TOTAL_RESETS) commands.push(Commands.RESET_ALL);
-    return commands;
-  }
+  const commands = [];
+  let resetCount = 0;
 
   for (const [name, value] of Object.entries(next)) {
     if (resetColorProperties.hasOwnProperty(name)) {
       // color
       if (value === null) {
         if (prev[name] !== null) commands.push(resetColorProperties[name]);
+        ++resetCount;
         continue;
       }
       if (value) {
@@ -222,11 +217,17 @@ export const stateTransition = (prev, next) => {
     }
     if (value === null) {
       if (prev[name] !== null) commands.push(Commands['RESET_' + name.toUpperCase()]);
+      ++resetCount;
       continue;
     }
     if (value) {
       if (prev[name] !== value) commands.push(value);
     }
+  }
+
+  if (resetCount === TOTAL_RESETS) {
+    const prevResets = getStateResets(prev);
+    return prevResets === TOTAL_RESETS ? [] : [Commands.RESET_ALL];
   }
 
   return commands;
