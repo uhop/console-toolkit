@@ -7,16 +7,21 @@ import {
   getBgColor,
   getBrightBgColor,
   FORMAT_COLOR256,
+  getRawColor256,
   getColor256,
   getGrayColor256,
-  getRawColor256,
   getTrueColor,
   getHexTrueColor,
+  getRawBgColor256,
   getBgColor256,
   getGrayBgColor256,
-  getRawBgColor256,
   getTrueBgColor,
-  getHexTrueBgColor
+  getHexTrueBgColor,
+  getDecorationRawColor256,
+  getDecorationColor256,
+  getDecorationGrayColor256,
+  getDecorationTrueColor,
+  getDecorationHexTrueColor
 } from './sgr.js';
 import {RESET_STATE, newState, stateToCommands, stateTransition} from './sgr-state.js';
 import {matchCsi} from './csi.js';
@@ -158,17 +163,17 @@ export class Style {
   decorationColor(c) {
     return this.make(getDecorationRawColor256(c));
   }
-  rgb256(r, g, b) {
+  decorationRgb256(r, g, b) {
     return this.make(getDecorationColor256(r, g, b));
   }
-  gray(i) {
+  decorationGray(i) {
     return this.make(getDecorationGrayColor256(i));
   }
-  trueColor(r, g, b) {
+  decorationTrueColor(r, g, b) {
     return this.make(getDecorationTrueColor(r, g, b));
   }
-  hexTrueColor(hex) {
-    return this.make(getHexDecorationTrueColor(hex));
+  decorationHexTrueColor(hex) {
+    return this.make(getDecorationHexTrueColor(hex));
   }
   // wrap a string
   text(s) {
