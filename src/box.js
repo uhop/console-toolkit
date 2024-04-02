@@ -30,6 +30,13 @@ export const normalizeBox = (strings, symbol = ' ', align = 'right') => {
   });
 };
 
+export const getWidth = (strings, normalized) => {
+  if (normalized) return strings.length ? getLength(strings[0]) : 0;
+  return Math.max(0, ...strings.map(s => getLength(s)));
+};
+
+export const getHeight = strings => strings.length;
+
 export const padBoxHorizontally = (strings, left, right, symbol = ' ') => {
   const paddingSmall = symbol.repeat(Math.min(left, right)),
     paddingLarge = paddingSmall + symbol.repeat(Math.max(left - right, right - left));
