@@ -174,12 +174,14 @@ const resetColorProperties = {
 
 export const stateToCommands = state => {
   const commands = [];
+  let resetCount = 0;
 
   for (const [name, value] of Object.entries(state)) {
     if (resetColorProperties.hasOwnProperty(name)) {
       // colors
       if (value === null) {
         commands.push(resetColorProperties[name]);
+        ++resetCount;
         continue;
       }
       pushColor(commands, value);
@@ -187,12 +189,13 @@ export const stateToCommands = state => {
     }
     if (value === null) {
       commands.push(Commands['RESET_' + name.toUpperCase()]);
+      ++resetCount;
       continue;
     }
     commands.push(value);
   }
 
-  return commands;
+  return resetCount === TOTAL_RESETS ? [Commands.RESET_ALL] : commands;
 };
 
 const addCommands = (commands, prev, next, property, resetCommand) => {
