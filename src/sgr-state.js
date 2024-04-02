@@ -17,85 +17,116 @@ export const RESET_STATE = {
   font: null
 };
 
-export const newState = (commands, oldState = {}) => {
-  if (commands.length < 1) return oldState;
-  const currentCommand = commands[0];
-  switch (currentCommand) {
-    case '': // reset
-    case Commands.RESET_ALL:
-      return newState(commands.slice(1), RESET_STATE);
-    case Commands.BOLD:
-    case Commands.DIM:
-      return newState(commands.slice(1), {...oldState, bold: currentCommand});
-    case Commands.ITALIC:
-      return newState(commands.slice(1), {...oldState, italic: currentCommand});
-    case Commands.UNDERLINE:
-    case Commands.DOUBLE_UNDERLINE:
-    case Commands.CURLY_UNDERLINE:
-      return newState(commands.slice(1), {...oldState, underline: currentCommand});
-    case Commands.BLINK:
-      return newState(commands.slice(1), {...oldState, blink: currentCommand});
-    case Commands.INVERSE:
-      return newState(commands.slice(1), {...oldState, inverse: currentCommand});
-    case Commands.HIDDEN:
-      return newState(commands.slice(1), {...oldState, hidden: currentCommand});
-    case Commands.STRIKETHROUGH:
-      return newState(commands.slice(1), {...oldState, strikethrough: currentCommand});
-    case Commands.OVERLINE:
-      return newState(commands.slice(1), {...oldState, overline: currentCommand});
-    case Commands.RESET_BOLD:
-      return newState(commands.slice(1), {...oldState, bold: null});
-    // case Commands.RESET_DIM: return newState(commands.slice(1), {...oldState, bold: null});
-    case Commands.RESET_ITALIC:
-      return newState(commands.slice(1), {...oldState, italic: null});
-    case Commands.RESET_UNDERLINE:
-      return newState(commands.slice(1), {...oldState, underline: null});
-    // case Commands.RESET_DOUBLE_UNDERLINE: return newState(commands.slice(1), {...oldState, underline: null});
-    // case Commands.RESET_CURLY_UNDERLINE: return newState(commands.slice(1), {...oldState, underline: null});
-    case Commands.RESET_BLINK:
-      return newState(commands.slice(1), {...oldState, blink: null});
-    case Commands.RESET_INVERSE:
-      return newState(commands.slice(1), {...oldState, inverse: null});
-    case Commands.RESET_HIDDEN:
-      return newState(commands.slice(1), {...oldState, hidden: null});
-    case Commands.RESET_STRIKETHROUGH:
-      return newState(commands.slice(1), {...oldState, strikethrough: null});
-    case Commands.RESET_OVERLINE:
-      return newState(commands.slice(1), {...oldState, overline: null});
-    case Commands.RESET_COLOR_DECORATION:
-      return newState(commands.slice(1), {...oldState, decoration: null});
-    case Commands.COLOR_EXTENDED: {
-      const next = commands[1] === FORMAT_COLOR256 ? 3 : 5,
-        color = commands.slice(0, next);
-      return newState(commands.slice(next), {...oldState, foreground: color});
+export const newState = (commands, state = {}) => {
+  for (let i = 0; i < commands.length; ++i) {
+    const currentCommand = commands[i];
+    switch (currentCommand) {
+      case '': // reset
+      case Commands.RESET_ALL:
+        state = RESET_STATE;
+        continue;
+      case Commands.BOLD:
+      case Commands.DIM:
+        state = {...state, bold: currentCommand};
+        continue;
+      case Commands.ITALIC:
+        state = {...state, italic: currentCommand};
+        continue;
+      case Commands.UNDERLINE:
+      case Commands.DOUBLE_UNDERLINE:
+      case Commands.CURLY_UNDERLINE:
+        state = {...state, underline: currentCommand};
+        continue;
+      case Commands.BLINK:
+        state = {...state, blink: currentCommand};
+        continue;
+      case Commands.INVERSE:
+        state = {...state, inverse: currentCommand};
+        continue;
+      case Commands.HIDDEN:
+        state = {...state, hidden: currentCommand};
+        continue;
+      case Commands.STRIKETHROUGH:
+        state = {...state, strikethrough: currentCommand};
+        continue;
+      case Commands.OVERLINE:
+        state = {...state, overline: currentCommand};
+        continue;
+      case Commands.RESET_BOLD:
+      // case Commands.RESET_DIM:
+        state = {...state, bold: null};
+        continue;
+      case Commands.RESET_ITALIC:
+        state = {...state, italic: null};
+        continue;
+      case Commands.RESET_UNDERLINE:
+      // case Commands.RESET_DOUBLE_UNDERLINE:
+      // case Commands.RESET_CURLY_UNDERLINE:
+        state = {...state, underline: null};
+        continue;
+      case Commands.RESET_BLINK:
+        state = {...state, blink: null};
+        continue;
+      case Commands.RESET_INVERSE:
+        state = {...state, inverse: null};
+        continue;
+      case Commands.RESET_HIDDEN:
+        state = {...state, hidden: null};
+        continue;
+      case Commands.RESET_STRIKETHROUGH:
+        state = {...state, strikethrough: null};
+        continue;
+      case Commands.RESET_OVERLINE:
+        state = {...state, overline: null};
+        continue;
+      case Commands.RESET_COLOR_DECORATION:
+        state = {...state, decoration: null};
+        continue;
+      case Commands.COLOR_EXTENDED: {
+        const next = commands[i + 1] === FORMAT_COLOR256 ? 3 : 5,
+          color = commands.slice(i, i + next);
+        i += next - 1;
+        state = {...state, foreground: color};
+        continue;
+      }
+      case Commands.BG_COLOR_EXTENDED: {
+        const next = commands[i + 1] === FORMAT_COLOR256 ? 3 : 5,
+          color = commands.slice(i, i + next);
+        i += next - 1;
+        state = {...state, background: color};
+        continue;
+      }
+      case Commands.COLOR_DECORATION: {
+        const next = commands[i + 1] === FORMAT_COLOR256 ? 3 : 5,
+          color = commands.slice(i, i + next);
+        i += next - 1;
+        state = {...state, decoration: color};
+        continue;
+      }
+      case Commands.COLOR_DEFAULT:
+        state = {...state, foreground: null};
+        continue;
+      case Commands.BG_COLOR_DEFAULT:
+        state = {...state, background: null};
+        continue;
+      case Commands.FONT_DEFAULT:
+        state = {...state, font: null};
+        continue;
     }
-    case Commands.BG_COLOR_EXTENDED: {
-      const next = commands[1] === FORMAT_COLOR256 ? 3 : 5,
-        color = commands.slice(0, next);
-      return newState(commands.slice(next), {...oldState, background: color});
+    if (isFgColorCommand(currentCommand)) {
+      state = {...state, foreground: currentCommand};
+      continue;
     }
-    case Commands.COLOR_DECORATION: {
-      const next = commands[1] === FORMAT_COLOR256 ? 3 : 5,
-        color = commands.slice(0, next);
-      return newState(commands.slice(next), {...oldState, decoration: color});
+    if (isBgColorCommand(currentCommand)) {
+      state = {...state, background: currentCommand};
+      continue;
     }
-    case Commands.COLOR_DEFAULT:
-      return newState(commands.slice(1), {...oldState, foreground: null});
-    case Commands.BG_COLOR_DEFAULT:
-      return newState(commands.slice(1), {...oldState, background: null});
-    case Commands.FONT_DEFAULT:
-      return newState(commands.slice(1), {...oldState, font: null});
+    if (isFontCommand(currentCommand)) {
+      state = {...state, font: currentCommand};
+      continue;
+    }
   }
-  if (isFgColorCommand(currentCommand)) {
-    return newState(commands.slice(1), {...oldState, foreground: currentCommand});
-  }
-  if (isBgColorCommand(currentCommand)) {
-    return newState(commands.slice(1), {...oldState, background: currentCommand});
-  }
-  if (isFontCommand(currentCommand)) {
-    return newState(commands.slice(1), {...oldState, font: currentCommand});
-  }
-  return oldState;
+  return state;
 };
 
 const equalColors = (a, b) => {
