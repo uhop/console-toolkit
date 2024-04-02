@@ -1,5 +1,5 @@
 // import {log} from '../../src/show.js';
-import Style from '../../src/style.js';
+import style from '../../src/style.js';
 
-console.log(`Hello, ${new Style().bold.bright.cyan.italic}world!`);
-console.log(`Still cyan until ${new Style().reset.all}now.`);
+console.log(`Hello, ${style.bold.bright.cyan.italic}world!`);
+console.log(`Still cyan until ${style.reset.all}now.`);

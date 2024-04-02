@@ -283,4 +283,7 @@ for (const [name, value] of Object.entries(Commands)) {
   });
 }
 
-export default Style;
+// singleton
+export const style = new Style();
+
+export default style;
