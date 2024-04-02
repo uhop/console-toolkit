@@ -182,18 +182,9 @@ const TOTAL_RESETS = 12;
 const getStateResets = state => {
   let resetCount = 0;
 
-  if (state.bold === null) ++resetCount;
-  if (state.italic === null) ++resetCount;
-  if (state.underline === null) ++resetCount;
-  if (state.blink === null) ++resetCount;
-  if (state.inverse === null) ++resetCount;
-  if (state.hidden === null) ++resetCount;
-  if (state.strikethrough === null) ++resetCount;
-  if (state.overline === null) ++resetCount;
-  if (state.font === null) ++resetCount;
-  if (state.foreground === null) ++resetCount;
-  if (state.background === null) ++resetCount;
-  if (state.decoration === null) ++resetCount;
+  for (const name of Object.keys(RESET_STATE)) {
+    if (state[name] === null) ++ resetCount;
+  }
 
   return resetCount;
 };
