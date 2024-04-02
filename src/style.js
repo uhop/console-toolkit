@@ -21,7 +21,7 @@ import {
 import {RESET_STATE, newState, stateToCommands, stateCommand} from './sgr-state.js';
 import {matchCsi} from './csi.js';
 
-// TODO: Add a helper for styling text.
+// TODO: Make style objects immutable. Mutating methods should return new objects.
 
 const styleSymbol = Symbol('styleObject'),
   commands = Symbol('commands'),
@@ -33,6 +33,9 @@ class ExtendedColor {
     this[styleSymbol] = styleObject;
     this[isBrightSymbol] = isBright;
   }
+  make(newCommands) {
+    return this[styleSymbol].make(newCommands);
+  }
   // options: bright
   get bright() {
     this[isBrightSymbol] = true;
@@ -40,34 +43,27 @@ class ExtendedColor {
   }
   // standard colors: defined externally
   // get red() {
-  //   this[styleSymbol][commands].push(FORMAT_COLOR256, (this[isBrightSymbol] ? 8 : 0) + Colors.RED);
-  //   return this[styleSymbol];
+  //   return this.make([FORMAT_COLOR256, (this[isBrightSymbol] ? 8 : 0) + Colors.RED]);
   // }
   // get brightRed() {
-  //   this[styleSymbol][commands].push(FORMAT_COLOR256, 8 + Colors.RED);
-  //   return this[styleSymbol];
+  //   return this.make([FORMAT_COLOR256, 8 + Colors.RED]);
   // }
   // 256 colors
   color(c) {
-    this[styleSymbol][commands].push(...getRawColor256(c).slice(1));
-    return this[styleSymbol];
+    return this.make(getRawColor256(c).slice(1));
   }
   rgb256(r, g, b) {
-    this[styleSymbol][commands].push(...getColor256(r, g, b).slice(1));
-    return this[styleSymbol];
+    return this.make(getColor256(r, g, b).slice(1));
   }
   gray(i) {
-    this[styleSymbol][commands].push(...getGrayColor256(i).slice(1));
-    return this[styleSymbol];
+    return this.make(getGrayColor256(i).slice(1));
   }
   // true colors
   trueColor(r, g, b) {
-    this[styleSymbol][commands].push(...getTrueColor(r, g, b).slice(1));
-    return this[styleSymbol];
+    return this.make(getTrueColor(r, g, b).slice(1));
   }
   hexTrueColor(hex) {
-    this[styleSymbol][commands].push(...getHexTrueColor(hex).slice(1));
-    return this[styleSymbol];
+    return this.make(getHexTrueColor(hex).slice(1));
   }
 }
 
@@ -75,10 +71,12 @@ class Bright {
   constructor(styleObject) {
     this[styleSymbol] = styleObject;
   }
+  make(newCommands) {
+    return this[styleSymbol].make(newCommands);
+  }
   // standard colors: defined externally
   // get red() {
-  //   this[styleSymbol][commands].push(getBrightColor(Colors.RED));
-  //   return this[styleSymbol];
+  //   return this.make(getBrightColor(Colors.RED));
   // }
 }
 
@@ -86,30 +84,35 @@ class Reset {
   constructor(styleObject) {
     this[styleSymbol] = styleObject;
   }
+  make(newCommands) {
+    return this[styleSymbol].make(newCommands);
+  }
   // resettable properties: defined externally
   // get all() {
-  //   this[styleSymbol][commands].push(Commands.RESET_ALL);
-  //   return this[styleSymbol];
+  //   return this.make(Commands.RESET_ALL);
   // }
 }
 
 export class Style {
-  constructor(initState = RESET_STATE) {
+  constructor(initState = RESET_STATE, newCommands) {
     this[initStateSymbol] = initState;
-    this[commands] = [];
+    this[commands] = newCommands || [];
+  }
+  make(newCommands = []) {
+    return new Style(this[initStateSymbol], this[commands].concat(newCommands));
   }
   // fg, bg, decoration, reset
   get fg() {
-    this[commands].push(Commands.COLOR_EXTENDED);
-    return new ExtendedColor(this);
+    const newStyle = this.make(Commands.COLOR_EXTENDED);
+    return new ExtendedColor(newStyle);
   }
   get bg() {
-    this[commands].push(Commands.BG_COLOR_EXTENDED);
-    return new ExtendedColor(this);
+    const newStyle = this.make(Commands.BG_COLOR_EXTENDED);
+    return new ExtendedColor(newStyle);
   }
   get colorDecoration() {
-    this[commands].push(Commands.COLOR_DECORATION);
-    return new ExtendedColor(this);
+    const newStyle = this.make(Commands.COLOR_DECORATION);
+    return new ExtendedColor(newStyle);
   }
   get reset() {
     return new Reset(this);
@@ -120,64 +123,49 @@ export class Style {
   // general commands: defined externally
   // color commands: defined externally
   color(c) {
-    this[commands].push(...getRawColor256(c));
-    return this;
+    return this.make(getRawColor256(c));
   }
   rgb256(r, g, b) {
-    this[commands].push(...getColor256(r, g, b));
-    return this;
+    return this.make(getColor256(r, g, b));
   }
   gray(i) {
-    this[commands].push(...getGrayColor256(i));
-    return this;
+    return this.make(getGrayColor256(i));
   }
   trueColor(r, g, b) {
-    this[commands].push(...getTrueColor(r, g, b));
-    return this;
+    return this.make(getTrueColor(r, g, b));
   }
   hexTrueColor(hex) {
-    this[commands].push(...getHexTrueColor(hex));
-    return this;
+    return this.make(getHexTrueColor(hex));
   }
   bgColor(c) {
-    this[commands].push(...getRawBgColor256(c));
-    return this;
+    return this.make(getRawBgColor256(c));
   }
   bgRgb256(r, g, b) {
-    this[commands].push(...getBgColor256(r, g, b));
-    return this;
+    return this.make(getBgColor256(r, g, b));
   }
   bgGray(i) {
-    this[commands].push(...getGrayBgColor256(i));
-    return this;
+    return this.make(getGrayBgColor256(i));
   }
   trueBgColor(r, g, b) {
-    this[commands].push(...getTrueBgColor(r, g, b));
-    return this;
+    return this.make(getTrueBgColor(r, g, b));
   }
   hexTrueBgColor(hex) {
-    this[commands].push(...getHexTrueBgColor(hex));
-    return this;
+    return this.make(getHexTrueBgColor(hex));
   }
   decorationColor(c) {
-    this[commands].push(...getDecorationRawColor256(c));
-    return this;
+    return this.make(getDecorationRawColor256(c));
   }
   rgb256(r, g, b) {
-    this[commands].push(...getDecorationColor256(r, g, b));
-    return this;
+    return this.make(getDecorationColor256(r, g, b));
   }
   gray(i) {
-    this[commands].push(...getDecorationGrayColor256(i));
-    return this;
+    return this.make(getDecorationGrayColor256(i));
   }
   trueColor(r, g, b) {
-    this[commands].push(...getDecorationTrueColor(r, g, b));
-    return this;
+    return this.make(getDecorationTrueColor(r, g, b));
   }
   hexTrueColor(hex) {
-    this[commands].push(...getHexDecorationTrueColor(hex));
-    return this;
+    return this.make(getHexDecorationTrueColor(hex));
   }
   // wrap a string
   text(s) {
@@ -215,56 +203,49 @@ for (const [name, value] of Object.entries(Colors)) {
     configurable: true,
     enumerable: true,
     get: function () {
-      this[styleSymbol][commands].push(FORMAT_COLOR256, (this[isBrightSymbol] ? 8 : 0) + value);
-      return this[styleSymbol];
+      return this.make([FORMAT_COLOR256, (this[isBrightSymbol] ? 8 : 0) + value]);
     }
   });
   Object.defineProperty(ExtendedColor.prototype, 'bright' + capitalize(name), {
     configurable: true,
     enumerable: true,
     get: function () {
-      this[styleSymbol][commands].push(FORMAT_COLOR256, 8 + value);
-      return this[styleSymbol];
+      return this.make([FORMAT_COLOR256, 8 + value]);
     }
   });
   Object.defineProperty(Bright.prototype, name.toLowerCase(), {
     configurable: true,
     enumerable: true,
     get: function () {
-      this[styleSymbol][commands].push(getBrightColor(value));
-      return this[styleSymbol];
+      return this.make(getBrightColor(value));
     }
   });
   Object.defineProperty(Style.prototype, name.toLowerCase(), {
     configurable: true,
     enumerable: true,
     get: function () {
-      this[commands].push(getColor(value));
-      return this;
+      return this.make(getColor(value));
     }
   });
   Object.defineProperty(Style.prototype, 'bright' + capitalize(name), {
     configurable: true,
     enumerable: true,
     get: function () {
-      this[commands].push(getBrightColor(value));
-      return this;
+      return this.make(getBrightColor(value));
     }
   });
   Object.defineProperty(Style.prototype, 'bg' + capitalize(name), {
     configurable: true,
     enumerable: true,
     get: function () {
-      this[commands].push(getBgColor(value));
-      return this;
+      return this.make(getBgColor(value));
     }
   });
   Object.defineProperty(Style.prototype, 'bgBright' + capitalize(name), {
     configurable: true,
     enumerable: true,
     get: function () {
-      this[commands].push(getBrightBgColor(value));
-      return this;
+      return this.make(getBrightBgColor(value));
     }
   });
 }
@@ -277,8 +258,7 @@ for (const [name, value] of Object.entries(Commands)) {
     configurable: true,
     enumerable: true,
     get: function () {
-      this[styleSymbol][commands].push(value);
-      return this[styleSymbol];
+      return this.make(value);
     }
   });
 }
@@ -293,8 +273,7 @@ for (const [name, value] of Object.entries(Commands)) {
     configurable: true,
     enumerable: true,
     get: function () {
-      this[commands].push(value);
-      return this;
+      return this.make(value);
     }
   });
 }
