@@ -1,7 +1,7 @@
-import {getLength} from './utils.js';
-import {matchCsi} from './csi.js';
-import {setCommands} from './sgr.js';
-import {newState, stateTransition, RESET_STATE} from './sgr-state.js';
+import {getLength} from './ansi/utils.js';
+import {matchCsi} from './ansi/csi.js';
+import {setCommands} from './ansi/sgr.js';
+import {newState, stateTransition, RESET_STATE} from './ansi/sgr-state.js';
 
 // TODO: When copying and filling areas accept a state that finishes a row. The same goes for `addRight()`.
 

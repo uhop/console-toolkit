@@ -1,5 +1,5 @@
 import process from 'node:process';
-import {matchCsiNoGroups} from './utils.js';
+import {matchCsiNoGroups} from './ansi/utils.js';
 
 export const log = (s, endOfLineCommand = '\x1B[m', isMonochrome) => {
   if (typeof s == 'string') s = s.split(/\r?\n/g);

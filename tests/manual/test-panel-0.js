@@ -1,7 +1,7 @@
 import {log} from '../../src/show.js';
 import Panel from '../../src/panel.js';
-import {getBgColor, getBrightBgColor, Colors, Commands} from '../../src/sgr.js';
-import {newState, RESET_STATE} from '../../src/sgr-state.js';
+import {getBgColor, getBrightBgColor, Colors, Commands} from '../../src/ansi/sgr.js';
+import {newState, RESET_STATE} from '../../src/ansi/sgr-state.js';
 
 const panel = new Panel(8, 4);
 

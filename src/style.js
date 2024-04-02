@@ -22,9 +22,9 @@ import {
   getDecorationGrayColor256,
   getDecorationTrueColor,
   getDecorationHexTrueColor
-} from './sgr.js';
-import {RESET_STATE, newState, stateToCommands, stateTransition} from './sgr-state.js';
-import {matchCsi} from './csi.js';
+} from './ansi/sgr.js';
+import {RESET_STATE, newState, stateToCommands, stateTransition} from './ansi/sgr-state.js';
+import {matchCsi} from './ansi/csi.js';
 
 const styleSymbol = Symbol('styleObject'),
   commands = Symbol('commands'),
