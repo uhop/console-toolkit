@@ -115,7 +115,7 @@ export class Panel {
     return panel;
   }
 
-  copyFrom(x, y, width, height, panel, x1, y1) {
+  copyFrom(x, y, width, height, panel, x1 = 0, y1 = 0) {
     // normalize arguments
 
     if (x < 0) x = 0;
@@ -148,38 +148,43 @@ export class Panel {
     return this;
   }
 
-  put(x, y, s, ignore = '\x07') {
+  put(x, y, text, ignore = '\x07') {
+    if (text instanceof Panel) return this.copyFrom(x, y, text.width, text.height, text);
+
     // normalize arguments
 
-    let length = s.length;
+    const box = Array.isArray(text) ? text : String(text).split(/\r?\n/g);
+    if (!box.length) return this;
+
+    let height = box.length;
 
     if (x < 0) x = 0;
     if (x >= this.width) return this;
-    if (x + length > this.width) {
-      length = this.width - x;
-    }
 
     if (y < 0) y = 0;
     if (y >= this.height) return this;
+    if (y + height > this.height) {
+      height = this.height - y;
+    }
 
-    // copy cells
-    const row = this.box[y];
-    let start = 0,
-      pos = 0,
-      state = x > 0 && row[x - 1] ? row[x - 1].state : RESET_STATE;
-    matchCsi.lastIndex = 0;
-    for (const match of s.matchAll(matchCsi)) {
-      for (let j = start, n = match.index; j < n; ++j, ++pos) {
+    // copy characters
+    for (let i = 0; i < height; ++i) {
+      const row = this.box[y + i], s = box[i];
+      let start = 0, pos = 0, state = x > 0 && row[x - 1] ? row[x - 1].state : RESET_STATE;
+      matchCsi.lastIndex = 0;
+      for (const match of s.matchAll(matchCsi)) {
+        for (let j = start, n = match.index; j < n; ++j, ++pos) {
+          if (x + pos >= row.length) break;
+          row[x + pos] = s[j] === ignore ? null : {symbol: s[j], state};
+        }
+        start = match.index + match[0].length;
+        if (match[3] !== 'm') continue;
+        state = newState(match[1].split(';'), state);
+      }
+      for (let j = start, n = s.length; j < n; ++j, ++pos) {
         if (x + pos >= row.length) break;
         row[x + pos] = s[j] === ignore ? null : {symbol: s[j], state};
       }
-      start = match.index + match[0].length;
-      if (match[3] !== 'm') continue;
-      state = newState(match[1].split(';'), state);
-    }
-    for (let j = start, n = row.length; j < n; ++j, ++pos) {
-      if (x + pos >= row.length) break;
-      row[x + pos] = s[j] === ignore ? null : {symbol: s[j], state};
     }
 
     return this;
