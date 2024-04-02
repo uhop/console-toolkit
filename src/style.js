@@ -25,7 +25,7 @@ import {
 } from './ansi/sgr.js';
 import {RESET_STATE, newState, stateToCommands, stateTransition} from './ansi/sgr-state.js';
 import {matchCsi} from './ansi/csi.js';
-import {capitalize, toCamelCase, fromSnakeCase} from './meta.js';
+import {capitalize, toCamelCase, fromSnakeCase, addGetter} from './meta.js';
 
 const styleSymbol = Symbol('styleObject'),
   commands = Symbol('commands'),
@@ -204,56 +204,21 @@ export class Style {
 
 // add color names to ExtendedColor, Bright and Style
 
+const make = value =>
+  function () {
+    return this.make(value);
+  };
+
 for (const [name, value] of Object.entries(Colors)) {
-  Object.defineProperty(ExtendedColor.prototype, name.toLowerCase(), {
-    configurable: true,
-    enumerable: true,
-    get: function () {
-      return this.make([FORMAT_COLOR256, (this[isBrightSymbol] ? 8 : 0) + value]);
-    }
+  addGetter(ExtendedColor, name.toLowerCase(), function () {
+    return this.make([FORMAT_COLOR256, (this[isBrightSymbol] ? 8 : 0) + value]);
   });
-  Object.defineProperty(ExtendedColor.prototype, 'bright' + capitalize(name), {
-    configurable: true,
-    enumerable: true,
-    get: function () {
-      return this.make([FORMAT_COLOR256, 8 + value]);
-    }
-  });
-  Object.defineProperty(Bright.prototype, name.toLowerCase(), {
-    configurable: true,
-    enumerable: true,
-    get: function () {
-      return this.make(getBrightColor(value));
-    }
-  });
-  Object.defineProperty(Style.prototype, name.toLowerCase(), {
-    configurable: true,
-    enumerable: true,
-    get: function () {
-      return this.make(getColor(value));
-    }
-  });
-  Object.defineProperty(Style.prototype, 'bright' + capitalize(name), {
-    configurable: true,
-    enumerable: true,
-    get: function () {
-      return this.make(getBrightColor(value));
-    }
-  });
-  Object.defineProperty(Style.prototype, 'bg' + capitalize(name), {
-    configurable: true,
-    enumerable: true,
-    get: function () {
-      return this.make(getBgColor(value));
-    }
-  });
-  Object.defineProperty(Style.prototype, 'bgBright' + capitalize(name), {
-    configurable: true,
-    enumerable: true,
-    get: function () {
-      return this.make(getBrightBgColor(value));
-    }
-  });
+  addGetter(ExtendedColor, 'bright' + capitalize(name), make([FORMAT_COLOR256, 8 + value]));
+  addGetter(Bright, name.toLowerCase(), make(getBrightColor(value)));
+  addGetter(Style, name.toLowerCase(), make(getColor(value)));
+  addGetter(Style, 'bright' + capitalize(name), make(getBrightColor(value)));
+  addGetter(Style, 'bg' + capitalize(name), make(getBgColor(value)));
+  addGetter(Style, 'bgBright' + capitalize(name), make(getBrightBgColor(value)));
 }
 
 // add commands to Reset, Style
@@ -262,22 +227,10 @@ const skipCommands = {COLOR_EXTENDED: 1, BG_COLOR_EXTENDED: 1, COLOR_DECORATION:
 
 for (const [name, value] of Object.entries(Commands)) {
   if (name.startsWith('RESET_')) {
-    Object.defineProperty(Reset.prototype, toCamelCase(fromSnakeCase(name.substring(6))), {
-      configurable: true,
-      enumerable: true,
-      get: function () {
-        return this.make(value);
-      }
-    });
+    addGetter(Reset, toCamelCase(fromSnakeCase(name).slice(1)), make(value));
   }
   if (skipCommands[name] !== 1) {
-    Object.defineProperty(Style.prototype, toCamelCase(fromSnakeCase(name)), {
-      configurable: true,
-      enumerable: true,
-      get: function () {
-        return this.make(value);
-      }
-    });
+    addGetter(Style, toCamelCase(fromSnakeCase(name)), make(value));
   }
 }
 
