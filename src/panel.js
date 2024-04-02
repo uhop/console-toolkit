@@ -4,7 +4,6 @@ import {setCommands} from './sgr.js';
 import {newState, stateCommand, RESET_STATE} from './sgr-state.js';
 
 // TODO: When copying and filling areas accept a state that finishes a row. The same goes for `addRight()`.
-// TODO: We need a mechanism to add/remove rows/columns. It can be similar to padding methods.
 
 export class Panel {
   constructor(width, height) {
@@ -382,6 +381,67 @@ export class Panel {
     }
 
     return this.padLeftRight(l, r).padTopBottom(t, b);
+  }
+
+  removeColumns(x, n) {
+    // normalize arguments
+    if (x < 0) {
+      if (x + n <= 0) return this;
+      n = x + n;
+      x = 0;
+    }
+    if (n > this.width) n = this.width;
+
+    for (const row of this.box) {
+      row.splice(x, n);
+    }
+    this.width -= n;
+
+    return this;
+  }
+
+  removeRows(y, n) {
+    // normalize arguments
+    if (y < 0) {
+      if (y + n <= 0) return this;
+      n = y + n;
+      y = 0;
+    }
+    if (y > this.height) n = this.width;
+
+    this.box.splice(y, n);
+    this.height -= n;
+
+    return this;
+  }
+
+  insertColumns(x, n) {
+    // normalize arguments
+    if (n <= 0) return this;
+    if (x > this.width) x = this.width;
+    else if (x < 0) x = 0;
+
+    for (const row of this.box) {
+      row.splice(x, 0, ...new Array(n).fill(null));
+    }
+    this.width += n;
+
+    return this;
+  }
+
+  insertRows(y, n) {
+    // normalize arguments
+    if (n <= 0) return this;
+    if (y > this.height) y = this.height;
+    else if (y < 0) y = 0;
+
+    this.box.splice(y, 0, ...new Array(n).fill(null));
+    for (let i = 0; i < n; ++i) {
+      row[y + i] = new Array(this.width).fill(null);
+    }
+    this.height += n;
+
+    return this;
   }
 
   addRight(panel, alignment = 'top') {
