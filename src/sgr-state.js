@@ -198,22 +198,6 @@ export const stateToCommands = state => {
   return resetCount === TOTAL_RESETS ? [Commands.RESET_ALL] : commands;
 };
 
-const addCommands = (commands, prev, next, property, resetCommand) => {
-  if (next[property]) {
-    if (prev[property] !== next[property]) commands.push(next[property]);
-  } else if (next[property] === null) {
-    if (prev[property] !== null) commands.push(resetCommand);
-  }
-};
-
-const addColorCommands = (commands, prev, next, property, resetCommand) => {
-  if (next[property]) {
-    if (!equalColors(prev[property], next[property])) pushColor(commands, next[property]);
-  } else if (next[property] === null) {
-    if (prev[property] !== null) commands.push(resetCommand);
-  }
-};
-
 export const stateTransition = (prev, next) => {
   const commands = [],
     nextResets = getStateResets(next);
@@ -224,19 +208,26 @@ export const stateTransition = (prev, next) => {
     return commands;
   }
 
-  addCommands(commands, prev, next, 'bold', Commands.RESET_BOLD);
-  addCommands(commands, prev, next, 'italic', Commands.RESET_ITALIC);
-  addCommands(commands, prev, next, 'underline', Commands.RESET_UNDERLINE);
-  addCommands(commands, prev, next, 'blink', Commands.RESET_BLINK);
-  addCommands(commands, prev, next, 'inverse', Commands.RESET_INVERSE);
-  addCommands(commands, prev, next, 'hidden', Commands.RESET_HIDDEN);
-  addCommands(commands, prev, next, 'strikethrough', Commands.RESET_STRIKETHROUGH);
-  addCommands(commands, prev, next, 'overline', Commands.RESET_OVERLINE);
-  addCommands(commands, prev, next, 'font', Commands.RESET_FONT);
-
-  addColorCommands(commands, prev, next, 'foreground', Commands.RESET_COLOR);
-  addColorCommands(commands, prev, next, 'background', Commands.RESET_BG_COLOR);
-  addColorCommands(commands, prev, next, 'decoration', Commands.RESET_COLOR_DECORATION);
+  for (const [name, value] of Object.entries(next)) {
+    if (resetColorProperties.hasOwnProperty(name)) {
+      // color
+      if (value === null) {
+        if (prev[name] !== null) commands.push(resetColorProperties[name]);
+        continue;
+      }
+      if (value) {
+        if (!equalColors(prev[name], value)) pushColor(commands, value);
+      }
+      continue;
+    }
+    if (value === null) {
+      if (prev[name] !== null) commands.push(Commands['RESET_' + name.toUpperCase()]);
+      continue;
+    }
+    if (value) {
+      if (prev[name] !== value) commands.push(value);
+    }
+  }
 
   return commands;
 };
