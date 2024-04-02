@@ -23,7 +23,7 @@ const getStateResets = state => {
   let resetCount = 0;
 
   for (const name of Object.keys(RESET_STATE)) {
-    if (state[name] === null) ++ resetCount;
+    if (state[name] === null) ++resetCount;
   }
 
   return resetCount;
@@ -75,15 +75,15 @@ export const newState = (commands, state = {}) => {
         state = {...state, overline: currentCommand};
         continue;
       case Commands.RESET_BOLD:
-      // case Commands.RESET_DIM:
+        // case Commands.RESET_DIM:
         state = {...state, bold: null};
         continue;
       case Commands.RESET_ITALIC:
         state = {...state, italic: null};
         continue;
       case Commands.RESET_UNDERLINE:
-      // case Commands.RESET_DOUBLE_UNDERLINE:
-      // case Commands.RESET_CURLY_UNDERLINE:
+        // case Commands.RESET_DOUBLE_UNDERLINE:
+        // case Commands.RESET_CURLY_UNDERLINE:
         state = {...state, underline: null};
         continue;
       case Commands.RESET_BLINK:
@@ -166,35 +166,31 @@ const pushColor = (commands, color) => {
   return commands;
 };
 
+const resetColorProperties = {
+  foreground: Commands.RESET_COLOR,
+  background: Commands.RESET_BG_COLOR,
+  decoration: Commands.RESET_COLOR_DECORATION
+};
+
 export const stateToCommands = state => {
   const commands = [];
 
-  if (state.bold) commands.push(state.bold);
-  else if (state.bold === null) commands.push(Commands.RESET_BOLD);
-  if (state.italic) commands.push(state.italic);
-  else if (state.italic === null) commands.push(Commands.RESET_ITALIC);
-  if (state.underline) commands.push(state.underline);
-  else if (state.underline === null) commands.push(Commands.RESET_UNDERLINE);
-  if (state.blink) commands.push(state.blink);
-  else if (state.blink === null) commands.push(Commands.RESET_BLINK);
-  if (state.inverse) commands.push(state.inverse);
-  else if (state.inverse === null) commands.push(Commands.RESET_INVERSE);
-  if (state.hidden) commands.push(state.hidden);
-  else if (state.hidden === null) commands.push(Commands.RESET_HIDDEN);
-  if (state.strikethrough) commands.push(state.strikethrough);
-  else if (state.strikethrough === null) commands.push(Commands.RESET_STRIKETHROUGH);
-  if (state.overline) commands.push(state.overline);
-  else if (state.overline === null) commands.push(Commands.RESET_OVERLINE);
-
-  if (state.font) commands.push(state.font);
-  else if (state.font === null) commands.push(Commands.RESET_FONT);
-
-  if (state.foreground) pushColor(commands, state.foreground);
-  else if (state.foreground === null) commands.push(Commands.RESET_COLOR);
-  if (state.background) pushColor(commands, state.background);
-  else if (state.background === null) commands.push(Commands.RESET_BG_COLOR);
-  if (state.decoration) pushColor(commands, state.decoration);
-  else if (state.decoration === null) commands.push(Commands.RESET_COLOR_DECORATION);
+  for (const [name, value] of Object.entries(state)) {
+    if (resetColorProperties.hasOwnProperty(name)) {
+      // colors
+      if (value === null) {
+        commands.push(resetColorProperties[name]);
+        continue;
+      }
+      pushColor(commands, value);
+      continue;
+    }
+    if (value === null) {
+      commands.push(Commands['RESET_' + name.toUpperCase()]);
+      continue;
+    }
+    commands.push(value);
+  }
 
   return commands;
 };
