@@ -25,6 +25,7 @@ import {
 } from './ansi/sgr.js';
 import {RESET_STATE, newState, stateToCommands, stateTransition} from './ansi/sgr-state.js';
 import {matchCsi} from './ansi/csi.js';
+import {capitalize, toCamelCase, fromSnakeCase} from './meta.js';
 
 const styleSymbol = Symbol('styleObject'),
   commands = Symbol('commands'),
@@ -109,7 +110,7 @@ export class Style {
   make(newCommands = []) {
     return new Style(this[initStateSymbol], Array.isArray(newCommands) ? newCommands : [newCommands], this);
   }
-  // fg, bg, decoration, reset
+  // fg, bg, decoration, reset, bright
   get fg() {
     const newStyle = this.make(Commands.COLOR_EXTENDED);
     return new ExtendedColor(newStyle);
@@ -201,11 +202,6 @@ export class Style {
   }
 }
 
-// utilities
-
-const capitalize = name => (name ? name[0].toUpperCase() + name.substring(1).toLowerCase() : name);
-const toCamelCase = names => names.map((name, index) => (index ? capitalize(name) : name.toLowerCase())).join('');
-
 // add color names to ExtendedColor, Bright and Style
 
 for (const [name, value] of Object.entries(Colors)) {
@@ -260,32 +256,29 @@ for (const [name, value] of Object.entries(Colors)) {
   });
 }
 
-// add reset commands to Reset
-
-for (const [name, value] of Object.entries(Commands)) {
-  if (!name.startsWith('RESET_')) continue;
-  Object.defineProperty(Reset.prototype, toCamelCase(name.substring(6).split('_')), {
-    configurable: true,
-    enumerable: true,
-    get: function () {
-      return this.make(value);
-    }
-  });
-}
-
-// add commands to Style
+// add commands to Reset, Style
 
 const skipCommands = {COLOR_EXTENDED: 1, BG_COLOR_EXTENDED: 1, COLOR_DECORATION: 1};
 
 for (const [name, value] of Object.entries(Commands)) {
-  if (skipCommands[name] === 1) continue;
-  Object.defineProperty(Style.prototype, toCamelCase(name.split('_')), {
-    configurable: true,
-    enumerable: true,
-    get: function () {
-      return this.make(value);
-    }
-  });
+  if (name.startsWith('RESET_')) {
+    Object.defineProperty(Reset.prototype, toCamelCase(fromSnakeCase(name.substring(6))), {
+      configurable: true,
+      enumerable: true,
+      get: function () {
+        return this.make(value);
+      }
+    });
+  }
+  if (skipCommands[name] !== 1) {
+    Object.defineProperty(Style.prototype, toCamelCase(fromSnakeCase(name)), {
+      configurable: true,
+      enumerable: true,
+      get: function () {
+        return this.make(value);
+      }
+    });
+  }
 }
 
 // singleton
