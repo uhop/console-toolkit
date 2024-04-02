@@ -5,7 +5,7 @@ import {newState, RESET_STATE} from '../../src/ansi/sgr-state.js';
 
 const panel = new Panel(8, 4);
 
-panel.put(0, 0, '12345678').put(0, 1, '12345678').put(0, 2, '12345678').put(0, 3, '12345678').fillState(0, 0, 8, 4, RESET_STATE);
+panel.put(0, 0, '12345678\n23456781\n34567812\n45678123').fillState(0, 0, 8, 4, RESET_STATE);
 log(panel);
 console.log('==');
 
