@@ -105,8 +105,10 @@ export const fontNumber = font => (typeof font == 'number' && font >= 0 && font 
 export const getFont = font => 10 + fontNumber(font);
 export const setFont = font => setCommands(setFont(font));
 
-const get6 = colorComponent => Math.max(0, Math.min(5, Math.floor(colorComponent / 42.66667)));
-const get24 = intensity => Math.max(0, Math.min(23, Math.floor(intensity / 10.66667)));
+const oneSixth = 6.0 / 256;
+const oneTwentyFourth = 24.0 / 256;
+const get6 = colorComponent => Math.max(0, Math.min(5, Math.floor(colorComponent * oneSixth)));
+const get24 = intensity => Math.max(0, Math.min(23, Math.floor(intensity * oneTwentyFourth)));
 
 export const getStdColor256 = color => [Commands.COLOR_EXTENDED, FORMAT_COLOR256, colorNumber(color)];
 export const getBrightStdColor256 = color => [Commands.COLOR_EXTENDED, FORMAT_COLOR256, 8 + colorNumber(color)];
