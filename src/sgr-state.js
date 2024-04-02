@@ -17,6 +17,28 @@ export const RESET_STATE = {
   font: null
 };
 
+const TOTAL_RESETS = 12;
+
+const getStateResets = state => {
+  let resetCount = 0;
+
+  for (const name of Object.keys(RESET_STATE)) {
+    if (state[name] === null) ++ resetCount;
+  }
+
+  return resetCount;
+};
+
+export const combineStates = (...states) => {
+  let state = {};
+  for (const currentState of states) {
+    for (const [name, value] of Object.entries(currentState)) {
+      if (value !== undefined) state[name] = value;
+    }
+  }
+  return state;
+};
+
 export const newState = (commands, state = {}) => {
   for (let i = 0; i < commands.length; ++i) {
     const currentCommand = commands[i];
@@ -175,18 +197,6 @@ export const stateToCommands = state => {
   else if (state.decoration === null) commands.push(Commands.RESET_COLOR_DECORATION);
 
   return commands;
-};
-
-const TOTAL_RESETS = 12;
-
-const getStateResets = state => {
-  let resetCount = 0;
-
-  for (const name of Object.keys(RESET_STATE)) {
-    if (state[name] === null) ++ resetCount;
-  }
-
-  return resetCount;
 };
 
 const addCommands = (commands, prev, next, property, resetCommand) => {
