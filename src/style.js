@@ -21,10 +21,9 @@ import {
 import {RESET_STATE, newState, stateToCommands, stateCommand} from './sgr-state.js';
 import {matchCsi} from './csi.js';
 
-// TODO: Make style objects immutable. Mutating methods should return new objects.
-
 const styleSymbol = Symbol('styleObject'),
   commands = Symbol('commands'),
+  parentSymbol = Symbol('parent'),
   isBrightSymbol = Symbol('isBright'),
   initStateSymbol = Symbol('initState');
 
@@ -93,13 +92,17 @@ class Reset {
   // }
 }
 
+const collectCommands = style =>
+  style[parentSymbol] ? collectCommands(style[parentSymbol]).concat(style[commands]) : style[commands];
+
 export class Style {
-  constructor(initState = RESET_STATE, newCommands) {
+  constructor(initState = RESET_STATE, newCommands, parent = null) {
     this[initStateSymbol] = initState;
     this[commands] = newCommands || [];
+    this[parentSymbol] = parent;
   }
   make(newCommands = []) {
-    return new Style(this[initStateSymbol], this[commands].concat(newCommands));
+    return new Style(this[initStateSymbol], Array.isArray(newCommands) ? newCommands : [newCommands], this);
   }
   // fg, bg, decoration, reset
   get fg() {
@@ -169,7 +172,8 @@ export class Style {
   }
   // wrap a string
   text(s) {
-    const initialState = newState(this[commands], this[initStateSymbol]);
+    const commandsSoFar = collectCommands(this),
+      initialState = newState(commandsSoFar, this[initStateSymbol]);
     let state = initialState;
     matchCsi.lastIndex = 0;
     for (const match of s.matchAll(matchCsi)) {
@@ -186,8 +190,9 @@ export class Style {
   }
   // convert to string
   toString() {
-    const commandsSoFar = stateToCommands(newState(this[commands], this[initStateSymbol]));
-    return commandsSoFar.length ? setCommands(commandsSoFar) : '';
+    const commandsSoFar = collectCommands(this),
+      optimizedCommands = stateToCommands(newState(commandsSoFar, this[initStateSymbol]));
+    return optimizedCommands.length ? setCommands(optimizedCommands) : '';
   }
 }
 
