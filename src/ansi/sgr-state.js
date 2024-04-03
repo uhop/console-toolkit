@@ -195,7 +195,7 @@ export const stateToCommands = state => {
     commands.push(value);
   }
 
-  return resetCount === TOTAL_RESETS ? [Commands.RESET_ALL] : commands;
+  return resetCount === TOTAL_RESETS ? [''] : commands;
 };
 
 export const stateTransition = (prev, next) => {
@@ -227,7 +227,7 @@ export const stateTransition = (prev, next) => {
 
   if (resetCount === TOTAL_RESETS) {
     const prevResets = getStateResets(prev);
-    return prevResets === TOTAL_RESETS ? [] : [Commands.RESET_ALL];
+    return prevResets === TOTAL_RESETS ? [] : [''];
   }
 
   return commands;

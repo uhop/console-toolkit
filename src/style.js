@@ -93,9 +93,9 @@ class Reset {
     return this[styleSymbol].make(newCommands);
   }
   // resettable properties: defined externally
-  // get all() {
-  //   return this.make(Commands.RESET_ALL);
-  // }
+  get all() {
+    return this.make('');
+  }
 }
 
 const collectCommands = style =>
@@ -130,6 +130,9 @@ export class Style {
     return new Bright(this);
   }
   // general commands: defined externally
+  get resetAll() {
+    return this.make('');
+  }
   // color commands: defined externally
   color(c) {
     return this.make(getRawColor256(c));
