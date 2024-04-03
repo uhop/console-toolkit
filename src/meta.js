@@ -14,5 +14,8 @@ export const fromSnakeCase = name => name.split('_');
 export const toKebabCase = names => names.map(name => name.toLowerCase()).join('-');
 export const fromKebabCase = name => name.split('-');
 
-export const addGetter = (Class, name, getter) =>
-  Object.defineProperty(Class.prototype || Class, name, {configurable: true, enumerable: true, get: getter});
+export const addGetter = (Class, name, getter, force) => {
+  const object = Class.prototype || Class;
+  if (!force && object.hasOwnProperty(name)) return object;
+  return Object.defineProperty(object, name, {configurable: true, enumerable: true, get: getter});
+}
