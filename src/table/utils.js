@@ -30,15 +30,17 @@ export const populateTableSymbols = (tableSymbols, tableDefinition, hLineStyle, 
   return tableSymbols;
 };
 
-// A table definition matrix should define six properties:
+// A table definition matrix should define the following properties:
 //   - 't': top row (3 symbols),
 //   - 'm': middle row (3 symbols),
 //   - 'b': bottom row (3 symbols),
 //   - 'v': vertical separators (3 symbols),
 //   - 'h': a horizontal separator (1 symbol),
-//   - 'w': an numeric array that defines width of every corresponding symbol (default: [1,1,1]).
+//   - 'w': (optional) a numeric array that defines width of every corresponding symbol.
 // t/m/b/v lines should have the same width for a corresponding symbol.
 // h should be one character long (visually).
+
+// The default value for 'w': [1, 1, 1]
 
 // Each table symbol is defined like that: 'xNyM', where:
 // x and y are of 'tmb', x is for a horizontal dimension, y is for a vertical one.
