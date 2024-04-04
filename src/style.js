@@ -25,7 +25,7 @@ import {
 } from './ansi/sgr.js';
 import {RESET_STATE, newState, stateToCommands, stateTransition} from './ansi/sgr-state.js';
 import {matchCsi} from './ansi/csi.js';
-import {capitalize, toCamelCase, fromSnakeCase, addGetter} from './meta.js';
+import {capitalize, toCamelCase, fromSnakeCase, addGetter, addAlias} from './meta.js';
 
 const styleSymbol = Symbol('styleObject'),
   commands = Symbol('commands'),
@@ -60,7 +60,7 @@ class ExtendedColor {
   rgb256(r, g, b) {
     return this.make(getColor256(r, g, b).slice(1));
   }
-  gray(i) {
+  grayscale(i) {
     return this.make(getGrayColor256(i).slice(1));
   }
   // true colors
@@ -140,7 +140,7 @@ export class Style {
   rgb256(r, g, b) {
     return this.make(getColor256(r, g, b));
   }
-  gray(i) {
+  grayscale(i) {
     return this.make(getGrayColor256(i));
   }
   trueColor(r, g, b) {
@@ -155,7 +155,7 @@ export class Style {
   bgRgb256(r, g, b) {
     return this.make(getBgColor256(r, g, b));
   }
-  bgGray(i) {
+  bgGrayscale(i) {
     return this.make(getGrayBgColor256(i));
   }
   trueBgColor(r, g, b) {
@@ -170,7 +170,7 @@ export class Style {
   decorationRgb256(r, g, b) {
     return this.make(getDecorationColor256(r, g, b));
   }
-  decorationGray(i) {
+  decorationGrayscale(i) {
     return this.make(getDecorationGrayColor256(i));
   }
   decorationTrueColor(r, g, b) {
@@ -223,6 +223,18 @@ for (const [name, value] of Object.entries(Colors)) {
   addGetter(Style, 'bg' + capitalize(name), make(getBgColor(value)));
   addGetter(Style, 'bgBright' + capitalize(name), make(getBrightBgColor(value)));
 }
+
+addAlias(ExtendedColor, 'gray', 'brightBlack');
+addAlias(ExtendedColor, 'grey', 'brightBlack');
+addAlias(Style, 'gray', 'brightBlack');
+addAlias(Style, 'grey', 'brightBlack');
+addAlias(Style, 'bgGray', 'bgBrightBlack');
+addAlias(Style, 'bgGrey', 'bgBrightBlack');
+
+addAlias(ExtendedColor, 'greyscale', 'grayscale');
+addAlias(Style, 'greyscale', 'grayscale');
+addAlias(Style, 'bgGreyscale', 'bgGrayscale');
+addAlias(Style, 'decorationGreyscale', 'decorationGrayscale');
 
 // add commands to Reset, Style
 

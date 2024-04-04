@@ -18,4 +18,12 @@ export const addGetter = (Class, name, getter, force) => {
   const object = Class.prototype || Class;
   if (!force && object.hasOwnProperty(name)) return object;
   return Object.defineProperty(object, name, {configurable: true, enumerable: true, get: getter});
-}
+};
+
+export const addAlias = (Class, name, oldName, force) => {
+  const object = Class.prototype || Class;
+  if (!force && object.hasOwnProperty(name)) return object;
+  const descriptor = Object.getOwnPropertyDescriptor(object, oldName);
+  if (!descriptor) return object;
+  return Object.defineProperty(object, name, descriptor);
+};
