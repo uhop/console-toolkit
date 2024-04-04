@@ -1,6 +1,6 @@
 // Support for states based on SGR commands. See https://en.wikipedia.org/wiki/ANSI_escape_code for more details.
 
-import {Commands, FORMAT_COLOR256, isFgColorCommand, isBgColorCommand, isFontCommand} from './sgr.js';
+import {Commands, ColorFormatSize, isFgColorCommand, isBgColorCommand, isFontCommand} from './sgr.js';
 
 export const RESET_STATE = {
   bold: null,
@@ -107,21 +107,21 @@ export const newState = (commands, state = {}) => {
         state = {...state, decoration: null};
         continue;
       case Commands.COLOR_EXTENDED: {
-        const next = commands[i + 1] === FORMAT_COLOR256 ? 3 : 5,
+        const next = ColorFormatSize[commands[i + 1]],
           color = commands.slice(i, i + next);
         i += next - 1;
         state = {...state, foreground: color};
         continue;
       }
       case Commands.BG_COLOR_EXTENDED: {
-        const next = commands[i + 1] === FORMAT_COLOR256 ? 3 : 5,
+        const next = ColorFormatSize[commands[i + 1]],
           color = commands.slice(i, i + next);
         i += next - 1;
         state = {...state, background: color};
         continue;
       }
       case Commands.COLOR_DECORATION: {
-        const next = commands[i + 1] === FORMAT_COLOR256 ? 3 : 5,
+        const next = ColorFormatSize[commands[i + 1]],
           color = commands.slice(i, i + next);
         i += next - 1;
         state = {...state, decoration: color};

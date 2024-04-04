@@ -6,7 +6,7 @@ import {
   getBrightColor,
   getBgColor,
   getBgBrightColor,
-  FORMAT_COLOR256,
+  ColorFormat,
   getRawColor256,
   getColor256,
   getHexColor256,
@@ -58,10 +58,10 @@ class ExtendedColor {
   }
   // standard colors: defined externally
   // get red() {
-  //   return this.make([FORMAT_COLOR256, (this[isBrightSymbol] ? 8 : 0) + Colors.RED]);
+  //   return this.make([ColorFormat.COLOR_256, (this[isBrightSymbol] ? 8 : 0) + Colors.RED]);
   // }
   // get brightRed() {
-  //   return this.make([FORMAT_COLOR256, 8 + Colors.RED]);
+  //   return this.make([ColorFormat.COLOR_256, 8 + Colors.RED]);
   // }
   // 256 colors
   color(c) {
@@ -322,9 +322,9 @@ const make = value =>
 
 for (const [name, value] of Object.entries(Colors)) {
   addGetter(ExtendedColor, name.toLowerCase(), function () {
-    return this.make([FORMAT_COLOR256, (this[isBrightSymbol] ? 8 : 0) + value]);
+    return this.make([ColorFormat.COLOR_256, (this[isBrightSymbol] ? 8 : 0) + value]);
   });
-  addGetter(ExtendedColor, 'bright' + capitalize(name), make([FORMAT_COLOR256, 8 + value]));
+  addGetter(ExtendedColor, 'bright' + capitalize(name), make([ColorFormat.COLOR_256, 8 + value]));
   addGetter(Bright, name.toLowerCase(), make(getBrightColor(value)));
   addGetter(Style, name.toLowerCase(), make(getColor(value)));
   addGetter(Style, 'bright' + capitalize(name), make(getBrightColor(value)));
