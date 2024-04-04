@@ -94,19 +94,19 @@ export const getColor = color => 30 + colorNumber(color);
 export const getBgColor = color => 40 + colorNumber(color);
 export const getBrightColor = color => 90 + colorNumber(color);
 export const getBrightBgColor = color => 100 + colorNumber(color);
-export const getRgb1 = (r, g, b) => getColor((r ? 1 : 0) + (g ? 2 : 0) + (b ? 4 : 0));
-export const getBgRgb1 = (r, g, b) => getBgColor((r ? 1 : 0) + (g ? 2 : 0) + (b ? 4 : 0));
-export const getBrightRgb1 = (r, g, b) => getBrightColor((r ? 1 : 0) + (g ? 2 : 0) + (b ? 4 : 0));
-export const getBgBrightRgb1 = (r, g, b) => getBrightBgColor((r ? 1 : 0) + (g ? 2 : 0) + (b ? 4 : 0));
+export const getStdRgb = (r, g, b) => getColor((r ? 1 : 0) + (g ? 2 : 0) + (b ? 4 : 0));
+export const getBgStdRgb = (r, g, b) => getBgColor((r ? 1 : 0) + (g ? 2 : 0) + (b ? 4 : 0));
+export const getBrightStdRgb = (r, g, b) => getBrightColor((r ? 1 : 0) + (g ? 2 : 0) + (b ? 4 : 0));
+export const getBgBrightStdRgb = (r, g, b) => getBrightBgColor((r ? 1 : 0) + (g ? 2 : 0) + (b ? 4 : 0));
 
 export const setColor = color => setCommands(getColor(color));
 export const setBgColor = color => setCommands(getBgColor(color));
 export const setBrightColor = color => setCommands(getBrightColor(color));
 export const setBrightBgColor = color => setCommands(getBrightBgColor(color));
-export const setRgb1 = (r, g, b) => setCommands(getRgb1(r, g, b));
-export const setBgRgb1 = (r, g, b) => setCommands(getBgRgb1(r, g, b));
-export const setBrightRgb1 = (r, g, b) => setCommands(getBrightRgb1(r, g, b));
-export const setBgBrightRgb1 = (r, g, b) => setCommands(getBgBrightRgb1(r, g, b));
+export const setStdRgb = (r, g, b) => setCommands(getStdRgb(r, g, b));
+export const setBgStdRgb = (r, g, b) => setCommands(getBgStdRgb(r, g, b));
+export const setBrightStdRgb = (r, g, b) => setCommands(getBrightStdRgb(r, g, b));
+export const setBgBrightStdRgb = (r, g, b) => setCommands(getBgBrightStdRgb(r, g, b));
 
 export const fontNumber = font => (typeof font == 'number' && font >= 0 && font <= 10 ? font : 0);
 
