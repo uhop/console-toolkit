@@ -107,127 +107,73 @@ export const setFont = font => setCommands(setFont(font));
 
 const oneSixth = 6.0 / 256;
 const oneTwentyFourth = 24.0 / 256;
-const get6 = colorComponent => Math.max(0, Math.min(5, Math.floor(colorComponent * oneSixth)));
-const get24 = intensity => Math.max(0, Math.min(23, Math.floor(intensity * oneTwentyFourth)));
+const get6 = colorComponent => Math.floor(colorComponent * oneSixth);
+const get24 = intensity => Math.floor(intensity * oneTwentyFourth);
+const lim = (from, to) => value => Math.max(from, Math.min(to, value)); // inclusive
+const lim5 = lim(0, 5);
+const lim23 = lim(0, 23);
 
-export const getStdColor256 = color => [Commands.COLOR_EXTENDED, FORMAT_COLOR256, colorNumber(color)];
-export const getBrightStdColor256 = color => [Commands.COLOR_EXTENDED, FORMAT_COLOR256, 8 + colorNumber(color)];
-export const getColor256 = (r, g, b) => [
-  Commands.COLOR_EXTENDED,
-  FORMAT_COLOR256,
-  16 + 36 * get6(r) + 6 * get6(g) + get6(b)
-];
-export const getColor6 = (r, g, b) => {
-  r = Math.max(0, Math.min(5, Math.floor(r)));
-  g = Math.max(0, Math.min(5, Math.floor(g)));
-  b = Math.max(0, Math.min(5, Math.floor(b)));
-  return [Commands.COLOR_EXTENDED, FORMAT_COLOR256, 16 + 36 * r + 6 * g + b];
-};
-export const getGrayColor256 = i => [Commands.COLOR_EXTENDED, FORMAT_COLOR256, 232 + get24(i)];
-export const getGrayColor24 = i => {
-  i = Math.max(0, Math.min(23, Math.floor(i)));
-  return [Commands.COLOR_EXTENDED, FORMAT_COLOR256, 232 + i];
-};
 export const getRawColor256 = color => [Commands.COLOR_EXTENDED, FORMAT_COLOR256, color];
+export const getStdColor256 = color => getRawColor256(colorNumber(color));
+export const getBrightStdColor256 = color => getRawColor256(8 + colorNumber(color));
+export const getColor6 = (r, g, b) => getRawColor256(16 + 36 * lim5(r) + 6 * lim5(g) + lim5(b));
+export const getColor256 = (r, g, b) => getColor6(get6(r), get6(g), get6(b));
+export const getGrayColor24 = i => getRawColor256(232 + lim23(i));
+export const getGrayColor256 = i => getGrayColor24(get24(i));
 
+export const setRawColor256 = color => setCommands(getRawColor256(color));
 export const setStdColor256 = color => setCommands(getStdColor256(color));
 export const setBrightStdColor256 = color => setCommands(getBrightStdColor256(color));
-export const setColor256 = (r, g, b) => setCommands(getColor256(r, g, b));
 export const setColor6 = (r, g, b) => setCommands(getColor6(r, g, b));
-export const setGrayColor256 = i => setCommands(getGrayColor256(i));
+export const setColor256 = (r, g, b) => setCommands(getColor256(r, g, b));
 export const setGrayColor24 = i => setCommands(getGrayColor24(i));
-export const setRawColor256 = color => setCommands(getRawColor256(color));
+export const setGrayColor256 = i => setCommands(getGrayColor256(i));
 
-export const getStdBgColor256 = color => [Commands.BG_COLOR_EXTENDED, FORMAT_COLOR256, colorNumber(color)];
-export const getBrightStdBgColor256 = color => [Commands.BG_COLOR_EXTENDED, FORMAT_COLOR256, 8 + colorNumber(color)];
-export const getBgColor256 = (r, g, b) => [
-  Commands.BG_COLOR_EXTENDED,
-  FORMAT_COLOR256,
-  16 + 36 * get6(r) + 6 * get6(g) + get6(b)
-];
-export const getBgColor6 = (r, g, b) => {
-  r = Math.max(0, Math.min(5, Math.floor(r)));
-  g = Math.max(0, Math.min(5, Math.floor(g)));
-  b = Math.max(0, Math.min(5, Math.floor(b)));
-  return [Commands.BG_COLOR_EXTENDED, FORMAT_COLOR256, 16 + 36 * r + 6 * g + b];
-};
-export const getGrayBgColor256 = i => [Commands.BG_COLOR_EXTENDED, FORMAT_COLOR256, 232 + get24(i)];
-export const getGrayBgColor24 = i => {
-  i = Math.max(0, Math.min(23, Math.floor(i)));
-  return [Commands.BG_COLOR_EXTENDED, FORMAT_COLOR256, 232 + i];
-};
 export const getRawBgColor256 = color => [Commands.BG_COLOR_EXTENDED, FORMAT_COLOR256, color];
+export const getStdBgColor256 = color => getStdBgColor256(colorNumber(color));
+export const getBrightStdBgColor256 = color => getStdBgColor256(8 + colorNumber(color));
+export const getBgColor6 = (r, g, b) => getRawBgColor256(16 + 36 * lim5(r) + 6 * lim5(g) + lim5(b));
+export const getBgColor256 = (r, g, b) => getBgColor6(get6(r), get6(g), get6(b));
+export const getGrayBgColor24 = i => getRawBgColor256(232 + lim23(i));
+export const getGrayBgColor256 = i => getGrayBgColor24(get24(i));
 
+export const setRawBgColor256 = color => setCommands(getRawBgColor256(color));
 export const setStdBgColor256 = color => setCommands(getStdColor256(color));
 export const setBrightStdBgColor256 = color => setCommands(getBrightStdBgColor256(color));
-export const setBgColor256 = (r, g, b) => setCommands(getBgColor256(r, g, b));
 export const setBgColor6 = (r, g, b) => setCommands(getBgColor6(r, g, b));
-export const setGrayBgColor256 = i => setCommands(getGrayBgColor256(i));
+export const setBgColor256 = (r, g, b) => setCommands(getBgColor256(r, g, b));
 export const setGrayBgColor24 = i => setCommands(getGrayBgColor24(i));
-export const setRawBgColor256 = color => setCommands(getRawBgColor256(color));
+export const setGrayBgColor256 = i => setCommands(getGrayBgColor256(i));
 
 export const getTrueColor = (r, g, b) => [Commands.COLOR_EXTENDED, FORMAT_TRUE_COLOR, r, g, b];
 export const getTrueBgColor = (r, g, b) => [Commands.BG_COLOR_EXTENDED, FORMAT_TRUE_COLOR, r, g, b];
-export const getHexTrueColor = hex => [
-  Commands.COLOR_EXTENDED,
-  FORMAT_TRUE_COLOR,
-  (hex >> 16) & 0xff,
-  (hex >> 8) & 0xff,
-  hex & 0xff
-];
-export const getHexTrueBgColor = hex => [
-  Commands.BG_COLOR_EXTENDED,
-  FORMAT_TRUE_COLOR,
-  (hex >> 16) & 0xff,
-  (hex >> 8) & 0xff,
-  hex & 0xff
-];
+export const getHexTrueColor = hex => getTrueColor((hex >> 16) & 0xff, (hex >> 8) & 0xff, hex & 0xff);
+export const getHexTrueBgColor = hex => getTrueBgColor((hex >> 16) & 0xff, (hex >> 8) & 0xff, hex & 0xff);
 
 export const setTrueColor = (r, g, b) => setCommands(getTrueColor(r, g, b));
 export const setTrueBgColor = (r, g, b) => setCommands(getTrueBgColor(r, g, b));
 export const setHexTrueColor = hex => setCommands(getHexTrueColor(hex));
 export const setHexTrueBgColor = hex => setCommands(getHexTrueBgColor(hex));
 
-export const getDecorationStdColor256 = color => [Commands.COLOR_DECORATION, FORMAT_COLOR256, colorNumber(color)];
-export const getDecorationBrightStdColor256 = color => [
-  Commands.COLOR_DECORATION,
-  FORMAT_COLOR256,
-  8 + colorNumber(color)
-];
-export const getDecorationColor256 = (r, g, b) => [
-  Commands.COLOR_DECORATION,
-  FORMAT_COLOR256,
-  16 + 36 * get6(r) + 6 * get6(g) + get6(b)
-];
-export const getDecorationColor6 = (r, g, b) => {
-  r = Math.max(0, Math.min(5, Math.floor(r)));
-  g = Math.max(0, Math.min(5, Math.floor(g)));
-  b = Math.max(0, Math.min(5, Math.floor(b)));
-  return [Commands.COLOR_DECORATION, FORMAT_COLOR256, 16 + 36 * r + 6 * g + b];
-};
-export const getDecorationGrayColor256 = i => [Commands.COLOR_DECORATION, FORMAT_COLOR256, 232 + get24(i)];
-export const getDecorationGrayColor24 = i => {
-  i = Math.max(0, Math.min(23, Math.floor(i)));
-  return [Commands.COLOR_DECORATION, FORMAT_COLOR256, 232 + i];
-};
 export const getDecorationRawColor256 = color => [Commands.COLOR_DECORATION, FORMAT_COLOR256, color];
+export const getDecorationStdColor256 = color => getDecorationRawColor256(colorNumber(color));
+export const getDecorationBrightStdColor256 = color => getDecorationRawColor256(8 + colorNumber(color));
+export const getDecorationColor6 = (r, g, b) => getDecorationRawColor256(16 + 36 * lim5(r) + 6 * lim5(g) + lim5(b));
+export const getDecorationColor256 = (r, g, b) => getDecorationColor6(get6(r), get6(g), get6(b));
+export const getDecorationGrayColor24 = i => getDecorationRawColor256(232 + lim23(i));
+export const getDecorationGrayColor256 = i => getDecorationGrayColor24(get24(i));
 
+export const setDecorationRawColor256 = color => setCommands(getDecorationRawColor256(color));
 export const setDecorationStdColor256 = color => setCommands(getDecorationStdColor256(color));
 export const setDecorationBrightStdColor256 = color => setCommands(getDecorationBrightStdColor256(color));
-export const setDecorationColor256 = (r, g, b) => setCommands(getDecorationColor256(r, g, b));
 export const setDecorationColor6 = (r, g, b) => setCommands(getDecorationColor6(r, g, b));
-export const setDecorationGrayColor256 = i => setCommands(getDecorationGrayColor256(i));
+export const setDecorationColor256 = (r, g, b) => setCommands(getDecorationColor256(r, g, b));
 export const setDecorationGrayColor24 = i => setCommands(getDecorationGrayColor24(i));
-export const setDecorationRawColor256 = color => setCommands(getDecorationRawColor256(color));
+export const setDecorationGrayColor256 = i => setCommands(getDecorationGrayColor256(i));
 
 export const getDecorationTrueColor = (r, g, b) => [Commands.COLOR_DECORATION, FORMAT_TRUE_COLOR, r, g, b];
-export const getDecorationHexTrueColor = hex => [
-  Commands.COLOR_DECORATION,
-  FORMAT_TRUE_COLOR,
-  (hex >> 16) & 0xff,
-  (hex >> 8) & 0xff,
-  hex & 0xff
-];
+export const getDecorationHexTrueColor = hex =>
+  getDecorationTrueColor((hex >> 16) & 0xff, (hex >> 8) & 0xff, hex & 0xff);
 
 export const setDecorationTrueColor = (r, g, b) => setCommands(getDecorationTrueColor(r, g, b));
 export const setDecorationHexTrueColor = hex => setCommands(getDecorationHexTrueColor(hex));
