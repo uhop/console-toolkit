@@ -69,7 +69,7 @@ class ExtendedColor {
   rgb6(r, g, b) {
     return this.make(getColor6(r, g, b).slice(1));
   }
-  grayscale(i) {
+  grayscale256(i) {
     return this.make(getGrayColor256(i).slice(1));
   }
   grayscale24(i) {
@@ -78,6 +78,9 @@ class ExtendedColor {
   // true colors
   trueColor(r, g, b) {
     return this.make(getTrueColor(r, g, b).slice(1));
+  }
+  grayscale(i) {
+    return this.make(getTrueColor(i, i, i).slice(1));
   }
   hexTrueColor(hex) {
     return this.make(getHexTrueColor(hex).slice(1));
@@ -155,7 +158,7 @@ export class Style {
   rgb6(r, g, b) {
     return this.make(getColor6(r, g, b));
   }
-  grayscale(i) {
+  grayscale256(i) {
     return this.make(getGrayColor256(i));
   }
   grayscale24(i) {
@@ -163,6 +166,9 @@ export class Style {
   }
   trueColor(r, g, b) {
     return this.make(getTrueColor(r, g, b));
+  }
+  grayscale(i) {
+    return this.make(getTrueColor(i, i, i));
   }
   hexTrueColor(hex) {
     return this.make(getHexTrueColor(hex));
@@ -176,7 +182,7 @@ export class Style {
   bgRgb6(r, g, b) {
     return this.make(getBgColor6(r, g, b));
   }
-  bgGrayscale(i) {
+  bgGrayscale256(i) {
     return this.make(getGrayBgColor256(i));
   }
   bgGrayscale24(i) {
@@ -184,6 +190,9 @@ export class Style {
   }
   trueBgColor(r, g, b) {
     return this.make(getTrueBgColor(r, g, b));
+  }
+  bgGrayscale(i) {
+    return this.make(getTrueBgColor(i, i, i));
   }
   hexTrueBgColor(hex) {
     return this.make(getHexTrueBgColor(hex));
@@ -197,7 +206,7 @@ export class Style {
   decorationRgb6(r, g, b) {
     return this.make(getDecorationColor6(r, g, b));
   }
-  decorationGrayscale(i) {
+  decorationGrayscale256(i) {
     return this.make(getDecorationGrayColor256(i));
   }
   decorationGrayscale24(i) {
@@ -205,6 +214,9 @@ export class Style {
   }
   decorationTrueColor(r, g, b) {
     return this.make(getDecorationTrueColor(r, g, b));
+  }
+  decorationGrayscale(i) {
+    return this.make(getDecorationTrueColor(i, i, i));
   }
   decorationHexTrueColor(hex) {
     return this.make(getDecorationHexTrueColor(hex));
@@ -263,12 +275,16 @@ addAlias(Style, 'bgGrey', 'bgBrightBlack');
 
 addAlias(ExtendedColor, 'greyscale', 'grayscale');
 addAlias(ExtendedColor, 'greyscale24', 'grayscale24');
+addAlias(ExtendedColor, 'greyscale256', 'grayscale256');
 addAlias(Style, 'greyscale', 'grayscale');
 addAlias(Style, 'greyscale24', 'grayscale24');
+addAlias(Style, 'greyscale256', 'grayscale256');
 addAlias(Style, 'bgGreyscale', 'bgGrayscale');
 addAlias(Style, 'bgGreyscale24', 'bgGrayscale24');
+addAlias(Style, 'bgGreyscale256', 'bgGrayscale256');
 addAlias(Style, 'decorationGreyscale', 'decorationGrayscale');
 addAlias(Style, 'decorationGreyscale24', 'decorationGrayscale24');
+addAlias(Style, 'decorationGreyscale256', 'decorationGrayscale256');
 
 addAlias(ExtendedColor, 'rgb', 'trueColor');
 addAlias(Style, 'rgb', 'trueColor');
