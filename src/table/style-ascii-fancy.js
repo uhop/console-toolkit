@@ -1,13 +1,13 @@
-import {populateTableSymbols} from './utils.js';
+import {populateStyle} from './utils.js';
 
 export const style = {};
 
 const dots = {t: '...', m: '.:.', b: ':::', v: ':::', h: '.'};
 
-populateTableSymbols(style, dots, 'd', 'd');
+populateStyle(style, dots, 'd', 'd');
 
-const girder = {t: '//[]\\\\', m: '|][][|', b: '\\\\[]//', v: '||||||', h: '=', w: [2, 2, 2]};
+const girder = {t: '//[]\\\\', m: '|][][|', b: '\\\\[]//', v: '||||||', h: '=', w: 2};
 
-populateTableSymbols(style, girder, 'g', 'g');
+populateStyle(style, girder, 'g', 'g');
 
 export default style;

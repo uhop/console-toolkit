@@ -1,4 +1,4 @@
-import draw from './draw.js';
+import draw from './draw-borders.js';
 import style from './style-unicode.js';
 
 export {draw, style};

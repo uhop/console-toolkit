@@ -1,11 +1,11 @@
-import {populateTableSymbols} from './utils.js';
+import {populateStyle} from './utils.js';
 
 export const style = {};
 
-const markdownReddit11 = {t: '|', m: '|', b: '|', v: '|', h: '-', w: [0, 1, 0]},
-  markdownReddit21 = {t: '|', m: '|', b: '|', v: '|', h: '=', w: [0, 1, 0]};
+const markdownReddit11 = {t: ' | ', m: ' | ', b: ' | ', v: ' | ', h: '-'},
+  markdownReddit21 = {t: ' | ', m: ' | ', b: ' | ', v: ' | ', h: '='};
 
-populateTableSymbols(style, markdownReddit11, 1, 1);
-populateTableSymbols(style, markdownReddit21, 2, 1);
+populateStyle(style, markdownReddit11, 1, 1);
+populateStyle(style, markdownReddit21, 2, 1);
 
 export default style;

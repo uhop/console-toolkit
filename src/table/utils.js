@@ -1,52 +1,37 @@
-// The line symbols are indexed in this order: tmb
-// t is top
-// m is middle
-// b is bottom
-
-const lineSymbols = ['t', 'm', 'b', 'h', 'v'];
-
-export const populateTableSymbols = (tableSymbols, tableDefinition, hLineStyle, vLineStyle) => {
-  const symbolWidth = tableDefinition.w || [1, 1, 1];
-  for (let i = 0; i < 3; ++i) {
-    const y = lineSymbols[i],
-      yM = y + vLineStyle,
-      definition = tableDefinition[y];
-    for (let start = 0, j = 0; j < 3; ++j) {
-      const width = symbolWidth[j],
-        symbol = definition.substring(start, start + width),
-        x = lineSymbols[j];
-      tableSymbols[x + hLineStyle + yM] = symbol;
-      start += width;
-    }
-  }
-  for (let start = 0, j = 0; j < 3; ++j) {
-    const width = symbolWidth[j],
-      symbol = tableDefinition.v.substring(start, start + width),
-      x = lineSymbols[j];
-    tableSymbols['v' + vLineStyle + x] = symbol;
-    start += width;
-  }
-  tableSymbols['h' + hLineStyle] = tableDefinition.h;
-  return tableSymbols;
-};
-
 // A table definition matrix should define the following properties:
 //   - 't': top row (3 symbols),
 //   - 'm': middle row (3 symbols),
 //   - 'b': bottom row (3 symbols),
 //   - 'v': vertical separators (3 symbols),
 //   - 'h': a horizontal separator (1 symbol),
-//   - 'w': (optional) a numeric array that defines width of every corresponding symbol.
-// t/m/b/v lines should have the same width for a corresponding symbol.
+//   - 'w': (optional) width of symbols.
+// t/m/b/v lines should have the same width for each corresponding symbol.
 // h should be one character long (visually).
 
-// The default value for 'w': [1, 1, 1]
+// The default value for 'w': 1
 
-// Each table symbol is defined like that: 'xNyM', where:
-// x and y are of 'tmb', x is for a horizontal dimension, y is for a vertical one.
-// N and M are line styles (numbers or characters).
-// Example: they can be 1 or 2 for a line style (single/double).
-
-// A table defines horizontal and vertical symbols: hN and vMx.
-// N and M are line styles. See above.
-// x is of 'tmb' as before. h is 'h'. v is 'v'.
+export const populateStyle = (tableStyle, tableDefinition, hTheme, vTheme) => {
+  const w = tableDefinition.w || 1,
+    s = [0, w, w << 1],
+    e = [s[0] + w, s[1] + w, s[2] + w],
+    theme = (tableStyle[hTheme + '_' + vTheme] = [
+      tableDefinition.m.substring(s[1], e[1]),
+      tableDefinition.b.substring(s[1], e[1]),
+      tableDefinition.t.substring(s[1], e[1]),
+      tableDefinition.h.repeat(w),
+      tableDefinition.m.substring(s[2], e[2]),
+      tableDefinition.b.substring(s[2], e[2]),
+      tableDefinition.t.substring(s[2], e[2]),
+      tableDefinition.h.repeat(w),
+      tableDefinition.m.substring(s[0], e[0]),
+      tableDefinition.b.substring(s[0], e[0]),
+      tableDefinition.t.substring(s[0], e[0]),
+      tableDefinition.h.repeat(w),
+      tableDefinition.v.substring(s[1], e[1]),
+      tableDefinition.v.substring(s[0], e[0]),
+      tableDefinition.v.substring(s[2], e[2])
+    ]);
+  tableStyle['_w_' + vTheme] = w;
+  tableStyle['_h_' + hTheme] = tableDefinition.h;
+  tableStyle['_v_' + vTheme] = theme.slice(12); // last vertical symbols
+};
