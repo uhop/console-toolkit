@@ -9,17 +9,23 @@ import {
   FORMAT_COLOR256,
   getRawColor256,
   getColor256,
+  getColor6,
   getGrayColor256,
+  getGrayColor24,
   getTrueColor,
   getHexTrueColor,
   getRawBgColor256,
   getBgColor256,
+  getBgColor6,
   getGrayBgColor256,
+  getGrayBgColor24,
   getTrueBgColor,
   getHexTrueBgColor,
   getDecorationRawColor256,
   getDecorationColor256,
+  getDecorationColor6,
   getDecorationGrayColor256,
+  getDecorationGrayColor24,
   getDecorationTrueColor,
   getDecorationHexTrueColor
 } from './ansi/sgr.js';
@@ -60,8 +66,14 @@ class ExtendedColor {
   rgb256(r, g, b) {
     return this.make(getColor256(r, g, b).slice(1));
   }
+  rgb6(r, g, b) {
+    return this.make(getColor6(r, g, b).slice(1));
+  }
   grayscale(i) {
     return this.make(getGrayColor256(i).slice(1));
+  }
+  grayscale24(i) {
+    return this.make(getGrayColor24(i).slice(1));
   }
   // true colors
   trueColor(r, g, b) {
@@ -140,8 +152,14 @@ export class Style {
   rgb256(r, g, b) {
     return this.make(getColor256(r, g, b));
   }
+  rgb6(r, g, b) {
+    return this.make(getColor6(r, g, b));
+  }
   grayscale(i) {
     return this.make(getGrayColor256(i));
+  }
+  grayscale24(i) {
+    return this.make(getGrayColor24(i));
   }
   trueColor(r, g, b) {
     return this.make(getTrueColor(r, g, b));
@@ -155,8 +173,14 @@ export class Style {
   bgRgb256(r, g, b) {
     return this.make(getBgColor256(r, g, b));
   }
+  bgRgb6(r, g, b) {
+    return this.make(getBgColor6(r, g, b));
+  }
   bgGrayscale(i) {
     return this.make(getGrayBgColor256(i));
+  }
+  bgGrayscale24(i) {
+    return this.make(getGrayBgColor24(i));
   }
   trueBgColor(r, g, b) {
     return this.make(getTrueBgColor(r, g, b));
@@ -170,8 +194,14 @@ export class Style {
   decorationRgb256(r, g, b) {
     return this.make(getDecorationColor256(r, g, b));
   }
+  decorationRgb6(r, g, b) {
+    return this.make(getDecorationColor6(r, g, b));
+  }
   decorationGrayscale(i) {
     return this.make(getDecorationGrayColor256(i));
+  }
+  decorationGrayscale24(i) {
+    return this.make(getDecorationGrayColor24(i));
   }
   decorationTrueColor(r, g, b) {
     return this.make(getDecorationTrueColor(r, g, b));
@@ -232,9 +262,23 @@ addAlias(Style, 'bgGray', 'bgBrightBlack');
 addAlias(Style, 'bgGrey', 'bgBrightBlack');
 
 addAlias(ExtendedColor, 'greyscale', 'grayscale');
+addAlias(ExtendedColor, 'greyscale24', 'grayscale24');
 addAlias(Style, 'greyscale', 'grayscale');
+addAlias(Style, 'greyscale24', 'grayscale24');
 addAlias(Style, 'bgGreyscale', 'bgGrayscale');
+addAlias(Style, 'bgGreyscale24', 'bgGrayscale24');
 addAlias(Style, 'decorationGreyscale', 'decorationGrayscale');
+addAlias(Style, 'decorationGreyscale24', 'decorationGrayscale24');
+
+addAlias(ExtendedColor, 'rgb', 'trueColor');
+addAlias(Style, 'rgb', 'trueColor');
+addAlias(Style, 'bgRgb', 'trueBgColor');
+addAlias(Style, 'decorationRgb', 'decorationTrueColor');
+
+addAlias(ExtendedColor, 'hex', 'hexTrueColor');
+addAlias(Style, 'hex', 'hexTrueColor');
+addAlias(Style, 'bgHex', 'hexTrueBgColor');
+addAlias(Style, 'decorationHex', 'decorationHexTrueColor');
 
 // add commands to Reset, Style
 
