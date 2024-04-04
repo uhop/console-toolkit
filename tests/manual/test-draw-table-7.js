@@ -9,7 +9,7 @@ const box2 = drawTable(
   ['g', 1, 'g', 1, 'g', 1, 'g'],
   ['g', 1, 'g', 1, 'g', 1, 'g'],
   [
-    {x: 1, y: 5, width: 3, height: 1},
+    {x: 3, y: 5, width: 3, height: 1},
     {x: 1, y: 1, width: 3, height: 3}
   ]
 );
