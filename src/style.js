@@ -307,8 +307,9 @@ export class Style {
   // convert to string
   toString() {
     const commandsSoFar = collectCommands(this),
-      optimizedCommands = stateToCommands(newState(commandsSoFar, this[initStateSymbol]));
-    return optimizedCommands.length ? setCommands(optimizedCommands) : '';
+      initialState = newState(commandsSoFar, this[initStateSymbol]),
+      initialCommands = stateTransition(this[initStateSymbol], initialState);
+    return initialCommands.length ? setCommands(initialCommands) : '';
   }
 }
 
