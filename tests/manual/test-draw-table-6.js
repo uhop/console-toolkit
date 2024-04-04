@@ -18,16 +18,15 @@ const box2 = drawTable(
 );
 draw(box2);
 
-const box3 = drawTable(style, ['r', 1, 'r', 1, 'r', 1, 'r'], ['r', 1, 'r', 1, 'r', 1, 'r']);
-draw(box3);
-
-const box4 = drawTable(
+const box3 = drawTable(
   style,
-  ['r', 1, 'r', 1, 'r', 1, 'r'],
-  ['r', 1, 'r', 1, 'r', 1, 'r'],
+  [1, 1, 1, 1, 2, 1, 2],
+  [1, 1, 1, 1, 2, 1, 2],
   [
-    {x: 1, y: 5, width: 3, height: 1},
-    {x: 1, y: 1, width: 3, height: 3}
+    {x: 1, y: 1, width: 3, height: 1},
+    {x: 5, y: 1, width: 1, height: 3},
+    {x: 3, y: 5, width: 3, height: 1},
+    {x: 1, y: 3, width: 1, height: 3}
   ]
 );
-draw(box4);
+draw(box3);
