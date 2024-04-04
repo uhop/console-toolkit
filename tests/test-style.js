@@ -47,6 +47,18 @@ test('Styling', async t => {
       style.brightWhite;
     t.equal(s, '\x1B[90m\x1B[91m\x1B[92m\x1B[93m\x1B[94m\x1B[95m\x1B[96m\x1B[97m');
   });
+  await t.test('List of dark colors', t => {
+    const s =
+      style.darkBlack +
+      style.darkRed +
+      style.darkGreen +
+      style.darkYellow +
+      style.darkBlue +
+      style.darkMagenta +
+      style.darkCyan +
+      style.darkWhite;
+    t.equal(s, '\x1B[30m\x1B[31m\x1B[32m\x1B[33m\x1B[34m\x1B[35m\x1B[36m\x1B[37m');
+  });
   await t.test('List of background colors', t => {
     const s =
       style.bgBlack +
@@ -71,6 +83,18 @@ test('Styling', async t => {
       style.bgBrightWhite;
     t.equal(s, '\x1B[100m\x1B[101m\x1B[102m\x1B[103m\x1B[104m\x1B[105m\x1B[106m\x1B[107m');
   });
+  await t.test('List of dark background colors', t => {
+    const s =
+      style.bgDarkBlack +
+      style.bgDarkRed +
+      style.bgDarkGreen +
+      style.bgDarkYellow +
+      style.bgDarkBlue +
+      style.bgDarkMagenta +
+      style.bgDarkCyan +
+      style.bgDarkWhite;
+    t.equal(s, '\x1B[40m\x1B[41m\x1B[42m\x1B[43m\x1B[44m\x1B[45m\x1B[46m\x1B[47m');
+  });
 
   await t.test('List of commands', t => {
     const s =
@@ -87,5 +111,16 @@ test('Styling', async t => {
       style.doubleUnderline +
       style.overline;
     t.equal(s, '\x1B[1m\x1B[2m\x1B[3m\x1B[4m\x1B[5m\x1B[6m\x1B[7m\x1B[8m\x1B[9m\x1B[4:3m\x1B[21m\x1B[53m');
+  });
+
+  await t.test('List of color defaults', t => {
+    const style = new Style({}),
+      s = style.defaultColor + style.bgDefaultColor + style.decorationDefaultColor;
+    t.equal(s, '\x1B[39m\x1B[49m\x1B[59m');
+  });
+  await t.test('List of color resets', t => {
+    const style = new Style({}),
+      s = style.reset.color + style.reset.bgColor + style.reset.decorationColor + style.reset.all;
+    t.equal(s, '\x1B[39m\x1B[49m\x1B[59m\x1B[m');
   });
 });
