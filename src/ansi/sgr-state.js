@@ -60,6 +60,7 @@ export const newState = (commands, state = {}) => {
         state = {...state, underline: currentCommand};
         continue;
       case Commands.BLINK:
+      case Commands.RAPID_BLINK:
         state = {...state, blink: currentCommand};
         continue;
       case Commands.INVERSE:
@@ -87,6 +88,7 @@ export const newState = (commands, state = {}) => {
         state = {...state, underline: null};
         continue;
       case Commands.RESET_BLINK:
+        // case RESET_RAPID_BLINK:
         state = {...state, blink: null};
         continue;
       case Commands.RESET_INVERSE:
