@@ -9,6 +9,7 @@ import {
   FORMAT_COLOR256,
   getRawColor256,
   getColor256,
+  getHexColor256,
   getColor6,
   getGrayColor256,
   getGrayColor24,
@@ -16,6 +17,7 @@ import {
   getHexTrueColor,
   getRawBgColor256,
   getBgColor256,
+  getHexBgColor256,
   getBgColor6,
   getGrayBgColor256,
   getGrayBgColor24,
@@ -23,6 +25,7 @@ import {
   getHexTrueBgColor,
   getDecorationRawColor256,
   getDecorationColor256,
+  getDecorationHexColor256,
   getDecorationColor6,
   getDecorationGrayColor256,
   getDecorationGrayColor24,
@@ -37,7 +40,8 @@ const styleSymbol = Symbol('styleObject'),
   commands = Symbol('commands'),
   parentSymbol = Symbol('parent'),
   isBrightSymbol = Symbol('isBright'),
-  initStateSymbol = Symbol('initState');
+  initStateSymbol = Symbol('initState'),
+  colorDepthSymbol = Symbol('colorDepth');
 
 class ExtendedColor {
   constructor(styleObject, isBright) {
@@ -66,6 +70,9 @@ class ExtendedColor {
   rgb256(r, g, b) {
     return this.make(getColor256(r, g, b).slice(1));
   }
+  hex256(hex) {
+    return this.make(getHexColor256(hex).slice(1));
+  }
   rgb6(r, g, b) {
     return this.make(getColor6(r, g, b).slice(1));
   }
@@ -79,11 +86,20 @@ class ExtendedColor {
   trueColor(r, g, b) {
     return this.make(getTrueColor(r, g, b).slice(1));
   }
-  grayscale(i) {
+  trueGrayscale(i) {
     return this.make(getTrueColor(i, i, i).slice(1));
   }
   hexTrueColor(hex) {
     return this.make(getHexTrueColor(hex).slice(1));
+  }
+  rgb(r, g, b) {
+    return this[styleSymbol][colorDepthSymbol] > 8 ? this.trueColor(r, g, b) : this.rgb256(r, g, b);
+  }
+  grayscale(i) {
+    return this[styleSymbol][colorDepthSymbol] > 8 ? this.trueGrayscale(i) : this.grayscale256(i);
+  }
+  hex(hex) {
+    return this[styleSymbol][colorDepthSymbol] > 8 ? this.hexTrueColor(hex) : this.hex256(hex);
   }
 }
 
@@ -117,13 +133,26 @@ const collectCommands = style =>
   style[parentSymbol] ? collectCommands(style[parentSymbol]).concat(style[commands]) : style[commands];
 
 export class Style {
-  constructor(initState = RESET_STATE, newCommands, parent = null) {
+  constructor(initState = RESET_STATE, newCommands, colorDepth = 24, parent = null) {
     this[initStateSymbol] = initState;
     this[commands] = newCommands || [];
+    this[colorDepthSymbol] = colorDepth;
     this[parentSymbol] = parent;
   }
   make(newCommands = []) {
-    return new Style(this[initStateSymbol], Array.isArray(newCommands) ? newCommands : [newCommands], this);
+    return new Style(
+      this[initStateSymbol],
+      Array.isArray(newCommands) ? newCommands : [newCommands],
+      this[colorDepthSymbol],
+      this
+    );
+  }
+  // color depth
+  get colorDepth() {
+    return this[colorDepthSymbol]; // 1, 4, 8, 24
+  }
+  setColorDepth(colorDepth) {
+    return new Style(this[initStateSymbol], [], colorDepth, this);
   }
   // fg, bg, decoration, reset, bright
   get fg() {
@@ -155,6 +184,9 @@ export class Style {
   rgb256(r, g, b) {
     return this.make(getColor256(r, g, b));
   }
+  hex256(hex) {
+    return this.make(getHexColor256(hex));
+  }
   rgb6(r, g, b) {
     return this.make(getColor6(r, g, b));
   }
@@ -167,17 +199,29 @@ export class Style {
   trueColor(r, g, b) {
     return this.make(getTrueColor(r, g, b));
   }
-  grayscale(i) {
+  trueGrayscale(i) {
     return this.make(getTrueColor(i, i, i));
   }
   hexTrueColor(hex) {
     return this.make(getHexTrueColor(hex));
+  }
+  rgb(r, g, b) {
+    return this[colorDepthSymbol] > 8 ? this.trueColor(r, g, b) : this.rgb256(r, g, b);
+  }
+  grayscale(i) {
+    return this[colorDepthSymbol] > 8 ? this.trueGrayscale(i) : this.grayscale256(i);
+  }
+  hex(hex) {
+    return this[colorDepthSymbol] > 8 ? this.hexTrueColor(hex) : this.hex256(hex);
   }
   bgColor(c) {
     return this.make(getRawBgColor256(c));
   }
   bgRgb256(r, g, b) {
     return this.make(getBgColor256(r, g, b));
+  }
+  bgHex256(hex) {
+    return this.make(getHexBgColor256(hex));
   }
   bgRgb6(r, g, b) {
     return this.make(getBgColor6(r, g, b));
@@ -191,17 +235,29 @@ export class Style {
   trueBgColor(r, g, b) {
     return this.make(getTrueBgColor(r, g, b));
   }
-  bgGrayscale(i) {
+  bgTrueGrayscale(i) {
     return this.make(getTrueBgColor(i, i, i));
   }
   hexTrueBgColor(hex) {
     return this.make(getHexTrueBgColor(hex));
+  }
+  bgRgb(r, g, b) {
+    return this[colorDepthSymbol] > 8 ? this.bgTrueColor(r, g, b) : this.bgRgb256(r, g, b);
+  }
+  bgGrayscale(i) {
+    return this[colorDepthSymbol] > 8 ? this.bgTrueGrayscale(i) : this.bgGrayscale256(i);
+  }
+  bgHex(hex) {
+    return this[colorDepthSymbol] > 8 ? this.hexTrueBgColor(hex) : this.bgHex256(hex);
   }
   decorationColor(c) {
     return this.make(getDecorationRawColor256(c));
   }
   decorationRgb256(r, g, b) {
     return this.make(getDecorationColor256(r, g, b));
+  }
+  decorationHex256(hex) {
+    return this.make(getDecorationHexColor256(hex));
   }
   decorationRgb6(r, g, b) {
     return this.make(getDecorationColor6(r, g, b));
@@ -215,11 +271,20 @@ export class Style {
   decorationTrueColor(r, g, b) {
     return this.make(getDecorationTrueColor(r, g, b));
   }
-  decorationGrayscale(i) {
+  decorationTrueGrayscale(i) {
     return this.make(getDecorationTrueColor(i, i, i));
   }
   decorationHexTrueColor(hex) {
     return this.make(getDecorationHexTrueColor(hex));
+  }
+  decorationRgb(r, g, b) {
+    return this[colorDepthSymbol] > 8 ? this.decorationTrueColor(r, g, b) : this.decorationRgb256(r, g, b);
+  }
+  decorationGrayscale(i) {
+    return this[colorDepthSymbol] > 8 ? this.decorationTrueGrayscale(i) : this.decorationGrayscale256(i);
+  }
+  decorationHex(hex) {
+    return this[colorDepthSymbol] > 8 ? this.decorationHexTrueColor(hex) : this.decorationHex256(hex);
   }
   // wrap a string
   text(s) {
@@ -276,25 +341,19 @@ addAlias(Style, 'bgGrey', 'bgBrightBlack');
 addAlias(ExtendedColor, 'greyscale', 'grayscale');
 addAlias(ExtendedColor, 'greyscale24', 'grayscale24');
 addAlias(ExtendedColor, 'greyscale256', 'grayscale256');
+addAlias(ExtendedColor, 'trueGreyscale', 'trueGrayscale');
 addAlias(Style, 'greyscale', 'grayscale');
 addAlias(Style, 'greyscale24', 'grayscale24');
 addAlias(Style, 'greyscale256', 'grayscale256');
+addAlias(Style, 'trueGreyscale', 'trueGrayscale');
 addAlias(Style, 'bgGreyscale', 'bgGrayscale');
 addAlias(Style, 'bgGreyscale24', 'bgGrayscale24');
 addAlias(Style, 'bgGreyscale256', 'bgGrayscale256');
+addAlias(Style, 'bgTrueGreyscale', 'bgTrueGrayscale');
 addAlias(Style, 'decorationGreyscale', 'decorationGrayscale');
 addAlias(Style, 'decorationGreyscale24', 'decorationGrayscale24');
 addAlias(Style, 'decorationGreyscale256', 'decorationGrayscale256');
-
-addAlias(ExtendedColor, 'rgb', 'trueColor');
-addAlias(Style, 'rgb', 'trueColor');
-addAlias(Style, 'bgRgb', 'trueBgColor');
-addAlias(Style, 'decorationRgb', 'decorationTrueColor');
-
-addAlias(ExtendedColor, 'hex', 'hexTrueColor');
-addAlias(Style, 'hex', 'hexTrueColor');
-addAlias(Style, 'bgHex', 'hexTrueBgColor');
-addAlias(Style, 'decorationHex', 'decorationHexTrueColor');
+addAlias(Style, 'decorationTrueGreyscale', 'decorationTrueGrayscale');
 
 // add commands to Reset, Style
 
