@@ -2,8 +2,6 @@ import test from 'tape-six';
 
 import style, {Style} from '../src/style.js';
 
-const log = s => console.log(s.replace(/[\x00-\x1F]/g), m => '\\x' + m[0].charCodeAt(0).toString(16).toUpperCase());
-
 test('Styling', async t => {
   await t.test('One color output', t => {
     const s = style.cyan.text('cyan');
