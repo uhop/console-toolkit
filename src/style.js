@@ -438,7 +438,7 @@ addAlias(Style, 'decorationTrueGreyscale', 'decorationTrueGrayscale');
 
 // add commands to Reset, Style
 
-const skipCommands = {COLOR_EXTENDED: 1, BG_COLOR_EXTENDED: 1, COLOR_DECORATION: 1};
+const skipCommands = {EXTENDED_COLOR: 1, BG_EXTENDED_COLOR: 1, DECORATION_COLOR: 1};
 
 for (const [name, value] of Object.entries(Commands)) {
   if (name.startsWith('RESET_')) {

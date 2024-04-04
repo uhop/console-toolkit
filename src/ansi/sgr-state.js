@@ -103,37 +103,37 @@ export const newState = (commands, state = {}) => {
       case Commands.RESET_OVERLINE:
         state = {...state, overline: null};
         continue;
-      case Commands.RESET_COLOR_DECORATION:
+      case Commands.RESET_DECORATION_COLOR:
         state = {...state, decoration: null};
         continue;
-      case Commands.COLOR_EXTENDED: {
+      case Commands.EXTENDED_COLOR: {
         const next = ColorFormatSize[commands[i + 1]],
           color = commands.slice(i, i + next);
         i += next - 1;
         state = {...state, foreground: color};
         continue;
       }
-      case Commands.BG_COLOR_EXTENDED: {
+      case Commands.BG_EXTENDED_COLOR: {
         const next = ColorFormatSize[commands[i + 1]],
           color = commands.slice(i, i + next);
         i += next - 1;
         state = {...state, background: color};
         continue;
       }
-      case Commands.COLOR_DECORATION: {
+      case Commands.DECORATION_COLOR: {
         const next = ColorFormatSize[commands[i + 1]],
           color = commands.slice(i, i + next);
         i += next - 1;
         state = {...state, decoration: color};
         continue;
       }
-      case Commands.COLOR_DEFAULT:
+      case Commands.DEFAULT_COLOR:
         state = {...state, foreground: null};
         continue;
-      case Commands.BG_COLOR_DEFAULT:
+      case Commands.BG_DEFAULT_COLOR:
         state = {...state, background: null};
         continue;
-      case Commands.FONT_DEFAULT:
+      case Commands.DEFAULT_FONT:
         state = {...state, font: null};
         continue;
     }
@@ -171,7 +171,7 @@ const pushColor = (commands, color) => {
 const resetColorProperties = {
   foreground: Commands.RESET_COLOR,
   background: Commands.RESET_BG_COLOR,
-  decoration: Commands.RESET_COLOR_DECORATION
+  decoration: Commands.RESET_DECORATION_COLOR
 };
 
 export const stateToCommands = state => {
