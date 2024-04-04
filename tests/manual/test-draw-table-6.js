@@ -1,10 +1,8 @@
 import {draw as drawTable} from '../../src/table/index.js';
 import {style} from '../../src/table/style-unicode.js';
-
-const draw = box => box.forEach(line => console.log(line));
+import {draw} from './utils.js';
 
 const box1 = drawTable(style, [1, 1, 1, 1, 2, 1, 2], [1, 1, 1, 1, 2, 1, 2]);
-draw(box1);
 
 const box2 = drawTable(
   style,
@@ -16,7 +14,6 @@ const box2 = drawTable(
     {x: 3, y: 3, width: 3, height: 1}
   ]
 );
-draw(box2);
 
 const box3 = drawTable(
   style,
@@ -29,4 +26,5 @@ const box3 = drawTable(
     {x: 1, y: 3, width: 1, height: 3}
   ]
 );
-draw(box3);
+
+draw(box1, box2, box3);
