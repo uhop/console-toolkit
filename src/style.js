@@ -30,9 +30,15 @@ import {
   getDecorationGrayColor256,
   getDecorationGrayColor24,
   getDecorationTrueColor,
-  getDecorationHexTrueColor
+  getDecorationHexTrueColor,
+  getBrightStdRgb,
+  getStdRgb,
+  getDecorationStdColor256,
+  FgColorOptions,
+  BgColorOptions,
+  DecorationColorOptions
 } from './ansi/sgr.js';
-import {RESET_STATE, newState, stateToCommands, stateTransition} from './ansi/sgr-state.js';
+import {RESET_STATE, newState, stateTransition} from './ansi/sgr-state.js';
 import {matchCsi} from './ansi/csi.js';
 import {capitalize, toCamelCase, fromSnakeCase, addGetter, addAlias} from './meta.js';
 
@@ -41,57 +47,69 @@ const styleSymbol = Symbol('styleObject'),
   parentSymbol = Symbol('parent'),
   isBrightSymbol = Symbol('isBright'),
   initStateSymbol = Symbol('initState'),
-  colorDepthSymbol = Symbol('colorDepth');
+  colorDepthSymbol = Symbol('colorDepth'),
+  optionsSymbol = Symbol('options');
 
 class ExtendedColor {
-  constructor(styleObject, isBright) {
+  constructor(styleObject, options, isBright) {
     this[styleSymbol] = styleObject;
+    this[optionsSymbol] = options;
     this[isBrightSymbol] = isBright;
   }
   make(newCommands) {
+    if (Array.isArray(newCommands)) newCommands[0] = this[optionsSymbol].extended;
     return this[styleSymbol].make(newCommands);
   }
   // options: bright
   get bright() {
-    this[isBrightSymbol] = true;
-    return this;
+    return new ExtendedColor(this[styleSymbol], this[optionsSymbol], true);
+  }
+  get dark() {
+    return new ExtendedColor(this[styleSymbol], this[optionsSymbol], false);
+  }
+  get default() {
+    return this.make(this[options].default);
   }
   // standard colors: defined externally
   // get red() {
-  //   return this.make([ColorFormat.COLOR_256, (this[isBrightSymbol] ? 8 : 0) + Colors.RED]);
+  //   return this.make([this[optionsSymbol].base, ColorFormat.COLOR_256, (this[isBrightSymbol] ? 8 : 0) + Colors.RED]);
   // }
   // get brightRed() {
-  //   return this.make([ColorFormat.COLOR_256, 8 + Colors.RED]);
+  //   return this.make([this[optionsSymbol].base, ColorFormat.COLOR_256, 8 + Colors.RED]);
   // }
   // 256 colors
   color(c) {
-    return this.make(getRawColor256(c).slice(1));
+    return this.make(getRawColor256(c));
+  }
+  stdRgb256(r, g, b) {
+    return this.make(getRawColor256((this[isBrightSymbol] ? 8 : 0) + (r ? 1 : 0) + (g ? 2 : 0) + (b ? 4 : 0)));
   }
   rgb256(r, g, b) {
-    return this.make(getColor256(r, g, b).slice(1));
+    return this.make(getColor256(r, g, b));
   }
   hex256(hex) {
-    return this.make(getHexColor256(hex).slice(1));
+    return this.make(getHexColor256(hex));
   }
   rgb6(r, g, b) {
-    return this.make(getColor6(r, g, b).slice(1));
+    return this.make(getColor6(r, g, b));
   }
   grayscale256(i) {
-    return this.make(getGrayColor256(i).slice(1));
+    return this.make(getGrayColor256(i));
   }
   grayscale24(i) {
-    return this.make(getGrayColor24(i).slice(1));
+    return this.make(getGrayColor24(i));
   }
   // true colors
   trueColor(r, g, b) {
-    return this.make(getTrueColor(r, g, b).slice(1));
+    return this.make(getTrueColor(r, g, b));
   }
   trueGrayscale(i) {
-    return this.make(getTrueColor(i, i, i).slice(1));
+    return this.make(getTrueColor(i, i, i));
   }
   hexTrueColor(hex) {
-    return this.make(getHexTrueColor(hex).slice(1));
+    return this.make(getHexTrueColor(hex));
   }
+  // composite
   rgb(r, g, b) {
     return this[styleSymbol][colorDepthSymbol] > 8 ? this.trueColor(r, g, b) : this.rgb256(r, g, b);
   }
@@ -103,17 +121,45 @@ class ExtendedColor {
   }
 }
 
+class Color extends ExtendedColor {
+  // options: bright
+  get bright() {
+    return new Color(this[styleSymbol], this[optionsSymbol], true);
+  }
+  get dark() {
+    return new Color(this[styleSymbol], this[optionsSymbol], false);
+  }
+  // standard colors: defined externally
+  // get red() {
+  //   return this.make((this[isBrightSymbol] ? this[optionsSymbol].brightBase : this[optionsSymbol].base) + Colors.RED]);
+  // }
+  // get brightRed() {
+  //   return this.make(this[optionsSymbol].brightBase + Colors.RED]);
+  // }
+}
+
 class Bright {
-  constructor(styleObject) {
+  constructor(styleObject, isBright) {
     this[styleSymbol] = styleObject;
+    this[isBrightSymbol] = isBright;
   }
   make(newCommands) {
     return this[styleSymbol].make(newCommands);
   }
+  // options: bright
+  get bright() {
+    return new Bright(this[styleSymbol], true);
+  }
+  get dark() {
+    return new Bright(this[styleSymbol], false);
+  }
   // standard colors: defined externally
   // get red() {
-  //   return this.make(getBrightColor(Colors.RED));
+  //   return this.make(this[isBrightSymbol] ? getBrightColor(Colors.RED) : getColor(Colors.RED));
   // }
+  stdRgb(r, g, b) {
+    return this.make(this[isBrightSymbol] ? getBrightStdRgb(r, g, b) : getStdRgb(r, g, b));
+  }
 }
 
 class Reset {
@@ -156,28 +202,34 @@ export class Style {
   }
   // fg, bg, decoration, reset, bright
   get fg() {
-    const newStyle = this.make(Commands.COLOR_EXTENDED);
-    return new ExtendedColor(newStyle);
+    return new Color(this, FgColorOptions);
   }
   get bg() {
-    const newStyle = this.make(Commands.BG_COLOR_EXTENDED);
-    return new ExtendedColor(newStyle);
+    return new Color(this, BgColorOptions);
   }
   get colorDecoration() {
-    const newStyle = this.make(Commands.COLOR_DECORATION);
-    return new ExtendedColor(newStyle);
+    return new ExtendedColor(this, DecorationColorOptions);
   }
   get reset() {
     return new Reset(this);
   }
   get bright() {
-    return new Bright(this);
+    return new Bright(this, true);
+  }
+  get dark() {
+    return new Bright(this, false);
   }
   // general commands: defined externally
   get resetAll() {
     return this.make('');
   }
   // color commands: defined externally
+  stdRgb(r, g, b) {
+    return this.make(getStdRgb(r, g, b));
+  }
+  brightStdRgb(r, g, b) {
+    return this.make(getBrightStdRgb(r, g, b));
+  }
   color(c) {
     return this.make(getRawColor256(c));
   }
@@ -214,6 +266,12 @@ export class Style {
   hex(hex) {
     return this[colorDepthSymbol] > 8 ? this.hexTrueColor(hex) : this.hex256(hex);
   }
+  bgStdRgb(r, g, b) {
+    return this.make(getBgStdRgb(r, g, b));
+  }
+  bgBrightStdRgb(r, g, b) {
+    return this.make(getBgBrightStdRgb(r, g, b));
+  }
   bgColor(c) {
     return this.make(getBgRawColor256(c));
   }
@@ -249,6 +307,12 @@ export class Style {
   }
   bgHex(hex) {
     return this[colorDepthSymbol] > 8 ? this.bgHexTrueColor(hex) : this.bgHex256(hex);
+  }
+  decorationStdRgb256(r, g, b) {
+    return this.make(getDecorationStdColor256(r, g, b));
+  }
+  decorationBrightStdRgb256(r, g, b) {
+    return this.make(getDecorationBrightStdColor256(r, g, b));
   }
   decorationColor(c) {
     return this.make(getDecorationRawColor256(c));
@@ -321,15 +385,31 @@ const make = value =>
   };
 
 for (const [name, value] of Object.entries(Colors)) {
-  addGetter(ExtendedColor, name.toLowerCase(), function () {
-    return this.make([ColorFormat.COLOR_256, (this[isBrightSymbol] ? 8 : 0) + value]);
+  const nameLower = name.toLowerCase(),
+    nameCap = capitalize(name);
+  addGetter(ExtendedColor, nameLower, function () {
+    return this.make([this[optionsSymbol].extended, ColorFormat.COLOR_256, (this[isBrightSymbol] ? 8 : 0) + value]);
   });
-  addGetter(ExtendedColor, 'bright' + capitalize(name), make([ColorFormat.COLOR_256, 8 + value]));
-  addGetter(Bright, name.toLowerCase(), make(getBrightColor(value)));
-  addGetter(Style, name.toLowerCase(), make(getColor(value)));
-  addGetter(Style, 'bright' + capitalize(name), make(getBrightColor(value)));
-  addGetter(Style, 'bg' + capitalize(name), make(getBgColor(value)));
-  addGetter(Style, 'bgBright' + capitalize(name), make(getBgBrightColor(value)));
+  addGetter(ExtendedColor, 'bright' + nameCap, function () {
+    return this.make([this[optionsSymbol].extended, ColorFormat.COLOR_256, 8 + value]);
+  });
+  addGetter(ExtendedColor, 'dark' + nameCap, function () {
+    return this.make([this[optionsSymbol].extended, ColorFormat.COLOR_256, value]);
+  });
+
+  addGetter(Bright, nameLower, function () {
+    return this.make(this[isBrightSymbol] ? getBrightColor(value) : getColor(value));
+  });
+  addGetter(Bright, 'bright' + nameCap, make(getBrightColor(value)));
+  addGetter(Bright, 'dark' + nameCap, make(getColor(value)));
+
+  addGetter(Style, nameLower, make(getColor(value)));
+  addGetter(Style, 'bright' + nameCap, make(getBrightColor(value)));
+  addGetter(Style, 'bg' + nameCap, make(getBgColor(value)));
+  addGetter(Style, 'bgBright' + nameCap, make(getBgBrightColor(value)));
+
+  addAlias(Style, 'dark' + nameCap, nameLower);
+  addAlias(Style, 'bgDark' + nameCap, 'bg' + nameCap);
 }
 
 addAlias(ExtendedColor, 'gray', 'brightBlack');
