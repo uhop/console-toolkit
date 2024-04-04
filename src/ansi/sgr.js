@@ -93,7 +93,7 @@ export const colorNumber = color => {
 export const getColor = color => 30 + colorNumber(color);
 export const getBgColor = color => 40 + colorNumber(color);
 export const getBrightColor = color => 90 + colorNumber(color);
-export const getBrightBgColor = color => 100 + colorNumber(color);
+export const getBgBrightColor = color => 100 + colorNumber(color);
 export const getStdRgb = (r, g, b) => getColor((r ? 1 : 0) + (g ? 2 : 0) + (b ? 4 : 0));
 export const getBgStdRgb = (r, g, b) => getBgColor((r ? 1 : 0) + (g ? 2 : 0) + (b ? 4 : 0));
 export const getBrightStdRgb = (r, g, b) => getBrightColor((r ? 1 : 0) + (g ? 2 : 0) + (b ? 4 : 0));
@@ -102,7 +102,7 @@ export const getBgBrightStdRgb = (r, g, b) => getBrightBgColor((r ? 1 : 0) + (g 
 export const setColor = color => setCommands(getColor(color));
 export const setBgColor = color => setCommands(getBgColor(color));
 export const setBrightColor = color => setCommands(getBrightColor(color));
-export const setBrightBgColor = color => setCommands(getBrightBgColor(color));
+export const setBgBrightColor = color => setCommands(getBgBrightColor(color));
 export const setStdRgb = (r, g, b) => setCommands(getStdRgb(r, g, b));
 export const setBgStdRgb = (r, g, b) => setCommands(getBgStdRgb(r, g, b));
 export const setBrightStdRgb = (r, g, b) => setCommands(getBrightStdRgb(r, g, b));
@@ -139,33 +139,33 @@ export const setHexColor256 = (r, g, b) => setCommands(getHexColor256(r, g, b));
 export const setGrayColor24 = i => setCommands(getGrayColor24(i));
 export const setGrayColor256 = i => setCommands(getGrayColor256(i));
 
-export const getRawBgColor256 = color => [Commands.BG_COLOR_EXTENDED, FORMAT_COLOR256, color];
-export const getStdBgColor256 = color => getStdBgColor256(colorNumber(color));
-export const getBrightStdBgColor256 = color => getStdBgColor256(8 + colorNumber(color));
-export const getBgColor6 = (r, g, b) => getRawBgColor256(16 + 36 * lim5(r) + 6 * lim5(g) + lim5(b));
+export const getBgRawColor256 = color => [Commands.BG_COLOR_EXTENDED, FORMAT_COLOR256, color];
+export const getBgStdColor256 = color => getBgStdColor256(colorNumber(color));
+export const getBgBrightStdColor256 = color => getBgStdColor256(8 + colorNumber(color));
+export const getBgColor6 = (r, g, b) => getBgRawColor256(16 + 36 * lim5(r) + 6 * lim5(g) + lim5(b));
 export const getBgColor256 = (r, g, b) => getBgColor6(get6(r), get6(g), get6(b));
-export const getHexBgColor256 = hex => getBgColor256((hex >> 16) & 0xff, (hex >> 8) & 0xff, hex & 0xff);
-export const getGrayBgColor24 = i => getRawBgColor256(232 + lim23(i));
-export const getGrayBgColor256 = i => getGrayBgColor24(get24(i));
+export const getBgHexColor256 = hex => getBgColor256((hex >> 16) & 0xff, (hex >> 8) & 0xff, hex & 0xff);
+export const getBgGrayColor24 = i => getBgRawColor256(232 + lim23(i));
+export const getBgGrayColor256 = i => getBgGrayColor24(get24(i));
 
-export const setRawBgColor256 = color => setCommands(getRawBgColor256(color));
-export const setStdBgColor256 = color => setCommands(getStdColor256(color));
-export const setBrightStdBgColor256 = color => setCommands(getBrightStdBgColor256(color));
+export const setBgRawColor256 = color => setCommands(getBgRawColor256(color));
+export const setBgStdColor256 = color => setCommands(getBgStdColor256(color));
+export const setBgBrightStdColor256 = color => setCommands(getBgBrightStdColor256(color));
 export const setBgColor6 = (r, g, b) => setCommands(getBgColor6(r, g, b));
 export const setBgColor256 = (r, g, b) => setCommands(getBgColor256(r, g, b));
-export const setHexBgColor256 = (r, g, b) => setCommands(getHexBgColor256(r, g, b));
-export const setGrayBgColor24 = i => setCommands(getGrayBgColor24(i));
-export const setGrayBgColor256 = i => setCommands(getGrayBgColor256(i));
+export const setBgHexColor256 = (r, g, b) => setCommands(getBgHexColor256(r, g, b));
+export const setBgGrayColor24 = i => setCommands(getBgGrayColor24(i));
+export const setBgGrayColor256 = i => setCommands(geBgtGrayColor256(i));
 
 export const getTrueColor = (r, g, b) => [Commands.COLOR_EXTENDED, FORMAT_TRUE_COLOR, r, g, b];
 export const getHexTrueColor = hex => getTrueColor((hex >> 16) & 0xff, (hex >> 8) & 0xff, hex & 0xff);
-export const getTrueBgColor = (r, g, b) => [Commands.BG_COLOR_EXTENDED, FORMAT_TRUE_COLOR, r, g, b];
-export const getHexTrueBgColor = hex => getTrueBgColor((hex >> 16) & 0xff, (hex >> 8) & 0xff, hex & 0xff);
+export const getBgTrueColor = (r, g, b) => [Commands.BG_COLOR_EXTENDED, FORMAT_TRUE_COLOR, r, g, b];
+export const getBgHexTrueColor = hex => getBgTrueColor((hex >> 16) & 0xff, (hex >> 8) & 0xff, hex & 0xff);
 
 export const setTrueColor = (r, g, b) => setCommands(getTrueColor(r, g, b));
 export const setHexTrueColor = hex => setCommands(getHexTrueColor(hex));
-export const setTrueBgColor = (r, g, b) => setCommands(getTrueBgColor(r, g, b));
-export const setHexTrueBgColor = hex => setCommands(getHexTrueBgColor(hex));
+export const setBgTrueColor = (r, g, b) => setCommands(getBgTrueColor(r, g, b));
+export const setBgHexTrueColor = hex => setCommands(getBgHexTrueColor(hex));
 
 export const getDecorationRawColor256 = color => [Commands.COLOR_DECORATION, FORMAT_COLOR256, color];
 export const getDecorationStdColor256 = color => getDecorationRawColor256(colorNumber(color));

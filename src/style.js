@@ -5,7 +5,7 @@ import {
   getColor,
   getBrightColor,
   getBgColor,
-  getBrightBgColor,
+  getBgBrightColor,
   FORMAT_COLOR256,
   getRawColor256,
   getColor256,
@@ -15,14 +15,14 @@ import {
   getGrayColor24,
   getTrueColor,
   getHexTrueColor,
-  getRawBgColor256,
+  getBgRawColor256,
   getBgColor256,
-  getHexBgColor256,
+  getBgHexColor256,
   getBgColor6,
-  getGrayBgColor256,
-  getGrayBgColor24,
-  getTrueBgColor,
-  getHexTrueBgColor,
+  getBgGrayColor256,
+  getBgGrayColor24,
+  getBgTrueColor,
+  getBgHexTrueColor,
   getDecorationRawColor256,
   getDecorationColor256,
   getDecorationHexColor256,
@@ -215,31 +215,31 @@ export class Style {
     return this[colorDepthSymbol] > 8 ? this.hexTrueColor(hex) : this.hex256(hex);
   }
   bgColor(c) {
-    return this.make(getRawBgColor256(c));
+    return this.make(getBgRawColor256(c));
   }
   bgRgb256(r, g, b) {
     return this.make(getBgColor256(r, g, b));
   }
   bgHex256(hex) {
-    return this.make(getHexBgColor256(hex));
+    return this.make(getBgHexColor256(hex));
   }
   bgRgb6(r, g, b) {
     return this.make(getBgColor6(r, g, b));
   }
   bgGrayscale256(i) {
-    return this.make(getGrayBgColor256(i));
+    return this.make(getBgGrayColor256(i));
   }
   bgGrayscale24(i) {
-    return this.make(getGrayBgColor24(i));
+    return this.make(getBgGrayColor24(i));
   }
-  trueBgColor(r, g, b) {
-    return this.make(getTrueBgColor(r, g, b));
+  bgTrueColor(r, g, b) {
+    return this.make(getBgTrueColor(r, g, b));
   }
   bgTrueGrayscale(i) {
-    return this.make(getTrueBgColor(i, i, i));
+    return this.make(getBgTrueColor(i, i, i));
   }
-  hexTrueBgColor(hex) {
-    return this.make(getHexTrueBgColor(hex));
+  bgHexTrueColor(hex) {
+    return this.make(getBgHexTrueColor(hex));
   }
   bgRgb(r, g, b) {
     return this[colorDepthSymbol] > 8 ? this.bgTrueColor(r, g, b) : this.bgRgb256(r, g, b);
@@ -248,7 +248,7 @@ export class Style {
     return this[colorDepthSymbol] > 8 ? this.bgTrueGrayscale(i) : this.bgGrayscale256(i);
   }
   bgHex(hex) {
-    return this[colorDepthSymbol] > 8 ? this.hexTrueBgColor(hex) : this.bgHex256(hex);
+    return this[colorDepthSymbol] > 8 ? this.bgHexTrueColor(hex) : this.bgHex256(hex);
   }
   decorationColor(c) {
     return this.make(getDecorationRawColor256(c));
@@ -329,7 +329,7 @@ for (const [name, value] of Object.entries(Colors)) {
   addGetter(Style, name.toLowerCase(), make(getColor(value)));
   addGetter(Style, 'bright' + capitalize(name), make(getBrightColor(value)));
   addGetter(Style, 'bg' + capitalize(name), make(getBgColor(value)));
-  addGetter(Style, 'bgBright' + capitalize(name), make(getBrightBgColor(value)));
+  addGetter(Style, 'bgBright' + capitalize(name), make(getBgBrightColor(value)));
 }
 
 addAlias(ExtendedColor, 'gray', 'brightBlack');
