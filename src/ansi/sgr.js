@@ -51,6 +51,25 @@ export const Commands = {
 export const ColorFormat = {COLOR_256: '5', TRUE_COLOR: '2'};
 export const ColorFormatSize = {[ColorFormat.COLOR_256]: 3, [ColorFormat.TRUE_COLOR]: 5};
 
+export const FgColorOptions = {
+  base: 30,
+  brightBase: 90,
+  default: Commands.COLOR_DEFAULT,
+  extended: Commands.COLOR_EXTENDED
+};
+export const BgColorOptions = {
+  base: 40,
+  brightBase: 100,
+  default: Commands.BG_COLOR_DEFAULT,
+  extended: Commands.BG_COLOR_EXTENDED
+};
+export const DecorationColorOptions = {
+  base: 0,
+  brightBase: 100,
+  default: Commands.RESET_COLOR_DECORATION,
+  extended: Commands.COLOR_DECORATION
+};
+
 const resetCommands = {};
 for (const [k, v] of Object.entries(Commands)) {
   if (!k.startsWith('RESET_')) continue;
