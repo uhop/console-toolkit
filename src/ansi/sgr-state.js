@@ -155,8 +155,9 @@ export const newState = (commands, state = {}) => {
 
 const equalColors = (a, b) => {
   if (a === b) return true;
-  if (!Array.isArray(a) || !Array.isArray(b)) return false;
-  return a.length === b.length && a.every((value, index) => value === b[index]);
+  if (Array.isArray(a) && Array.isArray(b))
+    return a.length === b.length && a.every((value, index) => value === b[index]);
+  return false;
 };
 
 const pushColor = (commands, color) => {
@@ -204,7 +205,8 @@ export const stateTransition = (prev, next) => {
   const commands = [];
   let resetCount = 0;
 
-  for (const [name, value] of Object.entries(next)) {
+  for (const name of Object.keys(RESET_STATE)) {
+    const value = next[name];
     if (resetColorProperties.hasOwnProperty(name)) {
       // color
       if (value === null) {
@@ -230,6 +232,38 @@ export const stateTransition = (prev, next) => {
   if (resetCount === TOTAL_RESETS) {
     const prevResets = getStateResets(prev);
     return prevResets === TOTAL_RESETS ? [] : [''];
+  }
+
+  return commands;
+};
+
+export const stateReverseTransition = (prev, next) => {
+  const commands = [];
+  let resetCount = 0;
+
+  for (const name of Object.keys(RESET_STATE)) {
+    const value = prev[name];
+    if (resetColorProperties.hasOwnProperty(name)) {
+      // color
+      if (!value) {
+        if (next[name]) commands.push(resetColorProperties[name]);
+        ++resetCount;
+        continue;
+      }
+      if (!equalColors(next[name], value)) pushColor(commands, value);
+      continue;
+    }
+    if (!value) {
+      if (next[name]) commands.push(Commands['RESET_' + name.toUpperCase()]);
+      ++resetCount;
+      continue;
+    }
+    if (next[name] !== value) commands.push(value);
+  }
+
+  if (resetCount === TOTAL_RESETS) {
+    const nextResets = getStateResets(next);
+    return nextResets === TOTAL_RESETS ? [] : [''];
   }
 
   return commands;
