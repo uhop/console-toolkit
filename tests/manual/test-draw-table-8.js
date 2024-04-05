@@ -1,5 +1,5 @@
 import {draw as drawTable} from '../../src/table/index.js';
-import {style} from '../../src/table/style-unicode.js';
+import {style} from '../../src/table/style-unicode-rounded.js';
 import {draw} from './utils.js';
 
 const box1 = drawTable(style, ['r', 1, 'r', 1, 'r', 1, 'r'], ['r', 1, 'r', 1, 'r', 1, 'r']);
