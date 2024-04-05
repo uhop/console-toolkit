@@ -184,6 +184,15 @@ export class Style {
     if (!Array.isArray(newCommands)) newCommands = [newCommands];
     return new Style(this[initStateSymbol], newState(newCommands, this[currentStateSymbol]), this[colorDepthSymbol]);
   }
+  add(commandSequence) {
+    let state = this[currentStateSymbol];
+    matchCsi.lastIndex = 0;
+    for (const match of String(commandSequence).matchAll(matchCsi)) {
+      if (match[3] !== 'm') continue;
+      state = newState(match[1].split(';'), state);
+    }
+    return state === this[currentStateSymbol] ? this : new Style(this[initStateSymbol], state, this[colorDepthSymbol]);
+  }
   mark(fn) {
     fn(new Style(this[currentStateSymbol], null, this[colorDepthSymbol]));
     return this;
