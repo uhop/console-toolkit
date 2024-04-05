@@ -46,7 +46,7 @@ import {capitalize, toCamelCase, fromSnakeCase, addGetter, addAlias} from './met
 const styleSymbol = Symbol('styleObject'),
   isBrightSymbol = Symbol('isBright'),
   initStateSymbol = Symbol('initState'),
-  currentStateSymbol = Symbol('currentState'),
+  stateSymbol = Symbol('currentState'),
   colorDepthSymbol = Symbol('colorDepth'),
   optionsSymbol = Symbol('options');
 
@@ -146,7 +146,9 @@ class Color extends ExtendedColor {
   //   return this.make(this[optionsSymbol].brightBase + Colors.RED);
   // }
   stdRgb(r, g, b) {
-    return this.make((this[isBrightSymbol] ? this[optionsSymbol].brightBase : this[optionsSymbol].base) + colorStdRgb(r, g, b));
+    return this.make(
+      (this[isBrightSymbol] ? this[optionsSymbol].brightBase : this[optionsSymbol].base) + colorStdRgb(r, g, b)
+    );
   }
   brightStdRgb(r, g, b) {
     return this.make(this[optionsSymbol].brightBase + colorStdRgb(r, g, b));
@@ -202,24 +204,28 @@ class Reset {
 export class Style {
   constructor(initState = RESET_STATE, currentState, colorDepth = 24) {
     this[initStateSymbol] = initState;
-    this[currentStateSymbol] = currentState || initState;
+    this[stateSymbol] = currentState || initState;
     this[colorDepthSymbol] = colorDepth;
   }
   make(newCommands = []) {
     if (!Array.isArray(newCommands)) newCommands = [newCommands];
-    return new Style(this[initStateSymbol], newState(newCommands, this[currentStateSymbol]), this[colorDepthSymbol]);
+    return new Style(this[initStateSymbol], newState(newCommands, this[stateSymbol]), this[colorDepthSymbol]);
   }
   add(commandSequence) {
-    let state = this[currentStateSymbol];
+    let state = this[stateSymbol];
     matchCsi.lastIndex = 0;
     for (const match of String(commandSequence).matchAll(matchCsi)) {
       if (match[3] !== 'm') continue;
       state = newState(match[1].split(';'), state);
     }
-    return state === this[currentStateSymbol] ? this : new Style(this[initStateSymbol], state, this[colorDepthSymbol]);
+    return state === this[stateSymbol] ? this : new Style(this[initStateSymbol], state, this[colorDepthSymbol]);
   }
   mark(fn) {
-    fn(new Style(this[currentStateSymbol], null, this[colorDepthSymbol]));
+    fn(new Style(this[stateSymbol], null, this[colorDepthSymbol]));
+    return this;
+  }
+  getState(fn) {
+    fn(this[stateSymbol]);
     return this;
   }
   // color depth
@@ -227,7 +233,7 @@ export class Style {
     return this[colorDepthSymbol]; // 1, 4, 8, 24
   }
   setColorDepth(colorDepth) {
-    return new Style(this[initStateSymbol], this[currentStateSymbol], colorDepth);
+    return new Style(this[initStateSymbol], this[stateSymbol], colorDepth);
   }
   // fg, bg, decoration, reset, bright
   get fg() {
@@ -381,7 +387,7 @@ export class Style {
   }
   // wrap a string
   text(s) {
-    let state = this[currentStateSymbol];
+    let state = this[stateSymbol];
     const initialCommands = stateTransition(this[initStateSymbol], state);
     matchCsi.lastIndex = 0;
     for (const match of s.matchAll(matchCsi)) {
@@ -397,7 +403,7 @@ export class Style {
   }
   // convert to string
   toString() {
-    const initialCommands = stateTransition(this[initStateSymbol], this[currentStateSymbol]);
+    const initialCommands = stateTransition(this[initStateSymbol], this[stateSymbol]);
     return initialCommands.length ? setCommands(initialCommands) : '';
   }
 }
@@ -475,6 +481,91 @@ for (const [name, value] of Object.entries(Commands)) {
     addGetter(Style, toCamelCase(fromSnakeCase(name)), make(value));
   }
 }
+
+const matchOps = /\{\{([\.\w]+)\}\}/g;
+
+const processPart = s => {
+  s = String(s);
+  const result = [];
+  let start = (matchOps.lastIndex = 0);
+  for (const match of s.matchAll(matchOps)) {
+    result.push(s.substring(start, match.index), match[1].split('.'));
+    start = match.index + match[0].length;
+  }
+  if (start < s.length) result.push(s.substring(start));
+  return result;
+};
+
+const processStringConstant = (strings, i, result, stack, style) => {
+  const pos = () => (i < strings.length ? 'string before argument #' + i : 'string after the last argument');
+  for (const input of processPart(strings[i])) {
+    if (typeof input == 'string') {
+      // process a string
+      style = style.add(input);
+      result += style + input;
+      style.mark(t => (style = t));
+      continue;
+    }
+    // process commands
+    for (const command of input) {
+      switch (command) {
+        case 'save':
+          const setupCommands = stateTransition(style[initStateSymbol], style[stateSymbol]);
+          if (setupCommands.length) result += setCommands(setupCommands);
+          stack.push(style.mark(t => (style = t)));
+          continue;
+        case 'restore':
+          {
+            const newStyle = style;
+            style = stack.pop();
+            if (!style) throw new ReferenceError(`Unmatched restore (${pos()})`);
+            const cleanupCommands = stateReverseTransition(style[stateSymbol], newStyle[stateSymbol]);
+            if (cleanupCommands.length) result += setCommands(cleanupCommands);
+            style.mark(t => (style = t));
+          }
+          continue;
+      }
+      style = style[command];
+      if (!style) throw new TypeError(`Wrong style property: "${command}" (${pos()})`);
+    }
+    if (!(style instanceof Style)) throw new TypeError(`The final object is not Style (${pos()})`);
+    result += style;
+    style.mark(t => (style = t));
+  }
+  return {result, style};
+};
+
+export const s = (strings, ...args) => {
+  const callAsFunction = !Array.isArray(strings),
+    stack = [];
+  let style = new Style(callAsFunction ? strings : {});
+
+  const bq = (strings, ...args) => {
+    let result = '';
+    for (let i = 0; i < args.length; ++i) {
+      // process a string constant
+      ({result, style} = processStringConstant(strings, i, result, stack, style));
+      // process an argument
+      const arg = args[i];
+      if (typeof arg == 'function') {
+        style = arg(style);
+        if (!(style instanceof Style)) throw new TypeError(`The returned object is not Style (argument #${i})`);
+        result += style;
+        style.mark(t => (style = t));
+        continue;
+      }
+      const input = String(arg);
+      style = style.add(input);
+      result += input;
+      style.mark(t => (style = t));
+    }
+    ({result} = processStringConstant(strings, strings.length - 1, result, stack, style));
+    return result;
+  };
+
+  if (callAsFunction) return bq;
+  return bq(strings, ...args);
+};
 
 // singleton
 export const style = new Style({});
