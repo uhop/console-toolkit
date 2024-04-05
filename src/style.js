@@ -184,6 +184,10 @@ export class Style {
     if (!Array.isArray(newCommands)) newCommands = [newCommands];
     return new Style(this[initStateSymbol], newState(newCommands, this[currentStateSymbol]), this[colorDepthSymbol]);
   }
+  mark(fn) {
+    fn(new Style(this[currentStateSymbol], null, this[colorDepthSymbol]));
+    return this;
+  }
   // color depth
   get colorDepth() {
     return this[colorDepthSymbol]; // 1, 4, 8, 24
