@@ -247,7 +247,7 @@ export const stateReverseTransition = (prev, next) => {
       // color
       if (!value) {
         if (next[name]) commands.push(resetColorProperties[name]);
-        ++resetCount;
+        if (value === null) ++resetCount;
         continue;
       }
       if (!equalColors(next[name], value)) pushColor(commands, value);
@@ -255,7 +255,7 @@ export const stateReverseTransition = (prev, next) => {
     }
     if (!value) {
       if (next[name]) commands.push(Commands['RESET_' + name.toUpperCase()]);
-      ++resetCount;
+      if (value === null) ++resetCount;
       continue;
     }
     if (next[name] !== value) commands.push(value);
