@@ -67,7 +67,7 @@ for (let i = 0; i < 24; ++i) {
 }
 console.log('\nGrayscale:', s);
 
-console.log('\nColor cube colors:');
+console.log('\nSelect color cube colors:');
 console.log(
   'Black:',
   style.bg.rgb6(0, 0, 0).text('  '),
