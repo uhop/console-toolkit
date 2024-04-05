@@ -55,13 +55,22 @@ const drawRow = (tableStyle, xAxis, yAxis, skip, symbol, y, i) =>
       const index = getIndex(xAxis, yAxis, skip, j, i);
       if (j & 1) {
         if ((i & 1) || index == ALL) return symbol.repeat(x);
+        if (!tableStyle['_h_' + y]) throw new TypeError(`Style has no "_h_${y}" property`);
         return tableStyle['_h_' + y].repeat(x);
       }
       if (i & 1) {
-        if (index == ALL) return symbol.repeat(tableStyle['_w_' + x]);
+        if (index == ALL) {
+          if (!tableStyle['_w_' + x]) throw new TypeError(`Style has no "_w_${x}" property`);
+          return symbol.repeat(tableStyle['_w_' + x]);
+        }
+        if (!tableStyle['_v_' + x]) throw new TypeError(`Style has no "_v_${x}" property`);
         return tableStyle['_v_' + x][index - 12];
       }
-      if (index == ALL) return symbol.repeat(tableStyle['_w_' + y]);
+      if (index == ALL) {
+        if (!tableStyle['_w_' + x]) throw new TypeError(`Style has no "_w_${x}" property`);
+        return symbol.repeat(tableStyle['_w_' + y]);
+      }
+      if (!tableStyle[y + '_' + x]) throw new TypeError(`Style has no "${y}_${x}" property`);
       return tableStyle[y + '_' + x][index];
     })
     .join('');
