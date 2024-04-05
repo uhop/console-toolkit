@@ -121,4 +121,15 @@ test('Styling', async t => {
       s = style.reset.color + style.reset.bgColor + style.reset.decorationColor + style.reset.all;
     t.equal(s, '\x1B[39m\x1B[49m\x1B[59m\x1B[m');
   });
+
+  await t.test('Named colors vs. RGB', t => {
+    t.equal(style.black + '', style.stdRgb(0, 0, 0) + '');
+    t.equal(style.red + '', style.stdRgb(1, 0, 0) + '');
+    t.equal(style.green + '', style.stdRgb(0, 1, 0) + '');
+    t.equal(style.yellow + '', style.stdRgb(1, 1, 0) + '');
+    t.equal(style.blue + '', style.stdRgb(0, 0, 1) + '');
+    t.equal(style.magenta + '', style.stdRgb(1, 0, 1) + '');
+    t.equal(style.cyan + '', style.stdRgb(0, 1, 1) + '');
+    t.equal(style.white + '', style.stdRgb(1, 1, 1) + '');
+  });
 });
