@@ -43,6 +43,8 @@ import {RESET_STATE, newState, stateTransition, stateReverseTransition, optimize
 import {matchCsi} from './ansi/csi.js';
 import {capitalize, toCamelCase, fromSnakeCase, addGetter, addAlias} from './meta.js';
 
+export {RESET_STATE};
+
 const styleSymbol = Symbol('styleObject'),
   isBrightSymbol = Symbol('isBright'),
   initStateSymbol = Symbol('initState'),
@@ -537,8 +539,9 @@ const processStringConstant = (strings, i, result, stack, style) => {
 
 export const s = (strings, ...args) => {
   const callAsFunction = !Array.isArray(strings),
+    initState = callAsFunction ? strings : {},
     stack = [];
-  let style = new Style(callAsFunction ? strings : {});
+  let style = new Style(initState);
 
   const bq = (strings, ...args) => {
     let result = '';
@@ -560,7 +563,7 @@ export const s = (strings, ...args) => {
       style.mark(t => (style = t));
     }
     ({result} = processStringConstant(strings, strings.length - 1, result, stack, style));
-    return optimize(result);
+    return optimize(result, initState);
   };
 
   if (callAsFunction) return bq;
