@@ -1,6 +1,6 @@
 import {log} from '../../src/show.js';
 import Panel from '../../src/panel.js';
-import {getBgColor, getBrightBgColor, Colors} from '../../src/ansi/sgr.js';
+import {getBgColor, getBgBrightColor, Colors} from '../../src/ansi/sgr.js';
 import {newState, RESET_STATE} from '../../src/ansi/sgr-state.js';
 
 const panel = new Panel(8, 4);
@@ -13,7 +13,7 @@ panel.fill(2, 1, 4, 2, '*', newState([getBgColor(Colors.RED)]));
 log(panel);
 console.log('==');
 
-const yellow = newState([getBrightBgColor(Colors.YELLOW)]);
+const yellow = newState([getBgBrightColor(Colors.YELLOW)]);
 panel.fillState(0, 0, 2, 1, yellow).fillState(6, 3, 2, 1, yellow);
 log(panel);
 console.log('==');
