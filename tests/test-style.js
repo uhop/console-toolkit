@@ -5,11 +5,11 @@ import style, {Style} from '../src/style.js';
 test('Styling', async t => {
   await t.test('One color output', t => {
     const s = style.cyan.text('cyan');
-    t.equal(s, '\x1B[36mcyan\x1B[m');
+    t.equal(s, '\x1B[36mcyan\x1B[39m');
   });
   await t.test('One color output (initial style is undefined)', t => {
     const s = new Style({}).cyan.text('cyan');
-    t.equal(s, '\x1B[36mcyan');
+    t.equal(s, '\x1B[36mcyan\x1B[39m');
   });
   await t.test('One color output (initial style is null)', t => {
     const s = new Style({foreground: null}).cyan.text('cyan');
@@ -17,16 +17,16 @@ test('Styling', async t => {
   });
   await t.test('One color output (colorDepth = 24)', t => {
     const s = style.rgb(0, 255, 255).text('cyan');
-    t.equal(s, '\x1B[38;2;0;255;255mcyan\x1B[m');
+    t.equal(s, '\x1B[38;2;0;255;255mcyan\x1B[39m');
   });
   await t.test('One color output (colorDepth = 8)', t => {
     const s = style.setColorDepth(8).rgb(0, 255, 255).text('cyan');
-    t.equal(s, '\x1B[38;5;51mcyan\x1B[m');
+    t.equal(s, '\x1B[38;5;51mcyan\x1B[39m');
   });
 
   await t.test('Chain of colors', t => {
     const s = style.black.red.green.yellow.blue.magenta.cyan.white.text('white');
-    t.equal(s, '\x1B[37mwhite\x1B[m');
+    t.equal(s, '\x1B[37mwhite\x1B[39m');
   });
   await t.test('List of colors', t => {
     const s =
