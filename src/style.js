@@ -38,15 +38,14 @@ import {
   BgColorOptions,
   DecorationColorOptions
 } from './ansi/sgr.js';
-import {RESET_STATE, newState, stateTransition} from './ansi/sgr-state.js';
+import {RESET_STATE, newState, stateTransition, stateReverseTransition} from './ansi/sgr-state.js';
 import {matchCsi} from './ansi/csi.js';
 import {capitalize, toCamelCase, fromSnakeCase, addGetter, addAlias} from './meta.js';
 
 const styleSymbol = Symbol('styleObject'),
-  commands = Symbol('commands'),
-  parentSymbol = Symbol('parent'),
   isBrightSymbol = Symbol('isBright'),
   initStateSymbol = Symbol('initState'),
+  currentStateSymbol = Symbol('currentState'),
   colorDepthSymbol = Symbol('colorDepth'),
   optionsSymbol = Symbol('options');
 
@@ -175,30 +174,22 @@ class Reset {
   }
 }
 
-const collectCommands = style =>
-  style[parentSymbol] ? collectCommands(style[parentSymbol]).concat(style[commands]) : style[commands];
-
 export class Style {
-  constructor(initState = RESET_STATE, newCommands, colorDepth = 24, parent = null) {
+  constructor(initState = RESET_STATE, currentState, colorDepth = 24) {
     this[initStateSymbol] = initState;
-    this[commands] = newCommands || [];
+    this[currentStateSymbol] = currentState || initState;
     this[colorDepthSymbol] = colorDepth;
-    this[parentSymbol] = parent;
   }
   make(newCommands = []) {
-    return new Style(
-      this[initStateSymbol],
-      Array.isArray(newCommands) ? newCommands : [newCommands],
-      this[colorDepthSymbol],
-      this
-    );
+    if (!Array.isArray(newCommands)) newCommands = [newCommands];
+    return new Style(this[initStateSymbol], newState(newCommands, this[currentStateSymbol]), this[colorDepthSymbol]);
   }
   // color depth
   get colorDepth() {
     return this[colorDepthSymbol]; // 1, 4, 8, 24
   }
   setColorDepth(colorDepth) {
-    return new Style(this[initStateSymbol], [], colorDepth, this);
+    return new Style(this[initStateSymbol], this[currentStateSymbol], colorDepth);
   }
   // fg, bg, decoration, reset, bright
   get fg() {
@@ -352,27 +343,23 @@ export class Style {
   }
   // wrap a string
   text(s) {
-    const commandsSoFar = collectCommands(this),
-      initialState = newState(commandsSoFar, this[initStateSymbol]);
-    let state = initialState;
+    let state = this[currentStateSymbol];
     matchCsi.lastIndex = 0;
     for (const match of s.matchAll(matchCsi)) {
       if (match[3] !== 'm') continue;
       state = newState(match[1].split(';'), state);
     }
     const initialCommands = stateTransition(this[initStateSymbol], state),
-      finalCommands = stateTransition(state, this[initStateSymbol]);
+      cleanupCommands = stateReverseTransition(this[initStateSymbol], state);
     return (
       (initialCommands.length ? setCommands(initialCommands) : '') +
       s +
-      (finalCommands.length ? setCommands(finalCommands) : '')
+      (cleanupCommands.length ? setCommands(cleanupCommands) : '')
     );
   }
   // convert to string
   toString() {
-    const commandsSoFar = collectCommands(this),
-      initialState = newState(commandsSoFar, this[initStateSymbol]),
-      initialCommands = stateTransition(this[initStateSymbol], initialState);
+    const initialCommands = stateTransition(this[initStateSymbol], this[currentStateSymbol]);
     return initialCommands.length ? setCommands(initialCommands) : '';
   }
 }
@@ -450,6 +437,6 @@ for (const [name, value] of Object.entries(Commands)) {
 }
 
 // singleton
-export const style = new Style();
+export const style = new Style({});
 
 export default style;
