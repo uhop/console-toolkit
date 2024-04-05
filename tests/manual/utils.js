@@ -8,3 +8,6 @@ export const draw = (...boxes) => {
   }
   result.forEach(line => console.log(line));
 };
+
+export const show = s =>
+  console.log(s.replace(/[\x00-\x1F]/g, m => '\\x' + m[0].charCodeAt(0).toString(16).toUpperCase()));
