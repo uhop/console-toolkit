@@ -1,4 +1,3 @@
-// import {log} from '../../src/show.js';
 import style from '../../src/style.js';
 
 const log = s => console.log(s.replace(/\x1B/g, '\\x1B'));
