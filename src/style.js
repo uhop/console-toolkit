@@ -2,6 +2,7 @@ import {
   Commands,
   setCommands,
   Colors,
+  colorStdRgb,
   getColor,
   getBrightColor,
   getBgColor,
@@ -81,7 +82,13 @@ class ExtendedColor {
     return this.make(getRawColor256(c));
   }
   stdRgb256(r, g, b) {
-    return this.make(getRawColor256((this[isBrightSymbol] ? 8 : 0) + (r ? 1 : 0) + (g ? 2 : 0) + (b ? 4 : 0)));
+    return this.make(getRawColor256((this[isBrightSymbol] ? 8 : 0) + colorStdRgb(r, g, b)));
+  }
+  brightStdRgb256(r, g, b) {
+    return this.make(getRawColor256(8 + colorStdRgb(r, g, b)));
+  }
+  darkStdRgb256(r, g, b) {
+    return this.make(getRawColor256(colorStdRgb(r, g, b)));
   }
   rgb256(r, g, b) {
     return this.make(getColor256(r, g, b));
@@ -119,6 +126,9 @@ class ExtendedColor {
     return this[styleSymbol][colorDepthSymbol] > 8 ? this.hexTrueColor(hex) : this.hex256(hex);
   }
 }
+addAlias(ExtendedColor, 'stdRgb', 'stdRgb256');
+addAlias(ExtendedColor, 'brightStdRgb', 'brightStdRgb256');
+addAlias(ExtendedColor, 'darkStdRgb', 'darkStdRgb256');
 
 class Color extends ExtendedColor {
   // options: bright
@@ -130,11 +140,20 @@ class Color extends ExtendedColor {
   }
   // standard colors: defined externally
   // get red() {
-  //   return this.make((this[isBrightSymbol] ? this[optionsSymbol].brightBase : this[optionsSymbol].base) + Colors.RED]);
+  //   return this.make((this[isBrightSymbol] ? this[optionsSymbol].brightBase : this[optionsSymbol].base) + Colors.RED);
   // }
   // get brightRed() {
-  //   return this.make(this[optionsSymbol].brightBase + Colors.RED]);
+  //   return this.make(this[optionsSymbol].brightBase + Colors.RED);
   // }
+  stdRgb(r, g, b) {
+    return this.make((this[isBrightSymbol] ? this[optionsSymbol].brightBase : this[optionsSymbol].base) + colorStdRgb(r, g, b));
+  }
+  brightStdRgb(r, g, b) {
+    return this.make(this[optionsSymbol].brightBase + colorStdRgb(r, g, b));
+  }
+  darkStdRgb(r, g, b) {
+    return this.make(this[optionsSymbol].base + colorStdRgb(r, g, b));
+  }
 }
 
 class Bright {
@@ -158,6 +177,12 @@ class Bright {
   // }
   stdRgb(r, g, b) {
     return this.make(this[isBrightSymbol] ? getBrightStdRgb(r, g, b) : getStdRgb(r, g, b));
+  }
+  brightStdRgb(r, g, b) {
+    return this.make(getBrightStdRgb(r, g, b));
+  }
+  darkStdRgb(r, g, b) {
+    return this.make(getStdRgb(r, g, b));
   }
 }
 
@@ -412,17 +437,19 @@ for (const [name, value] of Object.entries(Colors)) {
   addAlias(Style, 'bgDark' + nameCap, 'bg' + nameCap);
 }
 
+// color aliases
 addAlias(ExtendedColor, 'gray', 'brightBlack');
-addAlias(ExtendedColor, 'grey', 'brightBlack');
 addAlias(Style, 'gray', 'brightBlack');
-addAlias(Style, 'grey', 'brightBlack');
 addAlias(Style, 'bgGray', 'bgBrightBlack');
-addAlias(Style, 'bgGrey', 'bgBrightBlack');
 
+// alias "gray" to "grey"
+addAlias(ExtendedColor, 'grey', 'brightBlack');
 addAlias(ExtendedColor, 'greyscale', 'grayscale');
 addAlias(ExtendedColor, 'greyscale24', 'grayscale24');
 addAlias(ExtendedColor, 'greyscale256', 'grayscale256');
 addAlias(ExtendedColor, 'trueGreyscale', 'trueGrayscale');
+addAlias(Style, 'grey', 'brightBlack');
+addAlias(Style, 'bgGrey', 'bgBrightBlack');
 addAlias(Style, 'greyscale', 'grayscale');
 addAlias(Style, 'greyscale24', 'grayscale24');
 addAlias(Style, 'greyscale256', 'grayscale256');

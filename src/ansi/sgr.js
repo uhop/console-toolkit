@@ -109,15 +109,16 @@ export const colorNumber = color => {
   }
   return typeof color == 'number' && color >= 0 && color <= 9 ? color : 0;
 };
+export const colorStdRgb = (r, g, b) => (r ? 1 : 0) + (g ? 2 : 0) + (b ? 4 : 0);
 
 export const getColor = color => 30 + colorNumber(color);
 export const getBgColor = color => 40 + colorNumber(color);
 export const getBrightColor = color => 90 + colorNumber(color);
 export const getBgBrightColor = color => 100 + colorNumber(color);
-export const getStdRgb = (r, g, b) => getColor((r ? 1 : 0) + (g ? 2 : 0) + (b ? 4 : 0));
-export const getBgStdRgb = (r, g, b) => getBgColor((r ? 1 : 0) + (g ? 2 : 0) + (b ? 4 : 0));
-export const getBrightStdRgb = (r, g, b) => getBrightColor((r ? 1 : 0) + (g ? 2 : 0) + (b ? 4 : 0));
-export const getBgBrightStdRgb = (r, g, b) => getBrightBgColor((r ? 1 : 0) + (g ? 2 : 0) + (b ? 4 : 0));
+export const getStdRgb = (r, g, b) => getColor(colorStdRgb(r, g, b));
+export const getBgStdRgb = (r, g, b) => getBgColor(colorStdRgb(r, g, b));
+export const getBrightStdRgb = (r, g, b) => getBrightColor(colorStdRgb(r, g, b));
+export const getBgBrightStdRgb = (r, g, b) => getBrightBgColor(colorStdRgb(r, g, b));
 
 export const setColor = color => setCommands(getColor(color));
 export const setBgColor = color => setCommands(getBgColor(color));
