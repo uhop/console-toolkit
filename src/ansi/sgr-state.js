@@ -1,6 +1,14 @@
 // Support for states based on SGR commands. See https://en.wikipedia.org/wiki/ANSI_escape_code for more details.
 
-import {Commands, ColorFormatSize, isFgColorCommand, isBgColorCommand, isFontCommand} from './sgr.js';
+import {
+  Commands,
+  ColorFormatSize,
+  isFgColorCommand,
+  isBgColorCommand,
+  isFontCommand,
+  setCommands,
+  matchSgr
+} from './sgr.js';
 
 export const RESET_STATE = {
   bold: null,
@@ -267,4 +275,25 @@ export const stateReverseTransition = (prev, next) => {
   }
 
   return commands;
+};
+
+export const optimize = (s, initState = {}) => {
+  let state = initState,
+    result = '',
+    start = 0;
+  matchSgr.lastIndex = 0;
+  for (const match of s.matchAll(matchSgr)) {
+    if (start < match.index) {
+      const commands = initState !== state ? stateTransition(initState, state) : [];
+      if (commands.length) result += setCommands(commands);
+      initState = state;
+      result += s.substring(start, match.index);
+    }
+    state = newState(match[1].split(';'), state);
+    start = match.index + match[0].length;
+  }
+  const commands = initState !== state ? stateTransition(initState, state) : [];
+  if (commands.length) result += setCommands(commands);
+  if (start < s.length) result += s.substring(start);
+  return result;
 };

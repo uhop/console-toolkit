@@ -39,7 +39,7 @@ import {
   BgColorOptions,
   DecorationColorOptions
 } from './ansi/sgr.js';
-import {RESET_STATE, newState, stateTransition, stateReverseTransition} from './ansi/sgr-state.js';
+import {RESET_STATE, newState, stateTransition, stateReverseTransition, optimize} from './ansi/sgr-state.js';
 import {matchCsi} from './ansi/csi.js';
 import {capitalize, toCamelCase, fromSnakeCase, addGetter, addAlias} from './meta.js';
 
@@ -560,7 +560,7 @@ export const s = (strings, ...args) => {
       style.mark(t => (style = t));
     }
     ({result} = processStringConstant(strings, strings.length - 1, result, stack, style));
-    return result;
+    return optimize(result);
   };
 
   if (callAsFunction) return bq;
