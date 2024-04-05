@@ -344,13 +344,13 @@ export class Style {
   // wrap a string
   text(s) {
     let state = this[currentStateSymbol];
+    const initialCommands = stateTransition(this[initStateSymbol], state);
     matchCsi.lastIndex = 0;
     for (const match of s.matchAll(matchCsi)) {
       if (match[3] !== 'm') continue;
       state = newState(match[1].split(';'), state);
     }
-    const initialCommands = stateTransition(this[initStateSymbol], state),
-      cleanupCommands = stateReverseTransition(this[initStateSymbol], state);
+    const cleanupCommands = stateReverseTransition(this[initStateSymbol], state);
     return (
       (initialCommands.length ? setCommands(initialCommands) : '') +
       s +
