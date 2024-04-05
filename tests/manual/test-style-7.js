@@ -1,7 +1,5 @@
 import style from '../../src/style.js';
 
-const log = s => console.log(s.replace(/\x1B/g, '\\x1B'));
-
 console.log(
   `Colors: ${style.bold.bright.white.bg.brightBlack.text(' bg.brightBlack ')}${style.bold.bright.white.bg.gray.text(
     ' bg.gray '
