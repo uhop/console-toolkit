@@ -18,8 +18,6 @@ console.log(
     ' - unstyled?'
 );
 
-console.log(' ');
-
 console.log(
   'Embedded colors: ' +
     style.bg.bright.black.bold.bright.red.text(
