@@ -1,5 +1,5 @@
 import {draw as drawTable} from '../../src/table/index.js';
-import {style} from '../../src/table/style-ascii-girder.js';
+import {style} from '../../src/line-styles/style-ascii-girder.js';
 import {draw} from './utils.js';
 
 const box1 = drawTable(style, ['g', 1, 'g', 1, 'g', 1, 'g'], ['g', 1, 'g', 1, 'g', 1, 'g']);

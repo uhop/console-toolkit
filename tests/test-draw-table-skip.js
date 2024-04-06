@@ -1,7 +1,7 @@
 import test from 'tape-six';
 
 import {draw} from '../src/table/index.js';
-import {style} from '../src/table/style-unicode-rounded.js';
+import {style} from '../src/line-styles/style-unicode-rounded.js';
 
 test('Draw a table with skip rectangles', async t => {
   await t.test('Round table with two merged cells', t => {
