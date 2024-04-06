@@ -1,5 +1,5 @@
 import style from '../../src/style.js';
-import {draw, show} from './utils.js';
+import {draw} from './utils.js';
 
 console.log(style.bold.text('DEPTH=4 COLORS=16') + '\n');
 
