@@ -1,7 +1,7 @@
 import test from 'tape-six';
 
 import {draw} from '../src/table/index.js';
-import {style} from '../src/line-styles/style-unicode.js';
+import {style} from '../src/line-styles/unicode.js';
 
 test('Draw a table', async t => {
   await t.test('Single lines', t => {

@@ -1,5 +1,5 @@
 import {draw as drawTable} from '../../src/table/index.js';
-import {style} from '../../src/line-styles/style-unicode.js';
+import {style} from '../../src/line-styles/unicode.js';
 import {draw} from './utils.js';
 
 const box1 = drawTable(style, [1, 1, 1], [1, 1, 1]);
