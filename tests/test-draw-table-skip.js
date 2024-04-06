@@ -1,14 +1,14 @@
 import test from 'tape-six';
 
 import {draw} from '../src/table/index.js';
-import {style} from '../src/table/style-unicode.js';
+import {style} from '../src/table/style-unicode-rounded.js';
 
 test('Draw a table with skip rectangles', async t => {
   await t.test('Round table with two merged cells', t => {
     const box = draw(
       style,
-      ['r', 1, 'r', 1, 'r', 1, 'r'],
-      ['r', 1, 'r', 1, 'r', 1, 'r'],
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1],
       [
         {x: 1, y: 5, width: 3, height: 1},
         {x: 1, y: 1, width: 3, height: 3}
@@ -24,8 +24,8 @@ test('Draw a table with skip rectangles', async t => {
   await t.test('Double lines outside, single lines inside', t => {
     const box = draw(
       style,
-      ['r', 1, 'r', 1, 'r', 1, 'r'],
-      ['r', 1, 'r', 1, 'r', 1, 'r'],
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1],
       [
         {x: 1, y: 1, width: 2, height: 1},
         {x: 1, y: 2, width: 1, height: 2},
