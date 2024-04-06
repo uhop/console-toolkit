@@ -2,6 +2,7 @@ import {
   Commands,
   setCommands,
   Colors,
+  colorNumber,
   colorStdRgb,
   getColor,
   getBrightColor,
@@ -16,6 +17,7 @@ import {
   getGrayColor24,
   getTrueColor,
   getHexTrueColor,
+  getBgBrightStdRgb,
   getBgRawColor256,
   getBgColor256,
   getBgHexColor256,
@@ -39,7 +41,14 @@ import {
   BgColorOptions,
   DecorationColorOptions
 } from './ansi/sgr.js';
-import {RESET_STATE, newState, stateTransition, stateReverseTransition, optimize} from './ansi/sgr-state.js';
+import {
+  RESET_STATE,
+  combineStates,
+  newState,
+  stateTransition,
+  stateReverseTransition,
+  optimize
+} from './ansi/sgr-state.js';
 import {matchCsi} from './ansi/csi.js';
 import {capitalize, toCamelCase, fromSnakeCase, addGetter, addAlias} from './meta.js';
 
@@ -431,6 +440,7 @@ const make = value =>
 for (const [name, value] of Object.entries(Colors)) {
   const nameLower = name.toLowerCase(),
     nameCap = capitalize(name);
+
   addGetter(ExtendedColor, nameLower, function () {
     return this.make([this[optionsSymbol].extended, ColorFormat.COLOR_256, (this[isBrightSymbol] ? 8 : 0) + value]);
   });
@@ -439,6 +449,18 @@ for (const [name, value] of Object.entries(Colors)) {
   });
   addGetter(ExtendedColor, 'dark' + nameCap, function () {
     return this.make([this[optionsSymbol].extended, ColorFormat.COLOR_256, value]);
+  });
+
+  addGetter(Color, nameLower, function () {
+    return this.make(
+      (this[isBrightSymbol] ? this[optionsSymbol].brightBase : this[optionsSymbol].base) + colorNumber(value)
+    );
+  });
+  addGetter(Color, 'bright' + nameCap, function () {
+    return this.make(this[optionsSymbol].brightBase + colorNumber(value));
+  });
+  addGetter(Color, 'dark' + nameCap, function () {
+    return this.make(this[optionsSymbol].base + colorNumber(value));
   });
 
   addGetter(Bright, nameLower, function () {
@@ -461,6 +483,7 @@ addAlias(Style, 'addCommands', 'make');
 
 // color aliases
 addAlias(ExtendedColor, 'gray', 'brightBlack');
+addAlias(Color, 'gray', 'brightBlack');
 addAlias(Style, 'gray', 'brightBlack');
 addAlias(Style, 'bgGray', 'bgBrightBlack');
 
@@ -470,6 +493,7 @@ addAlias(ExtendedColor, 'greyscale', 'grayscale');
 addAlias(ExtendedColor, 'greyscale24', 'grayscale24');
 addAlias(ExtendedColor, 'greyscale256', 'grayscale256');
 addAlias(ExtendedColor, 'trueGreyscale', 'trueGrayscale');
+addAlias(Color, 'grey', 'brightBlack');
 addAlias(Style, 'grey', 'brightBlack');
 addAlias(Style, 'bgGrey', 'bgBrightBlack');
 addAlias(Style, 'greyscale', 'grayscale');
