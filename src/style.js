@@ -476,6 +476,7 @@ for (const [name, value] of Object.entries(Colors)) {
 
 // method aliases
 addAlias(Style, 'addCommands', 'make');
+addAlias(Style, 'decoration', 'colorDecoration');
 
 // color aliases
 addAlias(ExtendedColor, 'gray', 'brightBlack');
