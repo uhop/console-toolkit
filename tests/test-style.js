@@ -132,4 +132,25 @@ test('Styling', async t => {
     t.equal(style.cyan + '', style.stdRgb(0, 1, 1) + '');
     t.equal(style.white + '', style.stdRgb(1, 1, 1) + '');
   });
+
+  await t.test('Check different ways to specify a named color', t => {
+    t.equal(style.brightRed + '', style.brightStdRgb(1, 0, 0) + '');
+    t.equal(style.brightRed + '', style.bright.red + '');
+    t.equal(style.brightRed + '', style.bright.dark.bright.red + '');
+    t.equal(style.brightRed + '', style.fg.brightStdRgb(1, 0, 0) + '');
+    t.equal(style.brightRed + '', style.fg.brightRed + '');
+    t.equal(style.brightRed + '', style.fg.bright.red + '');
+    t.equal(style.brightRed + '', style.fg.bright.dark.bright.red + '');
+
+    t.equal(style.bgBrightRed + '', style.bgBrightStdRgb(1, 0, 0) + '');
+    t.equal(style.bgBrightRed + '', style.bg.brightStdRgb(1, 0, 0) + '');
+    t.equal(style.bgBrightRed + '', style.bg.brightRed + '');
+    t.equal(style.bgBrightRed + '', style.bg.bright.red + '');
+    t.equal(style.bgBrightRed + '', style.bg.bright.dark.bright.red + '');
+  });
+
+  await t.test('Condense commands into a state', t => {
+    const state = style.bold.bright.yellow.bg.blue.getState();
+    t.equal(style.italic.addState(state) + 'text' + style.reset.all, '\x1B[1;3;93;44mtext\x1B[m');
+  });
 });
