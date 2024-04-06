@@ -545,7 +545,7 @@ const processStringConstant = (strings, i, result, stack, style) => {
       // process a string
       style = style.add(input);
       result += style + input;
-      style.mark(t => (style = t));
+      style = style.mark();
       continue;
     }
     // process commands
@@ -554,7 +554,8 @@ const processStringConstant = (strings, i, result, stack, style) => {
         case 'save':
           const setupCommands = stateTransition(style[initStateSymbol], style[stateSymbol]);
           if (setupCommands.length) result += setCommands(setupCommands);
-          stack.push(style.mark(t => (style = t)));
+          stack.push(style);
+          style = style.mark();
           continue;
         case 'restore':
           {
@@ -563,7 +564,7 @@ const processStringConstant = (strings, i, result, stack, style) => {
             if (!style) throw new ReferenceError(`Unmatched restore (${pos()})`);
             const cleanupCommands = stateReverseTransition(style[stateSymbol], newStyle[stateSymbol]);
             if (cleanupCommands.length) result += setCommands(cleanupCommands);
-            style.mark(t => (style = t));
+            style = style.mark();
           }
           continue;
       }
@@ -572,7 +573,7 @@ const processStringConstant = (strings, i, result, stack, style) => {
     }
     if (!(style instanceof Style)) throw new TypeError(`The final object is not Style (${pos()})`);
     result += style;
-    style.mark(t => (style = t));
+    style = style.mark();
   }
   return {result, style};
 };
@@ -594,13 +595,13 @@ export const s = (strings, ...args) => {
         style = arg(style);
         if (!(style instanceof Style)) throw new TypeError(`The returned object is not Style (argument #${i})`);
         result += style;
-        style.mark(t => (style = t));
+        style = style.mark();
         continue;
       }
       const input = String(arg);
       style = style.add(input);
       result += input;
-      style.mark(t => (style = t));
+      style = style.mark();
     }
     ({result} = processStringConstant(strings, strings.length - 1, result, stack, style));
     return optimize(result, initState);
