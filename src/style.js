@@ -226,10 +226,18 @@ export class Style {
     return new Style(this[initStateSymbol], combineStates(this[stateSymbol], state), this[colorDepthSymbol]);
   }
   mark(fn) {
-    fn(new Style(this[stateSymbol], null, this[colorDepthSymbol]));
+    const newStyle = new Style(this[stateSymbol], null, this[colorDepthSymbol]);
+    if (typeof fn != 'function') return newStyle;
+    fn(newStyle);
+    return this;
+  }
+  getInitialState(fn) {
+    if (typeof fn != 'function') return this[initStateSymbol];
+    fn(this[initStateSymbol]);
     return this;
   }
   getState(fn) {
+    if (typeof fn != 'function') return this[stateSymbol];
     fn(this[stateSymbol]);
     return this;
   }
