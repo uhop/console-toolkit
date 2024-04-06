@@ -118,7 +118,7 @@ export const getBgBrightColor = color => 100 + colorNumber(color);
 export const getStdRgb = (r, g, b) => getColor(colorStdRgb(r, g, b));
 export const getBgStdRgb = (r, g, b) => getBgColor(colorStdRgb(r, g, b));
 export const getBrightStdRgb = (r, g, b) => getBrightColor(colorStdRgb(r, g, b));
-export const getBgBrightStdRgb = (r, g, b) => getBrightBgColor(colorStdRgb(r, g, b));
+export const getBgBrightStdRgb = (r, g, b) => getBgBrightColor(colorStdRgb(r, g, b));
 
 export const setColor = color => setCommands(getColor(color));
 export const setBgColor = color => setCommands(getBgColor(color));
