@@ -222,6 +222,9 @@ export class Style {
     }
     return state === this[stateSymbol] ? this : new Style(this[initStateSymbol], state, this[colorDepthSymbol]);
   }
+  addState(state) {
+    return new Style(this[initStateSymbol], combineStates(this[stateSymbol], state), this[colorDepthSymbol]);
+  }
   mark(fn) {
     fn(new Style(this[stateSymbol], null, this[colorDepthSymbol]));
     return this;
@@ -445,6 +448,9 @@ for (const [name, value] of Object.entries(Colors)) {
   addAlias(Style, 'bgDark' + nameCap, 'bg' + nameCap);
 }
 
+// method aliases
+addAlias(Style, 'addCommands', 'make');
+
 // color aliases
 addAlias(ExtendedColor, 'gray', 'brightBlack');
 addAlias(Style, 'gray', 'brightBlack');
@@ -483,6 +489,8 @@ for (const [name, value] of Object.entries(Commands)) {
     addGetter(Style, toCamelCase(fromSnakeCase(name)), make(value));
   }
 }
+
+// the back quote function
 
 const matchOps = /\{\{([\.\w]+)\}\}/g;
 
