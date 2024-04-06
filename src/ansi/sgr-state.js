@@ -277,6 +277,8 @@ export const stateReverseTransition = (prev, next) => {
   return commands;
 };
 
+export const stringifyCommands = commands => commands?.length ? setCommands(commands) : '';
+
 export const optimize = (s, initState = {}) => {
   let state = initState,
     result = '',
@@ -285,7 +287,7 @@ export const optimize = (s, initState = {}) => {
   for (const match of s.matchAll(matchSgr)) {
     if (start < match.index) {
       const commands = initState !== state ? stateTransition(initState, state) : [];
-      if (commands.length) result += setCommands(commands);
+      result += stringifyCommands(commands);
       initState = state;
       result += s.substring(start, match.index);
     }
@@ -293,7 +295,7 @@ export const optimize = (s, initState = {}) => {
     start = match.index + match[0].length;
   }
   const commands = initState !== state ? stateTransition(initState, state) : [];
-  if (commands.length) result += setCommands(commands);
+  result += stringifyCommands(commands);
   if (start < s.length) result += s.substring(start);
   return result;
 };

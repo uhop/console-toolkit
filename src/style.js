@@ -1,6 +1,5 @@
 import {
   Commands,
-  setCommands,
   Colors,
   colorNumber,
   colorStdRgb,
@@ -47,6 +46,7 @@ import {
   newState,
   stateTransition,
   stateReverseTransition,
+  stringifyCommands,
   optimize
 } from './ansi/sgr-state.js';
 import {matchCsi} from './ansi/csi.js';
@@ -417,16 +417,12 @@ export class Style {
       state = newState(match[1].split(';'), state);
     }
     const cleanupCommands = stateReverseTransition(this[initStateSymbol], state);
-    return (
-      (initialCommands.length ? setCommands(initialCommands) : '') +
-      s +
-      (cleanupCommands.length ? setCommands(cleanupCommands) : '')
-    );
+    return stringifyCommands(initialCommands) + s + stringifyCommands(cleanupCommands);
   }
   // convert to string
   toString() {
     const initialCommands = stateTransition(this[initStateSymbol], this[stateSymbol]);
-    return initialCommands.length ? setCommands(initialCommands) : '';
+    return stringifyCommands(initialCommands);
   }
 }
 
@@ -553,7 +549,7 @@ const processStringConstant = (strings, i, result, stack, style) => {
       switch (command) {
         case 'save':
           const setupCommands = stateTransition(style[initStateSymbol], style[stateSymbol]);
-          if (setupCommands.length) result += setCommands(setupCommands);
+          result += stringifyCommands(setupCommands);
           stack.push(style);
           style = style.mark();
           continue;
@@ -563,7 +559,7 @@ const processStringConstant = (strings, i, result, stack, style) => {
             style = stack.pop();
             if (!style) throw new ReferenceError(`Unmatched restore (${pos()})`);
             const cleanupCommands = stateReverseTransition(style[stateSymbol], newStyle[stateSymbol]);
-            if (cleanupCommands.length) result += setCommands(cleanupCommands);
+            result += stringifyCommands(cleanupCommands);
             style = style.mark();
           }
           continue;
