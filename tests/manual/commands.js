@@ -1,6 +1,3 @@
-import {normalizeBox} from '../../src/box/index.js';
-import {padBoxRight} from '../../src/box/pad.js';
-import {stackHorizontally} from '../../src/box/stack.js';
 import style, {s} from '../../src/style.js';
 import {draw, show} from './utils.js';
 
@@ -13,7 +10,7 @@ console.log(s`{{bold.bright.cyan}}Supported commands{{reset.all}}\n`);
     names.push(name + ':');
     values.push(style[name].text('sample'));
   }
-  draw(stackHorizontally(padBoxRight(normalizeBox(names), 1), normalizeBox(values)));
+  draw(names, values);
 }
 
 console.log(s`\n{{bold.bright.cyan}}Underline versions{{reset.all}}\n`);
@@ -25,7 +22,7 @@ console.log(s`\n{{bold.bright.cyan}}Underline versions{{reset.all}}\n`);
     names.push(name + ':');
     values.push(style[name].text('sample'));
   }
-  draw(stackHorizontally(padBoxRight(normalizeBox(names), 1), normalizeBox(values)));
+  draw(names, values);
 }
 
 console.log(s`\n{{bold.bright.cyan}}Underline decoration colors{{reset.all}}\n`);
@@ -38,5 +35,5 @@ console.log(s`\n{{bold.bright.cyan}}Underline decoration colors{{reset.all}}\n`)
       style.curlyUnderline.decoration.bright.red.text('sample'),
       style.underline.decoration.bright.green.text('sample')
     ];
-  draw(stackHorizontally(padBoxRight(normalizeBox(names), 1), normalizeBox(values)));
+  draw(names, values);
 }

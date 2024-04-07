@@ -1,25 +1,32 @@
 import process from 'node:process';
 import {matchCsiNoGroups} from './ansi/utils.js';
+import Box from './Box.js';
+
+const toBox = s => {
+  if (s instanceof Box) return s;
+  if (s && typeof s == 'object' && typeof s.toBox == 'function') {
+    return s.toBox('', ' ');
+  }
+  return new Box(s);
+};
 
 export const log = (s, endOfLineCommand = '\x1B[m', colorDepth = 24) => {
-  if (typeof s == 'string') s = s.split(/\r?\n/g);
-  if (s && typeof s == 'object' && typeof s.toBox == 'function') s = s.toBox('', ' ');
+  s = toBox(s);
   if (colorDepth < 4) {
-    s.forEach(row => console.log((row + endOfLineCommand).replace(matchCsiNoGroups, '')));
+    s.box.forEach(row => console.log((row + endOfLineCommand).replace(matchCsiNoGroups, '')));
     return;
   }
-  s.forEach(row => console.log(row + endOfLineCommand));
+  s.box.forEach(row => console.log(row + endOfLineCommand));
 };
 
 export const out = (s, stream = process.stdout, endOfLineCommand = '\x1B[m', colorDepth) => {
+  s = toBox(s);
   if (typeof colorDepth != 'number') colorDepth = stream.isTTY ? stream.getColorDepth() : 1;
-  if (typeof s == 'string') s = s.split(/\r?\n/g);
-  if (s && typeof s == 'object' && typeof s.toBox == 'function') s = s.toBox('', ' ');
   if (colorDepth < 4) {
-    s.forEach(row => stream.write((row + endOfLineCommand).replace(matchCsiNoGroups, '') + '\n'));
+    s.box.forEach(row => stream.write((row + endOfLineCommand).replace(matchCsiNoGroups, '') + '\n'));
     return;
   }
-  s.forEach(row => stream.write(row + endOfLineCommand + '\n'));
+  s.box.forEach(row => stream.write(row + endOfLineCommand + '\n'));
 };
 
 export class Out {

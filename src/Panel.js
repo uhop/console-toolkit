@@ -1,6 +1,7 @@
 import {getLength} from './ansi/utils.js';
 import {matchCsi} from './ansi/csi.js';
 import {newState, stateTransition, stringifyCommands, RESET_STATE} from './ansi/sgr-state.js';
+import Box from './Box.js';
 
 // TODO: When copying and filling areas accept a state that finishes a row. The same goes for `addRight()`.
 
@@ -16,13 +17,13 @@ export class Panel {
   }
 
   static fromBox(box, ignore = '\x07') {
-    // box should be normalized
-    if (!box || !box.length || !box[0].length) return null;
+    if (!(box instanceof Box)) box = new Box(box);
+    if (!box.height || !box.width) return null;
 
-    const panel = new Panel(getLength(box[0]), box.length);
+    const panel = new Panel(box.width, box.height);
 
-    for (let i = 0; i < box.length; ++i) {
-      const row = box[i],
+    for (let i = 0, n = box.height; i < n; ++i) {
+      const row = box.box[i],
         panelRow = panel.box[i];
       let start = 0,
         pos = 0,
@@ -64,7 +65,7 @@ export class Panel {
       box[i] = row + endOfLineCommand;
     }
 
-    return box;
+    return new Box(box, true);
   }
 
   extract(x, y, width, height) {
@@ -150,24 +151,24 @@ export class Panel {
 
     // normalize arguments
 
-    const box = Array.isArray(text) ? text : String(text).split(/\r?\n/g);
-    if (!box.length) return this;
-
-    let height = box.length;
+    const box = text instanceof Box ? text : new Box(text);
+    let height = box.height;
+    if (!height) return this;
 
     if (x < 0) x = 0;
     if (x >= this.width) return this;
 
     if (y < 0) y = 0;
     if (y >= this.height) return this;
-    if (y + height > this.height) {
-      height = this.height - y;
-    }
+    if (y + height > this.height) height = this.height - y;
 
     // copy characters
     for (let i = 0; i < height; ++i) {
-      const row = this.box[y + i], s = box[i];
-      let start = 0, pos = 0, state = x > 0 && row[x - 1] ? row[x - 1].state : RESET_STATE;
+      const row = this.box[y + i],
+        s = box.box[i];
+      let start = 0,
+        pos = 0,
+        state = x > 0 && row[x - 1] ? row[x - 1].state : RESET_STATE;
       matchCsi.lastIndex = 0;
       for (const match of s.matchAll(matchCsi)) {
         for (let j = start, n = match.index; j < n; ++j, ++pos) {
@@ -547,12 +548,18 @@ export class Panel {
 
     if (diff >= 0) {
       const half = diff >> 1;
-      this.box.splice(this.height, 0, ...panel.box.map(row => new Array(half).fill(null).concat(row, new Array(diff - half).fill(null))));
+      this.box.splice(
+        this.height,
+        0,
+        ...panel.box.map(row => new Array(half).fill(null).concat(row, new Array(diff - half).fill(null)))
+      );
       return this;
     }
 
     const half = -diff >> 1;
-    this.box = this.box.map(row => new Array(half).fill(null).concat(row, new Array(-diff - half).fill(null))).concat(panel.box);
+    this.box = this.box
+      .map(row => new Array(half).fill(null).concat(row, new Array(-diff - half).fill(null)))
+      .concat(panel.box);
     return this;
   }
 }

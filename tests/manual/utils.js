@@ -1,15 +1,14 @@
-import {padBoxLeft} from '../../src/box/pad.js';
-import {stackHorizontally} from '../../src/box/stack.js';
+import Box from '../../src/Box.js';
 
-export const drawBox = box => box.forEach(line => console.log(line));
+export const drawBox = box => box.box.forEach(line => console.log(line));
 
 export const draw = (...boxes) => {
   if (!boxes.length) return;
-  if (boxes.length == 1) return drawBox(boxes[0]);
+  if (boxes.length == 1) return drawBox(new Box(boxes[0]).box);
 
   let result;
   for (const box of boxes) {
-    result = result ? stackHorizontally(result, padBoxLeft(box, 2)) : box;
+    result = result ? result.addRight(new Box(box).padLeft(2)) : new Box(box);
   }
   drawBox(result);
 };
