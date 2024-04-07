@@ -1,3 +1,5 @@
+import Box from '../Box.js';
+
 // An axis structure is an array:
 //   - every even element is a drawing style defined by a table style
 //     - if it is falsy (e.g., 0), the line is skipped
@@ -22,19 +24,19 @@ const LEFT = 8,
   DOWN = 1,
   ALL = 15;
 
-const getIndex = (xAxis, yAxis, skip, x, y) => {
+const getIndex = (hAxis, vAxis, skip, x, y) => {
   let index = 0;
   // use geometry
   if (x == 0) {
     index |= LEFT; // skip left
-  } else if (x == xAxis.length - 1) {
+  } else if (x == hAxis.length - 1) {
     index |= RIGHT; // skip right
   } else if (x & 1) {
     index |= UP | DOWN; // skip up + down
   }
   if (y == 0) {
     index |= UP; // skip up
-  } else if (y == yAxis.length - 1) {
+  } else if (y == vAxis.length - 1) {
     index |= DOWN; // skip down
   } else if (y & 1) {
     index |= LEFT | RIGHT; // skip left + right
@@ -48,13 +50,13 @@ const getIndex = (xAxis, yAxis, skip, x, y) => {
   return index;
 };
 
-const drawRow = (tableStyle, xAxis, yAxis, skip, symbol, y, i) =>
-  xAxis
+const drawRow = (tableStyle, hAxis, vAxis, skip, symbol, y, i) =>
+  hAxis
     .map((x, j) => {
       if (!x) return '';
-      const index = getIndex(xAxis, yAxis, skip, j, i);
+      const index = getIndex(hAxis, vAxis, skip, j, i);
       if (j & 1) {
-        if ((i & 1) || index == ALL) return symbol.repeat(x);
+        if (i & 1 || index == ALL) return symbol.repeat(x);
         if (!tableStyle['_h_' + y]) throw new TypeError(`Style has no "_h_${y}" property`);
         return tableStyle['_h_' + y].repeat(x);
       }
@@ -75,16 +77,19 @@ const drawRow = (tableStyle, xAxis, yAxis, skip, symbol, y, i) =>
     })
     .join('');
 
-export const draw = (tableStyle, xAxis, yAxis, skip = [], symbol = ' ') =>
-  yAxis
-    .map((y, i) => {
-      if (!y) return [];
-      if (i & 1) {
-        const row = drawRow(tableStyle, xAxis, yAxis, skip, symbol, y, i);
-        return y == 1 ? row : new Array(y).fill(row);
-      }
-      return drawRow(tableStyle, xAxis, yAxis, skip, symbol, y, i);
-    })
-    .flat(1);
+export const draw = (tableStyle, hAxis, vAxis, skip = [], symbol = ' ') =>
+  new Box(
+    vAxis
+      .map((y, i) => {
+        if (!y) return [];
+        if (i & 1) {
+          const row = drawRow(tableStyle, hAxis, vAxis, skip, symbol, y, i);
+          return y == 1 ? row : new Array(y).fill(row);
+        }
+        return drawRow(tableStyle, hAxis, vAxis, skip, symbol, y, i);
+      })
+      .flat(1),
+    true
+  );
 
 export default draw;

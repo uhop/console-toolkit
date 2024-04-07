@@ -1,4 +1,4 @@
-import {draw as drawTable} from '../../src/table/index.js';
+import {draw as drawTable} from '../../src/table/draw-borders.js';
 import {style} from '../../src/line-styles/ascii.js';
 import {draw} from './utils.js';
 

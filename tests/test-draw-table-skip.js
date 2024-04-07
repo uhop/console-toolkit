@@ -1,6 +1,6 @@
 import test from 'tape-six';
 
-import {draw} from '../src/table/index.js';
+import {draw} from '../src/table/draw-borders.js';
 import {style} from '../src/line-styles/unicode-rounded.js';
 
 test('Draw a table with skip rectangles', async t => {
@@ -15,10 +15,10 @@ test('Draw a table with skip rectangles', async t => {
       ]
     );
 
-    t.equal(box.length, 7);
-    t.equal(box[0].length, 7);
+    t.equal(box.height, 7);
+    t.equal(box.width, 7);
 
-    t.deepEqual(box, ['╭───┬─╮', '│   │ │', '│   ├─┤', '│   │ │', '├───┼─┤', '│   │ │', '╰───┴─╯']);
+    t.deepEqual(box.box, ['╭───┬─╮', '│   │ │', '│   ├─┤', '│   │ │', '├───┼─┤', '│   │ │', '╰───┴─╯']);
   });
 
   await t.test('Double lines outside, single lines inside', t => {
@@ -33,9 +33,9 @@ test('Draw a table with skip rectangles', async t => {
       ]
     );
 
-    t.equal(box.length, 7);
-    t.equal(box[0].length, 7);
+    t.equal(box.height, 7);
+    t.equal(box.width, 7);
 
-    t.deepEqual(box, ['╭───┬─╮', '│   │ │', '│ ╭─┴─┤', '│ │   │', '├─┤   │', '│ │   │', '╰─┴───╯']);
+    t.deepEqual(box.box, ['╭───┬─╮', '│   │ │', '│ ╭─┴─┤', '│ │   │', '├─┤   │', '│ │   │', '╰─┴───╯']);
   });
 });
