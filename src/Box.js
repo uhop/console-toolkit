@@ -12,7 +12,7 @@ export class Box {
   }
 
   get width() {
-    return this.box.length ? getLength(this.box[0].length) : 0;
+    return this.box.length ? getLength(this.box[0]) : 0;
   }
   get height() {
     return this.box.length;
@@ -125,9 +125,11 @@ export class Box {
       let x = diff < 0 ? a : b;
       switch (align) {
         case 'left':
+        case 'l':
           x = x.padRight(d, symbol);
           break;
         case 'right':
+        case 'r':
           x = x.padLeft(d, symbol);
           break;
         default: // center
@@ -155,10 +157,12 @@ export class Box {
     const diff = Math.abs(ah - bh);
     switch (align) {
       case 'top':
+      case 't':
         t = 0;
         b = diff;
         break;
       case 'bottom':
+      case 'b':
         t = diff;
         b = 0;
         break;
