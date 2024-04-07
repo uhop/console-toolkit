@@ -188,7 +188,7 @@ export class Panel {
     return this;
   }
 
-  fill(x, y, width, height, symbol, state = {}) {
+  fillFn(x, y, width, height, fn) {
     // normalize arguments
 
     if (x < 0) x = 0;
@@ -203,59 +203,48 @@ export class Panel {
       height = this.height - y;
     }
 
-    if (typeof state == 'string') {
-      state = newState(state.split(';'));
-    } else if (Array.isArray(state)) {
-      state = newState(state);
-    }
-
     // fill cells
     for (let i = 0; i < height; ++i) {
       const row = this.box[y + i];
       for (let j = 0; j < width; ++j) {
-        row[x + j] = {symbol, state};
+        const cell = row[x + j],
+          newCell = fn(x + j, y + i, cell);
+        if (newCell !== undefined) row[x + j] = newCell;
       }
     }
 
     return this;
   }
 
-  fillState(x, y, width, height, state = {}, ignore = ' ') {
-    // normalize arguments
-
-    if (x < 0) x = 0;
-    if (x >= this.width) return this;
-    if (x + width > this.width) {
-      width = this.width - x;
-    }
-
-    if (y < 0) y = 0;
-    if (y >= this.height) return this;
-    if (y + height > this.height) {
-      height = this.height - y;
-    }
-
+  fill(x, y, width, height, symbol, state = {}) {
     if (typeof state == 'string') {
       state = newState(state.split(';'));
     } else if (Array.isArray(state)) {
       state = newState(state);
     }
+    return this.fillFn(x, y, width, height, () => ({symbol, state}));
+  }
 
-    // fill cells
-    for (let i = 0; i < height; ++i) {
-      const row = this.box[y + i];
-      for (let j = 0; j < width; ++j) {
-        const cell = row[x + j];
-        row[x + j] = {symbol: cell ? cell.symbol : ignore, state};
-      }
+  fillState(x, y, width, height, state = {}, ignore = ' ') {
+    if (typeof state == 'string') {
+      state = newState(state.split(';'));
+    } else if (Array.isArray(state)) {
+      state = newState(state);
     }
+    return this.fillFn(x, y, width, height, (x, y, cell) => ({symbol: cell ? cell.symbol : ignore, state}));
+  }
 
-    return this;
+  fillNonEmptyState(x, y, width, height, state = {}) {
+    if (typeof state == 'string') {
+      state = newState(state.split(';'));
+    } else if (Array.isArray(state)) {
+      state = newState(state);
+    }
+    return this.fillFn(x, y, width, height, (x, y, cell) => cell && {symbol: cell.symbol, state});
   }
 
   clear(x, y, width, height) {
     // normalize arguments
-
     if (typeof x != 'number') {
       x = y = 0;
       width = this.width;
@@ -271,27 +260,7 @@ export class Panel {
       height = this.height;
     }
 
-    if (x < 0) x = 0;
-    if (x >= this.width) return this;
-    if (x + width > this.width) {
-      width = this.width - x;
-    }
-
-    if (y < 0) y = 0;
-    if (y >= this.height) return this;
-    if (y + height > this.height) {
-      height = this.height - y;
-    }
-
-    // clear cells
-    for (let i = 0; i < height; ++i) {
-      const row = this.box[y + i];
-      for (let j = 0; j < width; ++j) {
-        row[x + j] = null;
-      }
-    }
-
-    return this;
+    return this.fillFn(x, y, width, height, () => null);
   }
 
   padLeft(n) {
@@ -450,7 +419,7 @@ export class Panel {
   addRight(panel, alignment = 'top') {
     const diff = this.height - panel.height;
 
-    if (alignment === 'bottom') {
+    if (alignment === 'bottom' || alignment === 'b') {
       if (diff >= 0) {
         for (let i = 0; i < diff; ++i) {
           this.box[i] = this.box[i].concat(new Array(panel.width).fill(null));
@@ -471,7 +440,7 @@ export class Panel {
       return this;
     }
 
-    if (alignment === 'top') {
+    if (alignment === 'top' || alignment === 't') {
       if (diff >= 0) {
         for (let i = 0; i < panel.height; ++i) {
           this.box[i] = this.box[i].concat(panel.box[i]);
@@ -526,7 +495,7 @@ export class Panel {
   addBottom(panel, alignment = 'left') {
     const diff = this.width - panel.width;
 
-    if (alignment === 'left') {
+    if (alignment === 'left' || alignment === 'l') {
       if (diff >= 0) {
         this.box.splice(this.height, 0, ...panel.box.map(row => row.concat(new Array(diff).fill(null))));
         return this;
@@ -535,7 +504,7 @@ export class Panel {
       return this;
     }
 
-    if (alignment === 'right') {
+    if (alignment === 'right' || alignment === 'r') {
       if (diff >= 0) {
         this.box.splice(this.height, 0, ...panel.box.map(row => new Array(diff).fill(null).concat(row)));
         return this;
