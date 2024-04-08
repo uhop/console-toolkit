@@ -1,6 +1,13 @@
-import {getLength} from './ansi/utils.js';
 import {matchCsi} from './ansi/csi.js';
-import {newState, stateTransition, stringifyCommands, RESET_STATE} from './ansi/sgr-state.js';
+import {
+  RESET_STATE,
+  newState,
+  combineStates,
+  stateTransition,
+  stateReverseTransition,
+  stringifyCommands,
+  optimize
+} from './ansi/sgr-state.js';
 import Box from './Box.js';
 
 // TODO: When copying and filling areas accept a state that finishes a row. The same goes for `addRight()`.
@@ -27,7 +34,7 @@ export class Panel {
         panelRow = panel.box[i];
       let start = 0,
         pos = 0,
-        state = RESET_STATE;
+        state = {};
       matchCsi.lastIndex = 0;
       for (const match of row.matchAll(matchCsi)) {
         for (let j = start, n = match.index; j < n; ++j) {
@@ -54,15 +61,17 @@ export class Panel {
     for (let i = 0; i < this.height; ++i) {
       const panelRow = this.box[i];
       let row = '',
-        state = RESET_STATE;
+        initState = {},
+        state = initState;
       for (let j = 0; j < this.width; ++j) {
         const cell = panelRow[j] || emptyCell,
-          commands = stateTransition(state, cell.state);
-        row += stringifyCommands(commands);
-        state = cell.state;
-        row += cell.symbol;
+          newState = combineStates(state, cell.state),
+          commands = stateTransition(state, newState);
+        row += stringifyCommands(commands) + cell.symbol;
+        state = newState;
       }
-      box[i] = row;
+      const commands = stateReverseTransition(initState, state);
+      box[i] = optimize(row + stringifyCommands(commands), initState);
     }
 
     return new Box(box, true);
@@ -163,12 +172,15 @@ export class Panel {
     if (y + height > this.height) height = this.height - y;
 
     // copy characters
+    let state = null;
     for (let i = 0; i < height; ++i) {
       const row = this.box[y + i],
         s = box.box[i];
       let start = 0,
-        pos = 0,
-        state = x > 0 && row[x - 1] ? row[x - 1].state : RESET_STATE;
+        pos = 0;
+      if (!state) {
+        state = x > 0 ? (row[x - 1] ? row[x - 1].state : RESET_STATE) : {};
+      }
       matchCsi.lastIndex = 0;
       for (const match of s.matchAll(matchCsi)) {
         for (let j = start, n = match.index; j < n; ++j, ++pos) {
@@ -182,6 +194,10 @@ export class Panel {
       for (let j = start, n = s.length; j < n; ++j, ++pos) {
         if (x + pos >= row.length) break;
         row[x + pos] = s[j] === ignore ? null : {symbol: s[j], state};
+      }
+      if (x + pos < row.length) {
+        const cell = row[x + pos];
+        if (cell) cell.state = combineStates(state, cell.state);
       }
     }
 
