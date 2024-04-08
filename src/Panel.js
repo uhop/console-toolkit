@@ -1,8 +1,9 @@
 import {matchCsi} from './ansi/csi.js';
 import {
   RESET_STATE,
-  newState,
   combineStates,
+  commandsToState,
+  addCommandsToState,
   stateTransition,
   stateReverseTransition,
   stringifyCommands,
@@ -42,7 +43,7 @@ export class Panel {
         }
         start = match.index + match[0].length;
         if (match[3] !== 'm') continue;
-        state = newState(match[1].split(';'), state);
+        state = addCommandsToState(state, match[1].split(';'));
       }
       for (let j = start, n = row.length; j < n; ++j) {
         panelRow[pos++] = row[j] === ignore ? null : {symbol: row[j], state};
@@ -189,7 +190,7 @@ export class Panel {
         }
         start = match.index + match[0].length;
         if (match[3] !== 'm') continue;
-        state = newState(match[1].split(';'), state);
+        state = addCommandsToState(state, match[1].split(';'));
       }
       for (let j = start, n = s.length; j < n; ++j, ++pos) {
         if (x + pos >= row.length) break;
@@ -234,27 +235,27 @@ export class Panel {
 
   fill(x, y, width, height, symbol, state = {}) {
     if (typeof state == 'string') {
-      state = newState(state.split(';'));
+      state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
-      state = newState(state);
+      state = commandsToState(state);
     }
     return this.fillFn(x, y, width, height, () => ({symbol, state}));
   }
 
   fillState(x, y, width, height, state = {}, ignore = ' ') {
     if (typeof state == 'string') {
-      state = newState(state.split(';'));
+      state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
-      state = newState(state);
+      state = commandsToState(state);
     }
     return this.fillFn(x, y, width, height, (x, y, cell) => ({symbol: cell ? cell.symbol : ignore, state}));
   }
 
   fillNonEmptyState(x, y, width, height, state = {}) {
     if (typeof state == 'string') {
-      state = newState(state.split(';'));
+      state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
-      state = newState(state);
+      state = commandsToState(state);
     }
     return this.fillFn(x, y, width, height, (x, y, cell) => cell && {symbol: cell.symbol, state});
   }

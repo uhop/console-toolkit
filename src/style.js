@@ -43,7 +43,7 @@ import {
 import {
   RESET_STATE,
   combineStates,
-  newState,
+  addCommandsToState,
   stateTransition,
   stateReverseTransition,
   stringifyCommands,
@@ -220,14 +220,14 @@ export class Style {
   }
   make(newCommands = []) {
     if (!Array.isArray(newCommands)) newCommands = [newCommands];
-    return new Style(this[initStateSymbol], newState(newCommands, this[stateSymbol]), this[colorDepthSymbol]);
+    return new Style(this[initStateSymbol], addCommandsToState(this[stateSymbol], newCommands), this[colorDepthSymbol]);
   }
   add(commandSequence) {
     let state = this[stateSymbol];
     matchCsi.lastIndex = 0;
     for (const match of String(commandSequence).matchAll(matchCsi)) {
       if (match[3] !== 'm') continue;
-      state = newState(match[1].split(';'), state);
+      state = addCommandsToState(state, match[1].split(';'));
     }
     return state === this[stateSymbol] ? this : new Style(this[initStateSymbol], state, this[colorDepthSymbol]);
   }
@@ -414,7 +414,7 @@ export class Style {
     matchCsi.lastIndex = 0;
     for (const match of s.matchAll(matchCsi)) {
       if (match[3] !== 'm') continue;
-      state = newState(match[1].split(';'), state);
+      state = addCommandsToState(state, match[1].split(';'));
     }
     const cleanupCommands = stateReverseTransition(this[initStateSymbol], state);
     return stringifyCommands(initialCommands) + s + stringifyCommands(cleanupCommands);

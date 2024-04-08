@@ -47,7 +47,8 @@ export const combineStates = (...states) => {
   return state;
 };
 
-export const newState = (commands, state = {}) => {
+export const commandsToState = commands => {
+  let state = {};
   for (let i = 0; i < commands.length; ++i) {
     const currentCommand = commands[i];
     switch (currentCommand) {
@@ -57,109 +58,111 @@ export const newState = (commands, state = {}) => {
         continue;
       case Commands.BOLD:
       case Commands.DIM:
-        state = {...state, bold: currentCommand};
+        state.bold = currentCommand;
         continue;
       case Commands.ITALIC:
-        state = {...state, italic: currentCommand};
+        state.italic = currentCommand;
         continue;
       case Commands.UNDERLINE:
       case Commands.DOUBLE_UNDERLINE:
       case Commands.CURLY_UNDERLINE:
-        state = {...state, underline: currentCommand};
+        state.underline = currentCommand;
         continue;
       case Commands.BLINK:
       case Commands.RAPID_BLINK:
-        state = {...state, blink: currentCommand};
+        state.blink = currentCommand;
         continue;
       case Commands.INVERSE:
-        state = {...state, inverse: currentCommand};
+        state.inverse = currentCommand;
         continue;
       case Commands.HIDDEN:
-        state = {...state, hidden: currentCommand};
+        state.hidden = currentCommand;
         continue;
       case Commands.STRIKETHROUGH:
-        state = {...state, strikethrough: currentCommand};
+        state.strikethrough = currentCommand;
         continue;
       case Commands.OVERLINE:
-        state = {...state, overline: currentCommand};
+        state.overline = currentCommand;
         continue;
       case Commands.RESET_BOLD:
         // case Commands.RESET_DIM:
-        state = {...state, bold: null};
+        state.bold = null;
         continue;
       case Commands.RESET_ITALIC:
-        state = {...state, italic: null};
+        state.italic = null;
         continue;
       case Commands.RESET_UNDERLINE:
         // case Commands.RESET_DOUBLE_UNDERLINE:
         // case Commands.RESET_CURLY_UNDERLINE:
-        state = {...state, underline: null};
+        state.underline = null;
         continue;
       case Commands.RESET_BLINK:
         // case RESET_RAPID_BLINK:
-        state = {...state, blink: null};
+        state.blink = null;
         continue;
       case Commands.RESET_INVERSE:
-        state = {...state, inverse: null};
+        state.inverse = null;
         continue;
       case Commands.RESET_HIDDEN:
-        state = {...state, hidden: null};
+        state.hidden = null;
         continue;
       case Commands.RESET_STRIKETHROUGH:
-        state = {...state, strikethrough: null};
+        state.strikethrough = null;
         continue;
       case Commands.RESET_OVERLINE:
-        state = {...state, overline: null};
+        state.overline = null;
         continue;
       case Commands.RESET_DECORATION_COLOR:
-        state = {...state, decoration: null};
+        state.decoration = null;
         continue;
       case Commands.EXTENDED_COLOR: {
         const next = ColorFormatSize[commands[i + 1]],
           color = commands.slice(i, i + next);
         i += next - 1;
-        state = {...state, foreground: color};
+        state.foreground = color;
         continue;
       }
       case Commands.BG_EXTENDED_COLOR: {
         const next = ColorFormatSize[commands[i + 1]],
           color = commands.slice(i, i + next);
         i += next - 1;
-        state = {...state, background: color};
+        state.background = color;
         continue;
       }
       case Commands.DECORATION_COLOR: {
         const next = ColorFormatSize[commands[i + 1]],
           color = commands.slice(i, i + next);
         i += next - 1;
-        state = {...state, decoration: color};
+        state.decoration = color;
         continue;
       }
       case Commands.DEFAULT_COLOR:
-        state = {...state, foreground: null};
+        state.foreground = null;
         continue;
       case Commands.BG_DEFAULT_COLOR:
-        state = {...state, background: null};
+        state.background = null;
         continue;
       case Commands.DEFAULT_FONT:
-        state = {...state, font: null};
+        state.font = null;
         continue;
     }
     if (isFgColorCommand(currentCommand)) {
-      state = {...state, foreground: currentCommand};
+      state.foreground = currentCommand;
       continue;
     }
     if (isBgColorCommand(currentCommand)) {
-      state = {...state, background: currentCommand};
+      state.background = currentCommand;
       continue;
     }
     if (isFontCommand(currentCommand)) {
-      state = {...state, font: currentCommand};
+      state.font = currentCommand;
       continue;
     }
   }
   return state;
 };
+
+export const addCommandsToState = (state, commands) => combineStates(state, commandsToState(commands));
 
 const equalColors = (a, b) => {
   if (a === b) return true;
@@ -204,6 +207,28 @@ export const stateToCommands = state => {
       continue;
     }
     commands.push(value);
+  }
+
+  return resetCount === TOTAL_RESETS ? [''] : commands;
+};
+
+export const stateToResetCommands = state => {
+  const commands = [];
+  let resetCount = 0;
+
+  for (const [name, value] of Object.entries(state)) {
+    if (resetColorProperties.hasOwnProperty(name)) {
+      // colors
+      if (value || value === null) {
+        commands.push(resetColorProperties[name]);
+        ++resetCount;
+      }
+      continue;
+    }
+    if (value || value === null) {
+      commands.push(Commands['RESET_' + name.toUpperCase()]);
+      ++resetCount;
+    }
   }
 
   return resetCount === TOTAL_RESETS ? [''] : commands;
@@ -277,7 +302,7 @@ export const stateReverseTransition = (prev, next) => {
   return commands;
 };
 
-export const stringifyCommands = commands => commands?.length ? setCommands(commands) : '';
+export const stringifyCommands = commands => (commands?.length ? setCommands(commands) : '');
 
 export const optimize = (s, initState = {}) => {
   let state = initState,
@@ -291,7 +316,7 @@ export const optimize = (s, initState = {}) => {
       initState = state;
       result += s.substring(start, match.index);
     }
-    state = newState(match[1].split(';'), state);
+    state = addCommandsToState(state, match[1].split(';'));
     start = match.index + match[0].length;
   }
   const commands = initState !== state ? stateTransition(initState, state) : [];
