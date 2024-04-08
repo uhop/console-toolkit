@@ -140,7 +140,7 @@ export class Data {
       let x = (this.lineStyle['_w_' + hAxis[0]] || 0) + this.cellPadding.l;
       for (let j = 0; j < this.width; ++j) {
         const cell = this.cells[i][j];
-        if (cell) {
+        if (cell && this.isVisible(j, i)) {
           let diffX = this.widths[j] - cell.width + (cell.cellWidth - 1) * (this.cellPadding.l + this.cellPadding.r);
           for (let k = 1; k < cell.cellWidth; ++k) {
             diffX += this.widths[j + k] + (this.hAxis[j + k] ? this.lineStyle['_w_' + this.hAxis[j + k]] : 0);
@@ -161,6 +161,16 @@ export class Data {
     }
 
     return panel;
+  }
+
+  isVisible(x, y) {
+    const i = 2 * y + 1,
+      j = 2 * x + 1;
+    for (const rect of this.skipList) {
+      if (rect.x === j && rect.y === i) return true;
+      if (rect.x <= j && j < rect.x + rect.width && rect.y <= i && i < rect.y + rect.height) return false;
+    }
+    return true;
   }
 }
 
