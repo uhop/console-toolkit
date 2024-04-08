@@ -85,8 +85,15 @@ export class Data {
     for (let i = 0; i < this.height; ++i) {
       let x = (hAxis[0] ? tableStyle['_w_' + hAxis[0]] : 0) + this.cellPadding.l;
       for (let j = 0; j < this.width; ++j) {
-        // drawFn(j, i, x, y, this.cells[i][j], this);
-        panel.put(x, y, this.cells[i][j].box);
+        const cell = this.cells[i][j],
+          hAlign = getCellAlign(cell.align, 0) || this.options.hAlign[j] || 'left',
+          vAlign = getCellAlign(cell.align, 1) || this.options.vAlign[i] || 'top',
+          diffX = this.widths[j] - cell.width,
+          diffY = this.heights[i] - cell.height,
+          dx = hAlign === 'l' || hAlign == 'left' ? 0 : hAlign === 'r' || hAlign === 'right' ? diffX : diffX >> 1,
+          dy = vAlign === 't' || vAlign == 'top' ? 0 : vAlign === 'b' || vAlign === 'bottom' ? diffY : diffY >> 1;
+        // drawFn(j, i, x + dx, y + dy, this.cells[i][j], this);
+        panel.put(x + dx, y + dy, cell.box);
         x += hAxis[2 * j + 1] + (hAxis[2 * j + 2] ? tableStyle['_w_' + hAxis[2 * j + 2]] : 0);
       }
       y += vAxis[2 * i + 1] + (vAxis[2 * i + 1] ? 1 : 0);
