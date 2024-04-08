@@ -4,11 +4,18 @@ export const drawBox = box => box.box.forEach(line => console.log(line));
 
 export const draw = (...boxes) => {
   if (!boxes.length) return;
-  if (boxes.length == 1) return drawBox(new Box(boxes[0]).box);
 
   let result;
   for (const box of boxes) {
-    result = result ? result.addRight(new Box(box).padLeft(2)) : new Box(box);
+    let b;
+    if (box instanceof Box) {
+      b = box;
+    } else if (typeof box?.toBox == 'function') {
+      b = box.toBox();
+    } else {
+      b = new Box(box);
+    }
+    result = result ? result.addRight(b.padLeft(2)) : b;
   }
   drawBox(result);
 };
