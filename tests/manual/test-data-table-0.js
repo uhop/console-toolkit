@@ -9,8 +9,8 @@ const table = new Data([
   ['blue', s`{{blue}}blue`, 2],
   ['green', s`{{green}}1st line\n2nd\nand 3rd`, 3],
   [s`{{inverse}}bright\nyellow`, s`{{bright.yellow}}bright yellow`, '12,345']
-], {hAlign: ['l', 'c', 'r'], vAlign: ['t', 'c', 'c', 'c', 'b']});
+], {lineStyle, hAlign: ['l', 'c', 'r'], vAlign: ['t', 'c', 'c', 'c', 'b']});
 table.hAxis[2] = '2';
 table.vAxis[1] = '2';
 
-draw(table.draw(lineStyle, style.dim.getState()).toBox());
+draw(table.draw(style.dim.getState()).toBox());
