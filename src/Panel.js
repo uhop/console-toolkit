@@ -45,7 +45,7 @@ export class Panel {
     return panel;
   }
 
-  toBox(endOfLineCommand = '', ignore = '\x07') {
+  toBox(ignore = ' ') {
     if (!this.height || !this.width) return null;
 
     const box = new Array(this.height),
@@ -62,7 +62,7 @@ export class Panel {
         state = cell.state;
         row += cell.symbol;
       }
-      box[i] = row + endOfLineCommand;
+      box[i] = row;
     }
 
     return new Box(box, true);
