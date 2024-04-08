@@ -4,9 +4,10 @@ import {draw as drawBorder} from './draw-borders.js';
 
 const getCellAlign = (align, index) => (typeof align == 'string' && align[index] !== 'd' && align[index]) || '';
 
-const ensureSize = (cellSize, cellLength, cellGap, pos, lengths) => {
+const ensureSize = (cellSize, cellLength, cellGap, pos, lineStyle, axis, lengths) => {
   let available = (cellSize - 1) * cellGap;
-  for (let i = 0; i < cellSize; ++i) available += lengths[pos + i];
+  for (let i = 0; i < cellSize; ++i)
+    available += lengths[pos + i] + (!axis[pos + i] ? 0 : lineStyle ? lineStyle['_w_' + axis[pos + i]] : 1);
   if (cellLength > available) {
     const diff = cellLength - available,
       perCell = Math.floor(diff / cellSize),
@@ -22,7 +23,7 @@ const ensureSize = (cellSize, cellLength, cellGap, pos, lengths) => {
 
 export class Data {
   constructor(data, options = {}) {
-    const {lineStyle, hTheme = '1', vTheme = '1', hAlign = [], vAlign = [], cellPadding = {}} = options;
+    const {lineStyle, hAxis = '1', vAxis = '1', hAlign = [], vAlign = [], cellPadding = {}} = options;
 
     this.height = data.length;
     this.width = this.height ? data[0].length : 0;
@@ -32,7 +33,7 @@ export class Data {
     if (typeof vAlign == 'string') vAlign = new Array(this.height).fill(vAlign);
 
     this.lineStyle = lineStyle;
-    this.options = {hTheme, vTheme, hAlign, vAlign};
+    this.options = {hAxis, vAxis, hAlign, vAlign};
     this.widths = new Array(this.width).fill(0);
     this.heights = new Array(this.height).fill(0);
     this.skipList = [];
@@ -41,6 +42,14 @@ export class Data {
       const {l = 1, r = 1, t = 0, b = 0} = cellPadding;
       this.cellPadding = {l, r, t, b};
     }
+
+    this.hAxis = Array.isArray(hAxis) ? hAxis : new Array(this.width + 1).fill(hAxis);
+    this.vAxis = Array.isArray(vAxis) ? vAxis : new Array(this.height + 1).fill(vAxis);
+
+    if (this.hAxis.length != this.width + 1)
+      throw new Error('hAxis should be a row size plus 1, not ' + this.hAxis.length);
+    if (this.vAxis.length != this.height + 1)
+      throw new Error('vAxis should be a column size plus 1, not ' + this.vAxis.length);
 
     this.cells = data.map((row, i) => {
       const result = new Array(this.width);
@@ -68,9 +77,6 @@ export class Data {
       return result;
     });
 
-    this.hAxis = new Array(this.width + 1).fill(vTheme);
-    this.vAxis = new Array(this.height + 1).fill(hTheme);
-
     // merged cells
     this.skipList.forEach(rect => {
       const j = (rect.x - 1) >> 1,
@@ -80,13 +86,23 @@ export class Data {
         ensureSize(
           cell.cellWidth,
           cell.width,
-          lineStyle['_w_' + vTheme].length + this.cellPadding.l + this.cellPadding.r,
+          this.cellPadding.l + this.cellPadding.r,
           j,
+          lineStyle,
+          this.hAxis,
           this.widths
         );
       }
       if (cell.cellHeight > 1) {
-        ensureSize(cell.cellHeight, cell.height, 1 + this.cellPadding.t + this.cellPadding.b, i, this.heights);
+        ensureSize(
+          cell.cellHeight,
+          cell.height,
+          this.cellPadding.t + this.cellPadding.b,
+          i,
+          null,
+          this.vAxis,
+          this.heights
+        );
       }
     });
     console.log(this.widths, this.heights);
@@ -111,33 +127,37 @@ export class Data {
     }
     vAxis[vAxis.length - 1] = this.vAxis[this.vAxis.length - 1];
 
+    // draw table borders
+
     const borderBox = drawBorder(this.lineStyle, hAxis, vAxis, this.skipList, '\x07'),
       panel = Panel.fromBox(borderBox, '\x07');
     panel.fillNonEmptyState(0, 0, panel.width, panel.height, lineState);
 
+    // draw cells
+
     let y = (vAxis[0] ? 1 : 0) + this.cellPadding.t;
     for (let i = 0; i < this.height; ++i) {
-      let x = (hAxis[0] ? this.lineStyle['_w_' + hAxis[0]] : 0) + this.cellPadding.l;
+      let x = (this.lineStyle['_w_' + hAxis[0]] || 0) + this.cellPadding.l;
       for (let j = 0; j < this.width; ++j) {
         const cell = this.cells[i][j];
         if (cell) {
-          let diffX =
-            this.widths[j] -
-            cell.width +
-            (cell.cellWidth - 1) * (this.lineStyle['_w_' + hAxis[0]] + this.cellPadding.l + this.cellPadding.r);
-          for (let k = 1; k < cell.cellWidth; ++k) diffX += this.widths[j + k];
-          let diffY =
-            this.heights[i] - cell.height + (cell.cellHeight - 1) * (1 + this.cellPadding.t + this.cellPadding.b);
-          for (let k = 1; k < cell.cellHeight; ++k) diffY += this.heights[j + k];
+          let diffX = this.widths[j] - cell.width + (cell.cellWidth - 1) * (this.cellPadding.l + this.cellPadding.r);
+          for (let k = 1; k < cell.cellWidth; ++k) {
+            diffX += this.widths[j + k] + (this.hAxis[j + k] ? this.lineStyle['_w_' + this.hAxis[j + k]] : 0);
+          }
+          let diffY = this.heights[i] - cell.height + (cell.cellHeight - 1) * (this.cellPadding.t + this.cellPadding.b);
+          for (let k = 1; k < cell.cellHeight; ++k) {
+            diffY += this.heights[j + k] + (this.vAxis[j + k] ? 1 : 0);
+          }
           const hAlign = getCellAlign(cell.align, 0) || this.options.hAlign[j] || 'left',
             vAlign = getCellAlign(cell.align, 1) || this.options.vAlign[i] || 'top',
             dx = hAlign === 'l' || hAlign == 'left' ? 0 : hAlign === 'r' || hAlign === 'right' ? diffX : diffX >> 1,
             dy = vAlign === 't' || vAlign == 'top' ? 0 : vAlign === 'b' || vAlign === 'bottom' ? diffY : diffY >> 1;
           panel.put(x + dx, y + dy, cell.box);
         }
-        x += hAxis[2 * j + 1] + (hAxis[2 * j + 2] ? this.lineStyle['_w_' + hAxis[2 * j + 2]] : 0);
+        x += hAxis[2 * j + 1] + (this.lineStyle['_w_' + hAxis[2 * j + 2]] || 0);
       }
-      y += vAxis[2 * i + 1] + (vAxis[2 * i + 1] ? 1 : 0);
+      y += vAxis[2 * i + 1] + (vAxis[2 * i + 2] ? 1 : 0);
     }
 
     return panel;
