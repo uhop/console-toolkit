@@ -260,6 +260,18 @@ export class Panel {
     return this.fillFn(x, y, width, height, (x, y, cell) => cell && {symbol: cell.symbol, state});
   }
 
+  combineStateBefore(x, y, width, height, state = {}, ignore = ' ') {
+    if (typeof state == 'string') {
+      state = commandsToState(state.split(';'));
+    } else if (Array.isArray(state)) {
+      state = commandsToState(state);
+    }
+    return this.fillFn(x, y, width, height, (x, y, cell) => ({
+      symbol: cell ? cell.symbol : ignore,
+      state: combineStates(state, cell ? cell.state : RESET_STATE)
+    }));
+  }
+
   combineState(x, y, width, height, state = {}, ignore = ' ') {
     if (typeof state == 'string') {
       state = commandsToState(state.split(';'));
@@ -270,6 +282,10 @@ export class Panel {
       symbol: cell ? cell.symbol : ignore,
       state: combineStates(cell ? cell.state : RESET_STATE, state)
     }));
+  }
+
+  combineStateAfter(x, y, width, height, state, ignore) {
+    return this.combineState(x, y, width, height, state, ignore);
   }
 
   clear(x, y, width, height) {
