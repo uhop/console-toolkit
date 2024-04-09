@@ -260,6 +260,18 @@ export class Panel {
     return this.fillFn(x, y, width, height, (x, y, cell) => cell && {symbol: cell.symbol, state});
   }
 
+  combineState(x, y, width, height, state = {}, ignore = ' ') {
+    if (typeof state == 'string') {
+      state = commandsToState(state.split(';'));
+    } else if (Array.isArray(state)) {
+      state = commandsToState(state);
+    }
+    return this.fillFn(x, y, width, height, (x, y, cell) => ({
+      symbol: cell ? cell.symbol : ignore,
+      state: combineStates(cell ? cell.state : RESET_STATE, state)
+    }));
+  }
+
   clear(x, y, width, height) {
     // normalize arguments
     if (typeof x != 'number') {
