@@ -13,70 +13,101 @@ import Box from '../Box.js';
 
 const isSkipped = (skip, x, y) => {
   for (const rect of skip) {
-    if (rect.x <= x && x < rect.x + rect.width && rect.y <= y && y < rect.y + rect.height) return true;
+    if (rect.x <= x && x < rect.x + rect.width && rect.y <= y && y < rect.y + rect.height)
+      return true;
   }
   return false;
 };
 
-const LEFT = 8,
-  RIGHT = 4,
-  UP = 2,
-  DOWN = 1,
-  ALL = 15;
+const BEFORE = 1,
+  AFTER = 2,
+  BOTH = 3;
 
-const getLineIndex = (axis, i) => i == 0 ? 2 : i == axis.length - 1 ? 1 : 0;
+const getLineIndex = (axis, i) => (i == 0 ? BEFORE : i == axis.length - 1 ? AFTER : 0);
 
 const getIndex = (hAxis, vAxis, skip, x, y) => {
-  let index = 0;
-  // use geometry
-  if (x & 1) {
-    index |= UP | DOWN; // skip up + down
-  } else if (x == 0) {
-    index |= LEFT; // skip left
-  } else if (x == hAxis.length - 1) {
-    index |= RIGHT; // skip right
+  let hIndex = getLineIndex(hAxis, x),
+    vIndex = getLineIndex(vAxis, y),
+    skipFlag = false;
+
+  if (skip?.length) {
+    // use the skip list
+    // console.log(isSkipped(skip, x - 1, y), isSkipped(skip, x + 1, y), isSkipped(skip, x, y - 1), isSkipped(skip, x, y + 1));
+
+    if (isSkipped(skip, x, y)) {
+      skipFlag = true;
+    } else if (!(x & 1) && !(y & 1)) {
+      if (isSkipped(skip, x - 1, y)) {
+        hIndex |= BEFORE;
+      }
+      if (isSkipped(skip, x + 1, y)) {
+        hIndex |= AFTER;
+      }
+      if (isSkipped(skip, x, y - 1)) {
+        vIndex |= BEFORE;
+      }
+      if (isSkipped(skip, x, y + 1)) {
+        vIndex |= AFTER;
+      }
+      if (hIndex == BOTH && vIndex == BOTH) {
+        skipFlag = true;
+      }
+    }
   }
-  if (y & 1) {
-    index |= LEFT | RIGHT; // skip left + right
-  } else if (y == 0) {
-    index |= UP; // skip up
-  } else if (y == vAxis.length - 1) {
-    index |= DOWN; // skip down
-  }
-  // use the skip list
-  if (!(index & LEFT) && isSkipped(skip, x - 1, y)) index |= LEFT;
-  if (!(index & RIGHT) && isSkipped(skip, x + 1, y)) index |= RIGHT;
-  if (!(index & UP) && isSkipped(skip, x, y - 1)) index |= UP;
-  if (!(index & DOWN) && isSkipped(skip, x, y + 1)) index |= DOWN;
-  if (index != ALL && isSkipped(skip, x, y)) index = ALL;
-  // return required indices
-  return {index, hIndex: getLineIndex(hAxis, x), vIndex: getLineIndex(vAxis, y)};
+
+  return {hIndex, vIndex, skipFlag};
 };
 
 const drawRow = (tableStyle, hAxis, vAxis, skip, symbol, y, i) =>
   hAxis
     .map((x, j) => {
       if (!x) return '';
-      const {index, hIndex, vIndex} = getIndex(hAxis, vAxis, skip, j, i);
-      if (j & 1) {
-        if (i & 1 || index == ALL) return symbol.repeat(x);
-        if (!tableStyle['h_' + y]) throw new TypeError(`Style has no "h_${y}" property`);
-        return tableStyle['h_' + y][vIndex].repeat(x);
-      }
-      if (i & 1) {
-        if (index == ALL) {
-          if (!tableStyle['w_' + x]) throw new TypeError(`Style has no "w_${x}" property`);
+      const {skipFlag, hIndex, vIndex} = getIndex(hAxis, vAxis, skip, j, i);
+
+      // if (j & 1) {
+      //   if (i & 1 || skipFlag) {
+      //     return symbol.repeat(x);
+      //   }
+      //   if (!tableStyle['h_' + y]) throw new TypeError(`Style has no "h_${y}" property`);
+      //   console.log('H:', j, i, x, y, skipFlag, hIndex, vIndex, tableStyle['h_' + y], vIndex);
+      //   return tableStyle['h_' + y][vIndex].repeat(x);
+      // }
+      // if (i & 1) {
+      //   if (skipFlag) {
+      //     if (!tableStyle['w_' + x]) throw new TypeError(`Style has no "w_${x}" property`);
+      //     return symbol.repeat(tableStyle['w_' + x]);
+      //   }
+      //   if (!tableStyle['v_' + x]) throw new TypeError(`Style has no "v_${x}" property`);
+      //   console.log('V:', j, i, x, y, skipFlag, hIndex, vIndex, tableStyle['v_' + x], hIndex);
+      //   return tableStyle['v_' + x][hIndex];
+      // }
+      // if (skipFlag) {
+      //   if (!tableStyle['w_' + x]) throw new TypeError(`Style has no "w_${x}" property`);
+      //   return symbol.repeat(tableStyle['w_' + x]);
+      // }
+
+      if (skipFlag) {
+        if (j & 1) {
+          return symbol.repeat(x);
+        } else {
           return symbol.repeat(tableStyle['w_' + x]);
         }
-        if (!tableStyle['v_' + x]) throw new TypeError(`Style has no "v_${x}" property`);
-        return tableStyle['v_' + x][hIndex];
       }
-      if (index == ALL) {
-        if (!tableStyle['w_' + x]) throw new TypeError(`Style has no "w_${x}" property`);
-        return symbol.repeat(tableStyle['w_' + x]);
+
+      if (j & 1) {
+        if (i & 1) {
+          return symbol.repeat(x);
+        } else {
+          return tableStyle['h_' + y][vIndex].repeat(x);
+        }
+      } else {
+        if (i & 1) {
+          return tableStyle['v_' + x][hIndex];
+        }
       }
+
       if (!tableStyle['t_' + y + '_' + x]) throw new TypeError(`Style has no "t_${y}_${x}" property`);
-      return tableStyle['t_' + y + '_' + x][index];
+      return tableStyle['t_' + y + '_' + x][4 * hIndex + vIndex];
     })
     .join('');
 
