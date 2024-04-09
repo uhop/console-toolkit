@@ -24,22 +24,24 @@ const LEFT = 8,
   DOWN = 1,
   ALL = 15;
 
+const getLineIndex = (axis, i) => i == 0 ? 2 : i == axis.length - 1 ? 1 : 0;
+
 const getIndex = (hAxis, vAxis, skip, x, y) => {
   let index = 0;
   // use geometry
-  if (x == 0) {
+  if (x & 1) {
+    index |= UP | DOWN; // skip up + down
+  } else if (x == 0) {
     index |= LEFT; // skip left
   } else if (x == hAxis.length - 1) {
     index |= RIGHT; // skip right
-  } else if (x & 1) {
-    index |= UP | DOWN; // skip up + down
   }
-  if (y == 0) {
+  if (y & 1) {
+    index |= LEFT | RIGHT; // skip left + right
+  } else if (y == 0) {
     index |= UP; // skip up
   } else if (y == vAxis.length - 1) {
     index |= DOWN; // skip down
-  } else if (y & 1) {
-    index |= LEFT | RIGHT; // skip left + right
   }
   // use the skip list
   if (!(index & LEFT) && isSkipped(skip, x - 1, y)) index |= LEFT;
@@ -47,33 +49,34 @@ const getIndex = (hAxis, vAxis, skip, x, y) => {
   if (!(index & UP) && isSkipped(skip, x, y - 1)) index |= UP;
   if (!(index & DOWN) && isSkipped(skip, x, y + 1)) index |= DOWN;
   if (index != ALL && isSkipped(skip, x, y)) index = ALL;
-  return index;
+  // return required indices
+  return {index, hIndex: getLineIndex(hAxis, x), vIndex: getLineIndex(vAxis, y)};
 };
 
 const drawRow = (tableStyle, hAxis, vAxis, skip, symbol, y, i) =>
   hAxis
     .map((x, j) => {
       if (!x) return '';
-      const index = getIndex(hAxis, vAxis, skip, j, i);
+      const {index, hIndex, vIndex} = getIndex(hAxis, vAxis, skip, j, i);
       if (j & 1) {
         if (i & 1 || index == ALL) return symbol.repeat(x);
-        if (!tableStyle['_h_' + y]) throw new TypeError(`Style has no "_h_${y}" property`);
-        return tableStyle['_h_' + y].repeat(x);
+        if (!tableStyle['h_' + y]) throw new TypeError(`Style has no "h_${y}" property`);
+        return tableStyle['h_' + y][vIndex].repeat(x);
       }
       if (i & 1) {
         if (index == ALL) {
-          if (!tableStyle['_w_' + x]) throw new TypeError(`Style has no "_w_${x}" property`);
-          return symbol.repeat(tableStyle['_w_' + x]);
+          if (!tableStyle['w_' + x]) throw new TypeError(`Style has no "w_${x}" property`);
+          return symbol.repeat(tableStyle['w_' + x]);
         }
-        if (!tableStyle['_v_' + x]) throw new TypeError(`Style has no "_v_${x}" property`);
-        return tableStyle['_v_' + x][index - 12];
+        if (!tableStyle['v_' + x]) throw new TypeError(`Style has no "v_${x}" property`);
+        return tableStyle['v_' + x][hIndex];
       }
       if (index == ALL) {
-        if (!tableStyle['_w_' + x]) throw new TypeError(`Style has no "_w_${x}" property`);
-        return symbol.repeat(tableStyle['_w_' + y]);
+        if (!tableStyle['w_' + x]) throw new TypeError(`Style has no "w_${x}" property`);
+        return symbol.repeat(tableStyle['w_' + x]);
       }
-      if (!tableStyle[y + '_' + x]) throw new TypeError(`Style has no "${y}_${x}" property`);
-      return tableStyle[y + '_' + x][index];
+      if (!tableStyle['t_' + y + '_' + x]) throw new TypeError(`Style has no "t_${y}_${x}" property`);
+      return tableStyle['t_' + y + '_' + x][index];
     })
     .join('');
 

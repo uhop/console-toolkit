@@ -8,7 +8,7 @@ const getCellAlign = (align, index) => (typeof align == 'string' && align[index]
 const ensureSize = (cellSize, cellLength, cellGap, pos, lineStyle, axis, lengths) => {
   let available = (cellSize - 1) * cellGap;
   for (let i = 0; i < cellSize; ++i)
-    available += lengths[pos + i] + (!axis[pos + i] ? 0 : lineStyle ? lineStyle['_w_' + axis[pos + i]] : 1);
+    available += lengths[pos + i] + (!axis[pos + i] ? 0 : lineStyle ? lineStyle['w_' + axis[pos + i]] : 1);
   if (cellLength > available) {
     const diff = cellLength - available,
       perCell = Math.floor(diff / cellSize),
@@ -148,13 +148,13 @@ export class Data {
 
     let y = (vAxis[0] ? 1 : 0) + this.cellPadding.t;
     for (let i = 0; i < this.height; ++i) {
-      let x = (this.lineStyle['_w_' + hAxis[0]] || 0) + this.cellPadding.l;
+      let x = (this.lineStyle['w_' + hAxis[0]] || 0) + this.cellPadding.l;
       for (let j = 0; j < this.width; ++j) {
         const cell = this.cells[i][j];
         if (cell && this.isVisible(j, i)) {
           let diffX = this.widths[j] - cell.width + (cell.cellWidth - 1) * (this.cellPadding.l + this.cellPadding.r);
           for (let k = 1; k < cell.cellWidth; ++k) {
-            diffX += this.widths[j + k] + (this.hAxis[j + k] ? this.lineStyle['_w_' + this.hAxis[j + k]] : 0);
+            diffX += this.widths[j + k] + (this.hAxis[j + k] ? this.lineStyle['w_' + this.hAxis[j + k]] : 0);
           }
           let diffY = this.heights[i] - cell.height + (cell.cellHeight - 1) * (this.cellPadding.t + this.cellPadding.b);
           for (let k = 1; k < cell.cellHeight; ++k) {
@@ -166,7 +166,7 @@ export class Data {
             dy = vAlign === 't' || vAlign == 'top' ? 0 : vAlign === 'b' || vAlign === 'bottom' ? diffY : diffY >> 1;
           panel.put(x + dx, y + dy, cell.box);
         }
-        x += hAxis[2 * j + 1] + (this.lineStyle['_w_' + hAxis[2 * j + 2]] || 0);
+        x += hAxis[2 * j + 1] + (this.lineStyle['w_' + hAxis[2 * j + 2]] || 0);
       }
       y += vAxis[2 * i + 1] + (vAxis[2 * i + 2] ? 1 : 0);
     }
