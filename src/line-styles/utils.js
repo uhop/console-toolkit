@@ -29,9 +29,9 @@ export const populateStyle = (tableStyle, tableDefinition, hTheme, vTheme) => {
       tableDefinition.h[2].repeat(w),
       tableDefinition.v.substring(s[1], e[1]),
       tableDefinition.v.substring(s[0], e[0]), // before
-      tableDefinition.v.substring(s[2], e[2]), // after
+      tableDefinition.v.substring(s[2], e[2]) // after
     ]);
-  tableStyle['h_' + hTheme] = [theme[3], theme[7], theme[11]];
+  tableStyle['h_' + hTheme] = [tableDefinition.h[1], tableDefinition.h[0], tableDefinition.h[2]];
   tableStyle['v_' + vTheme] = theme.slice(12);
   tableStyle['w_' + vTheme] = w;
 };
