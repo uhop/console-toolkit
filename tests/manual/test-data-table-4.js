@@ -10,7 +10,7 @@ const table = new Data(
     [null, 'II', 41],
     [null, 'III', 59],
     [null, 'IV', 26],
-    [{value: s`{{bold.bright.cyan}}Total:`, width: 2}, null, s`{{bold.cyan}}157`]
+    [{value: s`{{bold.bright.cyan}}Total:`, width: 2, align: 'c'}, null, s`{{bold.cyan}}157`]
   ],
   {lineStyle, hAlign: ['l', 'c', 'r'], hAxis: [1, 1, 2, 1], vAxis: [1, 2, 0, 0, 0, 2, 1], hMin: 8}
 );
