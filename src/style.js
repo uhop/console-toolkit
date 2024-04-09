@@ -409,6 +409,7 @@ export class Style {
   }
   // wrap a string
   text(s) {
+    s = String(s);
     let state = this[stateSymbol];
     const initialCommands = stateTransition(this[initStateSymbol], state);
     matchCsi.lastIndex = 0;
