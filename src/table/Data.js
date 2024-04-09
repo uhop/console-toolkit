@@ -23,20 +23,26 @@ const ensureSize = (cellSize, cellLength, cellGap, pos, lineStyle, axis, lengths
 
 export class Data {
   constructor(data, options = {}) {
-    const {lineStyle, hAxis = '1', vAxis = '1', hAlign = [], vAlign = [], cellPadding = {}} = options;
+    const {lineStyle, hAxis = '1', vAxis = '1', hAlign = [], vAlign = [], hMin = 0, vMin = 0, cellPadding = {}} = options;
 
     this.height = data.length;
     this.width = this.height ? data[0].length : 0;
     this.data = data;
 
-    if (typeof hAlign == 'string') hAlign = new Array(this.width).fill(hAlign);
-    if (typeof vAlign == 'string') vAlign = new Array(this.height).fill(vAlign);
+    if (!Array.isArray(hAlign)) hAlign = new Array(this.width).fill(hAlign);
+    if (!Array.isArray(vAlign)) vAlign = new Array(this.height).fill(vAlign);
+
+    this.widths = Array.isArray(hMin) ? [...hMin] : new Array(this.width).fill(hMin);
+    this.heights = Array.isArray(vMin) ? [...vMin] : new Array(this.height).fill(vMin);
+
+    if (this.widths.length != this.width)
+      throw new Error('hMin should be equal to a row size, not ' + this.widths.length);
+    if (this.heights.length != this.height)
+      throw new Error('vMin should be equal to a column size, not ' + this.heights.length);
 
     this.lineStyle = lineStyle;
-    this.options = {hAxis, vAxis, hAlign, vAlign};
-    this.widths = new Array(this.width).fill(0);
-    this.heights = new Array(this.height).fill(0);
     this.skipList = [];
+    this.options = {hAxis, vAxis, hAlign, vAlign};
 
     {
       const {l = 1, r = 1, t = 0, b = 0} = cellPadding;
@@ -105,7 +111,6 @@ export class Data {
         );
       }
     });
-    console.log(this.widths, this.heights);
   }
 
   draw(lineState, cellState) {
