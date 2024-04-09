@@ -1,6 +1,6 @@
 import makeTable from '../../src/table/index.js';
 import lineStyle from '../../src/line-styles/unicode-rounded.js';
-import style, {s} from '../../src/style.js';
+import {s} from '../../src/style.js';
 import {draw} from './utils.js';
 
 const data = [
@@ -18,4 +18,4 @@ const table = makeTable(
   {hAlign: ['l', 'c', 'r'], vAlign: ['t', 'c', 'c', 'c', 'b']}
 );
 
-draw(table.draw(style.dim.getState()).toBox());
+draw(table.draw().toBox());

@@ -1,6 +1,6 @@
 import makeTable from '../../src/table/index.js';
 import lineStyle from '../../src/line-styles/unicode-rounded.js';
-import style, {s} from '../../src/style.js';
+import {s} from '../../src/style.js';
 import {draw} from './utils.js';
 
 const data = [
@@ -14,4 +14,4 @@ const data = [
 
 const table = makeTable(data, lineStyle, {rowFirst: '2', columnLast: '2', hCenter: [1], hRight: [2]});
 
-draw(table.draw(style.dim.getState()).toBox());
+draw(table.draw().toBox());

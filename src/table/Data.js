@@ -1,6 +1,7 @@
 import Box from '../Box.js';
 import Panel from '../Panel.js';
 import {draw as drawBorder} from './draw-borders.js';
+import style, {RESET_STATE} from '../style.js';
 
 const getCellAlign = (align, index) => (typeof align == 'string' && align[index] !== 'd' && align[index]) || '';
 
@@ -20,6 +21,10 @@ const ensureSize = (cellSize, cellLength, cellGap, pos, lineStyle, axis, lengths
     }
   }
 };
+
+const dataInstructions = 'rowFirst,rowLast,columnFirst,columnLast,data,rowOdd,rowEven,columnOdd,columnEven'.split(',');
+
+const DIM_STATE = style.dim.getState();
 
 export class Data {
   constructor(data, lineStyle, options = {}) {
@@ -113,7 +118,8 @@ export class Data {
     });
   }
 
-  draw(lineState, cellState) {
+  // TODO: accept `states`, draw even/odd rows/columns, support bg on lines optionally
+  draw(lineState = DIM_STATE) {
     // prepare axes
 
     const hAxis = new Array(this.hAxis.length + this.widths.length),
@@ -216,7 +222,8 @@ export class Data {
     if (borderLeft !== undefined) hAxis[0] = borderLeft;
     if (borderRight !== undefined) hAxis[width] = borderRight;
     {
-      let dataFrom = 1, dataTo = width - 1;
+      let dataFrom = 1,
+        dataTo = width - 1;
       if (columnFirst !== undefined && dataFrom <= dataTo) hAxis[dataFrom++] = columnFirst;
       if (columnLast !== undefined && dataFrom <= dataTo) hAxis[dataTo--] = columnLast;
       if (vDataSep !== undefined) {
@@ -228,7 +235,8 @@ export class Data {
     if (borderTop !== undefined) vAxis[0] = borderTop;
     if (borderBottom !== undefined) vAxis[height] = borderBottom;
     {
-      let dataFrom = 1, dataTo = height - 1;
+      let dataFrom = 1,
+        dataTo = height - 1;
       if (rowFirst !== undefined && dataFrom <= dataTo) vAxis[dataFrom++] = rowFirst;
       if (rowLast !== undefined && dataFrom <= dataTo) vAxis[dataTo--] = rowLast;
       if (hDataSep !== undefined) {
@@ -255,8 +263,52 @@ export class Data {
     return {hAxis, vAxis, hAlign, vAlign, hMin: hMinArray, vMin: vMinArray};
   }
 
+  static processData(data, options) {
+    if (!options) return data;
+
+    const available = dataInstructions.filter(name => options[name] !== undefined);
+    if (!available.length) return data;
+
+    const height = data.length,
+      width = height && data[0].length,
+      states = {};
+    available.forEach(name => (states[name] = options[name] || RESET_STATE));
+
+    const rowOdd = states.rowOdd || states.data,
+      rowEven = states.rowEven || states.data,
+      columnOdd = states.columnOdd || states.data,
+      columnEven = states.columnEven || states.data;
+
+    return data.map((row, i) => {
+      return row.map((data, j) => {
+        if (data === null) return null;
+        const isObject = data?.hasOwnProperty('value');
+        let datum = isObject ? data.value : data;
+        if (j === 0 && states.columnFirst) datum = style.addState(states.columnFirst).text(datum);
+        if (j === width - 1 && states.columnLast) datum = style.addState(states.columnLast).text(datum);
+        if (i === 0 && states.rowFirst) datum = style.addState(states.rowFirst).text(datum);
+        if (i === height - 1 && states.rowLast) datum = style.addState(states.rowLast).text(datum);
+        if (columnOdd || columnEven) {
+          if (j % 2) {
+            if (columnOdd) datum = style.addState(columnOdd).text(datum);
+          } else {
+            if (columnEven) datum = style.addState(columnEven).text(datum);
+          }
+        }
+        if (rowOdd || rowEven) {
+          if (i % 2) {
+            if (rowOdd) datum = style.addState(rowOdd).text(datum);
+          } else {
+            if (rowEven) datum = style.addState(rowEven).text(datum);
+          }
+        }
+        return isObject ? {...data, value: datum} : datum;
+      });
+    });
+  }
+
   static make(data, lineStyle, options, overrides) {
-    return new Data(data, lineStyle, {
+    return new Data(Data.processData(data, options?.states), lineStyle, {
       ...(options && Data.generateAxes(data.length && data[0].length, data.length, options)),
       ...overrides
     });
