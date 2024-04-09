@@ -1,4 +1,4 @@
-import {Data} from '../../src/table/index.js';
+import makeTable from '../../src/table/index.js';
 import lineStyle from '../../src/line-styles/unicode-rounded.js';
 import style, {s} from '../../src/style.js';
 import {draw} from './utils.js';
@@ -9,14 +9,9 @@ const data = [
   [null, 'II', 41],
   [null, 'III', 59],
   [null, 'IV', 26],
-  [{value: s`{{bold.bright.cyan}}Total:`, width: 2, align: 'r'}, null, s`{{bold.cyan}}157`]
+  [{value: s`{{bold.bright.cyan}}Total:`, width: 2}, null, s`{{bold.cyan}}157`]
 ];
 
-const table = new Data(data, lineStyle, {
-  hAlign: ['l', 'c', 'r'],
-  hAxis: [1, 1, 2, 1],
-  vAxis: [1, 2, 0, 0, 0, 2, 1],
-  hMin: [0, 8, 0]
-});
+const table = makeTable(data, lineStyle, {rowFirst: '2', columnLast: '2', hCenter: [1], hRight: [2]});
 
 draw(table.draw(style.dim.getState()).toBox());

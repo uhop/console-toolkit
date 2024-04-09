@@ -1,5 +1,6 @@
-import draw from './draw-borders.js';
-import style from '../line-styles/unicode.js';
+import Data from './Data.js';
 
-export {draw, style};
-export default draw;
+export {Data};
+export const make = Data.make;
+
+export default make;

@@ -22,8 +22,8 @@ const ensureSize = (cellSize, cellLength, cellGap, pos, lineStyle, axis, lengths
 };
 
 export class Data {
-  constructor(data, options = {}) {
-    const {lineStyle, hAxis = '1', vAxis = '1', hAlign = [], vAlign = [], hMin = 0, vMin = 0, cellPadding = {}} = options;
+  constructor(data, lineStyle, options = {}) {
+    const {hAxis = '1', vAxis = '1', hAlign = [], vAlign = [], hMin = 0, vMin = 0, cellPadding = {}} = options;
 
     this.height = data.length;
     this.width = this.height ? data[0].length : 0;
@@ -176,6 +176,90 @@ export class Data {
       if (rect.x <= j && j < rect.x + rect.width && rect.y <= i && i < rect.y + rect.height) return false;
     }
     return true;
+  }
+
+  static generateAxes(
+    width,
+    height,
+    {
+      hTheme = '1',
+      vTheme = '1',
+      borderTop,
+      borderRight,
+      borderLeft,
+      borderBottom,
+      rowFirst,
+      rowLast,
+      columnFirst,
+      columnLast,
+      hDataSep,
+      vDataSep,
+
+      hAlignDefault = 'l',
+      hLeft = [],
+      hCenter = [],
+      hRight = [],
+
+      vAlignDefault = 't',
+      vTop = [],
+      vCenter = [],
+      vBottom = [],
+
+      hMinDefault = 0,
+      hMin = {},
+
+      vMinDefault = 0,
+      vMin = {}
+    }
+  ) {
+    const hAxis = new Array(width + 1).fill(hTheme);
+    if (borderLeft !== undefined) hAxis[0] = borderLeft;
+    if (borderRight !== undefined) hAxis[width] = borderRight;
+    {
+      let dataFrom = 1, dataTo = width - 1;
+      if (columnFirst !== undefined && dataFrom <= dataTo) hAxis[dataFrom++] = columnFirst;
+      if (columnLast !== undefined && dataFrom <= dataTo) hAxis[dataTo--] = columnLast;
+      if (vDataSep !== undefined) {
+        for (let i = dataFrom; i <= dataTo; ++i) hAxis[i] = vDataSep;
+      }
+    }
+
+    const vAxis = new Array(height + 1).fill(vTheme);
+    if (borderTop !== undefined) vAxis[0] = borderTop;
+    if (borderBottom !== undefined) vAxis[height] = borderBottom;
+    {
+      let dataFrom = 1, dataTo = height - 1;
+      if (rowFirst !== undefined && dataFrom <= dataTo) vAxis[dataFrom++] = rowFirst;
+      if (rowLast !== undefined && dataFrom <= dataTo) vAxis[dataTo--] = rowLast;
+      if (hDataSep !== undefined) {
+        for (let i = dataFrom; i <= dataTo; ++i) vAxis[i] = hDataSep;
+      }
+    }
+
+    const hAlign = new Array(width).fill(hAlignDefault);
+    for (const i of hLeft) hAlign[i] = 'l';
+    for (const i of hCenter) hAlign[i] = 'c';
+    for (const i of hRight) hAlign[i] = 'r';
+
+    const vAlign = new Array(height).fill(vAlignDefault);
+    for (const i of vTop) vAlign[i] = 't';
+    for (const i of vCenter) vAlign[i] = 'c';
+    for (const i of vBottom) vAlign[i] = 'b';
+
+    const hMinArray = new Array(width).fill(hMinDefault);
+    for (const [i, value] of Object.entries(hMin)) hMinArray[i] = value;
+
+    const vMinArray = new Array(height).fill(vMinDefault);
+    for (const [i, value] of Object.entries(vMin)) vMinArray[i] = value;
+
+    return {hAxis, vAxis, hAlign, vAlign, hMin: hMinArray, vMin: vMinArray};
+  }
+
+  static make(data, lineStyle, options, overrides) {
+    return new Data(data, lineStyle, {
+      ...(options && Data.generateAxes(data.length && data[0].length, data.length, options)),
+      ...overrides
+    });
   }
 }
 
