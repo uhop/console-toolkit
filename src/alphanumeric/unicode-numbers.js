@@ -38,6 +38,22 @@ fill(digitsMono, '𝟶', 0, 9);
 const digitsWithCommas = [];
 fill(digitsWithCommas, '🄁', 0, 9);
 
+// Number Forms
+
+const numbersRoman = [undefined];
+fill(numbersRoman, 'Ⅰ', 1, 12);
+
+const numbersRomanLower = [undefined];
+fill(numbersRomanLower, 'ⅰ', 1, 12);
+
+// Arabic
+
+const digitsArabicIndic = [];
+fill(digitsArabicIndic, '٠', 0, 9);
+
+const digitsArabicIndicExtended = [];
+fill(digitsArabicIndicExtended, '۰', 0, 9);
+
 // API
 
 const zeroCode = '0'.charCodeAt(0);
@@ -58,10 +74,14 @@ export const transcodeTables = {
   sansSerif: digitsSansSerif,
   sansSerifBold: digitsSansSerifBold,
   mono: digitsMono,
-  commas: digitsWithCommas
+  commas: digitsWithCommas,
+  roman: numbersRoman,
+  romanLower: numbersRomanLower,
+  arabicIndic: digitsArabicIndic,
+  arabicIndicExtended: digitsArabicIndicExtended
 };
 
-export const transcode = (s, name, {missing}) => {
+export const transcode = (s, name, {missing} = {}) => {
   const table = transcodeTables[name];
   if (!table) throw new Error(`There is no transcode table named "${name}"`);
   return s.replace(/./g, missing ? m => table[m] || missing : m => table[m] || m);
