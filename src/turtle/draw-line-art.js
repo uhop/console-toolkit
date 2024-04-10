@@ -15,7 +15,7 @@ const getIndex = cell => {
   return {skipFlag, hTheme, vTheme, hIndex, vIndex};
 };
 
-export const draw = (turtle, lineStyle, ignore = ' ') =>
+export const draw = (turtle, lineStyle, {ignore = ' '} = {}) =>
   new Box(
     turtle.cells.map(row =>
       row
