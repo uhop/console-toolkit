@@ -17,4 +17,4 @@ turtle2.setTheme(2).set(2, 0).moveDown(4).set(0, 2).moveRight(4);
 // overrides some lines
 turtle2.setTheme(1).set(2, 0).moveDown(2).set(0, 2).moveRight(2);
 
-draw(drawUnicode(turtle1), drawUnicode(turtle2));
+draw(drawUnicode(turtle1), drawUnicode(turtle2), drawUnicode(turtle2, {useArcs: true}));
