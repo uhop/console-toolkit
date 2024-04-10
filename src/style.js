@@ -50,7 +50,7 @@ import {
   optimize
 } from './ansi/sgr-state.js';
 import {matchCsi} from './ansi/csi.js';
-import {capitalize, toCamelCase, fromSnakeCase, addGetter, addAlias} from './meta.js';
+import {capitalize, toCamelCase, fromSnakeCase, addGetter, addAlias, addAliases} from './meta.js';
 
 export {RESET_STATE};
 
@@ -475,37 +475,51 @@ for (const [name, value] of Object.entries(Colors)) {
   addAlias(Style, 'bgDark' + nameCap, 'bg' + nameCap);
 }
 
-// method aliases
-addAlias(Style, 'addCommands', 'make');
-addAlias(Style, 'decoration', 'colorDecoration');
+addAliases(Style, {
+  // method aliases
+  addCommands: 'make',
+  decoration: 'colorDecoration',
 
-// color aliases
-addAlias(ExtendedColor, 'gray', 'brightBlack');
-addAlias(Color, 'gray', 'brightBlack');
-addAlias(Style, 'gray', 'brightBlack');
-addAlias(Style, 'bgGray', 'bgBrightBlack');
+  // color aliases
+  gray: 'brightBlack',
+  bgGray: 'bgBrightBlack',
 
-// alias "gray" to "grey"
-addAlias(ExtendedColor, 'grey', 'brightBlack');
-addAlias(ExtendedColor, 'greyscale', 'grayscale');
-addAlias(ExtendedColor, 'greyscale24', 'grayscale24');
-addAlias(ExtendedColor, 'greyscale256', 'grayscale256');
-addAlias(ExtendedColor, 'trueGreyscale', 'trueGrayscale');
-addAlias(Color, 'grey', 'brightBlack');
-addAlias(Style, 'grey', 'brightBlack');
-addAlias(Style, 'bgGrey', 'bgBrightBlack');
-addAlias(Style, 'greyscale', 'grayscale');
-addAlias(Style, 'greyscale24', 'grayscale24');
-addAlias(Style, 'greyscale256', 'grayscale256');
-addAlias(Style, 'trueGreyscale', 'trueGrayscale');
-addAlias(Style, 'bgGreyscale', 'bgGrayscale');
-addAlias(Style, 'bgGreyscale24', 'bgGrayscale24');
-addAlias(Style, 'bgGreyscale256', 'bgGrayscale256');
-addAlias(Style, 'bgTrueGreyscale', 'bgTrueGrayscale');
-addAlias(Style, 'decorationGreyscale', 'decorationGrayscale');
-addAlias(Style, 'decorationGreyscale24', 'decorationGrayscale24');
-addAlias(Style, 'decorationGreyscale256', 'decorationGrayscale256');
-addAlias(Style, 'decorationTrueGreyscale', 'decorationTrueGrayscale');
+  // alias "gray" to "grey"
+  grey: 'brightBlack',
+  bgGrey: 'bgBrightBlack',
+  greyscale: 'grayscale',
+  greyscale24: 'grayscale24',
+  greyscale256: 'grayscale256',
+  trueGreyscale: 'trueGrayscale',
+  bgGreyscale: 'bgGrayscale',
+  bgGreyscale24: 'bgGrayscale24',
+  bgGreyscale256: 'bgGrayscale256',
+  bgTrueGreyscale: 'bgTrueGrayscale',
+  decorationGreyscale: 'decorationGrayscale',
+  decorationGreyscale24: 'decorationGrayscale24',
+  decorationGreyscale256: 'decorationGrayscale256',
+  decorationTrueGreyscale: 'decorationTrueGrayscale'
+});
+
+addAliases(ExtendedColor, {
+  // color aliases
+  gray: 'brightBlack',
+
+  // alias "gray" to "grey"
+  grey: 'brightBlack',
+  greyscale: 'grayscale',
+  greyscale24: 'grayscale24',
+  greyscale256: 'grayscale256',
+  trueGreyscale: 'trueGrayscale'
+});
+
+addAliases(Color, {
+  // color aliases
+  gray: 'brightBlack',
+
+  // alias "gray" to "grey"
+  grey: 'brightBlack'
+});
 
 // add commands to Reset, Style
 

@@ -27,3 +27,9 @@ export const addAlias = (Class, name, oldName, force) => {
   if (!descriptor) return object;
   return Object.defineProperty(object, name, descriptor);
 };
+
+export const addAliases = (Class, aliases, force) => {
+  for (const [name, oldName] of Object.entries(aliases)) {
+    addAlias(Class, name, oldName, force);
+  }
+};
