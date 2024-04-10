@@ -18,21 +18,27 @@ const getIndex = cell => {
 export const draw = (turtle, lineStyle, ignore = ' ') =>
   new Box(
     turtle.cells.map(row =>
-      row.map(cell => {
-        const {skipFlag, hTheme, vTheme, hIndex, vIndex} = getIndex(cell);
-        if (skipFlag) return ignore;
-        if (!hTheme) {
-          if (!lineStyle['v_' + vTheme]) throw new TypeError(`Style has no "v_${vTheme}" property`);
-          return lineStyle['v_' + vTheme][vIndex];
-        }
-        if (!vTheme) {
-          if (!lineStyle['h_' + hTheme]) throw new TypeError(`Style has no "h_${hTheme}" property`);
-          return lineStyle['h_' + hTheme][hIndex];
-        }
-        if (!lineStyle['t_' + hTheme + '_' + vTheme])
-          throw new TypeError(`Style has no "t_${hTheme}_${vTheme}" property`);
-        return lineStyle['t_' + hTheme + '_' + vTheme][4 * hIndex + vIndex];
-      }).join('')
+      row
+        .map(cell => {
+          const {skipFlag, hTheme, vTheme, hIndex, vIndex} = getIndex(cell);
+          if (skipFlag) return ignore;
+          if (!hTheme) {
+            if (lineStyle['w_' + vTheme] !== 1)
+              throw new TypeError(`Theme "${vTheme}" should have width of 1 for all vertical elements`);
+            if (!lineStyle['v_' + vTheme]) throw new TypeError(`Style has no "v_${vTheme}" property`);
+            return lineStyle['v_' + vTheme][vIndex];
+          }
+          if (!vTheme) {
+            if (!lineStyle['h_' + hTheme]) throw new TypeError(`Style has no "h_${hTheme}" property`);
+            return lineStyle['h_' + hTheme][hIndex];
+          }
+          if (lineStyle['w_' + vTheme] !== 1)
+            throw new TypeError(`Theme "${vTheme}" should have width of 1 for all vertical elements`);
+          if (!lineStyle['t_' + hTheme + '_' + vTheme])
+            throw new TypeError(`Style has no "t_${hTheme}_${vTheme}" property`);
+          return lineStyle['t_' + hTheme + '_' + vTheme][4 * hIndex + vIndex];
+        })
+        .join('')
     ),
     true
   );
