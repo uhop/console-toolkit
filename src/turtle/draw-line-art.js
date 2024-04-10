@@ -24,7 +24,7 @@ export const draw = (turtle, lineStyle, {ignore = ' '} = {}) =>
           if (skipFlag) return ignore;
           if (!hTheme) {
             if (lineStyle['w_' + vTheme] !== 1)
-              throw new TypeError(`Theme "${vTheme}" should have width of 1 for all vertical elements`);
+              throw new TypeError(`Vertical theme "${vTheme}" should have width of 1 for all vertical elements`);
             if (!lineStyle['v_' + vTheme]) throw new TypeError(`Style has no "v_${vTheme}" property`);
             return lineStyle['v_' + vTheme][vIndex];
           }
@@ -33,7 +33,7 @@ export const draw = (turtle, lineStyle, {ignore = ' '} = {}) =>
             return lineStyle['h_' + hTheme][hIndex];
           }
           if (lineStyle['w_' + vTheme] !== 1)
-            throw new TypeError(`Theme "${vTheme}" should have width of 1 for all vertical elements`);
+            throw new TypeError(`Vertical theme "${vTheme}" should have width of 1 for all vertical elements`);
           if (!lineStyle['t_' + hTheme + '_' + vTheme])
             throw new TypeError(`Style has no "t_${hTheme}_${vTheme}" property`);
           return lineStyle['t_' + hTheme + '_' + vTheme][4 * hIndex + vIndex];
