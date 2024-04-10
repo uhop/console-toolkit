@@ -82,7 +82,7 @@ export const transcodeTables = {
 };
 
 export const transcode = (s, name, {missing} = {}) => {
-  const table = transcodeTables[name];
-  if (!table) throw new Error(`There is no transcode table named "${name}"`);
+  const table = typeof name == 'string' ? transcodeTables[name] : name;
+  if (!table) throw new Error(`There is no transcode table "${name}"`);
   return s.replace(/./g, missing ? m => table[m] || missing : m => table[m] || m);
 };
