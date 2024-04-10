@@ -20,6 +20,12 @@ export const addGetter = (Class, name, getter, force) => {
   return Object.defineProperty(object, name, {configurable: true, enumerable: true, get: getter});
 };
 
+export const addGetters = (Class, getters, force) => {
+  for (const [name, value] of Object.entries(getters)) {
+    addGetter(Class, name, value, force);
+  }
+};
+
 export const addAlias = (Class, name, oldName, force) => {
   const object = Class.prototype || Class;
   if (!force && object.hasOwnProperty(name)) return object;

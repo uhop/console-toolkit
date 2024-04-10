@@ -50,7 +50,7 @@ import {
   optimize
 } from './ansi/sgr-state.js';
 import {matchCsi} from './ansi/csi.js';
-import {capitalize, toCamelCase, fromSnakeCase, addGetter, addAlias, addAliases} from './meta.js';
+import {capitalize, toCamelCase, fromSnakeCase, addGetter, addAliases, addGetters} from './meta.js';
 
 export {RESET_STATE};
 
@@ -137,9 +137,7 @@ class ExtendedColor {
     return this[styleSymbol][colorDepthSymbol] > 8 ? this.hexTrueColor(hex) : this.hex256(hex);
   }
 }
-addAlias(ExtendedColor, 'stdRgb', 'stdRgb256');
-addAlias(ExtendedColor, 'brightStdRgb', 'brightStdRgb256');
-addAlias(ExtendedColor, 'darkStdRgb', 'darkStdRgb256');
+addAliases(ExtendedColor, {stdRgb: 'stdRgb256', brightStdRgb: 'brightStdRgb256', darkStdRgb: 'darkStdRgb256'});
 
 class Color extends ExtendedColor {
   // options: bright
@@ -438,41 +436,48 @@ for (const [name, value] of Object.entries(Colors)) {
   const nameLower = name.toLowerCase(),
     nameCap = capitalize(name);
 
-  addGetter(ExtendedColor, nameLower, function () {
-    return this.make([this[optionsSymbol].extended, ColorFormat.COLOR_256, (this[isBrightSymbol] ? 8 : 0) + value]);
-  });
-  addGetter(ExtendedColor, 'bright' + nameCap, function () {
-    return this.make([this[optionsSymbol].extended, ColorFormat.COLOR_256, 8 + value]);
-  });
-  addGetter(ExtendedColor, 'dark' + nameCap, function () {
-    return this.make([this[optionsSymbol].extended, ColorFormat.COLOR_256, value]);
-  });
-
-  addGetter(Color, nameLower, function () {
-    return this.make(
-      (this[isBrightSymbol] ? this[optionsSymbol].brightBase : this[optionsSymbol].base) + colorNumber(value)
-    );
-  });
-  addGetter(Color, 'bright' + nameCap, function () {
-    return this.make(this[optionsSymbol].brightBase + colorNumber(value));
-  });
-  addGetter(Color, 'dark' + nameCap, function () {
-    return this.make(this[optionsSymbol].base + colorNumber(value));
+  addGetters(ExtendedColor, {
+    [nameLower]: function () {
+      return this.make([this[optionsSymbol].extended, ColorFormat.COLOR_256, (this[isBrightSymbol] ? 8 : 0) + value]);
+    },
+    ['bright' + nameCap]: function () {
+      return this.make([this[optionsSymbol].extended, ColorFormat.COLOR_256, 8 + value]);
+    },
+    ['dark' + nameCap]: function () {
+      return this.make([this[optionsSymbol].extended, ColorFormat.COLOR_256, value]);
+    }
   });
 
-  addGetter(Bright, nameLower, function () {
-    return this.make(this[isBrightSymbol] ? getBrightColor(value) : getColor(value));
+  addGetters(Color, {
+    [nameLower]: function () {
+      return this.make(
+        (this[isBrightSymbol] ? this[optionsSymbol].brightBase : this[optionsSymbol].base) + colorNumber(value)
+      );
+    },
+    ['bright' + nameCap]: function () {
+      return this.make(this[optionsSymbol].brightBase + colorNumber(value));
+    },
+    ['dark' + nameCap]: function () {
+      return this.make(this[optionsSymbol].base + colorNumber(value));
+    }
   });
-  addGetter(Bright, 'bright' + nameCap, make(getBrightColor(value)));
-  addGetter(Bright, 'dark' + nameCap, make(getColor(value)));
 
-  addGetter(Style, nameLower, make(getColor(value)));
-  addGetter(Style, 'bright' + nameCap, make(getBrightColor(value)));
-  addGetter(Style, 'bg' + nameCap, make(getBgColor(value)));
-  addGetter(Style, 'bgBright' + nameCap, make(getBgBrightColor(value)));
+  addGetters(Bright, {
+    [nameLower]: function () {
+      return this.make(this[isBrightSymbol] ? getBrightColor(value) : getColor(value));
+    },
+    ['bright' + nameCap]: make(getBrightColor(value)),
+    ['dark' + nameCap]: make(getColor(value))
+  });
 
-  addAlias(Style, 'dark' + nameCap, nameLower);
-  addAlias(Style, 'bgDark' + nameCap, 'bg' + nameCap);
+  addGetters(Style, {
+    [nameLower]: make(getColor(value)),
+    ['bright' + nameCap]: make(getBrightColor(value)),
+    ['bg' + nameCap]: make(getBgColor(value)),
+    ['bgBright' + nameCap]: make(getBgBrightColor(value))
+  });
+
+  addAliases(Style, {['dark' + nameCap]: nameLower, ['bgDark' + nameCap]: 'bg' + nameCap});
 }
 
 addAliases(Style, {
