@@ -38,15 +38,17 @@ export class Panel {
         state = {};
       matchCsi.lastIndex = 0;
       for (const match of row.matchAll(matchCsi)) {
-        for (let j = start, n = match.index; j < n; ++j) {
-          panelRow[pos++] = row[j] === ignore ? null : {symbol: row[j], state};
+        const str = [...row.substring(start, match.index)];
+        for (let j = 0; j < str.length; ++j) {
+          panelRow[pos++] = str[j] === ignore ? null : {symbol: str[j], state};
         }
         start = match.index + match[0].length;
         if (match[3] !== 'm') continue;
         state = addCommandsToState(state, match[1].split(';'));
       }
-      for (let j = start, n = row.length; j < n; ++j) {
-        panelRow[pos++] = row[j] === ignore ? null : {symbol: row[j], state};
+      const str = [...row.substring(start)];
+      for (let j = 0; j < str.length; ++j) {
+        panelRow[pos++] = str[j] === ignore ? null : {symbol: str[j], state};
       }
     }
 
@@ -184,17 +186,19 @@ export class Panel {
       }
       matchCsi.lastIndex = 0;
       for (const match of s.matchAll(matchCsi)) {
-        for (let j = start, n = match.index; j < n; ++j, ++pos) {
+        const str = [...s.substring(start, match.index)];
+        for (let j = 0; j < str.length; ++j, ++pos) {
           if (x + pos >= row.length) break;
-          row[x + pos] = s[j] === ignore ? null : {symbol: s[j], state};
+          row[x + pos] = str[j] === ignore ? null : {symbol: str[j], state};
         }
         start = match.index + match[0].length;
         if (match[3] !== 'm') continue;
         state = addCommandsToState(state, match[1].split(';'));
       }
-      for (let j = start, n = s.length; j < n; ++j, ++pos) {
+      const str = [...s.substring(start)];
+      for (let j = 0; j < str.length; ++j, ++pos) {
         if (x + pos >= row.length) break;
-        row[x + pos] = s[j] === ignore ? null : {symbol: s[j], state};
+        row[x + pos] = str[j] === ignore ? null : {symbol: str[j], state};
       }
       if (x + pos < row.length) {
         const cell = row[x + pos];
