@@ -1,6 +1,6 @@
-import Data from './Data.js';
+import Table from './Table.js';
 
-export {Data};
-export const make = Data.make;
+export {Table};
+export const make = Table.make;
 
 export default make;

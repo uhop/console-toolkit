@@ -26,7 +26,7 @@ const dataInstructions = 'rowFirst,rowLast,columnFirst,columnLast,data,rowOdd,ro
 
 const DIM_STATE = style.dim.getState();
 
-export class Data {
+export class Table {
   constructor(data, lineStyle, options = {}) {
     const {hAxis = '1', vAxis = '1', hAlign = [], vAlign = [], hMin = 0, vMin = 0, cellPadding = {}} = options;
 
@@ -308,11 +308,11 @@ export class Data {
   }
 
   static make(data, lineStyle, options, overrides) {
-    return new Data(Data.processData(data, options?.states), lineStyle, {
-      ...(options && Data.generateAxes(data.length && data[0].length, data.length, options)),
+    return new Table(Table.processData(data, options?.states), lineStyle, {
+      ...(options && Table.generateAxes(data.length && data[0].length, data.length, options)),
       ...overrides
     });
   }
 }
 
-export default Data;
+export default Table;
