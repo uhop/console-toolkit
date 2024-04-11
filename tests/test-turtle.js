@@ -3,8 +3,16 @@ import test from 'tape-six';
 import lineStyle from '../src/line-styles/unicode.js';
 import {draw as drawBorders} from '../src/table/index.js';
 import {Turtle, draw as drawTurtle} from '../src/turtle/index.js';
+import drawLineArt from '../src/turtle/draw-line-art.js';
 
 test('Turtle', async t => {
+  '╭─┴─╮'
+  await t.test('Draw an axis', t => {
+    const turtle = new Turtle(5, 1).markHalfDown().forward(2).markHalfUp().forward(2).markHalfDown(),
+      axis = drawLineArt(turtle, lineStyle);
+    t.deepEqual(axis.box, ['┌─┴─┐']);
+  });
+
   await t.test('Compare with table', t => {
     const hTheme = 1,
       vTheme = 1;
