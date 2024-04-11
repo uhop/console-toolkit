@@ -9,4 +9,9 @@ test('Utilities', async t => {
     t.equal(getLength(s), 4);
     t.equal(s.replace(matchCsiNoGroups, ''), 'cyan');
   });
+
+  await t.test('Unicode symbols', t => {
+    const s = style.cyan.text('① ② ③ ④');
+    t.equal(getLength(s), 7);
+  });
 });
