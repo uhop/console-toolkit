@@ -158,7 +158,7 @@ export class Table {
           }
           let diffY = this.heights[i] - cell.height + (cell.cellHeight - 1) * (this.cellPadding.t + this.cellPadding.b);
           for (let k = 1; k < cell.cellHeight; ++k) {
-            diffY += this.heights[j + k] + (this.vAxis[j + k] ? 1 : 0);
+            diffY += this.heights[i + k] + (this.vAxis[i + k] ? 1 : 0);
           }
           const hAlign = getCellAlign(cell.align, 0) || this.options.hAlign[j] || 'left',
             vAlign = getCellAlign(cell.align, 1) || this.options.vAlign[i] || 'top',
