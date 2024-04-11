@@ -22,6 +22,7 @@ export class Turtle {
     this.direction = Turtle.RIGHT;
     this.position = {x: 0, y: 0};
     this.theme = theme;
+    this.stack = [];
   }
 
   reset() {
@@ -40,6 +41,15 @@ export class Turtle {
   setY(y) {
     this.position.y = Math.max(0, Math.min(this.height - 1, y));
     return this;
+  }
+  add(dx, dy) {
+    return this.set(x + dx, y + dy);
+  }
+  addX(dx) {
+    return this.setX(x + dx);
+  }
+  addY(dy) {
+    return this.setY(y + dy);
   }
 
   setTheme(theme) {
@@ -68,6 +78,16 @@ export class Turtle {
   }
   right() {
     return this.setDirection((this.direction + 1) % 4);
+  }
+
+  save() {
+    this.stack.push([this.position.x, this.position.y, this.direction, this.theme]);
+    return this;
+  }
+  restore() {
+    if (!this.stack) throw new ReferenceError('Unmatched restore');
+    [this.position.x, this.position.y, this.direction, this.theme] = this.stack.pop();
+    return this;
   }
 
   moveUp(distance) {
@@ -238,6 +258,7 @@ addAliases(Turtle, {
   goto: 'set',
   setPos: 'set',
   setPosition: 'set',
+  advance: 'add',
   lt: 'left',
   rt: 'right',
   fd: 'forward',
