@@ -4,6 +4,6 @@ export const style = {};
 
 const dots = {t: '...', m: '.:.', b: ':::', v: ':::', h: '...'};
 
-populateStyle(style, dots, 'd', 'd');
+populateStyle(style, dots, 1, 1);
 
 export default style;
