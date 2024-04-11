@@ -69,7 +69,7 @@ const drawRow = (tableStyle, hAxis, vAxis, skip, symbol, y, i) =>
     })
     .join('');
 
-export const draw = (tableStyle, hAxis, vAxis, skip = [], symbol = ' ') =>
+export const draw = (tableStyle, hAxis, vAxis, {skip = [], symbol = ' '} = {}) =>
   new Box(
     vAxis
       .map((y, i) => {

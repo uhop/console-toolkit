@@ -5,7 +5,7 @@ import {commandsToState, RESET_STATE} from '../../src/ansi/sgr-state.js';
 
 const panel = new Panel(8, 4);
 
-panel.put(0, 0, '12345678\n23456781\n34567812\n45678123').fillState(0, 0, 8, 4, RESET_STATE);
+panel.put(0, 0, '12345678\n23456781\n34567812\n45678123').fillState(0, 0, 8, 4, {state: RESET_STATE});
 log(panel);
 console.log('==');
 
@@ -14,7 +14,7 @@ log(panel);
 console.log('==');
 
 const yellow = commandsToState([getBgBrightColor(Colors.YELLOW)]);
-panel.fillState(0, 0, 2, 1, yellow).fillState(6, 3, 2, 1, yellow);
+panel.fillState(0, 0, 2, 1, {state: yellow}).fillState(6, 3, 2, 1, {state: yellow});
 log(panel);
 console.log('==');
 

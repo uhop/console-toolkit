@@ -70,11 +70,11 @@ export class Turtle {
     return this.setDirection((this.direction + 1) % 4);
   }
 
-  moveUp(d) {
-    if (!d) return this;
-    if (d < 0) return this.moveDown(-d);
+  moveUp(distance) {
+    if (!distance) return this;
+    if (distance < 0) return this.moveDown(-distance);
 
-    const last = Math.max(0, this.position.y - d);
+    const last = Math.max(0, this.position.y - distance);
     if (this.position.y === last) return this;
 
     for (let i = this.position.y; i >= last; --i) {
@@ -96,11 +96,11 @@ export class Turtle {
     this.position.y = last;
     return this;
   }
-  moveDown(d) {
-    if (!d) return this;
-    if (d < 0) return this.moveUp(-d);
+  moveDown(distance) {
+    if (!distance) return this;
+    if (distance < 0) return this.moveUp(-distance);
 
-    const last = Math.min(this.height - 1, this.position.y + d);
+    const last = Math.min(this.height - 1, this.position.y + distance);
     if (this.position.y === last) return this;
 
     for (let i = this.position.y; i <= last; ++i) {
@@ -122,11 +122,11 @@ export class Turtle {
     this.position.y = last;
     return this;
   }
-  moveLeft(d) {
-    if (!d) return this;
-    if (d < 0) return this.moveRight(-d);
+  moveLeft(distance) {
+    if (!distance) return this;
+    if (distance < 0) return this.moveRight(-distance);
 
-    const last = Math.max(0, this.position.x - d);
+    const last = Math.max(0, this.position.x - distance);
     if (this.position.x === last) return this;
 
     for (let j = this.position.x; j >= last; --j) {
@@ -148,11 +148,11 @@ export class Turtle {
     this.position.x = last;
     return this;
   }
-  moveRight(d) {
-    if (!d) return this;
-    if (d < 0) return this.moveLeft(-d);
+  moveRight(distance) {
+    if (!distance) return this;
+    if (distance < 0) return this.moveLeft(-distance);
 
-    const last = Math.min(this.width - 1, this.position.x + d);
+    const last = Math.min(this.width - 1, this.position.x + distance);
     if (this.position.x === last) return this;
 
     for (let j = this.position.x; j <= last; ++j) {
@@ -174,24 +174,24 @@ export class Turtle {
     this.position.x = last;
     return this;
   }
-  move(direction, d) {
+  move(direction, distance) {
     switch (direction) {
       case Turtle.UP:
-        return this.moveUp(d);
+        return this.moveUp(distance);
       case Turtle.DOWN:
-        return this.moveDown(d);
+        return this.moveDown(distance);
       case Turtle.RIGHT:
-        return this.moveRight(d);
+        return this.moveRight(distance);
       case Turtle.LEFT:
-        return this.moveLeft(d);
+        return this.moveLeft(distance);
     }
     return this;
   }
-  forward(d) {
-    return this.move(this.direction, d);
+  forward(distance) {
+    return this.move(this.direction, distance);
   }
-  backward(d) {
-    return this.move((this.direction + 2) % 4, d);
+  backward(distance) {
+    return this.move((this.direction + 2) % 4, distance);
   }
 
   markHalf(direction) {

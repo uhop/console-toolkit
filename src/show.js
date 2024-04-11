@@ -10,7 +10,7 @@ const toBox = s => {
   return new Box(s);
 };
 
-export const log = (s, endOfLineCommand = '\x1B[m', colorDepth = 24) => {
+export const log = (s, {endOfLineCommand = '\x1B[m', colorDepth = 24} = {}) => {
   s = toBox(s);
   if (colorDepth < 4) {
     s.box.forEach(row => console.log((row + endOfLineCommand).replace(matchCsiNoGroups, '')));
@@ -19,7 +19,7 @@ export const log = (s, endOfLineCommand = '\x1B[m', colorDepth = 24) => {
   s.box.forEach(row => console.log(row + endOfLineCommand));
 };
 
-export const out = (s, stream = process.stdout, endOfLineCommand = '\x1B[m', colorDepth) => {
+export const out = (s, {stream = process.stdout, endOfLineCommand = '\x1B[m', colorDepth} = {}) => {
   s = toBox(s);
   if (typeof colorDepth != 'number') colorDepth = stream.isTTY ? stream.getColorDepth() : 1;
   if (colorDepth < 4) {
@@ -34,7 +34,7 @@ export class Out {
     this.stream = stream;
     this.colorDepth = stream.isTTY ? stream.getColorDepth() : 1;
   }
-  out(s, endOfLineCommand = '\x1B[m', colorDepth) {
+  out(s, {endOfLineCommand = '\x1B[m', colorDepth} = {}) {
     if (typeof colorDepth != 'number') colorDepth = this.colorDepth;
     return out(s, this.stream, endOfLineCommand, colorDepth);
   }

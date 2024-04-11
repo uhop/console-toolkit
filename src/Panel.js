@@ -246,7 +246,7 @@ export class Panel {
     return this.fillFn(x, y, width, height, () => ({symbol, state}));
   }
 
-  fillState(x, y, width, height, state = {}, ignore = ' ') {
+  fillState(x, y, width, height, {state = {}, ignore = ' '} = {}) {
     if (typeof state == 'string') {
       state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
@@ -255,7 +255,7 @@ export class Panel {
     return this.fillFn(x, y, width, height, (x, y, cell) => ({symbol: cell ? cell.symbol : ignore, state}));
   }
 
-  fillNonEmptyState(x, y, width, height, state = {}) {
+  fillNonEmptyState(x, y, width, height, {state = {}} = {}) {
     if (typeof state == 'string') {
       state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
@@ -264,7 +264,7 @@ export class Panel {
     return this.fillFn(x, y, width, height, (x, y, cell) => cell && {symbol: cell.symbol, state});
   }
 
-  combineStateBefore(x, y, width, height, state = {}, ignore = ' ') {
+  combineStateBefore(x, y, width, height, {state = {}, ignore = ' '} = {}) {
     if (typeof state == 'string') {
       state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
@@ -276,7 +276,7 @@ export class Panel {
     }));
   }
 
-  combineState(x, y, width, height, state = {}, ignore = ' ') {
+  combineState(x, y, width, height, {state = {}, ignore = ' '} = {}) {
     if (typeof state == 'string') {
       state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
@@ -288,8 +288,8 @@ export class Panel {
     }));
   }
 
-  combineStateAfter(x, y, width, height, state, ignore) {
-    return this.combineState(x, y, width, height, state, ignore);
+  combineStateAfter(x, y, width, height, options) {
+    return this.combineState(x, y, width, height, options);
   }
 
   clear(x, y, width, height) {

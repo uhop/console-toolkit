@@ -18,7 +18,7 @@ export class Box {
     return this.box.length;
   }
 
-  static make(box, symbol = ' ', align = 'left') {
+  static make(box, {symbol = ' ', align = 'left'} = {}) {
     if (isPrimitive[typeof box] === 1) return Box.make(String(box).split(/\r?\n/g), symbol, align);
     if (!box) return new Box([], true);
     if (box.hasOwnProperty('value')) return Box.make(box.value, symbol, align);
@@ -116,7 +116,7 @@ export class Box {
 
   // stack
 
-  addBottom(box, symbol = ' ', align = 'left') {
+  addBottom(box, {symbol = ' ', align = 'left'} = {}) {
     let a = this,
       b = box;
     const diff = a.width - b.width;
@@ -143,7 +143,7 @@ export class Box {
     return new Box([...a.box, ...b.box], true);
   }
 
-  addRight(box, symbol = ' ', align = 'top') {
+  addRight(box, {symbol = ' ', align = 'top'} = {}) {
     const ah = this.height,
       bh = box.height;
     if (ah == bh)

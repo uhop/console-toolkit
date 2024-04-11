@@ -73,7 +73,7 @@ export class Table {
         const isObject = data?.hasOwnProperty('value'),
           value = isObject ? data.value : data,
           align = (isObject && data.align) || '',
-          box = value instanceof Box ? value : Box.make(value, ' ', getCellAlign(align, 0) || hAlign[j] || 'left'),
+          box = value instanceof Box ? value : Box.make(value, {symbol: ' ', align: getCellAlign(align, 0) || hAlign[j] || 'left'}),
           width = box.width,
           height = box.height,
           cellWidth = isObject ? data.width || 1 : 1,
@@ -140,9 +140,9 @@ export class Table {
 
     // draw table borders
 
-    const borderBox = drawBorder(this.lineStyle, hAxis, vAxis, this.skipList, '\x07'),
+    const borderBox = drawBorder(this.lineStyle, hAxis, vAxis, {skip: this.skipList, symbol: '\x07'}),
       panel = Panel.fromBox(borderBox, '\x07');
-    panel.fillNonEmptyState(0, 0, panel.width, panel.height, lineState);
+    panel.fillNonEmptyState(0, 0, panel.width, panel.height, {state: lineState});
 
     // draw cells
 
