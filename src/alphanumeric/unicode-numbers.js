@@ -54,6 +54,11 @@ fill(digitsArabicIndic, '٠', 0, 9);
 const digitsArabicIndicExtended = [];
 fill(digitsArabicIndicExtended, '۰', 0, 9);
 
+// Tamil
+
+const numbersTamil = [];
+fill(numbersTamil, '௦', 0, 10);
+
 // API
 
 const zeroCode = '0'.charCodeAt(0);
@@ -78,7 +83,8 @@ export const transcodeTables = {
   roman: numbersRoman,
   romanLower: numbersRomanLower,
   arabicIndic: digitsArabicIndic,
-  arabicIndicExtended: digitsArabicIndicExtended
+  arabicIndicExtended: digitsArabicIndicExtended,
+  tamil: numbersTamil
 };
 
 export const transcode = (s, name, {missing} = {}) => {
