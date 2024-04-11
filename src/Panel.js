@@ -11,8 +11,6 @@ import {
 } from './ansi/sgr-state.js';
 import Box from './Box.js';
 
-// TODO: When copying and filling areas accept a state that finishes a row. The same goes for `addRight()`.
-
 export class Panel {
   constructor(width, height) {
     this.width = width;
