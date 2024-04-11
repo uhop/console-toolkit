@@ -32,10 +32,11 @@ export const transcodeTables = {
 
 // API
 
-const zeroCode = '0'.charCodeAt(0);
-
-export const numberPunctuation = s =>
-  s.replace(/(\d)([\,\.])/g, (_, d, p) => transcodeTables[p === '.' ? 'dots' : 'commas'].transcode(d) + ' ');
+export const numberPunctuation = (s, {addBefore = '', addAfter = ' '} = {}) =>
+  s.replace(
+    /(\d)([\,\.])/g,
+    (_, d, p) => addBefore + transcodeTables[p === '.' ? 'dots' : 'commas'].transcode(d) + addAfter
+  );
 
 export const transcode = (s, name, {missing} = {}) => {
   const table = typeof name == 'string' ? transcodeTables[name] : name;
