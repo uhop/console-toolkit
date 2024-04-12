@@ -12,3 +12,6 @@ export const getLength = (s, matcher = matchCsiNoGroups) => {
   counter += [...s.substring(start)].length;
   return counter;
 };
+
+export const getMaxLength = (strings, matcher = matchCsiNoGroups) =>
+  Math.max(0, ...strings.map(s => getLength(s, matcher)));
