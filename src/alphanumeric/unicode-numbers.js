@@ -5,7 +5,7 @@ export const transcodeTables = {
   circled: new SymbolRange('①', 1, 20),
   parens: new SymbolRange('⑴', 1, 20),
   dots: new SymbolRange('⒈', 1, 20),
-  doubleCircled: new SymbolRange('⓵', 1),
+  doubleCircled: new SymbolRange('⓵', 1, 10),
 
   // Mathematical Alphanumeric Symbols
   bold: new SymbolRange('𝟎'),
@@ -29,6 +29,13 @@ export const transcodeTables = {
 
 // const numbersWithDots = ['🄀'];
 // fill(numbersWithDots, '⒈', 1, 20);
+
+// patches
+
+transcodeTables.circled.overlay = {'0': '\u{24EA}'};
+const negativeCircled_11_20 = new SymbolRange('\u{24EB}', 11, 20);
+negativeCircled_11_20.overlay= {'0': '\u{24FF}'};
+transcodeTables.dingbatsNegativeCircled.overlay = negativeCircled_11_20;
 
 // API
 
