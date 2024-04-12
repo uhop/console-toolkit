@@ -1,5 +1,16 @@
 import Box from './Box.js';
 
+const getIndex = (h, v) => 4 * h + v;
+
+const T = 1,
+  B = 2,
+  L = 1,
+  R = 2,
+  LT = getIndex(L, T),
+  RT = getIndex(R, T),
+  LB = getIndex(L, B),
+  RB = getIndex(R, B);
+
 export const drawRect = (
   width,
   height,
@@ -14,13 +25,13 @@ export const drawRect = (
 
   return new Box(
     [
-      lineStyle['t_' + top + '_' + left][5] +
-        lineStyle['h_' + top][1].repeat(width) +
-        lineStyle['t_' + top + '_' + right][9],
-      ...new Array(height).fill(lineStyle['v_' + left][1] + symbol.repeat(width) + lineStyle['v_' + right][2]),
-      lineStyle['t_' + bottom + '_' + left][6] +
-        lineStyle['h_' + bottom][2].repeat(width) +
-        lineStyle['t_' + bottom + '_' + right][10]
+      lineStyle['t_' + top + '_' + left][LT] +
+        lineStyle['h_' + top][T].repeat(width) +
+        lineStyle['t_' + top + '_' + right][RT],
+      ...new Array(height).fill(lineStyle['v_' + left][L] + symbol.repeat(width) + lineStyle['v_' + right][R]),
+      lineStyle['t_' + bottom + '_' + left][LB] +
+        lineStyle['h_' + bottom][B].repeat(width) +
+        lineStyle['t_' + bottom + '_' + right][RB]
     ],
     true
   );
