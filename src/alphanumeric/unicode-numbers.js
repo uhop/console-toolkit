@@ -32,9 +32,9 @@ export const transcodeTables = {
 
 // patches
 
-transcodeTables.circled.overlay = {'0': '\u{24EA}'};
+transcodeTables.circled.overlay = {0: '\u{24EA}'};
 const negativeCircled_11_20 = new SymbolRange('\u{24EB}', 11, 20);
-negativeCircled_11_20.overlay= {'0': '\u{24FF}'};
+negativeCircled_11_20.overlay = {0: '\u{24FF}'};
 transcodeTables.dingbatsNegativeCircled.overlay = negativeCircled_11_20;
 
 // API

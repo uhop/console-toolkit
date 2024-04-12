@@ -6,10 +6,7 @@ import {draw} from './utils.js';
 
 const pattern = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz';
 
-const tableData = [
-  ['Name', 'Result'],
-  ['pattern', pattern].map(s => style.brightCyan.text(s))
-];
+const tableData = [['Name', 'Result'], ['pattern', pattern].map(s => style.brightCyan.text(s))];
 for (const name of Object.keys(transcodeTables)) {
   tableData.push([name, transcode(pattern, name)]);
 }

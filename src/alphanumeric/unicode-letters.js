@@ -1,9 +1,9 @@
 import {SymbolRange, transcode as internalTranscode} from './utils.js';
 
-const range = (fromCapital, fromSmall) => [
-  fromCapital && new SymbolRange(fromCapital, 0, 25, 'A'),
-  fromSmall && new SymbolRange(fromSmall, 0, 25, 'a')
-].filter(x => x);
+const range = (fromCapital, fromSmall) =>
+  [fromCapital && new SymbolRange(fromCapital, 0, 25, 'A'), fromSmall && new SymbolRange(fromSmall, 0, 25, 'a')].filter(
+    x => x
+  );
 
 export const transcodeTables = {
   bold: range('\u{1D400}', '\u{1D41A}'),
@@ -25,7 +25,7 @@ export const transcodeTables = {
   squared: range('\u{1F130}', ''),
   negativeCircled: range('\u{1F150}', ''),
   negativeSquared: range('\u{1F170}', ''),
-  regionalIndicators: range('\u{1F1E6}', ''),
+  regionalIndicators: range('\u{1F1E6}', '')
 };
 
 // patches as suggested in https://en.wikipedia.org/wiki/Mathematical_Alphanumeric_Symbols
