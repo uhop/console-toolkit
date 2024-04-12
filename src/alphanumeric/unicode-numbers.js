@@ -1,4 +1,4 @@
-import {SymbolRange} from './utils.js';
+import {SymbolRange, transcode as internalTranscode} from './utils.js';
 
 export const transcodeTables = {
   // Enclosed Alphanumeric
@@ -38,9 +38,8 @@ export const numberPunctuation = (s, {addBefore = '', addAfter = ' '} = {}) =>
     (_, d, p) => addBefore + transcodeTables[p === '.' ? 'dots' : 'commas'].transcode(d) + addAfter
   );
 
-export const transcode = (s, name, {missing} = {}) => {
+export const transcode = (s, name, options) => {
   const table = typeof name == 'string' ? transcodeTables[name] : name;
   if (!table) throw new Error(`There is no transcode table "${name}"`);
-  if (typeof table.transcode == 'function') return table.transcode(s, missing);
-  return s.replace(/./g, missing ? m => table[m] || missing : m => table[m] || m);
+  return internalTranscode(s, table, options);
 };

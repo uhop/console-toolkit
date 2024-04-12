@@ -1,4 +1,4 @@
-import {transcode} from '../../src/alphanumeric/unicode-numbers.js';
+import {transcode} from '../../src/alphanumeric/utils.js';
 import {transcodeTables} from '../../src/alphanumeric/unicode-cultural-numbers.js';
 import makeTable from '../../src/table/index.js';
 import tableStyle from '../../src/line-styles/unicode-rounded.js';
