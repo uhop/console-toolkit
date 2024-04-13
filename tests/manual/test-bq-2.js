@@ -5,3 +5,4 @@ console.log(c`Hello, {{save.bold.save.bright.cyan}}bold bright cyan{{restore}} b
 show(c`Hello, {{save.bold.save.bright.cyan}}bold bright cyan{{restore}} bold{{restore}}! We love you!`);
 show(c(RESET_STATE)`Hello, {{save.bold.save.bright.cyan}}bold bright cyan{{restore}} bold{{restore}}! We love you!`);
 show(c`Hello, {{save.bold.save.bright.cyan}}bold bright cyan bold! We love you!`);
+show(c(RESET_STATE)`Hello, {{save.bold.save.bright.cyan}}bold bright cyan bold! We love you!`);
