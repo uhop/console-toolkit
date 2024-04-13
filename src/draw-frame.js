@@ -22,6 +22,7 @@ export const drawFrame = (
   bottom ??= hTheme ?? theme ?? 1;
   left ??= vTheme ?? theme ?? 1;
   right ??= vTheme ?? theme ?? 1;
+  symbol ??= lineTheme?.f || ' ';
 
   return new Box(
     [

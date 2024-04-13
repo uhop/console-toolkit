@@ -34,4 +34,5 @@ export const populateTheme = (lineTheme, tableDefinition, hTheme, vTheme) => {
   lineTheme['h_' + hTheme] = [tableDefinition.h[1], tableDefinition.h[0], tableDefinition.h[2]];
   lineTheme['v_' + vTheme] = theme.slice(12);
   lineTheme['w_' + vTheme] = w;
+  lineTheme.f = tableDefinition.f || ' ';
 };
