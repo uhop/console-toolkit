@@ -11,7 +11,7 @@ const T = 1,
   LB = getIndex(L, B),
   RB = getIndex(R, B);
 
-export const drawRect = (
+export const drawBorder = (
   width,
   height,
   lineStyle,
@@ -37,4 +37,4 @@ export const drawRect = (
   );
 };
 
-export default drawRect;
+export default drawBorder;
