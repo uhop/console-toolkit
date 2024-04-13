@@ -1,5 +1,5 @@
 import {Table} from '../../src/table/index.js';
-import lineStyle from '../../src/line-themes/unicode-rounded.js';
+import lineTheme from '../../src/line-themes/unicode-rounded.js';
 import style, {s} from '../../src/style.js';
 import {draw} from './utils.js';
 
@@ -11,7 +11,7 @@ const data = [
   [s`{{inverse}}bright\nyellow`, s`{{bright.yellow}}bright yellow`, '12,345']
 ];
 
-const table = new Table(data, lineStyle, {hAlign: ['l', 'c', 'r'], vAlign: ['t', 'c', 'c', 'c', 'b']});
+const table = new Table(data, lineTheme, {hAlign: ['l', 'c', 'r'], vAlign: ['t', 'c', 'c', 'c', 'b']});
 table.hAxis[2] = '2';
 table.vAxis[1] = '2';
 

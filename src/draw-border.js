@@ -14,7 +14,7 @@ const T = 1,
 export const drawBorder = (
   width,
   height,
-  lineStyle,
+  lineTheme,
   {top, bottom, left, right, vTheme, hTheme, theme, symbol = ' '} = {}
 ) => {
   // decode options
@@ -25,13 +25,13 @@ export const drawBorder = (
 
   return new Box(
     [
-      lineStyle['t_' + top + '_' + left][LT] +
-        lineStyle['h_' + top][T].repeat(width) +
-        lineStyle['t_' + top + '_' + right][RT],
-      ...new Array(height).fill(lineStyle['v_' + left][L] + symbol.repeat(width) + lineStyle['v_' + right][R]),
-      lineStyle['t_' + bottom + '_' + left][LB] +
-        lineStyle['h_' + bottom][B].repeat(width) +
-        lineStyle['t_' + bottom + '_' + right][RB]
+      lineTheme['t_' + top + '_' + left][LT] +
+        lineTheme['h_' + top][T].repeat(width) +
+        lineTheme['t_' + top + '_' + right][RT],
+      ...new Array(height).fill(lineTheme['v_' + left][L] + symbol.repeat(width) + lineTheme['v_' + right][R]),
+      lineTheme['t_' + bottom + '_' + left][LB] +
+        lineTheme['h_' + bottom][B].repeat(width) +
+        lineTheme['t_' + bottom + '_' + right][RB]
     ],
     true
   );

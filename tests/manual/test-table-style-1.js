@@ -1,10 +1,10 @@
 import {draw as drawTable} from '../../src/table/draw-borders.js';
-import lineStyle from '../../src/line-themes/unicode-rounded.js';
+import lineTheme from '../../src/line-themes/unicode-rounded.js';
 import {draw} from './utils.js';
 
 const makeBox4 = (hTheme1, hTheme2, vTheme1, vTheme2) =>
   drawTable(
-    lineStyle,
+    lineTheme,
     [vTheme1, 1, vTheme1, 1, vTheme1, 1, vTheme2, 1, vTheme2, 1, vTheme2],
     [hTheme1, 1, hTheme1, 1, hTheme1, 1, hTheme2, 1, hTheme2, 1, hTheme2],
     {

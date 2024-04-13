@@ -5,10 +5,10 @@ import style, {RESET_STATE} from '../style.js';
 
 const getCellAlign = (align, index) => (typeof align == 'string' && align[index] !== 'd' && align[index]) || '';
 
-const ensureSize = (cellSize, cellLength, cellGap, pos, lineStyle, axis, lengths) => {
+const ensureSize = (cellSize, cellLength, cellGap, pos, lineTheme, axis, lengths) => {
   let available = (cellSize - 1) * cellGap;
   for (let i = 0; i < cellSize; ++i)
-    available += lengths[pos + i] + (!axis[pos + i] ? 0 : lineStyle ? lineStyle['w_' + axis[pos + i]] : 1);
+    available += lengths[pos + i] + (!axis[pos + i] ? 0 : lineTheme ? lineTheme['w_' + axis[pos + i]] : 1);
   if (cellLength > available) {
     const diff = cellLength - available,
       perCell = Math.floor(diff / cellSize),
@@ -27,7 +27,7 @@ const dataInstructions = 'rowFirst,rowLast,columnFirst,columnLast,data,rowOdd,ro
 const DIM_STATE = style.dim.getState();
 
 export class Table {
-  constructor(data, lineStyle, options = {}) {
+  constructor(data, lineTheme, options = {}) {
     const {hAxis = '1', vAxis = '1', hAlign = [], vAlign = [], hMin = 0, vMin = 0, cellPadding = {}} = options;
 
     this.height = data.length;
@@ -45,7 +45,7 @@ export class Table {
     if (this.heights.length != this.height)
       throw new Error('vMin should be equal to a column size, not ' + this.heights.length);
 
-    this.lineStyle = lineStyle;
+    this.lineTheme = lineTheme;
     this.skipList = [];
     this.options = {hAxis, vAxis, hAlign, vAlign};
 
@@ -99,7 +99,7 @@ export class Table {
           cell.width,
           this.cellPadding.l + this.cellPadding.r,
           j,
-          lineStyle,
+          lineTheme,
           this.hAxis,
           this.widths
         );
@@ -140,7 +140,7 @@ export class Table {
 
     // draw table borders
 
-    const borderBox = drawBorder(this.lineStyle, hAxis, vAxis, {skip: this.skipList, symbol: '\x07'}),
+    const borderBox = drawBorder(this.lineTheme, hAxis, vAxis, {skip: this.skipList, symbol: '\x07'}),
       panel = Panel.fromBox(borderBox, '\x07');
     panel.fillNonEmptyState(0, 0, panel.width, panel.height, {state: lineState});
 
@@ -148,13 +148,13 @@ export class Table {
 
     let y = (vAxis[0] ? 1 : 0) + this.cellPadding.t;
     for (let i = 0; i < this.height; ++i) {
-      let x = (this.lineStyle['w_' + hAxis[0]] || 0) + this.cellPadding.l;
+      let x = (this.lineTheme['w_' + hAxis[0]] || 0) + this.cellPadding.l;
       for (let j = 0; j < this.width; ++j) {
         const cell = this.cells[i][j];
         if (cell && this.isVisible(j, i)) {
           let diffX = this.widths[j] - cell.width + (cell.cellWidth - 1) * (this.cellPadding.l + this.cellPadding.r);
           for (let k = 1; k < cell.cellWidth; ++k) {
-            diffX += this.widths[j + k] + (this.hAxis[j + k] ? this.lineStyle['w_' + this.hAxis[j + k]] : 0);
+            diffX += this.widths[j + k] + (this.hAxis[j + k] ? this.lineTheme['w_' + this.hAxis[j + k]] : 0);
           }
           let diffY = this.heights[i] - cell.height + (cell.cellHeight - 1) * (this.cellPadding.t + this.cellPadding.b);
           for (let k = 1; k < cell.cellHeight; ++k) {
@@ -166,7 +166,7 @@ export class Table {
             dy = vAlign === 't' || vAlign == 'top' ? 0 : vAlign === 'b' || vAlign === 'bottom' ? diffY : diffY >> 1;
           panel.put(x + dx, y + dy, cell.box);
         }
-        x += hAxis[2 * j + 1] + (this.lineStyle['w_' + hAxis[2 * j + 2]] || 0);
+        x += hAxis[2 * j + 1] + (this.lineTheme['w_' + hAxis[2 * j + 2]] || 0);
       }
       y += vAxis[2 * i + 1] + (vAxis[2 * i + 2] ? 1 : 0);
     }
@@ -307,8 +307,8 @@ export class Table {
     });
   }
 
-  static make(data, lineStyle, options, overrides) {
-    return new Table(Table.processData(data, options?.states), lineStyle, {
+  static make(data, lineTheme, options, overrides) {
+    return new Table(Table.processData(data, options?.states), lineTheme, {
       ...(options && Table.generateAxes(data.length && data[0].length, data.length, options)),
       ...overrides
     });

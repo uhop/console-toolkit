@@ -1,11 +1,11 @@
 import test from 'tape-six';
 
 import {draw} from '../src/table/draw-borders.js';
-import lineStyle from '../src/line-themes/unicode-rounded.js';
+import lineTheme from '../src/line-themes/unicode-rounded.js';
 
 test('Draw a table with skip rectangles', async t => {
   await t.test('Round table with two merged cells', t => {
-    const box = draw(lineStyle, [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], {
+    const box = draw(lineTheme, [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], {
       skip: [
         {x: 1, y: 5, width: 3, height: 1},
         {x: 1, y: 1, width: 3, height: 3}
@@ -19,7 +19,7 @@ test('Draw a table with skip rectangles', async t => {
   });
 
   await t.test('Double lines outside, single lines inside', t => {
-    const box = draw(lineStyle, [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], {
+    const box = draw(lineTheme, [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], {
       skip: [
         {x: 1, y: 1, width: 2, height: 1},
         {x: 1, y: 2, width: 1, height: 2},

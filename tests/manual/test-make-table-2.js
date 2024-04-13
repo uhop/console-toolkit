@@ -1,5 +1,5 @@
 import makeTable from '../../src/table/index.js';
-import lineStyle from '../../src/line-themes/unicode-rounded.js';
+import lineTheme from '../../src/line-themes/unicode-rounded.js';
 import {s} from '../../src/style.js';
 import {draw} from './utils.js';
 
@@ -12,7 +12,7 @@ const data = [
   [{value: s`{{bold.bright.cyan}}Total:`, width: 2}, null, s`{{bold.cyan}}157`]
 ];
 
-const table = makeTable(data, lineStyle, {
+const table = makeTable(data, lineTheme, {
   hCenter: [1],
   hRight: [2],
   columnLast: '2',

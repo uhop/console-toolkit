@@ -1,17 +1,17 @@
 import {draw as drawTable} from '../../src/table/draw-borders.js';
-import lineStyle from '../../src/line-themes/unicode-rounded.js';
+import lineTheme from '../../src/line-themes/unicode-rounded.js';
 import {draw} from './utils.js';
 
-const box1 = drawTable(lineStyle, [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1]);
+const box1 = drawTable(lineTheme, [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1]);
 
-const box2 = drawTable(lineStyle, [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], {
+const box2 = drawTable(lineTheme, [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], {
   skip: [
     {x: 1, y: 5, width: 3, height: 1},
     {x: 1, y: 1, width: 3, height: 3}
   ]
 });
 
-const box3 = drawTable(lineStyle, [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], {
+const box3 = drawTable(lineTheme, [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], {
   skip: [
     {x: 1, y: 1, width: 2, height: 1},
     {x: 1, y: 2, width: 1, height: 2},
