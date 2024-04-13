@@ -595,7 +595,7 @@ const processStringConstant = (strings, i, result, stack, style) => {
   return {result, style};
 };
 
-export const s = (strings, ...args) => {
+const makeBq = clear => (strings, ...args) => {
   const callAsFunction = !Array.isArray(strings),
     initState = callAsFunction ? strings : {},
     stack = [];
@@ -620,13 +620,20 @@ export const s = (strings, ...args) => {
       result += input;
       style = style.mark();
     }
-    ({result} = processStringConstant(strings, strings.length - 1, result, stack, style));
+    ({result, style} = processStringConstant(strings, strings.length - 1, result, stack, style));
+    if (clear) {
+        const cleanupCommands = stateReverseTransition(initState, style[stateSymbol]);
+        result += stringifyCommands(cleanupCommands);
+    }
     return optimize(result, initState);
   };
 
   if (callAsFunction) return bq;
   return bq(strings, ...args);
 };
+
+export const s = makeBq();
+export const c = makeBq(true);
 
 // singleton
 export const style = new Style({});
