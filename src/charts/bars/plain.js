@@ -1,7 +1,7 @@
 import style from '../../style.js';
 import {capitalize} from '../../meta.js';
 import {Commands} from '../../ansi/sgr.js';
-import {combineStates} from '../../ansi/sgr-state.js';
+import {combineStates, optimize} from '../../ansi/sgr-state.js';
 
 // data = [datum]
 // datum = {value, symbol, state}
@@ -13,7 +13,7 @@ export const drawRow = (data, width, maxValue, zeroLimit) => {
   if (maxValue < 0) maxValue = sumValues(data);
   if (!maxValue) maxValue = 1;
   let total = 0;
-  return data
+  return optimize(data
     .map((datum, i) => {
       if (!datum) return '';
       let value = (Math.max(0, datum.value) / maxValue) * width;
@@ -28,7 +28,7 @@ export const drawRow = (data, width, maxValue, zeroLimit) => {
         .addState(datum.state || {})
         .text((datum.symbol || ' ').repeat(n + (isLast && normalize && total < width ? width - total : 0)));
     })
-    .join('');
+    .join(''));
 };
 
 const seriesColors = 'cyan,magenta,blue,yellow,green,red'.split(',');
