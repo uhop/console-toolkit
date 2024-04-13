@@ -2,14 +2,16 @@ import {drawChart} from '../../src/charts/bars/plain-grouped.js';
 import {draw} from './utils.js';
 import style from '../../src/style.js';
 
-const customTheme = [
-    {state: style.brightMagenta.getState(), symbol: '='},
-    {state: style.brightCyan.getState(), symbol: '='},
-    {state: style.brightYellow.getState(), symbol: '='},
-    {state: style.brightBlue.getState(), symbol: '='},
-    {state: style.brightGreen.getState(), symbol: '='}
+const symbol = '=',
+  customTheme = [
+    {state: style.brightMagenta.getState(), symbol},
+    {state: style.brightCyan.getState(), symbol},
+    {state: style.brightYellow.getState(), symbol},
+    {state: style.brightBlue.getState(), symbol},
+    {state: style.brightGreen.getState(), symbol}
   ];
 
+console.log('Grouped bars:');
 draw(
   drawChart(
     [

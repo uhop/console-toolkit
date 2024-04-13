@@ -2,9 +2,10 @@ import {drawChart} from '../../src/charts/bars/plain.js';
 import {draw} from './utils.js';
 import style from '../../src/style.js';
 
+console.log('Trivial bars:');
 draw(drawChart([5, 10, 2, 7], 50));
 
-console.log();
+console.log('Stacked bars:');
 draw(
   drawChart(
     [
@@ -25,7 +26,7 @@ const customTheme1 = [
   {colorState: style.brightGreen.getState(), symbol: '*'}
 ];
 
-console.log();
+console.log('Stacked bars + custom theme:');
 draw(
   drawChart(
     [
@@ -48,7 +49,7 @@ const symbol = '\u{2591}',
     {colorState: style.brightGreen.getState(), symbol}
   ];
 
-console.log();
+console.log('Stacked bars + custom theme with a shadow symbol:');
 draw(
   drawChart(
     [
@@ -63,14 +64,14 @@ draw(
 );
 
 const customTheme3 = [
-    {state: style.brightMagenta.getState(), symbol: '='},
-    {state: style.brightCyan.getState(), symbol: '='},
-    {state: style.brightYellow.getState(), symbol: '='},
-    {state: style.brightBlue.getState(), symbol: '='},
-    {state: style.brightGreen.getState(), symbol: '='}
-  ];
+  {state: style.brightMagenta.getState(), symbol: '='},
+  {state: style.brightCyan.getState(), symbol: '='},
+  {state: style.brightYellow.getState(), symbol: '='},
+  {state: style.brightBlue.getState(), symbol: '='},
+  {state: style.brightGreen.getState(), symbol: '='}
+];
 
-console.log();
+console.log('Stacked bars + custom theme with an ASCII art:');
 draw(
   drawChart(
     [
