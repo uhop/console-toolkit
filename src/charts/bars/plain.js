@@ -6,19 +6,30 @@ import {combineStates} from '../../ansi/sgr-state.js';
 // data = [datum]
 // datum = {value, symbol, state}
 
-export const drawRow = (data, width, maxValue, zeroLimit) =>
-  data
-    .map(datum => {
+export const sumValues = row => row.reduce((acc, datum) => acc + (datum?.value || 0), 0);
+
+export const drawRow = (data, width, maxValue, zeroLimit) => {
+  const normalize = maxValue < 0;
+  if (maxValue < 0) maxValue = sumValues(data);
+  if (!maxValue) maxValue = 1;
+  let total = 0;
+  return data
+    .map((datum, i) => {
       if (!datum) return '';
       let value = (Math.max(0, datum.value) / maxValue) * width;
       if (value < 1) {
         if (value < zeroLimit) return ''; // nothing to show
         value = 1;
       }
-      const n = Math.floor(value);
-      return style.addState(datum.state || {}).text((datum.symbol || ' ').repeat(n));
+      const n = Math.floor(value),
+        isLast = i + 1 == data.length;
+      total += n;
+      return style
+        .addState(datum.state || {})
+        .text((datum.symbol || ' ').repeat(n + (isLast && normalize && total < width ? width - total : 0)));
     })
     .join('');
+};
 
 const seriesColors = 'cyan,magenta,blue,yellow,green,red'.split(',');
 
@@ -34,8 +45,6 @@ export const makeBgFromFg = state => ({
     ? [Commands.BG_EXTENDED_COLOR, ...state.foreground.slice(1)]
     : Number(state.foreground) + 10
 });
-
-export const sumValues = row => row.reduce((acc, datum) => acc + datum.value, 0);
 
 export const normalizeData = (data, {theme = defaultTheme, state = {}} = {}) =>
   data.map(series => {
@@ -57,11 +66,11 @@ export const normalizeData = (data, {theme = defaultTheme, state = {}} = {}) =>
     });
   });
 
-export const drawChart = (values, width, {theme = defaultTheme, zeroLimit = 0.5, state = {}} = {}) => {
+export const drawChart = (values, width, {normalized, theme = defaultTheme, zeroLimit = 0.5, state = {}} = {}) => {
   if (isNaN(width) || width <= 0) throw new Error(`"width" should be positive integer instead of "${width}"`);
 
   const data = normalizeData(values, {theme, state}),
-    maxValue = Math.max(0, ...data.map(row => sumValues(row)));
+    maxValue = normalized ? -1 : Math.max(0, ...data.map(row => sumValues(row)));
 
   return data.map(row => drawRow(row, width, maxValue, zeroLimit));
 };
