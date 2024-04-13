@@ -37,11 +37,8 @@ export const makeBgFromFg = state => ({
 
 const sumValues = row => row.reduce((acc, datum) => acc + datum.value, 0);
 
-export const drawChart = (values, width, {theme = defaultTheme, zeroLimit = 0.5, state = {}} = {}) => {
-  if (isNaN(width) || width <= 0) throw new Error(`"width" should be positive integer instead of "${width}"`);
-
-  // convert to compound values
-  const data = values.map(series => {
+export const normalizeData = (data, {theme = defaultTheme, state = {}} = {}) =>
+  data.map(series => {
     if (!Array.isArray(series)) series = [series];
     return series.map((datum, i) => {
       if (typeof datum == 'number') datum = {value: datum};
@@ -53,14 +50,18 @@ export const drawChart = (values, width, {theme = defaultTheme, zeroLimit = 0.5,
         state:
           datum?.state ??
           (datum?.colorState && combineStates(state, makeBgFromFg(datum.colorState))) ??
-          seriesTheme?.state ??
-          (seriesTheme?.colorState && combineStates(state, makeBgFromFg(seriesTheme.colorState))) ??
+          seriesTheme.state ??
+          (seriesTheme.colorState && combineStates(state, makeBgFromFg(seriesTheme.colorState))) ??
           {}
       };
     });
   });
 
-  const maxValue = Math.max(0, ...data.map(row => sumValues(row)));
+export const drawChart = (values, width, {theme = defaultTheme, zeroLimit = 0.5, state = {}} = {}) => {
+  if (isNaN(width) || width <= 0) throw new Error(`"width" should be positive integer instead of "${width}"`);
+
+  const data = normalizeData(values, {theme, state}),
+    maxValue = Math.max(0, ...data.map(row => sumValues(row)));
 
   return data.map(row => drawRow(row, width, maxValue, zeroLimit));
 };
