@@ -1,4 +1,5 @@
 import {Commands} from '../ansi/sgr.js';
+import defaultTheme from './themes/default.js';
 
 export const makeBgFromFg = state => ({
   background: !state.foreground
@@ -15,3 +16,15 @@ export const makeFgFromBg = state => ({
     ? [Commands.EXTENDED_COLOR, ...state.background.slice(1)]
     : Number(state.background) - 10
 });
+
+export const normalizeData = (data, theme) =>
+  data.map(series => {
+    if (!Array.isArray(series)) series = [series];
+    return series.map((datum, i) => {
+      if (typeof datum == 'number') datum = {value: datum};
+      const value = Math.max(0, datum?.value ?? 0),
+        defaultSeriesTheme = defaultTheme[i % defaultTheme.length],
+        seriesTheme = theme[i % theme.length];
+      return {...defaultSeriesTheme, ...seriesTheme, ...datum, value: isNaN(value) || value < 0 ? 0 : value};
+    });
+  });

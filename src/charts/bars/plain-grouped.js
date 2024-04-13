@@ -1,9 +1,15 @@
-import {normalizeData, drawRow} from './plain.js';
+import {normalizeData} from '../utils.js';
+import defaultTheme from '../themes/default.js';
+import {drawRow} from './plain.js';
 
-export const drawChart = (values, width, {gap = 1, theme = defaultTheme, zeroLimit = 0.5, state = {}} = {}) => {
+export const drawChart = (
+  values,
+  width,
+  {gap = 1, maxValue, theme = defaultTheme, zeroLimit = 0.5, initState = {}} = {}
+) => {
   if (isNaN(width) || width <= 0) throw new Error(`"width" should be positive integer instead of "${width}"`);
 
-  const data = normalizeData(values, {theme, state}),
+  const data = normalizeData(values, theme),
     maxSeriesLength = Math.max(0, ...data.map(series => series.length));
 
   // normalize length of series
@@ -17,7 +23,8 @@ export const drawChart = (values, width, {gap = 1, theme = defaultTheme, zeroLim
     newData.push(...series);
   });
 
-  const maxValue = Math.max(0, ...newData.map(datum => datum?.value || 0));
+  const max =
+    typeof maxValue == 'number' && maxValue >= 0 ? maxValue : Math.max(0, ...newData.map(datum => datum?.value || 0));
 
-  return newData.map(datum => drawRow([datum], width, maxValue, zeroLimit));
+  return newData.map(datum => drawRow([datum], width, max, {zeroLimit, initState}));
 };

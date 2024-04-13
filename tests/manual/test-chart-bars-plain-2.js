@@ -21,6 +21,6 @@ draw(
       [3, 1, 3]
     ],
     50,
-    {theme: customTheme, normalized: true}
+    {theme: customTheme, maxValue: -1}
   )
 );
