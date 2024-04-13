@@ -19,20 +19,22 @@ export class Box {
   }
 
   static make(box, {symbol = ' ', align = 'left'} = {}) {
-    if (isPrimitive[typeof box] === 1) return Box.make(String(box).split(/\r?\n/g), symbol, align);
+    if (isPrimitive[typeof box] === 1) return Box.make(String(box).split(/\r?\n/g), {symbol, align});
     if (!box) return new Box([], true);
-    if (box.hasOwnProperty('value')) return Box.make(box.value, symbol, align);
+    if (box.hasOwnProperty('value')) return Box.make(box.value, {symbol, align});
     if (box.length <= 1) return new Box(box, true);
 
     const widths = box.map(s => getLength(s)),
       width = Math.max(0, ...widths);
     switch (align) {
       case 'left':
+      case 'l':
         return new Box(
           box.map((s, i) => s + symbol.repeat(width - widths[i])),
           true
         );
       case 'right':
+      case 'r':
         return new Box(
           box.map((s, i) => symbol.repeat(width - widths[i])),
           true
