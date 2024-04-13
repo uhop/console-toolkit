@@ -17,6 +17,8 @@ export const makeFgFromBg = state => ({
     : Number(state.background) - 10
 });
 
+export const sumValues = series => series.reduce((acc, datum) => acc + (datum?.value || 0), 0);
+
 export const normalizeData = (data, theme) =>
   data.map(series => {
     if (!Array.isArray(series)) series = [series];
