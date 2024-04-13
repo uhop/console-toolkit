@@ -1,5 +1,5 @@
 import drawFrame from '../../src/draw-frame.js';
-import lineTheme from '../../src/line-themes/unicode.js';
+import lineTheme from '../../src/themes/lines/unicode.js';
 import {draw} from './utils.js';
 
 draw(

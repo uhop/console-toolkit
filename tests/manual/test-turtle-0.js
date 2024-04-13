@@ -1,6 +1,6 @@
 import Turtle from '../../src/turtle/Turtle.js';
-import styleUnicode from '../../src/line-themes/unicode.js';
-import styleAsciiRounded from '../../src/line-themes/ascii-rounded.js';
+import styleUnicode from '../../src/themes/lines/unicode.js';
+import styleAsciiRounded from '../../src/themes/lines/ascii-rounded.js';
 import drawLineArt from '../../src/turtle/draw-line-art.js';
 import {draw} from './utils.js';
 

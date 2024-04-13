@@ -1,5 +1,5 @@
 import {draw as drawTable} from '../../src/table/draw-borders.js';
-import lineTheme from '../../src/line-themes/unicode-rounded.js';
+import lineTheme from '../../src/themes/lines/unicode-rounded.js';
 import {draw} from './utils.js';
 
 const makeBox4 = (hTheme1, hTheme2, vTheme1, vTheme2) =>

@@ -1,5 +1,5 @@
 import Turtle from '../../src/turtle/Turtle.js';
-import lineTheme from '../../src/line-themes/unicode-rounded.js';
+import lineTheme from '../../src/themes/lines/unicode-rounded.js';
 import drawLineArt from '../../src/turtle/draw-line-art.js';
 import Panel from '../../src/Panel.js';
 import {draw} from './utils.js';

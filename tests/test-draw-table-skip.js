@@ -1,7 +1,7 @@
 import test from 'tape-six';
 
 import {draw} from '../src/table/draw-borders.js';
-import lineTheme from '../src/line-themes/unicode-rounded.js';
+import lineTheme from '../src/themes/lines/unicode-rounded.js';
 
 test('Draw a table with skip rectangles', async t => {
   await t.test('Round table with two merged cells', t => {

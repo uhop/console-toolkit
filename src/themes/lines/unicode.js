@@ -1,8 +1,8 @@
-import {populateTheme} from './utils.js';
+import {populateTheme} from '../utils.js';
 
 export const lineTheme = {};
 
-const table11 = {t: '╭┬╮', m: '├┼┤', b: '╰┴╯', v: '│││', h: '───'},
+const table11 = {t: '┌┬┐', m: '├┼┤', b: '└┴┘', v: '│││', h: '───'},
   table12 = {t: '╓╥╖', m: '╟╫╢', b: '╙╨╜', v: '║║║', h: '───'},
   table21 = {t: '╒╤╕', m: '╞╪╡', b: '╘╧╛', v: '│││', h: '═══'},
   table22 = {t: '╔╦╗', m: '╠╬╣', b: '╚╩╝', v: '║║║', h: '═══'};

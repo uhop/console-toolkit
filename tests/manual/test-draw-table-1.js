@@ -1,5 +1,5 @@
 import {draw as drawTable} from '../../src/table/draw-borders.js';
-import lineTheme from '../../src/line-themes/unicode.js';
+import lineTheme from '../../src/themes/lines/unicode.js';
 import {draw} from './utils.js';
 
 const box1 = drawTable(lineTheme, [1, 1, 1], [1, 1, 1]);

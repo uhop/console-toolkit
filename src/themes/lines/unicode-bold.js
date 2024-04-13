@@ -1,4 +1,4 @@
-import {populateTheme} from './utils.js';
+import {populateTheme} from '../utils.js';
 
 export const lineTheme = {};
 

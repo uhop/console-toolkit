@@ -1,6 +1,6 @@
 import {transcode, transcodeTables} from '../../src/alphanumeric/unicode-letters.js';
 import makeTable from '../../src/table/index.js';
-import lineTheme from '../../src/line-themes/unicode-rounded.js';
+import lineTheme from '../../src/themes/lines/unicode-rounded.js';
 import style from '../../src/style.js';
 import {draw} from './utils.js';
 

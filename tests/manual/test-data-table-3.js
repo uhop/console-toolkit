@@ -1,5 +1,5 @@
 import {Table} from '../../src/table/index.js';
-import lineTheme from '../../src/line-themes/unicode-rounded.js';
+import lineTheme from '../../src/themes/lines/unicode-rounded.js';
 import style, {s} from '../../src/style.js';
 import {draw} from './utils.js';
 
