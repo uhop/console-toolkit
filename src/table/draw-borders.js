@@ -46,39 +46,39 @@ const getIndex = (hAxis, vAxis, skip, x, y) => {
   return {hIndex, vIndex, skipFlag};
 };
 
-const drawRow = (tableStyle, hAxis, vAxis, skip, symbol, y, i) =>
+const drawRow = (lineTheme, hAxis, vAxis, skip, symbol, y, i) =>
   hAxis
     .map((x, j) => {
       if (!x) return '';
       const {skipFlag, hIndex, vIndex} = getIndex(hAxis, vAxis, skip, j, i);
 
-      if (skipFlag) return symbol.repeat(j & 1 ? x : tableStyle['w_' + x]);
+      if (skipFlag) return symbol.repeat(j & 1 ? x : lineTheme['w_' + x]);
 
       if (j & 1) {
         if (i & 1) return symbol.repeat(x);
-        if (!tableStyle['h_' + y]) throw new TypeError(`Style has no "h_${y}" property`);
-        return tableStyle['h_' + y][vIndex].repeat(x);
+        if (!lineTheme['h_' + y]) throw new TypeError(`Style has no "h_${y}" property`);
+        return lineTheme['h_' + y][vIndex].repeat(x);
       }
       if (i & 1) {
-        if (!tableStyle['v_' + x]) throw new TypeError(`Style has no "v_${x}" property`);
-        return tableStyle['v_' + x][hIndex];
+        if (!lineTheme['v_' + x]) throw new TypeError(`Style has no "v_${x}" property`);
+        return lineTheme['v_' + x][hIndex];
       }
 
-      if (!tableStyle['t_' + y + '_' + x]) throw new TypeError(`Style has no "t_${y}_${x}" property`);
-      return tableStyle['t_' + y + '_' + x][4 * hIndex + vIndex];
+      if (!lineTheme['t_' + y + '_' + x]) throw new TypeError(`Style has no "t_${y}_${x}" property`);
+      return lineTheme['t_' + y + '_' + x][4 * hIndex + vIndex];
     })
     .join('');
 
-export const draw = (tableStyle, hAxis, vAxis, {skip = [], symbol = ' '} = {}) =>
+export const draw = (lineTheme, hAxis, vAxis, {skip = [], symbol = ' '} = {}) =>
   new Box(
     vAxis
       .map((y, i) => {
         if (!y) return [];
         if (i & 1) {
-          const row = drawRow(tableStyle, hAxis, vAxis, skip, symbol, y, i);
+          const row = drawRow(lineTheme, hAxis, vAxis, skip, symbol, y, i);
           return y == 1 ? row : new Array(y).fill(row);
         }
-        return drawRow(tableStyle, hAxis, vAxis, skip, symbol, y, i);
+        return drawRow(lineTheme, hAxis, vAxis, skip, symbol, y, i);
       })
       .flat(1),
     true
