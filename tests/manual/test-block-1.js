@@ -1,4 +1,4 @@
-import drawFrame from '../../src/draw-frame.js';
+import {drawFrame} from '../../src/draw-block.js';
 import lineTheme from '../../src/themes/lines/unicode.js';
 import {draw} from './utils.js';
 
