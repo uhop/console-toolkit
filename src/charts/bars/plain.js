@@ -35,7 +35,7 @@ export const makeBgFromFg = state => ({
     : Number(state.foreground) + 10
 });
 
-const sumValues = row => row.reduce((acc, datum) => acc + datum.value, 0);
+export const sumValues = row => row.reduce((acc, datum) => acc + datum.value, 0);
 
 export const normalizeData = (data, {theme = defaultTheme, state = {}} = {}) =>
   data.map(series => {
