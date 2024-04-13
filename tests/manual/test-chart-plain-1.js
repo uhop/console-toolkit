@@ -1,4 +1,4 @@
-import {drawChart} from '../../src/charts/bars/plain-clustered.js';
+import {drawChart} from '../../src/charts/bars/plain-grouped.js';
 import {draw} from './utils.js';
 import style from '../../src/style.js';
 
