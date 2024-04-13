@@ -484,6 +484,8 @@ addAliases(Style, {
   // method aliases
   addCommands: 'make',
   decoration: 'colorDecoration',
+  foreground: 'fg',
+  background: 'bg',
 
   // color aliases
   gray: 'brightBlack',
