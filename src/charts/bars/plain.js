@@ -1,7 +1,7 @@
 import style from '../../style.js';
-import {capitalize} from '../../meta.js';
-import {Commands} from '../../ansi/sgr.js';
 import {combineStates, optimize} from '../../ansi/sgr-state.js';
+import defaultTheme from '../themes/default.js';
+import {makeBgFromFg} from '../utils.js';
 
 // data = [datum]
 // datum = {value, symbol, state}
@@ -13,38 +13,25 @@ export const drawRow = (data, width, maxValue, zeroLimit) => {
   if (maxValue < 0) maxValue = sumValues(data);
   if (!maxValue) maxValue = 1;
   let total = 0;
-  return optimize(data
-    .map((datum, i) => {
-      if (!datum) return '';
-      let value = (Math.max(0, datum.value) / maxValue) * width;
-      if (value < 1) {
-        if (value < zeroLimit) return ''; // nothing to show
-        value = 1;
-      }
-      const n = Math.floor(value),
-        isLast = i + 1 == data.length;
-      total += n;
-      return style
-        .addState(datum.state || {})
-        .text((datum.symbol || ' ').repeat(n + (isLast && normalize && total < width ? width - total : 0)));
-    })
-    .join(''));
+  return optimize(
+    data
+      .map((datum, i) => {
+        if (!datum) return '';
+        let value = (Math.max(0, datum.value) / maxValue) * width;
+        if (value < 1) {
+          if (value < zeroLimit) return ''; // nothing to show
+          value = 1;
+        }
+        const n = Math.floor(value),
+          isLast = i + 1 == data.length;
+        total += n;
+        return style
+          .addState(datum.state || {})
+          .text((datum.symbol || ' ').repeat(n + (isLast && normalize && total < width ? width - total : 0)));
+      })
+      .join('')
+  );
 };
-
-const seriesColors = 'cyan,magenta,blue,yellow,green,red'.split(',');
-
-export const defaultTheme = [
-  ...seriesColors.map(name => ({colorState: style['bright' + capitalize(name)].getState(), symbol: ' '})),
-  ...seriesColors.map(name => ({colorState: style[name].getState(), symbol: ' '}))
-];
-
-export const makeBgFromFg = state => ({
-  background: !state.foreground
-    ? null
-    : Array.isArray(state.foreground)
-    ? [Commands.BG_EXTENDED_COLOR, ...state.foreground.slice(1)]
-    : Number(state.foreground) + 10
-});
 
 export const normalizeData = (data, {theme = defaultTheme, state = {}} = {}) =>
   data.map(series => {
