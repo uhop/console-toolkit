@@ -3,11 +3,8 @@ import {normalizeData} from '../utils.js';
 
 export const drawChart =
   drawRow =>
-  (
-    values,
-    width,
-    {maxValue, groupGap = 1, gap = 0, rectSize = 0, theme = defaultTheme, zeroLimit = 0.5, initState = {}} = {}
-  ) => {
+  (values, width, options = {}) => {
+    const {maxValue, groupGap = 1, gap = 0, theme = defaultTheme} = options;
     if (isNaN(width) || width <= 0) throw new Error(`"width" should be positive integer instead of "${width}"`);
 
     const data = normalizeData(values, theme),
@@ -23,8 +20,7 @@ export const drawChart =
     const max =
       typeof maxValue == 'number' && maxValue >= 0 ? maxValue : Math.max(0, ...newData.map(datum => datum?.value || 0));
 
-    if (gap < 1 && groupGap < 1)
-      return newData.map(datum => drawRow([datum], width, max, {rectSize, zeroLimit, initState}));
+    if (gap < 1 && groupGap < 1) return newData.map(datum => drawRow([datum], width, max, options));
 
     const result = [];
     newData.forEach((datum, i) => {
@@ -35,7 +31,7 @@ export const drawChart =
           if (gap > 0) result.push(new Array(gap).fill(''));
         }
       }
-      result.push(drawRow([datum], width, max, {rectSize, zeroLimit, initState}));
+      result.push(drawRow([datum], width, max, options));
     });
     return result.flat(1);
   };
