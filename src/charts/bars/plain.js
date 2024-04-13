@@ -13,7 +13,7 @@ export const drawRow = (data, width, maxValue, {rectSize = 0, zeroLimit = 0.5, i
   if (maxValue < 0) maxValue = sumValues(data);
   if (!maxValue) maxValue = 1;
   let total = 0;
-  return optimize(
+  const row = optimize(
     data
       .map((datum, i) => {
         if (!datum) return '';
@@ -31,6 +31,8 @@ export const drawRow = (data, width, maxValue, {rectSize = 0, zeroLimit = 0.5, i
       })
       .join('')
   );
+  if (rectSize <= 1) return row;
+  return new Array(rectSize).fill(row);
 };
 
 export const drawChart = (
