@@ -1,15 +1,15 @@
-import {populateStyle} from './utils.js';
+import {populateTheme} from './utils.js';
 
-export const style = {};
+export const lineTheme = {};
 
 const table11 = {t: '╭┬╮', m: '├┼┤', b: '╰┴╯', v: '│││', h: '───'},
   table12 = {t: '╓╥╖', m: '╟╫╢', b: '╙╨╜', v: '║║║', h: '───'},
   table21 = {t: '╒╤╕', m: '╞╪╡', b: '╘╧╛', v: '│││', h: '═══'},
   table22 = {t: '╔╦╗', m: '╠╬╣', b: '╚╩╝', v: '║║║', h: '═══'};
 
-populateStyle(style, table11, 1, 1);
-populateStyle(style, table12, 1, 2);
-populateStyle(style, table21, 2, 1);
-populateStyle(style, table22, 2, 2);
+populateTheme(lineTheme, table11, 1, 1);
+populateTheme(lineTheme, table12, 1, 2);
+populateTheme(lineTheme, table21, 2, 1);
+populateTheme(lineTheme, table22, 2, 2);
 
-export default style;
+export default lineTheme;

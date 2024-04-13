@@ -10,11 +10,11 @@
 
 // The default value for 'w': 1
 
-export const populateStyle = (tableStyle, tableDefinition, hTheme, vTheme) => {
+export const populateTheme = (lineTheme, tableDefinition, hTheme, vTheme) => {
   const w = tableDefinition.w || 1,
     s = [0, w, w << 1],
     e = [s[0] + w, s[1] + w, s[2] + w],
-    theme = (tableStyle['t_' + hTheme + '_' + vTheme] = [
+    theme = (lineTheme['t_' + hTheme + '_' + vTheme] = [
       tableDefinition.m.substring(s[1], e[1]),
       tableDefinition.t.substring(s[1], e[1]), // before
       tableDefinition.b.substring(s[1], e[1]), // after
@@ -31,7 +31,7 @@ export const populateStyle = (tableStyle, tableDefinition, hTheme, vTheme) => {
       tableDefinition.v.substring(s[0], e[0]), // before
       tableDefinition.v.substring(s[2], e[2]) // after
     ]);
-  tableStyle['h_' + hTheme] = [tableDefinition.h[1], tableDefinition.h[0], tableDefinition.h[2]];
-  tableStyle['v_' + vTheme] = theme.slice(12);
-  tableStyle['w_' + vTheme] = w;
+  lineTheme['h_' + hTheme] = [tableDefinition.h[1], tableDefinition.h[0], tableDefinition.h[2]];
+  lineTheme['v_' + vTheme] = theme.slice(12);
+  lineTheme['w_' + vTheme] = w;
 };

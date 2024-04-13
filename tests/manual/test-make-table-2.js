@@ -1,5 +1,5 @@
 import makeTable from '../../src/table/index.js';
-import lineStyle from '../../src/line-styles/unicode-rounded.js';
+import lineStyle from '../../src/line-themes/unicode-rounded.js';
 import {s} from '../../src/style.js';
 import {draw} from './utils.js';
 

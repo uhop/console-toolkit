@@ -1,6 +1,6 @@
 import test from 'tape-six';
 
-import lineStyle from '../src/line-styles/unicode.js';
+import lineStyle from '../src/line-themes/unicode.js';
 import {draw as drawBorders} from '../src/table/index.js';
 import {Turtle, draw as drawTurtle} from '../src/turtle/index.js';
 import drawLineArt from '../src/turtle/draw-line-art.js';

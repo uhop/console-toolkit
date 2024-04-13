@@ -1,5 +1,5 @@
 import {draw as drawTable} from '../../src/table/draw-borders.js';
-import {style as lineStyle} from '../../src/line-styles/ascii-dots.js';
+import lineStyle from '../../src/line-themes/ascii-dots.js';
 import {draw} from './utils.js';
 
 const makeBox4 = (hTheme1, hTheme2, vTheme1, vTheme2) =>

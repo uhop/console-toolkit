@@ -1,5 +1,5 @@
 import drawBorder from '../../src/draw-border.js';
-import lineStyle from '../../src/line-styles/unicode.js';
+import lineStyle from '../../src/line-themes/unicode.js';
 import {draw} from './utils.js';
 
 draw(
