@@ -1,5 +1,4 @@
 import Box from './Box.js';
-import blockTheme from './themes/lines/unicode-rounded.js';
 
 const getIndex = (h, v) => 4 * h + v;
 
