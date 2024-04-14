@@ -22,10 +22,13 @@ export const drawRow = (data, width, maxValue, {rectSize = 0, zeroLimit = 0.5, i
         }
         let n = Math.floor(value);
         if (total + n > width) n = width - total;
-        total += n;
         const isLast = i + 1 == data.length;
-        let newStyle = style.addState(initState).addState(datum.state || makeBgFromFg(datum.colorState));
-        return newStyle.text(datum.symbol.repeat(n + (isLast && normalize && total < width ? width - total : 0)));
+        if (isLast && normalize && total + n < width) n = width - total;
+        total += n;
+        return style
+          .addState(initState)
+          .addState(datum.state || makeBgFromFg(datum.colorState))
+          .text(datum.symbol.repeat(n));
       })
       .join('')
   );
