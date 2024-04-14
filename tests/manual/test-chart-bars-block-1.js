@@ -3,11 +3,11 @@ import {draw} from './utils.js';
 import style from '../../src/style.js';
 
 const customTheme = [
-  {state: style.brightMagenta.getState()},
-  {state: style.brightCyan.getState()},
-  {state: style.brightYellow.getState()},
-  {state: style.brightBlue.getState()},
-  {state: style.brightGreen.getState()}
+  {colorState: style.brightMagenta.getState()},
+  {colorState: style.brightCyan.getState()},
+  {colorState: style.brightYellow.getState()},
+  {colorState: style.brightBlue.getState()},
+  {colorState: style.brightGreen.getState()}
 ];
 
 console.log('Grouped bars (no bottom border):');
