@@ -13,11 +13,11 @@ const labelStyle = style.bold.bright.white,
     {state: labelStyle.bg.cyan.getState(), symbol: ' '}
   ];
 
-const panel = Panel.fromBox(drawChart([[40, 10, 30, 20]], 50, {theme: customTheme})).put(0, 0, [
-  ' 40%',
-  ' 10%',
-  ' ' + c`{{inverse}}30%`,
-  ' 20%'
+const panel = Panel.fromBox(drawChart([[40, 10, 30, 20]], 50, {theme: customTheme})).put(1, 0, [
+  '40%',
+  '10%',
+  c`{{inverse}}30%`,
+  '20%'
 ]);
 
 console.log('Some hypothetic distribution:');
