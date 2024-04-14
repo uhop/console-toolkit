@@ -30,3 +30,37 @@ export const normalizeData = (data, theme) =>
       return {...defaultSeriesTheme, ...seriesTheme, ...datum, value: isNaN(value) || value < 0 ? 0 : value};
     });
   });
+
+export const allocateSizes = (data, maxValue, size) => {
+  const values = data.map((datum, index) => ({value: datum?.value || 0, index})),
+    seriesValue = values.reduce((acc, datum) => acc + datum.value, 0);
+
+  if (maxValue < 0) {
+    maxValue = seriesValue;
+    if (!maxValue) maxValue = 1;
+  }
+  if (seriesValue < maxValue) {
+    values.push({value: maxValue - seriesValue, index: -1}); // add an empty bin
+  } else {
+    // truncate values above maxValue
+    let acc = 0;
+    for (const datum of values) {
+      datum.value = acc < maxValue ? Math.min(datum.value, maxValue - acc) : 0;
+      acc += datum.value;
+    }
+  }
+
+  let allocated = 0;
+  values.forEach(datum => {
+    const allocation = (datum.value / maxValue) * size;
+    allocated += datum.size = Math.floor(allocation);
+    datum.frac = allocation - datum.size;
+  });
+
+  values.sort((a, b) => b.frac - a.frac);
+  for (let i = 0, n = size - allocated; i < n; ++i) ++values[i].size;
+
+  const sizes = new Array(data.length);
+  values.forEach(datum => datum.index >= 0 && (sizes[datum.index] = datum.size));
+  return sizes;
+};
