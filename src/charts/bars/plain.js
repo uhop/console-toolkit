@@ -1,7 +1,8 @@
 import style from '../../style.js';
 import {optimize} from '../../ansi/sgr-state.js';
-import {allocateSizes, makeBgFromFg, sumValues} from '../utils.js';
+import {allocateSizes} from '../utils.js';
 import drawStackedChart from './draw-stacked.js';
+import {vBlocks8th} from '../../symbols.js';
 
 // data = [datum]
 // datum = {value, colorState, symbol, state}
@@ -14,8 +15,8 @@ export const drawRow = (data, width, maxValue, {rectSize = 0, initState = {}}) =
           datum
             ? style
                 .addState(initState)
-                .addState(datum.state || makeBgFromFg(datum.colorState))
-                .text((datum.symbol || ' ').repeat(sizes[i]))
+                .addState(datum.state || datum.colorState)
+                .text((datum.symbol || vBlocks8th[7]).repeat(sizes[i]))
             : ''
         )
         .join('')

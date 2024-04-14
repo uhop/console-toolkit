@@ -1,7 +1,7 @@
 import style from '../../style.js';
 import Box from '../../Box.js';
 import {optimize} from '../../ansi/sgr-state.js';
-import {allocateSizes, sumValues} from '../utils.js';
+import {allocateSizes} from '../utils.js';
 import drawStackedChart from './draw-stacked.js';
 import drawBlock from '../../draw-block.js';
 import defaultBlockTheme from '../../themes/blocks/unicode-half.js';
