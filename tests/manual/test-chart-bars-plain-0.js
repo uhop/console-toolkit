@@ -1,4 +1,4 @@
-import {drawChart} from '../../src/charts/bars/plain.js';
+import drawChart from '../../src/charts/bars/plain.js';
 import {draw} from './utils.js';
 import style from '../../src/style.js';
 
