@@ -1,24 +1,5 @@
+import {fullBlock, hBlocks8th, vBlocks8th} from './symbols.js';
 import Box from './Box.js';
-
-const generateSequence = (base, from, to) => {
-  const result = [];
-
-  let step;
-  if (from < to) {
-    step = 1;
-    ++to; // to make inclusive
-  } else {
-    step = -1;
-    --to; // to make inclusive
-  }
-
-  for (let i = from; i != to; i += step) result.push(String.fromCodePoint(base + i));
-  return result;
-};
-
-const vSymbol = [' ', ...generateSequence(0x2581, 0, 7)],
-  hSymbol = [' ', ...generateSequence(0x2588, 7, 0, -1)],
-  fullSymbol = '\u{2588}';
 
 export const drawRealWidthBlock = (realWidth, height, drawEmptyBorder) => {
   realWidth = Math.max(0, realWidth);
@@ -29,8 +10,8 @@ export const drawRealWidthBlock = (realWidth, height, drawEmptyBorder) => {
     hasFrac = realWidth - intWidth > 0,
     drawBorder = hasFrac && (drawEmptyBorder || index > 0);
 
-  let line = fullSymbol.repeat(intWidth);
-  if (drawBorder) line += hSymbol[index];
+  let line = fullBlock.repeat(intWidth);
+  if (drawBorder) line += hBlocks8th[index];
   return new Box(new Array(height).fill(line), true);
 };
 
@@ -43,10 +24,10 @@ export const drawRealHeightBlock = (width, realHeight, drawEmptyBorder) => {
     hasFrac = realHeight - intHeight > 0,
     drawBorder = hasFrac && (drawEmptyBorder || index > 0);
 
-  let result = fullSymbol.repeat(intHeight);
-  if (drawBorder) result += hSymbol[index];
+  let result = fullBlock.repeat(intHeight);
+  if (drawBorder) result += hBlocks8th[index];
   return new Box(
-    [...(drawBorder ? [vSymbol[index].repeat(width)] : []), ...new Array(intHeight).fill(fullSymbol.repeat(width))],
+    [...(drawBorder ? [vBlocks8th[index].repeat(width)] : []), ...new Array(intHeight).fill(fullBlock.repeat(width))],
     true
   );
 };
