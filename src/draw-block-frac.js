@@ -1,14 +1,23 @@
 import Box from './Box.js';
 
 const generateSequence = (base, from, to) => {
-  const result = [],
-    step = from < to ? 1 : -1;
+  const result = [];
+
+  let step;
+  if (from < to) {
+    step = 1;
+    ++to; // to make inclusive
+  } else {
+    step = -1;
+    --to; // to make inclusive
+  }
+
   for (let i = from; i != to; i += step) result.push(String.fromCodePoint(base + i));
   return result;
 };
 
-const vSymbol = [' ', ...generateSequence(0x2581, 0, 8)],
-  hSymbol = [' ', ...generateSequence(0x2587, 8, 0, -1)],
+const vSymbol = [' ', ...generateSequence(0x2581, 0, 7)],
+  hSymbol = [' ', ...generateSequence(0x2588, 7, 0, -1)],
   fullSymbol = '\u{2588}';
 
 export const drawRealWidthBlock = (realWidth, height, drawEmptyBorder) => {
