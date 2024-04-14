@@ -8,7 +8,10 @@ export class SymbolRange {
   }
   get(i) {
     if (this.overlay) {
-      const result = typeof this.overlay.get == 'function' ? this.overlay.get(i) : this.overlay[i];
+      const result =
+        typeof this.overlay.get == 'function'
+          ? this.overlay.get(i)
+          : this.overlay[typeof i !== 'number' ? i : String.fromCodePoint(this.inputBase + i)];
       if (result) return result;
     }
     if (typeof i !== 'number') {
