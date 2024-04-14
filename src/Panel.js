@@ -173,21 +173,20 @@ export class Panel {
     if (y + height > this.height) height = this.height - y;
 
     // copy characters
-    let state = null;
+    let state = {};
     for (let i = 0; i < height; ++i) {
       const row = this.box[y + i],
         s = box.box[i];
       let start = 0,
         pos = 0;
-      if (!state) {
-        state = x > 0 ? (row[x - 1] ? row[x - 1].state : RESET_STATE) : {};
-      }
       matchCsi.lastIndex = 0;
       for (const match of s.matchAll(matchCsi)) {
         const str = [...s.substring(start, match.index)];
         for (let j = 0; j < str.length; ++j, ++pos) {
           if (x + pos >= row.length) break;
-          row[x + pos] = str[j] === ignore ? null : {symbol: str[j], state};
+          const cell = row[x + pos];
+          row[x + pos] =
+            str[j] === ignore ? null : {symbol: str[j], state: cell ? combineStates(cell.state, state) : state};
         }
         start = match.index + match[0].length;
         if (match[3] !== 'm') continue;
@@ -196,11 +195,13 @@ export class Panel {
       const str = [...s.substring(start)];
       for (let j = 0; j < str.length; ++j, ++pos) {
         if (x + pos >= row.length) break;
-        row[x + pos] = str[j] === ignore ? null : {symbol: str[j], state};
+        const cell = row[x + pos];
+        row[x + pos] =
+          str[j] === ignore ? null : {symbol: str[j], state: cell ? combineStates(cell.state, state) : state};
       }
       if (x + pos < row.length) {
         const cell = row[x + pos];
-        if (cell) cell.state = combineStates(state, cell.state);
+        if (cell) row[x + pos] = {symbol: cell.symbol, state: combineStates(state, cell.state)};
       }
     }
 
