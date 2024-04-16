@@ -7,19 +7,21 @@ import {vBlocks8th} from '../../symbols.js';
 // data = [datum]
 // datum = {value, colorState, symbol, state}
 
-export const drawRow = (data, width, maxValue, {rectSize = 0, initState = {}}) => {
+const defaultSymbol = vBlocks8th[7];
+
+export const defaultDrawItem = (datum, size, _, {initState = {}}) =>
+  datum
+    ? style
+        .addState(initState)
+        .addState(datum.state || datum.colorState)
+        .text((datum.symbol || defaultSymbol).repeat(size))
+    : '';
+
+export const drawRow = (data, width, maxValue, options = {}) => {
+  const {drawItem = defaultDrawItem, rectSize = 0} = options;
   const sizes = allocateSizes(data, maxValue, width),
     row = optimize(
-      data
-        .map((datum, i) =>
-          datum
-            ? style
-                .addState(initState)
-                .addState(datum.state || datum.colorState)
-                .text((datum.symbol || vBlocks8th[7]).repeat(sizes[i]))
-            : ''
-        )
-        .join('')
+      data.map((datum, index) => drawItem(datum, sizes[index], {index, data, sizes, maxValue, width}, options)).join('')
     );
   if (rectSize <= 1) return row;
   return new Array(rectSize).fill(row);
