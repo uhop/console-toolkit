@@ -1,7 +1,7 @@
 import Box from '../Box.js';
 import {quadrants} from '../symbols.js';
 
-export const toBox = bmp => {
+export const toQuads = bmp => {
   // this algorithm is trivial, not very efficient, redo if it poses a problem
   const result = [],
     rowSize = Math.floor((bmp.width + 1) / 2),
@@ -30,4 +30,4 @@ export const toBox = bmp => {
   return new Box(result, true);
 };
 
-export default toBox;
+export default toQuads;
