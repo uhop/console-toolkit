@@ -2,7 +2,6 @@ import Box from '../Box.js';
 import {quadrants} from '../symbols.js';
 
 export const toQuads = bmp => {
-  // this algorithm is trivial, not very efficient, redo if it poses a problem
   const result = [],
     rowSize = Math.floor((bmp.width + 1) / 2),
     accumulator = new Array(rowSize).fill(0);
