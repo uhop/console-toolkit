@@ -62,7 +62,7 @@ export const quadrants = [
   fullBlock
 ];
 
-export const quadrant = (tl, tr, br, bl) => quadrants[(tl ? 1 : 0) + (tr ? 2 : 0) + (br ? 4 : 0) + (bl ? 1 : 0)];
+export const quadrant = (tl, tr, bl, br) => quadrants[(tl ? 1 : 0) + (tr ? 2 : 0) + (bl ? 4 : 0) + (br ? 8 : 0)];
 
 export const shades = [' ', ...generateSequence(0x2591, 0, 2), fullBlock];
 
