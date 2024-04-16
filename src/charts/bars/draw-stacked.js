@@ -5,7 +5,7 @@ export const drawChart =
   drawRow =>
   (values, width, options = {}) => {
     const {maxValue, gap = 0, theme = defaultTheme} = options;
-    if (isNaN(width) || width <= 0) throw new Error(`"width" should be positive integer instead of "${width}"`);
+    if (isNaN(width) || width <= 0) throw new Error(`"width" should be a positive integer instead of "${width}"`);
 
     const data = normalizeData(values, theme),
       max =
