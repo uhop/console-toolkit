@@ -55,7 +55,7 @@ export class Bitmap {
     return this.bitmap[index] & mask;
   }
 
-  setBit(x, y, value) {
+  setBit(x, y, value = 1) {
     if (x < 0 || x >= this.width || y < 0 || y >= this.height) return this;
     const index = this.getWordIndex(x, y),
       mask = this.getWordMask(x, y);
