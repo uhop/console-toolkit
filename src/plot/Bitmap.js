@@ -1,4 +1,5 @@
 import Box from '../Box.js';
+import {addAlias} from '../meta.js';
 import {fullBlock} from '../symbols.js';
 
 export class Bitmap {
@@ -100,5 +101,7 @@ export class Bitmap {
     return new Box(result, true);
   }
 }
+
+addAlias(Bitmap, 'set', 'setBit');
 
 export default Bitmap;
