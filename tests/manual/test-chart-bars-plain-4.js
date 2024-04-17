@@ -1,12 +1,33 @@
 import Box from '../../src/Box.js';
-import drawChart from '../../src/charts/bars/plain-grouped.js';
+import drawStackedChart from '../../src/charts/bars/plain.js';
+import drawGroupedChart from '../../src/charts/bars/plain-grouped.js';
 import {draw} from './utils.js';
 
-console.log('Butterfly bars:');
+console.log('Butterfly stacked bars:');
 draw(
   Box.make(
-    drawChart([[2, 4, 3]], 20, {reverse: true}),
+    drawStackedChart(
+      [
+        [2, 1, 2],
+        [5, 1, 4],
+        [1, 1],
+        [3, 1, 3]
+      ],
+      20,
+      {reverse: true}
+    ),
     {align: 'right'}
   ),
-  drawChart([[2, 4, 3]], 20)
+  drawStackedChart(
+    [
+      [2, 1, 2],
+      [5, 1, 4],
+      [1, 1],
+      [3, 1, 3]
+    ],
+    20
+  )
 );
+
+console.log('Butterfly grouped bars:');
+draw(Box.make(drawGroupedChart([[2, 4, 3]], 20, {reverse: true}), {align: 'right'}), drawGroupedChart([[2, 4, 3]], 20));
