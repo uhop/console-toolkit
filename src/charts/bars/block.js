@@ -9,21 +9,16 @@ import defaultBlockTheme from '../../themes/blocks/unicode-half.js';
 // data = [datum]
 // datum = {value, colorState, symbol, state}
 
-export const drawRow = (
-  data,
-  width,
-  maxValue,
-  options = {}
-) => {
+export const drawRow = (data, width, maxValue, options = {}) => {
   const {reverse, blockTheme = defaultBlockTheme, rectSize = 0, initState = {}} = options,
     sizes = allocateSizes(data, maxValue, width),
-    {t = 1, b = 1, l = (reverse ? 1 : 0), r = (reverse ? 0 : 1)} = options;
+    {t = 1, b = 1, l = reverse ? 1 : 0, r = reverse ? 0 : 1} = options;
 
   const blocks = data.map((datum, i) => {
       if (!datum) return Box.makeBlank(0, Math.max(2, rectSize));
       const box = drawBlock(sizes[i], Math.max(0, rectSize - 2), blockTheme, {
-          left: reverse ? (i + 1 < data.length ? 0: l) : (i ? 0 : l),
-          right: reverse ? (i ? 0 : r) : (i + 1 < data.length ? 0 : r),
+          left: reverse ? (i + 1 < data.length ? 0 : l) : i ? 0 : l,
+          right: reverse ? (i ? 0 : r) : i + 1 < data.length ? 0 : r,
           top: t,
           bottom: b
         }),
