@@ -1,45 +1,4 @@
-import {
-  Commands,
-  Colors,
-  colorNumber,
-  colorStdRgb,
-  getColor,
-  getBrightColor,
-  getBgColor,
-  getBgBrightColor,
-  ColorFormat,
-  getRawColor256,
-  getColor256,
-  getHexColor256,
-  getColor6,
-  getGrayColor256,
-  getGrayColor24,
-  getTrueColor,
-  getHexTrueColor,
-  getBgBrightStdRgb,
-  getBgRawColor256,
-  getBgColor256,
-  getBgHexColor256,
-  getBgColor6,
-  getBgGrayColor256,
-  getBgGrayColor24,
-  getBgTrueColor,
-  getBgHexTrueColor,
-  getDecorationRawColor256,
-  getDecorationColor256,
-  getDecorationHexColor256,
-  getDecorationColor6,
-  getDecorationGrayColor256,
-  getDecorationGrayColor24,
-  getDecorationTrueColor,
-  getDecorationHexTrueColor,
-  getBrightStdRgb,
-  getStdRgb,
-  getDecorationStdColor256,
-  FgColorOptions,
-  BgColorOptions,
-  DecorationColorOptions
-} from './ansi/sgr.js';
+import * as sgr from './ansi/sgr.js';
 import {
   RESET_STATE,
   combineStates,
@@ -47,7 +6,9 @@ import {
   stateTransition,
   stateReverseTransition,
   stringifyCommands,
-  optimize
+  toState,
+  optimize,
+  extractState
 } from './ansi/sgr-state.js';
 import {matchCsi} from './ansi/csi.js';
 import {capitalize, toCamelCase, fromSnakeCase, addGetter, addAliases, addGetters} from './meta.js';
@@ -83,48 +44,48 @@ class ExtendedColor {
   }
   // standard colors: defined externally
   // get red() {
-  //   return this.make([this[optionsSymbol].base, ColorFormat.COLOR_256, (this[isBrightSymbol] ? 8 : 0) + Colors.RED]);
+  //   return this.make([this[optionsSymbol].base, sgr.ColorFormat.COLOR_256, (this[isBrightSymbol] ? 8 : 0) + sgr.Colors.RED]);
   // }
   // get brightRed() {
-  //   return this.make([this[optionsSymbol].base, ColorFormat.COLOR_256, 8 + Colors.RED]);
+  //   return this.make([this[optionsSymbol].base, sgr.ColorFormat.COLOR_256, 8 + sgr.Colors.RED]);
   // }
   // 256 colors
   color(c) {
-    return this.make(getRawColor256(c));
+    return this.make(sgr.getRawColor256(c));
   }
   stdRgb256(r, g, b) {
-    return this.make(getRawColor256((this[isBrightSymbol] ? 8 : 0) + colorStdRgb(r, g, b)));
+    return this.make(sgr.getRawColor256((this[isBrightSymbol] ? 8 : 0) + sgr.colorStdRgb(r, g, b)));
   }
   brightStdRgb256(r, g, b) {
-    return this.make(getRawColor256(8 + colorStdRgb(r, g, b)));
+    return this.make(sgr.getRawColor256(8 + sgr.colorStdRgb(r, g, b)));
   }
   darkStdRgb256(r, g, b) {
-    return this.make(getRawColor256(colorStdRgb(r, g, b)));
+    return this.make(sgr.getRawColor256(sgr.colorStdRgb(r, g, b)));
   }
   rgb256(r, g, b) {
-    return this.make(getColor256(r, g, b));
+    return this.make(sgr.getColor256(r, g, b));
   }
   hex256(hex) {
-    return this.make(getHexColor256(hex));
+    return this.make(sgr.getHexColor256(hex));
   }
   rgb6(r, g, b) {
-    return this.make(getColor6(r, g, b));
+    return this.make(sgr.getColor6(r, g, b));
   }
   grayscale256(i) {
-    return this.make(getGrayColor256(i));
+    return this.make(sgr.getGrayColor256(i));
   }
   grayscale24(i) {
-    return this.make(getGrayColor24(i));
+    return this.make(sgr.getGrayColor24(i));
   }
   // true colors
   trueColor(r, g, b) {
-    return this.make(getTrueColor(r, g, b));
+    return this.make(sgr.getTrueColor(r, g, b));
   }
   trueGrayscale(i) {
-    return this.make(getTrueColor(i, i, i));
+    return this.make(sgr.getTrueColor(i, i, i));
   }
   hexTrueColor(hex) {
-    return this.make(getHexTrueColor(hex));
+    return this.make(sgr.getHexTrueColor(hex));
   }
   // composite
   rgb(r, g, b) {
@@ -149,21 +110,21 @@ class Color extends ExtendedColor {
   }
   // standard colors: defined externally
   // get red() {
-  //   return this.make((this[isBrightSymbol] ? this[optionsSymbol].brightBase : this[optionsSymbol].base) + Colors.RED);
+  //   return this.make((this[isBrightSymbol] ? this[optionsSymbol].brightBase : this[optionsSymbol].base) + sgr.Colors.RED);
   // }
   // get brightRed() {
-  //   return this.make(this[optionsSymbol].brightBase + Colors.RED);
+  //   return this.make(this[optionsSymbol].brightBase + sgr.Colors.RED);
   // }
   stdRgb(r, g, b) {
     return this.make(
-      (this[isBrightSymbol] ? this[optionsSymbol].brightBase : this[optionsSymbol].base) + colorStdRgb(r, g, b)
+      (this[isBrightSymbol] ? this[optionsSymbol].brightBase : this[optionsSymbol].base) + sgr.colorStdRgb(r, g, b)
     );
   }
   brightStdRgb(r, g, b) {
-    return this.make(this[optionsSymbol].brightBase + colorStdRgb(r, g, b));
+    return this.make(this[optionsSymbol].brightBase + sgr.colorStdRgb(r, g, b));
   }
   darkStdRgb(r, g, b) {
-    return this.make(this[optionsSymbol].base + colorStdRgb(r, g, b));
+    return this.make(this[optionsSymbol].base + sgr.colorStdRgb(r, g, b));
   }
 }
 
@@ -184,16 +145,16 @@ class Bright {
   }
   // standard colors: defined externally
   // get red() {
-  //   return this.make(this[isBrightSymbol] ? getBrightColor(Colors.RED) : getColor(Colors.RED));
+  //   return this.make(this[isBrightSymbol] ? sgr.getBrightColor(sgr.Colors.RED) : sgr.getColor(sgr.Colors.RED));
   // }
   stdRgb(r, g, b) {
-    return this.make(this[isBrightSymbol] ? getBrightStdRgb(r, g, b) : getStdRgb(r, g, b));
+    return this.make(this[isBrightSymbol] ? sgr.getBrightStdRgb(r, g, b) : sgr.getStdRgb(r, g, b));
   }
   brightStdRgb(r, g, b) {
-    return this.make(getBrightStdRgb(r, g, b));
+    return this.make(sgr.getBrightStdRgb(r, g, b));
   }
   darkStdRgb(r, g, b) {
-    return this.make(getStdRgb(r, g, b));
+    return this.make(sgr.getStdRgb(r, g, b));
   }
 }
 
@@ -211,9 +172,9 @@ class Reset {
 }
 
 export class Style {
-  constructor(initState = RESET_STATE, currentState, colorDepth = 24) {
-    this[initStateSymbol] = initState;
-    this[stateSymbol] = currentState || initState;
+  constructor(initState = null, currentState, colorDepth = 24) {
+    this[initStateSymbol] = toState(initState);
+    this[stateSymbol] = currentState ? toState(currentState) : this[initStateSymbol];
     this[colorDepthSymbol] = colorDepth;
   }
   make(newCommands = []) {
@@ -221,16 +182,11 @@ export class Style {
     return new Style(this[initStateSymbol], addCommandsToState(this[stateSymbol], newCommands), this[colorDepthSymbol]);
   }
   add(commandSequence) {
-    let state = this[stateSymbol];
-    matchCsi.lastIndex = 0;
-    for (const match of String(commandSequence).matchAll(matchCsi)) {
-      if (match[3] !== 'm') continue;
-      state = addCommandsToState(state, match[1].split(';'));
-    }
+    const state = extractState(String(commandSequence), this[stateSymbol]);
     return state === this[stateSymbol] ? this : new Style(this[initStateSymbol], state, this[colorDepthSymbol]);
   }
   addState(state) {
-    return new Style(this[initStateSymbol], combineStates(this[stateSymbol], state), this[colorDepthSymbol]);
+    return new Style(this[initStateSymbol], combineStates(this[stateSymbol], toState(state)), this[colorDepthSymbol]);
   }
   mark(fn) {
     const newStyle = new Style(this[stateSymbol], null, this[colorDepthSymbol]);
@@ -257,13 +213,13 @@ export class Style {
   }
   // fg, bg, decoration, reset, bright
   get fg() {
-    return new Color(this, FgColorOptions);
+    return new Color(this, sgr.FgColorOptions);
   }
   get bg() {
-    return new Color(this, BgColorOptions);
+    return new Color(this, sgr.BgColorOptions);
   }
   get colorDecoration() {
-    return new ExtendedColor(this, DecorationColorOptions);
+    return new ExtendedColor(this, sgr.DecorationColorOptions);
   }
   get reset() {
     return new Reset(this);
@@ -280,37 +236,37 @@ export class Style {
   }
   // color commands: defined externally
   stdRgb(r, g, b) {
-    return this.make(getStdRgb(r, g, b));
+    return this.make(sgr.getStdRgb(r, g, b));
   }
   brightStdRgb(r, g, b) {
-    return this.make(getBrightStdRgb(r, g, b));
+    return this.make(sgr.getBrightStdRgb(r, g, b));
   }
   color(c) {
-    return this.make(getRawColor256(c));
+    return this.make(sgr.getRawColor256(c));
   }
   rgb256(r, g, b) {
-    return this.make(getColor256(r, g, b));
+    return this.make(sgr.getColor256(r, g, b));
   }
   hex256(hex) {
-    return this.make(getHexColor256(hex));
+    return this.make(sgr.getHexColor256(hex));
   }
   rgb6(r, g, b) {
-    return this.make(getColor6(r, g, b));
+    return this.make(sgr.getColor6(r, g, b));
   }
   grayscale256(i) {
-    return this.make(getGrayColor256(i));
+    return this.make(sgr.getGrayColor256(i));
   }
   grayscale24(i) {
-    return this.make(getGrayColor24(i));
+    return this.make(sgr.getGrayColor24(i));
   }
   trueColor(r, g, b) {
-    return this.make(getTrueColor(r, g, b));
+    return this.make(sgr.getTrueColor(r, g, b));
   }
   trueGrayscale(i) {
-    return this.make(getTrueColor(i, i, i));
+    return this.make(sgr.getTrueColor(i, i, i));
   }
   hexTrueColor(hex) {
-    return this.make(getHexTrueColor(hex));
+    return this.make(sgr.getHexTrueColor(hex));
   }
   rgb(r, g, b) {
     return this[colorDepthSymbol] > 8 ? this.trueColor(r, g, b) : this.rgb256(r, g, b);
@@ -325,34 +281,34 @@ export class Style {
     return this.make(getBgStdRgb(r, g, b));
   }
   bgBrightStdRgb(r, g, b) {
-    return this.make(getBgBrightStdRgb(r, g, b));
+    return this.make(sgr.getBgBrightStdRgb(r, g, b));
   }
   bgColor(c) {
-    return this.make(getBgRawColor256(c));
+    return this.make(sgr.getBgRawColor256(c));
   }
   bgRgb256(r, g, b) {
-    return this.make(getBgColor256(r, g, b));
+    return this.make(sgr.getBgColor256(r, g, b));
   }
   bgHex256(hex) {
-    return this.make(getBgHexColor256(hex));
+    return this.make(sgr.getBgHexColor256(hex));
   }
   bgRgb6(r, g, b) {
-    return this.make(getBgColor6(r, g, b));
+    return this.make(sgr.getBgColor6(r, g, b));
   }
   bgGrayscale256(i) {
-    return this.make(getBgGrayColor256(i));
+    return this.make(sgr.getBgGrayColor256(i));
   }
   bgGrayscale24(i) {
-    return this.make(getBgGrayColor24(i));
+    return this.make(sgr.getBgGrayColor24(i));
   }
   bgTrueColor(r, g, b) {
-    return this.make(getBgTrueColor(r, g, b));
+    return this.make(sgr.getBgTrueColor(r, g, b));
   }
   bgTrueGrayscale(i) {
-    return this.make(getBgTrueColor(i, i, i));
+    return this.make(sgr.getBgTrueColor(i, i, i));
   }
   bgHexTrueColor(hex) {
-    return this.make(getBgHexTrueColor(hex));
+    return this.make(sgr.getBgHexTrueColor(hex));
   }
   bgRgb(r, g, b) {
     return this[colorDepthSymbol] > 8 ? this.bgTrueColor(r, g, b) : this.bgRgb256(r, g, b);
@@ -364,37 +320,37 @@ export class Style {
     return this[colorDepthSymbol] > 8 ? this.bgHexTrueColor(hex) : this.bgHex256(hex);
   }
   decorationStdRgb256(r, g, b) {
-    return this.make(getDecorationStdColor256(r, g, b));
+    return this.make(sgr.getDecorationStdColor256(r, g, b));
   }
   decorationBrightStdRgb256(r, g, b) {
     return this.make(getDecorationBrightStdColor256(r, g, b));
   }
   decorationColor(c) {
-    return this.make(getDecorationRawColor256(c));
+    return this.make(sgr.getDecorationRawColor256(c));
   }
   decorationRgb256(r, g, b) {
-    return this.make(getDecorationColor256(r, g, b));
+    return this.make(sgr.getDecorationColor256(r, g, b));
   }
   decorationHex256(hex) {
-    return this.make(getDecorationHexColor256(hex));
+    return this.make(sgr.getDecorationHexColor256(hex));
   }
   decorationRgb6(r, g, b) {
-    return this.make(getDecorationColor6(r, g, b));
+    return this.make(sgr.getDecorationColor6(r, g, b));
   }
   decorationGrayscale256(i) {
-    return this.make(getDecorationGrayColor256(i));
+    return this.make(sgr.getDecorationGrayColor256(i));
   }
   decorationGrayscale24(i) {
-    return this.make(getDecorationGrayColor24(i));
+    return this.make(sgr.getDecorationGrayColor24(i));
   }
   decorationTrueColor(r, g, b) {
-    return this.make(getDecorationTrueColor(r, g, b));
+    return this.make(sgr.getDecorationTrueColor(r, g, b));
   }
   decorationTrueGrayscale(i) {
-    return this.make(getDecorationTrueColor(i, i, i));
+    return this.make(sgr.getDecorationTrueColor(i, i, i));
   }
   decorationHexTrueColor(hex) {
-    return this.make(getDecorationHexTrueColor(hex));
+    return this.make(sgr.getDecorationHexTrueColor(hex));
   }
   decorationRgb(r, g, b) {
     return this[colorDepthSymbol] > 8 ? this.decorationTrueColor(r, g, b) : this.decorationRgb256(r, g, b);
@@ -432,49 +388,49 @@ const make = value =>
     return this.make(value);
   };
 
-for (const [name, value] of Object.entries(Colors)) {
+for (const [name, value] of Object.entries(sgr.Colors)) {
   const nameLower = name.toLowerCase(),
     nameCap = capitalize(name);
 
   addGetters(ExtendedColor, {
     [nameLower]: function () {
-      return this.make([this[optionsSymbol].extended, ColorFormat.COLOR_256, (this[isBrightSymbol] ? 8 : 0) + value]);
+      return this.make([this[optionsSymbol].extended, sgr.ColorFormat.COLOR_256, (this[isBrightSymbol] ? 8 : 0) + value]);
     },
     ['bright' + nameCap]: function () {
-      return this.make([this[optionsSymbol].extended, ColorFormat.COLOR_256, 8 + value]);
+      return this.make([this[optionsSymbol].extended, sgr.ColorFormat.COLOR_256, 8 + value]);
     },
     ['dark' + nameCap]: function () {
-      return this.make([this[optionsSymbol].extended, ColorFormat.COLOR_256, value]);
+      return this.make([this[optionsSymbol].extended, sgr.ColorFormat.COLOR_256, value]);
     }
   });
 
   addGetters(Color, {
     [nameLower]: function () {
       return this.make(
-        (this[isBrightSymbol] ? this[optionsSymbol].brightBase : this[optionsSymbol].base) + colorNumber(value)
+        (this[isBrightSymbol] ? this[optionsSymbol].brightBase : this[optionsSymbol].base) + sgr.colorNumber(value)
       );
     },
     ['bright' + nameCap]: function () {
-      return this.make(this[optionsSymbol].brightBase + colorNumber(value));
+      return this.make(this[optionsSymbol].brightBase + sgr.colorNumber(value));
     },
     ['dark' + nameCap]: function () {
-      return this.make(this[optionsSymbol].base + colorNumber(value));
+      return this.make(this[optionsSymbol].base + sgr.colorNumber(value));
     }
   });
 
   addGetters(Bright, {
     [nameLower]: function () {
-      return this.make(this[isBrightSymbol] ? getBrightColor(value) : getColor(value));
+      return this.make(this[isBrightSymbol] ? sgr.getBrightColor(value) : sgr.getColor(value));
     },
-    ['bright' + nameCap]: make(getBrightColor(value)),
-    ['dark' + nameCap]: make(getColor(value))
+    ['bright' + nameCap]: make(sgr.getBrightColor(value)),
+    ['dark' + nameCap]: make(sgr.getColor(value))
   });
 
   addGetters(Style, {
-    [nameLower]: make(getColor(value)),
-    ['bright' + nameCap]: make(getBrightColor(value)),
-    ['bg' + nameCap]: make(getBgColor(value)),
-    ['bgBright' + nameCap]: make(getBgBrightColor(value))
+    [nameLower]: make(sgr.getColor(value)),
+    ['bright' + nameCap]: make(sgr.getBrightColor(value)),
+    ['bg' + nameCap]: make(sgr.getBgColor(value)),
+    ['bgBright' + nameCap]: make(sgr.getBgBrightColor(value))
   });
 
   addAliases(Style, {['dark' + nameCap]: nameLower, ['bgDark' + nameCap]: 'bg' + nameCap});
@@ -532,7 +488,7 @@ addAliases(Color, {
 
 const skipCommands = {EXTENDED_COLOR: 1, BG_EXTENDED_COLOR: 1, DECORATION_COLOR: 1};
 
-for (const [name, value] of Object.entries(Commands)) {
+for (const [name, value] of Object.entries(sgr.Commands)) {
   if (name.startsWith('RESET_')) {
     addGetter(Reset, toCamelCase(fromSnakeCase(name).slice(1)), make(value));
   }
@@ -599,7 +555,7 @@ const processStringConstant = (strings, i, result, stack, style) => {
 
 const makeBq = clear => (strings, ...args) => {
   const callAsFunction = !Array.isArray(strings),
-    initState = callAsFunction ? strings : {},
+    initState = callAsFunction && strings,
     stack = [];
   let style = new Style(initState);
 
