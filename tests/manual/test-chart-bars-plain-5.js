@@ -33,7 +33,7 @@ const chartData = [
 const chart = drawChart(chartData, 50, {
   drawItem: drawItemLabel,
   truncate: true,
-  initState: style.bold.bright.white.getState()
+  initState: style.bold.bright.white
 });
 
 const {roman} = transcodeTables,

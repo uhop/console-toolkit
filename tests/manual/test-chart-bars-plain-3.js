@@ -5,12 +5,12 @@ import Panel from '../../src/Panel.js';
 
 const labelStyle = style.bold.bright.white,
   customTheme = [
-    {state: labelStyle.bg.red.getState(), symbol: ' '},
-    {state: labelStyle.bg.green.getState(), symbol: ' '},
-    {state: labelStyle.bg.blue.getState(), symbol: ' '},
-    {state: labelStyle.bg.magenta.getState(), symbol: ' '},
-    {state: labelStyle.bg.yellow.getState(), symbol: ' '},
-    {state: labelStyle.bg.cyan.getState(), symbol: ' '}
+    {state: labelStyle.bg.red, symbol: ' '},
+    {state: labelStyle.bg.green, symbol: ' '},
+    {state: labelStyle.bg.blue, symbol: ' '},
+    {state: labelStyle.bg.magenta, symbol: ' '},
+    {state: labelStyle.bg.yellow, symbol: ' '},
+    {state: labelStyle.bg.cyan, symbol: ' '}
   ];
 
 const panel = Panel.fromBox(drawChart([[40, 10, 30, 20]], 50, {theme: customTheme})).put(1, 0, [

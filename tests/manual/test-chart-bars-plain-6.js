@@ -36,7 +36,7 @@ const chart = Box.make(
     reverse: true,
     drawItem: drawItemLabel,
     truncate: true,
-    initState: style.bold.bright.white.getState()
+    initState: style.bold.bright.white
   }),
   {align: 'right'}
 );
