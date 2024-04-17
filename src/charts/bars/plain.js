@@ -1,8 +1,8 @@
 import style from '../../style.js';
 import {optimize} from '../../ansi/sgr-state.js';
-import {allocateSizes} from '../utils.js';
+import {allocateSizes, makeBgFromFg} from '../utils.js';
 import drawStackedChart from './draw-stacked.js';
-import {vBlocks8th} from '../../symbols.js';
+import {vBlocks8th, ellipsis} from '../../symbols.js';
 
 // data = [datum]
 // datum = {value, colorState, symbol, state}
@@ -13,9 +13,28 @@ export const defaultDrawItem = (datum, size, _, {initState = {}}) =>
   datum
     ? style
         .addState(initState)
-        .addState(datum.state || datum.colorState)
+        .addState(datum.colorState || {})
+        .addState(datum.state || {})
         .text((datum.symbol || defaultSymbol).repeat(size))
     : '';
+
+export const drawItemLabel = (datum, size, _, {reverse, truncate, useEllipsis = true, initState = {}}) => {
+  if (!datum) return '';
+  const symbol = datum.symbol || ' ';
+  let label = datum.label || '';
+  if (label.length <= size) {
+    label = reverse ? label.padStart(size, symbol) : label.padEnd(size, symbol);
+  } else if (truncate && (!useEllipsis || size > 1)) {
+    label = useEllipsis ? label.substring(0, size - 1) + ellipsis : label.substring(0, size);
+  } else {
+    label = symbol.repeat(size);
+  }
+  return style
+    .addState(initState)
+    .addState(datum.colorState ? makeBgFromFg(datum.colorState) : {})
+    .addState(datum.state || {})
+    .text(label);
+};
 
 export const drawRow = (data, width, maxValue, options = {}) => {
   const {drawItem = defaultDrawItem, rectSize = 0, reverse} = options;
