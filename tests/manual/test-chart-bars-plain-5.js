@@ -38,7 +38,7 @@ const chart = drawChart(chartData, 50, {
 
 const {roman} = transcodeTables,
   tableData = [
-    ['Quarters of 2022', 'Performance'],
+    ['Year 2022', 'Performance'],
     ['Quarter ' + roman.get(1), {value: chart, height: 4}],
     ['Quarter ' + roman.get(2), null],
     ['Quarter ' + roman.get(3), null],

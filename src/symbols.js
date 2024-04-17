@@ -70,4 +70,11 @@ export const shadeLight = shades[1];
 export const shadeMedium = shades[2];
 export const shadeDark = shades[3];
 
-export const ellipsis = '\u{2026}';
+// ellipses
+export const hellip = '\u{2026}'; // horizontal ellipsis
+export const vellip = '\u{22EE}'; // vertical ellipsis
+export const ctdot = '\u{22EF}'; // midline horizontal ellipsis
+export const utdot = '\u{22F0}'; // up right diagonal ellipsis
+export const dtdot = '\u{22F1}'; // down right diagonal ellipsis
+
+export {hellip as ellipsis};

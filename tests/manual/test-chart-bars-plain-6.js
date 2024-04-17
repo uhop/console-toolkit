@@ -43,7 +43,7 @@ const chart = Box.make(
 
 const {roman} = transcodeTables,
   tableData = [
-    ['Performance', 'Quarters of 2022'],
+    ['Performance', 'Year 2022'],
     [{value: chart, height: 4}, 'Quarter ' + roman.get(1)],
     [null, 'Quarter ' + roman.get(2)],
     [null, 'Quarter ' + roman.get(3)],
