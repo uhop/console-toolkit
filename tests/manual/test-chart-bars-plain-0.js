@@ -19,13 +19,16 @@ draw(
   )
 );
 
-const customTheme1 = [
-  {colorState: style.brightMagenta.getState(), symbol: '*'},
-  {colorState: style.brightCyan.getState(), symbol: '*'},
-  {colorState: style.brightYellow.getState(), symbol: '*'},
-  {colorState: style.brightBlue.getState(), symbol: '*'},
-  {colorState: style.brightGreen.getState(), symbol: '*'}
-];
+const bright = style.bright;
+
+const symbol1 = '*',
+  customTheme1 = [
+    {colorState: bright.magenta, symbol: symbol1},
+    {colorState: bright.cyan, symbol: symbol1},
+    {colorState: bright.yellow, symbol: symbol1},
+    {colorState: bright.blue, symbol: symbol1},
+    {colorState: bright.green, symbol: symbol1}
+  ];
 
 console.log('Stacked bars + custom theme + init state:');
 draw(
@@ -37,17 +40,17 @@ draw(
       [3, 1, 3]
     ],
     50,
-    {theme: customTheme1, initState: style.inverse.getState()}
+    {theme: customTheme1, initState: style.inverse}
   )
 );
 
-const symbol = shadeMedium,
+const symbol2 = shadeMedium,
   customTheme2 = [
-    {colorState: style.brightMagenta.getState(), symbol},
-    {colorState: style.brightCyan.getState(), symbol},
-    {colorState: style.brightYellow.getState(), symbol},
-    {colorState: style.brightBlue.getState(), symbol},
-    {colorState: style.brightGreen.getState(), symbol}
+    {colorState: bright.magenta, symbol: symbol2},
+    {colorState: bright.cyan, symbol: symbol2},
+    {colorState: bright.yellow, symbol: symbol2},
+    {colorState: bright.blue, symbol: symbol2},
+    {colorState: bright.green, symbol: symbol2}
   ];
 
 console.log('Stacked bars + custom theme with a shadow symbol + init state:');
@@ -60,17 +63,18 @@ draw(
       [3, 1, 3]
     ],
     50,
-    {theme: customTheme2, initState: style.bg.white.getState()}
+    {theme: customTheme2, initState: style.bg.white}
   )
 );
 
-const customTheme3 = [
-  {state: style.bright.magenta.getState(), symbol: '='},
-  {state: style.bright.cyan.getState(), symbol: '='},
-  {state: style.bright.yellow.getState(), symbol: '='},
-  {state: style.bright.blue.getState(), symbol: '='},
-  {state: style.bright.green.getState(), symbol: '='}
-];
+const symbol3 = '=',
+  customTheme3 = [
+    {state: bright.magenta, symbol: symbol3},
+    {state: bright.cyan, symbol: symbol3},
+    {state: bright.yellow, symbol: symbol3},
+    {state: bright.blue, symbol: symbol3},
+    {state: bright.green, symbol: symbol3}
+  ];
 
 console.log('Stacked bars + custom theme with an ASCII art:');
 draw(
