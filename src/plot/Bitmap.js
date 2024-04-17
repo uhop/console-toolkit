@@ -60,7 +60,8 @@ export class Bitmap {
     if (x < 0 || x >= this.width || y < 0 || y >= this.height) return this;
     const index = this.getWordIndex(x, y),
       mask = this.getWordMask(x, y);
-    this.bitmap[index] = value ? this.bitmap[index] | mask : this.bitmap[index] & ~mask;
+    this.bitmap[index] =
+      value > 0 ? this.bitmap[index] | mask : value < 0 ? this.bitmap[index] ^ mask : this.bitmap[index] & ~mask;
     return this;
   }
 
