@@ -25,6 +25,31 @@ export const RESET_STATE = {
   font: null
 };
 
+const defaultState = Symbol('defaultState');
+
+let toState;
+
+export const extractState = (s, initState = defaultState) => {
+  let state = toState(initState);
+  matchSgr.lastIndex = 0;
+  for (const match of s.matchAll(matchSgr)) state = addCommandsToState(state, match[1].split(';'));
+  return state;
+};
+
+toState = value => {
+  switch (typeof value) {
+    case 'object':
+      if (!value) return RESET_STATE;
+      if (typeof value.getState == 'function') return value.getState();
+      return value;
+    case 'string':
+      if (!value) break;
+      return extractState(value);
+  }
+  return {};
+};
+export {toState};
+
 const TOTAL_RESETS = Array.from(Object.keys(RESET_STATE)).length;
 
 const getStateResets = state => {
@@ -39,7 +64,8 @@ const getStateResets = state => {
 
 export const combineStates = (...states) => {
   let state = {};
-  for (const currentState of states) {
+  for (const s of states) {
+    const currentState = toState(s);
     for (const [name, value] of Object.entries(currentState)) {
       if (value !== undefined) state[name] = value;
     }
@@ -187,6 +213,7 @@ const resetColorProperties = {
 };
 
 export const stateToCommands = state => {
+  state = toState(state);
   const commands = [];
   let resetCount = 0;
 
@@ -213,6 +240,7 @@ export const stateToCommands = state => {
 };
 
 export const stateToResetCommands = state => {
+  state = toState(state);
   const commands = [];
   let resetCount = 0;
 
@@ -235,6 +263,8 @@ export const stateToResetCommands = state => {
 };
 
 export const stateTransition = (prev, next) => {
+  prev = toState(prev);
+  next = toState(next);
   const commands = [];
   let resetCount = 0;
 
@@ -271,6 +301,8 @@ export const stateTransition = (prev, next) => {
 };
 
 export const stateReverseTransition = (prev, next) => {
+  prev = toState(prev);
+  next = toState(next);
   const commands = [];
   let resetCount = 0;
 
@@ -304,8 +336,8 @@ export const stateReverseTransition = (prev, next) => {
 
 export const stringifyCommands = commands => (commands?.length ? setCommands(commands) : '');
 
-export const optimize = (s, initState = {}) => {
-  let state = initState,
+export const optimize = (s, initState = defaultState) => {
+  let state = toState(initState),
     result = '',
     start = 0;
   matchSgr.lastIndex = 0;
