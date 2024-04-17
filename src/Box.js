@@ -36,7 +36,7 @@ export class Box {
       case 'right':
       case 'r':
         return new Box(
-          box.map((s, i) => symbol.repeat(width - widths[i])),
+          box.map((s, i) => symbol.repeat(width - widths[i]) + s),
           true
         );
     }
