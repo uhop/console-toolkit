@@ -18,11 +18,11 @@ export const defaultDrawItem = (datum, size, _, {initState = {}}) =>
     : '';
 
 export const drawRow = (data, width, maxValue, options = {}) => {
-  const {drawItem = defaultDrawItem, rectSize = 0} = options;
+  const {drawItem = defaultDrawItem, rectSize = 0, reverse} = options;
   const sizes = allocateSizes(data, maxValue, width),
-    row = optimize(
-      data.map((datum, index) => drawItem(datum, sizes[index], {index, data, sizes, maxValue, width}, options)).join('')
-    );
+    items = data.map((datum, index) => drawItem(datum, sizes[index], {index, data, sizes, maxValue, width}, options));
+  if (reverse) items.reverse();
+  const row = optimize(items.join(''));
   if (rectSize <= 1) return row;
   return new Array(rectSize).fill(row);
 };
