@@ -17,9 +17,10 @@ const getSize = (value, drawEmptyBorder) => {
   return intValue + (drawBorder ? 1 : 0);
 };
 
-export const drawRow = (data, width, maxValue, {drawEmptyBorder, rectSize = 0.5, initState = {}}) => {
-  rectSize = Math.max(0, rectSize);
-  const sizes = allocateSizes(data, maxValue, width),
+export const drawRow = (data, width, maxValue, options = {}) => {
+  const {reverse, drawEmptyBorder, initState = {}} = options,
+    rectSize = Math.max(0, options.rectSize ?? 0.5),
+    sizes = allocateSizes(data, maxValue, width),
     blocks = data.map((datum, i) => {
       if (!datum) return Box.makeBlank(0, getSize(rectSize, drawEmptyBorder));
       const box = drawRealHeightBlock(sizes[i], rectSize, drawEmptyBorder),
@@ -28,8 +29,9 @@ export const drawRow = (data, width, maxValue, {drawEmptyBorder, rectSize = 0.5,
         box.box.map(line => boxStyle.text(line)),
         true
       );
-    });
-  const result = new Array(blocks[0].box.length).fill('');
+    }),
+    result = new Array(blocks[0].box.length).fill('');
+  if (reverse) blocks.reverse();
   for (const block of blocks) {
     for (let i = 0; i < block.box.length; ++i) {
       result[i] += block.box[i];
