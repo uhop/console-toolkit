@@ -69,3 +69,5 @@ export const shades = [' ', ...generateSequence(0x2591, 0, 2), fullBlock];
 export const shadeLight = shades[1];
 export const shadeMedium = shades[2];
 export const shadeDark = shades[3];
+
+export const ellipsis = '\u{2026}';
