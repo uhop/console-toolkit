@@ -1,11 +1,11 @@
 import {log} from '../../src/show.js';
 import Panel from '../../src/Panel.js';
 import {getBgColor, getBgBrightColor, Colors} from '../../src/ansi/sgr.js';
-import {commandsToState, RESET_STATE} from '../../src/ansi/sgr-state.js';
+import {commandsToState} from '../../src/ansi/sgr-state.js';
 
 const panel = new Panel(8, 4);
 
-panel.put(0, 0, '12345678\n23456781\n34567812\n45678123').fillState(0, 0, 8, 4, {state: RESET_STATE});
+panel.put(0, 0, '12345678\n23456781\n34567812\n45678123').fillState(0, 0, 8, 4, {state: null});
 log(panel);
 console.log('==');
 

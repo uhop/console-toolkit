@@ -1,6 +1,6 @@
 import test from 'tape-six';
 
-import {s, RESET_STATE} from '../src/style.js';
+import {s} from '../src/style.js';
 
 test('Styling with back quotes', async t => {
   await t.test('Plain styling', t => {
@@ -24,7 +24,7 @@ test('Styling with back quotes', async t => {
   });
 
   await t.test('Styling with RESET_STATE as the beginning', t => {
-    const text = s(RESET_STATE)`Hello, {{save.bold.save.red}}bold red{{restore}} bold{{restore}}!`;
+    const text = s(null)`Hello, {{save.bold.save.red}}bold red{{restore}} bold{{restore}}!`;
     t.equal(text, 'Hello, \x1B[1;31mbold red\x1B[39m bold\x1B[m!');
   });
 });
