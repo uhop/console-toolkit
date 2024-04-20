@@ -29,19 +29,23 @@ export const toRoman = value => {
   if (value < 1 || value > 3999)
     throw new Error(`Should be a positive integer not exceeding 3999 instead of "${value}"`);
 
-  let result = romanGroup(value % 10, 'I', 'V', 'X');
+  const result = [romanGroup(value % 10, 'I', 'V', 'X')];
   value = Math.floor(value / 10);
-  if (!value) return result;
 
-  result = romanGroup(value % 10, 'X', 'L', 'C') + result;
-  value = Math.floor(value / 10);
-  if (!value) return result;
+  while (value) {
+    result.push(romanGroup(value % 10, 'X', 'L', 'C'));
+    value = Math.floor(value / 10);
+    if (!value) break;
 
-  result = romanGroup(value % 10, 'C', 'D', 'M') + result;
-  value = Math.floor(value / 10);
-  if (!value) return result;
+    result.push(romanGroup(value % 10, 'C', 'D', 'M'));
+    value = Math.floor(value / 10);
+    if (!value) break;
 
-  return romanGroup(value % 10, 'M') + result;
+    result.push(romanGroup(value % 10, 'M'));
+    break;
+  }
+
+  return result.reverse().join('');
 };
 
 const toRomanUnicodeFn = (roman, L, C, D, M) => value => {
@@ -49,27 +53,33 @@ const toRomanUnicodeFn = (roman, L, C, D, M) => value => {
   if (value < 1 || value > 3999)
     throw new Error(`Should be a positive integer not exceeding 3999 instead of "${value}"`);
 
-  let result = '';
+  const result = [];
 
-  const last2 = value % 100;
-  if (last2 <= 12) {
-    if (last2) result = roman.get(last2);
-    value = Math.floor(value / 100);
-  } else {
-    const digit = value % 10;
-    if (digit) result = roman.get(digit);
-    value = Math.floor(value / 10);
+  while (value) {
+    const last2 = value % 100;
+    if (last2 <= 12) {
+      if (last2) result.push(roman.get(last2));
+      value = Math.floor(value / 100);
+    } else {
+      const digit = value % 10;
+      if (digit) result.push(roman.get(digit));
+      value = Math.floor(value / 10);
+      if (!value) break;
 
-    result = romanGroup(value % 10, roman.get(10), L, C) + result;
+      result.push(romanGroup(value % 10, roman.get(10), L, C));
+      value = Math.floor(value / 10);
+    }
+    if (!value) break;
+
+    result.push(romanGroup(value % 10, C, D, M));
     value = Math.floor(value / 10);
+    if (!value) break;
+
+    result.push(romanGroup(value % 10, M));
+    break;
   }
-  if (!value) return result;
 
-  result = romanGroup(value % 10, C, D, M) + result;
-  value = Math.floor(value / 10);
-  if (!value) return result;
-
-  return romanGroup(value % 10, M) + result;
+  return result.reverse().join('');
 };
 
 export const toRomanUnicode = toRomanUnicodeFn(roman, upperL, upperC, upperD, upperM);
