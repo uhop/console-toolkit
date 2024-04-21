@@ -40,7 +40,7 @@ class ExtendedColor {
     return new ExtendedColor(this[styleSymbol], this[optionsSymbol], false);
   }
   get default() {
-    return this.make(this[options].default);
+    return this.make(this[optionsSymbol].default);
   }
   // standard colors: defined externally
   // get red() {
