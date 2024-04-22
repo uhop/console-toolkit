@@ -7,9 +7,11 @@ import {
   stateTransition,
   stateReverseTransition,
   stringifyCommands,
-  optimize
+  optimize,
+  toState
 } from './ansi/sgr-state.js';
 import Box from './Box.js';
+import {addAlias} from './meta.js';
 
 export class Panel {
   constructor(width, height) {
@@ -241,6 +243,8 @@ export class Panel {
       state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
       state = commandsToState(state);
+    } else {
+      state = toState(state);
     }
     return this.fillFn(x, y, width, height, () => ({symbol, state}));
   }
@@ -250,6 +254,8 @@ export class Panel {
       state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
       state = commandsToState(state);
+    } else {
+      state = toState(state);
     }
     return this.fillFn(x, y, width, height, (x, y, cell) => ({symbol: cell ? cell.symbol : ignore, state}));
   }
@@ -259,6 +265,8 @@ export class Panel {
       state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
       state = commandsToState(state);
+    } else {
+      state = toState(state);
     }
     return this.fillFn(x, y, width, height, (x, y, cell) => cell && {symbol: cell.symbol, state});
   }
@@ -268,27 +276,29 @@ export class Panel {
       state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
       state = commandsToState(state);
+    } else {
+      state = toState(state);
     }
-    return this.fillFn(x, y, width, height, (x, y, cell) => ({
-      symbol: cell ? cell.symbol : ignore,
-      state: combineStates(state, cell ? cell.state : RESET_STATE)
-    }));
+    return this.fillFn(x, y, width, height, (x, y, cell) =>
+      cell
+        ? {symbol: cell.symbol, state: combineStates(state, cell.state)}
+        : {symbol: ignore, state: combineStates(state, RESET_STATE)}
+    );
   }
 
-  combineState(x, y, width, height, {state = {}, ignore = ' '} = {}) {
+  combineStateAfter(x, y, width, height, {state = {}, ignore = ' '} = {}) {
     if (typeof state == 'string') {
       state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
       state = commandsToState(state);
+    } else {
+      state = toState(state);
     }
-    return this.fillFn(x, y, width, height, (x, y, cell) => ({
-      symbol: cell ? cell.symbol : ignore,
-      state: combineStates(cell ? cell.state : RESET_STATE, state)
-    }));
-  }
-
-  combineStateAfter(x, y, width, height, options) {
-    return this.combineState(x, y, width, height, options);
+    return this.fillFn(x, y, width, height, (x, y, cell) =>
+      cell
+        ? {symbol: cell.symbol, state: combineStates(cell.state, state)}
+        : {symbol: ignore, state: combineStates(RESET_STATE, state)}
+    );
   }
 
   clear(x, y, width, height) {
@@ -407,15 +417,14 @@ export class Panel {
     // normalize arguments
     if (x < 0) {
       if (x + n <= 0) return this;
-      n = x + n;
+      n = Math.max(0, x + n);
       x = 0;
     }
-    if (n > this.width) n = this.width;
 
     for (const row of this.box) {
       row.splice(x, n);
     }
-    this.width -= n;
+    this.width = this.box[0].length;
 
     return this;
   }
@@ -424,13 +433,12 @@ export class Panel {
     // normalize arguments
     if (y < 0) {
       if (y + n <= 0) return this;
-      n = y + n;
+      n = Math.max(0, y + n);
       y = 0;
     }
-    if (y > this.height) n = this.width;
 
     this.box.splice(y, n);
-    this.height -= n;
+    this.height = this.box.length;
 
     return this;
   }
@@ -444,7 +452,7 @@ export class Panel {
     for (const row of this.box) {
       row.splice(x, 0, ...new Array(n).fill(null));
     }
-    this.width += n;
+    this.width = this.box[0].length;
 
     return this;
   }
@@ -457,17 +465,63 @@ export class Panel {
 
     this.box.splice(y, 0, ...new Array(n).fill(null));
     for (let i = 0; i < n; ++i) {
-      row[y + i] = new Array(this.width).fill(null);
+      this.box[y + i] = new Array(this.width).fill(null);
     }
-    this.height += n;
+    this.height = this.box.length;
 
     return this;
   }
 
-  addRight(panel, alignment = 'top') {
+  addBottom(panel, {align = 'left'} = {}) {
+    const diff = this.width - panel.width;
+
+    if (align === 'left' || align === 'l') {
+      if (diff >= 0) {
+        this.box.splice(this.height, 0, ...panel.box.map(row => row.concat(new Array(diff).fill(null))));
+        this.height = this.box.length;
+        return this;
+      }
+      this.box = this.box.map(row => row.concat(new Array(diff).fill(null))).concat(panel.box);
+      this.height = this.box.length;
+      return this;
+    }
+
+    if (align === 'right' || align === 'r') {
+      if (diff >= 0) {
+        this.box.splice(this.height, 0, ...panel.box.map(row => new Array(diff).fill(null).concat(row)));
+        this.height = this.box.length;
+        return this;
+      }
+      this.box = this.box.map(row => new Array(diff).fill(null).concat(row)).concat(panel.box);
+      this.height = this.box.length;
+      return this;
+    }
+
+    // align === 'center'
+
+    if (diff >= 0) {
+      const half = diff >> 1;
+      this.box.splice(
+        this.height,
+        0,
+        ...panel.box.map(row => new Array(half).fill(null).concat(row, new Array(diff - half).fill(null)))
+      );
+      this.height = this.box.length;
+      return this;
+    }
+
+    const half = -diff >> 1;
+    this.box = this.box
+      .map(row => new Array(half).fill(null).concat(row, new Array(-diff - half).fill(null)))
+      .concat(panel.box);
+    this.height = this.box.length;
+    return this;
+  }
+
+  addRight(panel, {align = 'top'} = {}) {
     const diff = this.height - panel.height;
 
-    if (alignment === 'bottom' || alignment === 'b') {
+    if (align === 'bottom' || align === 'b') {
       if (diff >= 0) {
         for (let i = 0; i < diff; ++i) {
           this.box[i] = this.box[i].concat(new Array(panel.width).fill(null));
@@ -475,6 +529,7 @@ export class Panel {
         for (let i = diff; i < this.height; ++i) {
           this.box[i] = this.box[i].concat(panel.box[i - diff]);
         }
+        this.width = this.box[0].length;
         return this;
       }
       const box = new Array(panel.height);
@@ -485,10 +540,11 @@ export class Panel {
         box[i] = this.box[i + diff].concat(panel.box[i]);
       }
       this.box = box;
+      this.width = this.box[0].length;
       return this;
     }
 
-    if (alignment === 'top' || alignment === 't') {
+    if (align === 'top' || align === 't') {
       if (diff >= 0) {
         for (let i = 0; i < panel.height; ++i) {
           this.box[i] = this.box[i].concat(panel.box[i]);
@@ -496,6 +552,7 @@ export class Panel {
         for (let i = panel.height; i < this.height; ++i) {
           this.box[i] = this.box[i].concat(new Array(panel.width).fill(null));
         }
+        this.width = this.box[0].length;
         return this;
       }
       const box = new Array(panel.height);
@@ -506,10 +563,11 @@ export class Panel {
         box[i] = new Array(panel.width).fill(null).concat().concat(panel.box[i]);
       }
       this.box = box;
+      this.width = this.box[0].length;
       return this;
     }
 
-    // alignment === 'center'
+    // align === 'center'
 
     if (diff >= 0) {
       const half = diff >> 1;
@@ -522,6 +580,7 @@ export class Panel {
       for (let i = panel.height + half; i < this.height; ++i) {
         this.box[i] = this.box[i].concat(new Array(panel.width).fill(null));
       }
+      this.width = this.box[0].length;
       return this;
     }
 
@@ -537,48 +596,11 @@ export class Panel {
       box[i] = new Array(panel.width).fill(null).concat(panel.box[i]);
     }
     this.box = box;
-    return this;
-  }
-
-  addBottom(panel, alignment = 'left') {
-    const diff = this.width - panel.width;
-
-    if (alignment === 'left' || alignment === 'l') {
-      if (diff >= 0) {
-        this.box.splice(this.height, 0, ...panel.box.map(row => row.concat(new Array(diff).fill(null))));
-        return this;
-      }
-      this.box = this.box.map(row => row.concat(new Array(diff).fill(null))).concat(panel.box);
-      return this;
-    }
-
-    if (alignment === 'right' || alignment === 'r') {
-      if (diff >= 0) {
-        this.box.splice(this.height, 0, ...panel.box.map(row => new Array(diff).fill(null).concat(row)));
-        return this;
-      }
-      this.box = this.box.map(row => new Array(diff).fill(null).concat(row)).concat(panel.box);
-      return this;
-    }
-
-    // alignment === 'center'
-
-    if (diff >= 0) {
-      const half = diff >> 1;
-      this.box.splice(
-        this.height,
-        0,
-        ...panel.box.map(row => new Array(half).fill(null).concat(row, new Array(diff - half).fill(null)))
-      );
-      return this;
-    }
-
-    const half = -diff >> 1;
-    this.box = this.box
-      .map(row => new Array(half).fill(null).concat(row, new Array(-diff - half).fill(null)))
-      .concat(panel.box);
+    this.width = this.box[0].length;
     return this;
   }
 }
+
+addAlias(Panel, 'combineState', 'combineStateAfter');
 
 export default Panel;
