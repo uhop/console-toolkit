@@ -6,7 +6,6 @@ import {Turtle, draw as drawTurtle} from '../src/turtle/index.js';
 import drawLineArt from '../src/turtle/draw-line-art.js';
 
 test('Turtle', async t => {
-  '╭─┴─╮'
   await t.test('Draw an axis', t => {
     const turtle = new Turtle(5, 1).markHalfDown().forward(2).markHalfUp().forward(2).markHalfDown(),
       axis = drawLineArt(turtle, lineTheme);

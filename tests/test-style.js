@@ -153,4 +153,9 @@ test('Styling', async t => {
     const state = style.bold.bright.yellow.bg.blue.getState();
     t.equal(style.italic.addState(state) + 'text' + style.reset.all, '\x1B[1;3;93;44mtext\x1B[m');
   });
+
+  await t.test('Implicit getState()', t => {
+    const state = style.bold.bright.yellow.bg.blue;
+    t.equal(style.italic.addState(state) + 'text' + style.reset.all, '\x1B[1;3;93;44mtext\x1B[m');
+  });
 });
