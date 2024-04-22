@@ -61,7 +61,7 @@ export class Box {
   padLeftRight(left, right, symbol = ' ') {
     const paddingSmall = symbol.repeat(Math.min(left, right)),
       paddingLarge = paddingSmall + symbol.repeat(Math.max(left - right, right - left));
-    return newBox(
+    return new Box(
       left < right
         ? this.box.map(s => paddingSmall + s + paddingLarge)
         : this.box.map(s => paddingLarge + s + paddingSmall),
