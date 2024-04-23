@@ -91,6 +91,18 @@ test('Box', async t => {
     t.deepEqual(b.box, ['---------', '----123--', '----ab --', '---------', '---------', '---------']);
   });
 
+  await t.test('clip', t => {
+    let b = new Box(['one', 'two', 'three']);
+    t.equal(b.width, 5);
+    t.equal(b.height, 3);
+    t.deepEqual(b.box, ['one  ', 'two  ', 'three']);
+
+    b = b.clip(3);
+    t.equal(b.width, 3);
+    t.equal(b.height, 3);
+    t.deepEqual(b.box, ['one', 'two', 'thr']);
+  });
+
   await t.test('add bottom', t => {
     let b = new Box(['12345']).addBottom(new Box(['ab']));
 

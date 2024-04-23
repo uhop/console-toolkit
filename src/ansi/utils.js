@@ -15,3 +15,31 @@ export const getLength = (s, matcher = matchCsiNoGroups) => {
 
 export const getMaxLength = (strings, matcher = matchCsiNoGroups) =>
   Math.max(0, ...strings.map(s => getLength(s, matcher)));
+
+export const clip = (s, width, includeLastCommand, matcher = matchCsiNoGroups) => {
+  s = String(s);
+  let counter = 0,
+    start = 0;
+  matcher.lastIndex = 0;
+  for (const match of s.matchAll(matcher)) {
+    if (counter >= width) return s.substring(0, match.index + (includeLastCommand ? match[0].length : 0));
+    const prev = [...s.substring(start, match.index)];
+    counter += prev.length;
+    if (includeLastCommand ? counter > width : counter >= width) {
+      const diff = width - counter,
+        end = start + (diff ? prev.slice(0, prev.length + diff).join('').length : prev.length);
+      return s.substring(0, end);
+    }
+    start = match.index + match[0].length;
+  }
+  if (counter >= width) return s.substring(0, start);
+  const prev = [...s.substring(start)];
+  if (counter + prev.length > width) {
+    const end = start + prev.slice(0, width - counter).join('').length;
+    return s.substring(0, end);
+  }
+  return s; // unchanged
+};
+
+export const clipStrings = (strings, width, includeLastCommand, matcher = matchCsiNoGroups) =>
+  strings.map(s => clip(s, width, includeLastCommand, matcher));

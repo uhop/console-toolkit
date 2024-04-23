@@ -1,4 +1,4 @@
-import {getLength} from './ansi/utils.js';
+import {getLength, clipStrings} from './ansi/utils.js';
 
 const isPrimitive = {string: 1, number: 1, boolean: 1};
 
@@ -114,6 +114,10 @@ export class Box {
       l = r;
     }
     return this.padLeftRight(l, r, symbol).padTopBottom(t, b, symbol);
+  }
+
+  clip(width, includeLastCommand) {
+    return new Box(clipStrings(this.box, width, includeLastCommand), true);
   }
 
   // stack
