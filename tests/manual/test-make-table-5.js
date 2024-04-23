@@ -20,8 +20,8 @@ const table = makeTable(data, lineTheme, {
   rowLast: '2',
   hDataSep: 0,
   states: {
-    rowFirst: style.bold.getState(),
-    rowLast: style.bright.cyan.getState()
+    rowFirst: s`{{bold}}`,
+    rowLast: s`{{bright.cyan}}`
   }
 });
 
