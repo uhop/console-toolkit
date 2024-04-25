@@ -277,4 +277,18 @@ test('Panel', async t => {
     t.equal(p.height, 3);
     t.deepEqual(p.toBox('*').box, ['123\x1B[m***', 'ab \x1B[m***', 'c  xyz']);
   });
+
+  await t.test('transpose', t => {
+    let p = Panel.fromBox(['123', 'ab']);
+
+    t.equal(p.width, 3);
+    t.equal(p.height, 2);
+    t.deepEqual(p.toBox().box, ['123', 'ab ']);
+
+    p = p.transpose();
+
+    t.equal(p.width, 2);
+    t.equal(p.height, 3);
+    t.deepEqual(p.toBox().box, ['1a', '2b', '3 ']);
+  });
 });

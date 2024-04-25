@@ -599,6 +599,18 @@ export class Panel {
     this.width = this.box[0].length;
     return this;
   }
+
+  transpose() {
+    const panel = new Panel(this.height, this.width);
+    for (let i = 0; i < this.height; ++i) {
+      const row = this.box[i];
+      for (let j = 0; j < this.width; ++j) {
+        const cell = row[j];
+        panel.box[j][i] = cell && {...cell};
+      }
+    }
+    return panel;
+  }
 }
 
 addAlias(Panel, 'combineState', 'combineStateAfter');
