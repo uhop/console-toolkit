@@ -7,5 +7,6 @@ export const chartTheme = [
   ...seriesColors.map(name => ({colorState: style['bright' + capitalize(name)].getState()})),
   ...seriesColors.map(name => ({colorState: style[name].getState()}))
 ];
+chartTheme.empty = {state: style.reset.all.getState()};
 
 export default chartTheme;
