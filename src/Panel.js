@@ -55,11 +55,12 @@ export class Panel {
     return panel;
   }
 
-  toBox(ignore = ' ') {
+  toBox(ignore = ' ', ignoreState = RESET_STATE) {
     if (!this.height || !this.width) return null;
+    ignoreState = toState(ignoreState);
 
     const box = new Array(this.height),
-      emptyCell = {symbol: ignore, state: RESET_STATE};
+      emptyCell = {symbol: ignore, state: ignoreState};
 
     for (let i = 0; i < this.height; ++i) {
       const panelRow = this.box[i];
@@ -271,7 +272,7 @@ export class Panel {
     return this.fillFn(x, y, width, height, (x, y, cell) => cell && {symbol: cell.symbol, state});
   }
 
-  combineStateBefore(x, y, width, height, {state = {}, ignore = ' '} = {}) {
+  combineStateBefore(x, y, width, height, {state = {}, ignore = ' ', ignoreState = RESET_STATE} = {}) {
     if (typeof state == 'string') {
       state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
@@ -282,11 +283,11 @@ export class Panel {
     return this.fillFn(x, y, width, height, (x, y, cell) =>
       cell
         ? {symbol: cell.symbol, state: combineStates(state, cell.state)}
-        : {symbol: ignore, state: combineStates(state, RESET_STATE)}
+        : {symbol: ignore, state: combineStates(state, ignoreState)}
     );
   }
 
-  combineStateAfter(x, y, width, height, {state = {}, ignore = ' '} = {}) {
+  combineStateAfter(x, y, width, height, {state = {}, ignore = ' ', ignoreState = RESET_STATE} = {}) {
     if (typeof state == 'string') {
       state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
@@ -297,7 +298,7 @@ export class Panel {
     return this.fillFn(x, y, width, height, (x, y, cell) =>
       cell
         ? {symbol: cell.symbol, state: combineStates(cell.state, state)}
-        : {symbol: ignore, state: combineStates(RESET_STATE, state)}
+        : {symbol: ignore, state: combineStates(ignoreState, state)}
     );
   }
 
