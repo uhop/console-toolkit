@@ -291,4 +291,56 @@ test('Panel', async t => {
     t.equal(p.height, 3);
     t.deepEqual(p.toBox().box, ['1a', '2b', '3 ']);
   });
+
+  await t.test('rotations', t => {
+    const p = Panel.fromBox(['123', 'ab']);
+
+    t.equal(p.width, 3);
+    t.equal(p.height, 2);
+    t.deepEqual(p.toBox().box, ['123', 'ab ']);
+
+    let r = p.rotateRight();
+
+    t.equal(r.width, 2);
+    t.equal(r.height, 3);
+    t.deepEqual(r.toBox().box, ['a1', 'b2', ' 3']);
+
+    r = r.rotateLeft();
+
+    t.equal(r.width, 3);
+    t.equal(r.height, 2);
+    t.deepEqual(r.toBox().box, p.toBox().box);
+
+    r = r.rotateLeft();
+
+    t.equal(r.width, 2);
+    t.equal(r.height, 3);
+    t.deepEqual(r.toBox().box, ['3 ', '2b', '1a']);
+  });
+
+  await t.test('flips', t => {
+    const p = Panel.fromBox(['123', 'ab']);
+
+    t.equal(p.width, 3);
+    t.equal(p.height, 2);
+    t.deepEqual(p.toBox().box, ['123', 'ab ']);
+
+    let f = p.clone().flipH();
+
+    t.equal(f.width, 3);
+    t.equal(f.height, 2);
+    t.deepEqual(f.toBox().box, ['321', ' ba']);
+
+    f.flipV();
+
+    t.equal(f.width, 3);
+    t.equal(f.height, 2);
+    t.deepEqual(f.toBox().box, [' ba', '321']);
+
+    t.deepEqual(f.toBox().box, p.clone().rotateRight().rotateRight().toBox().box);
+    t.deepEqual(f.toBox().box, p.clone().rotateLeft().rotateLeft().toBox().box);
+
+    t.deepEqual(p.clone().rotateLeft().toBox().box, p.clone().transpose().flipV().toBox().box);
+    t.deepEqual(p.clone().rotateRight().toBox().box, p.clone().transpose().flipH().toBox().box);
+  });
 });

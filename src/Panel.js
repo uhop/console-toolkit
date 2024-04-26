@@ -119,11 +119,16 @@ export class Panel {
       const panelRow = panel.box[i],
         row = this.box[y + i];
       for (let j = 0; j < width; ++j) {
-        panelRow[j] = row[x + j];
+        const cell = row[x + j];
+        panelRow[j] = cell && {...cell};
       }
     }
 
     return panel;
+  }
+
+  clone() {
+    return this.extract();
   }
 
   copyFrom(x, y, width, height, panel, x1 = 0, y1 = 0) {
@@ -152,7 +157,8 @@ export class Panel {
       const panelRow = panel.box[y1 + i],
         row = this.box[y + i];
       for (let j = 0; j < width; ++j) {
-        row[x + j] = panelRow[x1 + j];
+        const cell = panelRow[x1 + j];
+        row[x + j] = cell && {...cell};
       }
     }
 
@@ -611,6 +617,40 @@ export class Panel {
       }
     }
     return panel;
+  }
+
+  rotateRight() {
+    const panel = new Panel(this.height, this.width);
+    for (let i = 0; i < this.height; ++i) {
+      const row = this.box[i];
+      for (let j = 0; j < this.width; ++j) {
+        const cell = row[j];
+        panel.box[j][this.height - i - 1] = cell && {...cell};
+      }
+    }
+    return panel;
+  }
+
+  rotateLeft() {
+    const panel = new Panel(this.height, this.width);
+    for (let i = 0; i < this.height; ++i) {
+      const row = this.box[i];
+      for (let j = 0; j < this.width; ++j) {
+        const cell = row[j];
+        panel.box[this.width - j - 1][i] = cell && {...cell};
+      }
+    }
+    return panel;
+  }
+
+  flipH() {
+    for (const row of this.box) row.reverse();
+    return this;
+  }
+
+  flipV() {
+    this.box.reverse();
+    return this;
   }
 }
 
