@@ -22,8 +22,10 @@ export const drawColumnChart = drawBarChart => (values, width, options) => {
   options = {drawItem: defaultDrawItem, ...options};
   const {theme, initState, reverse} = options,
     {symbol = ' ', state = null, colorState} = theme?.empty || {},
-    emptyState = style.addState(initState).addState(colorState).addState(state).getState(),
-    chart = drawBarChart(values, width, options);
+    emptyState = style.addState(initState).addState(colorState).addState(state).getState();
+
+  options.reverse = false;
+  const chart = drawBarChart(values, width, options);
 
   let panel = Panel.fromBox(chart);
   if (reverse) {
