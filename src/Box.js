@@ -58,6 +58,12 @@ export class Box {
     return new Box(new Array(height).fill(padding), true);
   }
 
+  clip(width, includeLastCommand) {
+    return new Box(clipStrings(this.box, width, includeLastCommand), true);
+  }
+
+  // padding
+
   padLeftRight(left, right, symbol = ' ') {
     const paddingSmall = symbol.repeat(Math.min(left, right)),
       paddingLarge = paddingSmall + symbol.repeat(Math.max(left - right, right - left));
@@ -116,8 +122,23 @@ export class Box {
     return this.padLeftRight(l, r, symbol).padTopBottom(t, b, symbol);
   }
 
-  clip(width, includeLastCommand) {
-    return new Box(clipStrings(this.box, width, includeLastCommand), true);
+  // removing
+
+  removeColumns(x, n) {
+    return new Box(
+      this.box.map(s => {
+        const result = [...s];
+        result.splice(x, n);
+        return result.join('');
+      }),
+      true
+    );
+  }
+
+  removeRows(y, n) {
+    const result = [...this.box];
+    result.splice(y, n);
+    return new Box(result, true);
   }
 
   // stack
@@ -207,6 +228,8 @@ export class Box {
 
     return new Box(result, true);
   }
+
+  // flipping
 
   flipH() {
     const result = new Array(this.box.length);
