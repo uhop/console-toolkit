@@ -124,17 +124,6 @@ export class Box {
 
   // removing
 
-  removeColumns(x, n) {
-    return new Box(
-      this.box.map(s => {
-        const result = [...s];
-        result.splice(x, n);
-        return result.join('');
-      }),
-      true
-    );
-  }
-
   removeRows(y, n) {
     const result = [...this.box];
     result.splice(y, n);
@@ -230,14 +219,6 @@ export class Box {
   }
 
   // flipping
-
-  flipH() {
-    const result = new Array(this.box.length);
-    for (let i = 0; i < this.box.length; ++i) {
-      result[i] = [...this.box[i]].reverse().join('');
-    }
-    return new Box(result, true);
-  }
 
   flipV() {
     // return new Box(this.box.toReversed(), true);

@@ -150,17 +150,11 @@ test('Box', async t => {
     t.equal(b.height, 3);
     t.deepEqual(b.box, ['123', 'ab ', 'c  ']);
 
-    b = b.flipH();
-
-    t.equal(b.width, 3);
-    t.equal(b.height, 3);
-    t.deepEqual(b.box, ['321', ' ba', '  c']);
-
     b = b.flipV();
 
     t.equal(b.width, 3);
     t.equal(b.height, 3);
-    t.deepEqual(b.box, ['  c', ' ba', '321']);
+    t.deepEqual(b.box, ['c  ', 'ab ', '123']);
   });
 
   await t.test('remove rows', t => {
@@ -173,17 +167,5 @@ test('Box', async t => {
     t.deepEqual(b.removeRows(1, 1).box, ['123', 'c  ']);
     t.deepEqual(b.removeRows(1, 2).box, ['123']);
     t.deepEqual(b.removeRows(0, 2).box, ['c  ']);
-  });
-
-  await t.test('remove columns', t => {
-    const b = new Box(['123', 'ab', 'c']);
-
-    t.equal(b.width, 3);
-    t.equal(b.height, 3);
-    t.deepEqual(b.box, ['123', 'ab ', 'c  ']);
-
-    t.deepEqual(b.removeColumns(1, 1).box, ['13', 'a ', 'c ']);
-    t.deepEqual(b.removeColumns(1, 2).box, ['1', 'a', 'c']);
-    t.deepEqual(b.removeColumns(0, 2).box, ['3', ' ', ' ']);
   });
 });
