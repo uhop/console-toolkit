@@ -207,6 +207,19 @@ export class Box {
 
     return new Box(result, true);
   }
+
+  flipH() {
+    const result = new Array(this.box.length);
+    for (let i = 0; i < this.box.length; ++i) {
+      result[i] = [...this.box[i]].reverse().join('');
+    }
+    return new Box(result, true);
+  }
+
+  flipV() {
+    // return new Box(this.box.toReversed(), true);
+    return new Box([...this.box].reverse(), true);
+  }
 }
 
 export default Box;

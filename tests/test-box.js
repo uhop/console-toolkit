@@ -142,4 +142,24 @@ test('Box', async t => {
     t.equal(b.height, 3);
     t.deepEqual(b.box, ['123   ', 'ab    ', 'c  xyz']);
   });
+
+  await t.test('flips', t => {
+    let b = new Box(['123', 'ab', 'c']);
+
+    t.equal(b.width, 3);
+    t.equal(b.height, 3);
+    t.deepEqual(b.box, ['123', 'ab ', 'c  ']);
+
+    b = b.flipH();
+
+    t.equal(b.width, 3);
+    t.equal(b.height, 3);
+    t.deepEqual(b.box, ['321', ' ba', '  c']);
+
+    b = b.flipV();
+
+    t.equal(b.width, 3);
+    t.equal(b.height, 3);
+    t.deepEqual(b.box, ['  c', ' ba', '321']);
+  });
 });
