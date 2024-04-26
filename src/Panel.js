@@ -451,6 +451,8 @@ export class Panel {
   }
 
   addBottom(panel, {align = 'left'} = {}) {
+    panel = panel.clone();
+
     const diff = this.width - panel.width;
 
     if (align === 'left' || align === 'l') {
@@ -491,6 +493,8 @@ export class Panel {
   }
 
   addRight(panel, {align = 'top'} = {}) {
+    panel = panel.clone();
+
     const diff = this.height - panel.height;
 
     if (align === 'bottom' || align === 'b') {
