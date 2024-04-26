@@ -15,13 +15,18 @@ import {addAlias} from './meta.js';
 
 export class Panel {
   constructor(width, height) {
-    this.width = width;
-    this.height = height;
-
     this.box = new Array(height);
     for (let i = 0; i < height; ++i) {
       this.box[i] = new Array(width).fill(null);
     }
+  }
+
+  get width() {
+    return this.box.length && this.box[0].length;
+  }
+
+  get height() {
+    return this.box.length;
   }
 
   static fromBox(box, ignore = '\x07') {
@@ -217,7 +222,7 @@ export class Panel {
     return this;
   }
 
-  fillFn(x, y, width, height, fn) {
+  applyFn(x, y, width, height, fn) {
     // normalize arguments
 
     if (x < 0) x = 0;
@@ -253,7 +258,7 @@ export class Panel {
     } else {
       state = toState(state);
     }
-    return this.fillFn(x, y, width, height, () => ({symbol, state}));
+    return this.applyFn(x, y, width, height, () => ({symbol, state}));
   }
 
   fillState(x, y, width, height, {state = {}, ignore = ' '} = {}) {
@@ -264,7 +269,7 @@ export class Panel {
     } else {
       state = toState(state);
     }
-    return this.fillFn(x, y, width, height, (x, y, cell) => ({symbol: cell ? cell.symbol : ignore, state}));
+    return this.applyFn(x, y, width, height, (x, y, cell) => ({symbol: cell ? cell.symbol : ignore, state}));
   }
 
   fillNonEmptyState(x, y, width, height, {state = {}} = {}) {
@@ -275,7 +280,7 @@ export class Panel {
     } else {
       state = toState(state);
     }
-    return this.fillFn(x, y, width, height, (x, y, cell) => cell && {symbol: cell.symbol, state});
+    return this.applyFn(x, y, width, height, (x, y, cell) => cell && {symbol: cell.symbol, state});
   }
 
   combineStateBefore(x, y, width, height, {state = {}, ignore = ' ', ignoreState = RESET_STATE} = {}) {
@@ -286,7 +291,7 @@ export class Panel {
     } else {
       state = toState(state);
     }
-    return this.fillFn(x, y, width, height, (x, y, cell) =>
+    return this.applyFn(x, y, width, height, (x, y, cell) =>
       cell
         ? {symbol: cell.symbol, state: combineStates(state, cell.state)}
         : {symbol: ignore, state: combineStates(state, ignoreState)}
@@ -301,7 +306,7 @@ export class Panel {
     } else {
       state = toState(state);
     }
-    return this.fillFn(x, y, width, height, (x, y, cell) =>
+    return this.applyFn(x, y, width, height, (x, y, cell) =>
       cell
         ? {symbol: cell.symbol, state: combineStates(cell.state, state)}
         : {symbol: ignore, state: combineStates(ignoreState, state)}
@@ -325,28 +330,20 @@ export class Panel {
       height = this.height;
     }
 
-    return this.fillFn(x, y, width, height, () => null);
+    return this.applyFn(x, y, width, height, () => null);
   }
 
   padLeft(n) {
     if (n <= 0) return this;
 
-    for (let i = 0; i < this.height; ++i) {
-      this.box[i] = new Array(n).fill(null).concat(this.box[i]);
-    }
-    this.width += n;
-
+    for (let i = 0; i < this.height; ++i) this.box[i] = new Array(n).fill(null).concat(this.box[i]);
     return this;
   }
 
   padRight(n) {
     if (n <= 0) return this;
 
-    for (let i = 0; i < this.height; ++i) {
-      this.box[i] = this.box[i].concat(new Array(n).fill(null));
-    }
-    this.width += n;
-
+    for (let i = 0; i < this.height; ++i) this.box[i] = this.box[i].concat(new Array(n).fill(null));
     return this;
   }
 
@@ -354,11 +351,8 @@ export class Panel {
     if (n <= 0) return this.padRight(m);
     if (m <= 0) return this.padLeft(n);
 
-    for (let i = 0; i < this.height; ++i) {
+    for (let i = 0; i < this.height; ++i)
       this.box[i] = new Array(n).fill(null).concat(this.box[i], new Array(m).fill(null));
-    }
-    this.width += n + m;
-
     return this;
   }
 
@@ -366,11 +360,8 @@ export class Panel {
     if (n <= 0) return this;
 
     const pad = new Array(n);
-    for (let i = 0; i < n; ++i) {
-      pad[i] = new Array(this.width).fill(null);
-    }
+    for (let i = 0; i < n; ++i) pad[i] = new Array(this.width).fill(null);
     this.box = pad.concat(this.box);
-    this.height += n;
 
     return this;
   }
@@ -379,11 +370,8 @@ export class Panel {
     if (n <= 0) return this;
 
     const pad = new Array(n);
-    for (let i = 0; i < n; ++i) {
-      pad[i] = new Array(this.width).fill(null);
-    }
+    for (let i = 0; i < n; ++i) pad[i] = new Array(this.width).fill(null);
     this.box = this.box.concat(pad);
-    this.height += n;
 
     return this;
   }
@@ -397,11 +385,8 @@ export class Panel {
       top[i] = new Array(this.width).fill(null);
     }
     const bottom = new Array(m);
-    for (let i = 0; i < m; ++i) {
-      bottom[i] = new Array(this.width).fill(null);
-    }
+    for (let i = 0; i < m; ++i) bottom[i] = new Array(this.width).fill(null);
     this.box = top.concat(this.box, bottom);
-    this.height += n + m;
 
     return this;
   }
@@ -428,11 +413,7 @@ export class Panel {
       x = 0;
     }
 
-    for (const row of this.box) {
-      row.splice(x, n);
-    }
-    this.width = this.box[0].length;
-
+    for (const row of this.box) row.splice(x, n);
     return this;
   }
 
@@ -445,8 +426,6 @@ export class Panel {
     }
 
     this.box.splice(y, n);
-    this.height = this.box.length;
-
     return this;
   }
 
@@ -456,11 +435,7 @@ export class Panel {
     if (x > this.width) x = this.width;
     else if (x < 0) x = 0;
 
-    for (const row of this.box) {
-      row.splice(x, 0, ...new Array(n).fill(null));
-    }
-    this.width = this.box[0].length;
-
+    for (const row of this.box) row.splice(x, 0, ...new Array(n).fill(null));
     return this;
   }
 
@@ -471,11 +446,7 @@ export class Panel {
     else if (y < 0) y = 0;
 
     this.box.splice(y, 0, ...new Array(n).fill(null));
-    for (let i = 0; i < n; ++i) {
-      this.box[y + i] = new Array(this.width).fill(null);
-    }
-    this.height = this.box.length;
-
+    for (let i = 0; i < n; ++i) this.box[y + i] = new Array(this.width).fill(null);
     return this;
   }
 
@@ -485,22 +456,18 @@ export class Panel {
     if (align === 'left' || align === 'l') {
       if (diff >= 0) {
         this.box.splice(this.height, 0, ...panel.box.map(row => row.concat(new Array(diff).fill(null))));
-        this.height = this.box.length;
         return this;
       }
       this.box = this.box.map(row => row.concat(new Array(diff).fill(null))).concat(panel.box);
-      this.height = this.box.length;
       return this;
     }
 
     if (align === 'right' || align === 'r') {
       if (diff >= 0) {
         this.box.splice(this.height, 0, ...panel.box.map(row => new Array(diff).fill(null).concat(row)));
-        this.height = this.box.length;
         return this;
       }
       this.box = this.box.map(row => new Array(diff).fill(null).concat(row)).concat(panel.box);
-      this.height = this.box.length;
       return this;
     }
 
@@ -513,7 +480,6 @@ export class Panel {
         0,
         ...panel.box.map(row => new Array(half).fill(null).concat(row, new Array(diff - half).fill(null)))
       );
-      this.height = this.box.length;
       return this;
     }
 
@@ -521,7 +487,6 @@ export class Panel {
     this.box = this.box
       .map(row => new Array(half).fill(null).concat(row, new Array(-diff - half).fill(null)))
       .concat(panel.box);
-    this.height = this.box.length;
     return this;
   }
 
@@ -536,7 +501,6 @@ export class Panel {
         for (let i = diff; i < this.height; ++i) {
           this.box[i] = this.box[i].concat(panel.box[i - diff]);
         }
-        this.width = this.box[0].length;
         return this;
       }
       const box = new Array(panel.height);
@@ -547,7 +511,6 @@ export class Panel {
         box[i] = this.box[i + diff].concat(panel.box[i]);
       }
       this.box = box;
-      this.width = this.box[0].length;
       return this;
     }
 
@@ -559,7 +522,6 @@ export class Panel {
         for (let i = panel.height; i < this.height; ++i) {
           this.box[i] = this.box[i].concat(new Array(panel.width).fill(null));
         }
-        this.width = this.box[0].length;
         return this;
       }
       const box = new Array(panel.height);
@@ -570,7 +532,6 @@ export class Panel {
         box[i] = new Array(panel.width).fill(null).concat().concat(panel.box[i]);
       }
       this.box = box;
-      this.width = this.box[0].length;
       return this;
     }
 
@@ -587,7 +548,6 @@ export class Panel {
       for (let i = panel.height + half; i < this.height; ++i) {
         this.box[i] = this.box[i].concat(new Array(panel.width).fill(null));
       }
-      this.width = this.box[0].length;
       return this;
     }
 
@@ -603,7 +563,6 @@ export class Panel {
       box[i] = new Array(panel.width).fill(null).concat(panel.box[i]);
     }
     this.box = box;
-    this.width = this.box[0].length;
     return this;
   }
 
