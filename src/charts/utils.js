@@ -64,3 +64,12 @@ export const allocateSizes = (data, maxValue, size) => {
   values.forEach(datum => datum.index >= 0 && (sizes[datum.index] = datum.size));
   return sizes;
 };
+
+export const getFracSize = (value, drawEmptyBorder) => {
+  const intValue = Math.floor(value),
+    hasFrac = value - intValue > 0,
+    index = (value - intValue) * 8,
+    drawBorder = hasFrac && (drawEmptyBorder || index > 0);
+
+  return intValue + (drawBorder ? 1 : 0);
+};
