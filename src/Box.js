@@ -54,8 +54,7 @@ export class Box {
   }
 
   static makeBlank(width, height, symbol = ' ') {
-    const padding = symbol.repeat(width);
-    return new Box(new Array(height).fill(padding), true);
+    return new Box(height <= 0 ? [] : new Array(height).fill(symbol.repeat(width)), true);
   }
 
   clip(width, includeLastCommand) {
