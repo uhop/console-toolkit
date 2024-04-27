@@ -30,4 +30,4 @@ draw(
 );
 
 console.log('Butterfly grouped columns:');
-draw(Box.make(drawGroupedChart([[2, 4, 3]], 20, {reverse: true}), {align: 'right'}), drawGroupedChart([[2, 4, 3]], 20));
+draw(Box.make(drawGroupedChart([[2, 4, 3]], 10, {reverse: true}), {align: 'right'}), drawGroupedChart([[2, 4, 3]], 10));

@@ -10,7 +10,7 @@ const customTheme = [
   {colorState: style.brightGreen.getState()}
 ];
 
-console.log('Grouped bars (no bottom border):');
+console.log('Grouped bars:');
 draw(
   drawChart(
     [
