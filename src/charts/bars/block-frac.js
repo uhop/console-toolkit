@@ -15,7 +15,7 @@ export const drawRow = (data, width, maxValue, options = {}) => {
     blocks = data.map((datum, i) => {
       if (!datum) return Box.makeBlank(0, getFracSize(rectSize, drawEmptyBorder));
       const box = drawRealHeightBlock(sizes[i], rectSize, drawEmptyBorder),
-        boxStyle = style.addState(initState).addState(datum.colorState);
+        boxStyle = style.addState(initState).addState(datum.colorState).addState(datum.state);
       return new Box(
         box.box.map(line => boxStyle.text(line)),
         true

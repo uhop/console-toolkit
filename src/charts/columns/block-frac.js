@@ -1,7 +1,7 @@
 import style from '../../style.js';
 import Box from '../../Box.js';
 import {optimize} from '../../ansi/sgr-state.js';
-import {allocateSizes, getFracSize} from '../utils.js';
+import {allocateSizes} from '../utils.js';
 import drawStackedChart from './draw-stacked.js';
 import {drawRealWidthBlock} from '../../draw-block-frac.js';
 
@@ -13,9 +13,9 @@ export const drawColumn = (data, width, maxValue, options = {}) => {
     rectSize = Math.max(0, options.rectSize ?? 0.5),
     sizes = allocateSizes(data, maxValue, width),
     blocks = data.map((datum, i) => {
-      if (!datum) return Box.makeBlank(getFracSize(rectSize, drawEmptyBorder), 0);
+      if (!datum) return Box.makeBlank(/*getFracSize(rectSize, drawEmptyBorder)*/ 0, 0);
       const box = drawRealWidthBlock(rectSize, sizes[i], drawEmptyBorder),
-        boxStyle = style.addState(initState).addState(datum.colorState);
+        boxStyle = style.addState(initState).addState(datum.colorState).addState(datum.state);
       return new Box(
         box.box.map(line => boxStyle.text(line)),
         true

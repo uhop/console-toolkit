@@ -10,9 +10,9 @@ import drawGroupedChart from './draw-grouped.js';
 export const drawRow = (data, width, maxValue, options = {}) => {
   const {reverse, rectSize = 1, initState = {}} = options,
     blocks = data.map(datum => {
-      if (!datum) return '';
+      if (!datum) return Box.makeBlank(0, rectSize);
       const box = drawRealWidthBlock((datum.value / maxValue) * width, rectSize),
-        boxStyle = style.addState(initState).addState(datum.colorState);
+        boxStyle = style.addState(initState).addState(datum.colorState).addState(datum.state);
       return new Box(
         box.box.map(line => boxStyle.text(line)),
         true

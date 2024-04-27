@@ -22,7 +22,7 @@ export const drawRow = (data, width, maxValue, options = {}) => {
           top: t,
           bottom: b
         }),
-        boxStyle = style.addState(initState).addState(datum.colorState);
+        boxStyle = style.addState(initState).addState(datum.colorState).addState(datum.state);
       return new Box(
         box.box.map(line => boxStyle.text(line)),
         true

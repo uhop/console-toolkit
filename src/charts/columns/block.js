@@ -22,7 +22,7 @@ export const drawColumn = (data, width, maxValue, options = {}) => {
           left: l,
           right: r
         }),
-        boxStyle = style.addState(initState).addState(datum.colorState);
+        boxStyle = style.addState(initState).addState(datum.colorState).addState(datum.state);
       return new Box(
         box.box.map(line => boxStyle.text(line)),
         true
