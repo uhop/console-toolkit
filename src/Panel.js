@@ -31,7 +31,6 @@ export class Panel {
 
   static fromBox(box, ignore = '\x07') {
     if (!(box instanceof Box)) box = new Box(box);
-    if (!box.height || !box.width) return null;
 
     const panel = new Panel(box.width, box.height);
 
@@ -61,7 +60,7 @@ export class Panel {
   }
 
   toBox(ignore = ' ', ignoreState = RESET_STATE) {
-    if (!this.height || !this.width) return null;
+    if (!this.height || !this.width) return Box.makeBlank(this.width, this.height);
     ignoreState = toState(ignoreState);
 
     const box = new Array(this.height),
@@ -105,13 +104,13 @@ export class Panel {
     }
 
     if (x < 0) x = 0;
-    if (x >= this.width) return null;
+    if (x >= this.width) return new Panel(0, 0);
     if (x + width > this.width) {
       width = this.width - x;
     }
 
     if (y < 0) y = 0;
-    if (y >= this.height) return null;
+    if (y >= this.height) return new Panel(0, 0);
     if (y + height > this.height) {
       height = this.height - y;
     }
