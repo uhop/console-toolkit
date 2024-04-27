@@ -460,7 +460,7 @@ export class Panel {
         this.box.splice(this.height, 0, ...panel.box.map(row => row.concat(new Array(diff).fill(null))));
         return this;
       }
-      this.box = this.box.map(row => row.concat(new Array(diff).fill(null))).concat(panel.box);
+      this.box = this.box.map(row => row.concat(new Array(-diff).fill(null))).concat(panel.box);
       return this;
     }
 
@@ -469,7 +469,7 @@ export class Panel {
         this.box.splice(this.height, 0, ...panel.box.map(row => new Array(diff).fill(null).concat(row)));
         return this;
       }
-      this.box = this.box.map(row => new Array(diff).fill(null).concat(row)).concat(panel.box);
+      this.box = this.box.map(row => new Array(-diff).fill(null).concat(row)).concat(panel.box);
       return this;
     }
 
@@ -509,7 +509,7 @@ export class Panel {
       }
       const box = new Array(panel.height);
       for (let i = 0, n = -diff; i < n; ++i) {
-        box[i] = new Array(panel.width).fill(null).concat().concat(panel.box[i]);
+        box[i] = new Array(this.width).fill(null).concat(panel.box[i]);
       }
       for (let i = -diff; i < panel.height; ++i) {
         box[i] = this.box[i + diff].concat(panel.box[i]);
@@ -533,7 +533,7 @@ export class Panel {
         box[i] = this.box[i].concat(panel.box[i]);
       }
       for (let i = this.height; i < panel.height; ++i) {
-        box[i] = new Array(panel.width).fill(null).concat().concat(panel.box[i]);
+        box[i] = new Array(this.width).fill(null).concat(panel.box[i]);
       }
       this.box = box;
       return this;
@@ -558,13 +558,13 @@ export class Panel {
     const half = -diff >> 1,
       box = new Array(panel.height);
     for (let i = 0; i < half; ++i) {
-      box[i] = new Array(panel.width).fill(null).concat(panel.box[i]);
+      box[i] = new Array(this.width).fill(null).concat(panel.box[i]);
     }
     for (let i = 0; i < this.height; ++i) {
       box[i + half] = this.box[i].concat(panel.box[i + half]);
     }
     for (let i = this.height + half; i < panel.height; ++i) {
-      box[i] = new Array(panel.width).fill(null).concat(panel.box[i]);
+      box[i] = new Array(this.width).fill(null).concat(panel.box[i]);
     }
     this.box = box;
     return this;
