@@ -26,22 +26,20 @@ export const drawChart =
       {symbol = ' ', state = null, colorState} = theme?.empty || {},
       emptyState = style.addState(initState).addState(colorState).addState(state).getState();
 
-    let panel;
+    const panel = new Panel(0, width);
     for (let i = 0; i < newData.length; ++i) {
-      const p = Panel.fromBox(drawColumn([newData[i]], width, max, options));
       if (i) {
         if (i % maxSeriesLength == 0) {
           if (groupGap > 0) panel.padRight(groupGap);
         } else {
           if (gap > 0) panel.padRight(gap);
         }
-        if (p) {
-          panel.addRight(p, {align: reverse ? 'top' : 'bottom'});
-        } else {
-          panel.padRight(1);
-        }
+      }
+      const p = Panel.fromBox(drawColumn([newData[i]], width, max, options));
+      if (p) {
+        panel.addRight(p, {align: reverse ? 'top' : 'bottom'});
       } else {
-        panel = p || new Panel(1, 1);
+        panel.padRight(1);
       }
     }
     return panel.toBox(symbol, emptyState).box;

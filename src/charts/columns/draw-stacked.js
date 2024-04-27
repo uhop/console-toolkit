@@ -15,14 +15,14 @@ export const drawChart =
       {symbol = ' ', state = null, colorState} = theme?.empty || {},
       emptyState = style.addState(initState).addState(colorState).addState(state).getState();
 
-    let panel;
+    const panel = new Panel(0, width);
     for (let i = 0; i < data.length; ++i) {
+      if (i && gap > 0) panel.padRight(gap);
       const p = Panel.fromBox(drawColumn(data[i], width, max, options));
-      if (i) {
-        if (gap > 0) panel.padRight(gap);
+      if (p) {
         panel.addRight(p, {align: reverse ? 'top' : 'bottom'});
       } else {
-        panel = p;
+        panel.padRight(1);
       }
     }
     return panel.toBox(symbol, emptyState).box;
