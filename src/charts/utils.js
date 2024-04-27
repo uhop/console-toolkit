@@ -60,8 +60,8 @@ export const allocateSizes = (data, maxValue, size) => {
   values.sort((a, b) => b.frac - a.frac);
   for (let i = 0, n = size - allocated; i < n; ++i) ++values[i].size;
 
-  const sizes = new Array(data.length);
-  values.forEach(datum => datum.index >= 0 && (sizes[datum.index] = datum.size));
+  const sizes = new Array(data.length + 1).fill(0);
+  values.forEach(datum => (sizes[datum.index >= 0 ? datum.index : sizes.length - 1] = datum.size));
   return sizes;
 };
 
