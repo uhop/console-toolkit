@@ -1,6 +1,6 @@
-import {drawChart as drawBarChart} from '../bars/plain-grouped.js';
-import {drawColumnChart} from './plain.js';
+import {drawColumn} from './plain.js';
+import drawGroupedChart from './draw-grouped.js';
 
-export const drawChart = drawColumnChart(drawBarChart);
+export const drawChart = drawGroupedChart(drawColumn);
 
 export default drawChart;

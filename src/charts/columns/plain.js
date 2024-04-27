@@ -1,42 +1,27 @@
-import {drawChart as drawBarChart} from '../bars/plain.js';
-import Panel from '../../Panel.js';
-
-import {hBlocks8th} from '../../symbols.js';
 import style from '../../style.js';
+import Box from '../../Box.js';
+import {optimize} from '../../ansi/sgr-state.js';
+import {allocateSizes} from '../utils.js';
+import drawStackedChart from './draw-stacked.js';
+import {hBlocks8th} from '../../symbols.js';
 
 // data = [datum]
 // datum = {value, colorState, symbol, state}
 
 const defaultSymbol = hBlocks8th[7];
 
-export const defaultDrawItem = (datum, size, _, {initState = {}}) =>
-  datum
-    ? style
-        .addState(initState)
-        .addState(datum.colorState || {})
-        .addState(datum.state || {})
-        .text((datum.symbol || defaultSymbol).repeat(size))
-    : '';
-
-export const drawColumnChart = drawBarChart => (values, width, options) => {
-  options = {drawItem: defaultDrawItem, ...options};
-  const {theme, initState, reverse} = options,
-    {symbol = ' ', state = null, colorState} = theme?.empty || {},
-    emptyState = style.addState(initState).addState(colorState).addState(state).getState();
-
-  options.reverse = false;
-  const chart = drawBarChart(values, width, options);
-
-  let panel = Panel.fromBox(chart);
-  if (reverse) {
-    panel = panel.flipV().rotateRight();
-  } else {
-    panel = panel.rotateLeft();
-  }
-
-  return panel.toBox(symbol, emptyState).box;
+export const drawColumn = (data, width, maxValue, options = {}) => {
+  const {reverse, rectSize = 1, initState = {}} = options,
+    sizes = allocateSizes(data, maxValue, width),
+    blocks = data.map((datum, i) => {
+      if (!datum) return Box.makeBlank(rectSize, 0);
+      const boxStyle = style.addState(initState).addState(datum.colorState).addState(datum.state);
+      return new Box(new Array(sizes[i]).fill(boxStyle.text(datum.symbol || defaultSymbol)), true);
+    }),
+    result = (reverse ? blocks : blocks.reverse()).map(block => block.box).flat(1);
+  return result.map(line => optimize(line));
 };
 
-export const drawChart = drawColumnChart(drawBarChart);
+export const drawChart = drawStackedChart(drawColumn);
 
 export default drawChart;
