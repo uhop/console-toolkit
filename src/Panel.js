@@ -411,6 +411,7 @@ export class Panel {
       n = Math.max(0, x + n);
       x = 0;
     }
+    if (n <= 0) return this;
 
     for (const row of this.box) row.splice(x, n);
     return this;
@@ -423,8 +424,28 @@ export class Panel {
       n = Math.max(0, y + n);
       y = 0;
     }
+    if (n <= 0) return this;
 
     this.box.splice(y, n);
+    return this;
+  }
+
+  resize(newWidth, newHeight) {
+    if (newHeight < this.height) {
+      this.removeRows(newHeight, this.height - newHeight);
+      if (newWidth < this.width) {
+        this.removeColumns(newWidth, this.width - newWidth);
+      } else {
+        this.padRight(newWidth - this.width);
+      }
+    } else {
+      if (newWidth < this.width) {
+        this.removeColumns(newWidth, this.width - newWidth);
+      } else {
+        this.padRight(newWidth - this.width);
+      }
+      this.padBottom(newHeight - this.height);
+    }
     return this;
   }
 
