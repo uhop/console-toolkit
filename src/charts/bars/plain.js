@@ -3,6 +3,7 @@ import {optimize} from '../../ansi/sgr-state.js';
 import {allocateSizes, makeBgFromFg} from '../utils.js';
 import drawStackedChart from './draw-stacked.js';
 import {vBlocks8th, ellipsis} from '../../symbols.js';
+import defaultTheme from '../themes/default.js';
 
 // data = [datum]
 // datum = {value, colorState, symbol, state}
@@ -37,9 +38,20 @@ export const drawItemLabel = (datum, size, _, {reverse, truncate, useEllipsis = 
 };
 
 export const drawRow = (data, width, maxValue, options = {}) => {
-  const {drawItem = defaultDrawItem, rectSize = 0, reverse} = options;
-  const sizes = allocateSizes(data, maxValue, width),
+  const {drawItem = defaultDrawItem, rectSize = 0, theme = defaultTheme, initState, reverse} = options,
+    {symbol = ' ', state = null, colorState} = theme?.empty || {},
+    sizes = allocateSizes(data, maxValue, width),
     items = data.map((datum, index) => drawItem(datum, sizes[index], {index, data, sizes, maxValue, width}, options));
+  if (theme?.empty && sizes[sizes.length - 1] > 0) {
+    // fill the row
+    items.push(
+      style
+        .addState(initState)
+        .addState(colorState)
+        .addState(state)
+        .text(symbol.repeat(sizes[sizes.length - 1]))
+    );
+  }
   if (reverse) items.reverse();
   const row = optimize(items.join(''));
   if (rectSize <= 1) return row;
