@@ -335,14 +335,22 @@ export class Panel {
   padLeft(n) {
     if (n <= 0) return this;
 
-    for (let i = 0; i < this.height; ++i) this.box[i] = new Array(n).fill(null).concat(this.box[i]);
+    for (let i = 0; i < this.height; ++i) {
+      const row = this.box[i],
+        padding = new Array(n).fill(null);
+      this.box[i] = row ? padding.concat(row) : padding;
+    }
     return this;
   }
 
   padRight(n) {
     if (n <= 0) return this;
 
-    for (let i = 0; i < this.height; ++i) this.box[i] = this.box[i].concat(new Array(n).fill(null));
+    for (let i = 0; i < this.height; ++i) {
+      const row = this.box[i],
+        padding = new Array(n).fill(null);
+      this.box[i] = row ? row.concat(padding) : padding;
+    }
     return this;
   }
 
@@ -350,8 +358,10 @@ export class Panel {
     if (n <= 0) return this.padRight(m);
     if (m <= 0) return this.padLeft(n);
 
-    for (let i = 0; i < this.height; ++i)
-      this.box[i] = new Array(n).fill(null).concat(this.box[i], new Array(m).fill(null));
+    for (let i = 0; i < this.height; ++i) {
+      const row = this.box[i];
+      this.box[i] = row ? new Array(n).fill(null).concat(row, new Array(m).fill(null)) : new Array(n + m).fill(null);
+    }
     return this;
   }
 
@@ -430,23 +440,52 @@ export class Panel {
     return this;
   }
 
-  resize(newWidth, newHeight) {
-    if (newHeight < this.height) {
-      this.removeRows(newHeight, this.height - newHeight);
-      if (newWidth < this.width) {
-        this.removeColumns(newWidth, this.width - newWidth);
-      } else {
-        this.padRight(newWidth - this.width);
+  resizeH(newWidth, align = 'right') {
+    if (!this.width) return this.padRight(newWidth);
+
+    const diff = newWidth - this.width;
+    switch (align) {
+      case 'left':
+      case 'l':
+        return diff < 0 ? this.removeColumns(0, -diff) : this.padLeft(diff);
+      case 'center':
+      case 'c': {
+        const half = Math.abs(diff) >> 1;
+        return diff < 0
+          ? this.removeColumns(0, half).removeColumns(newWidth, half + 1)
+          : this.padLeft(half).padRight(diff - half);
       }
-    } else {
-      if (newWidth < this.width) {
-        this.removeColumns(newWidth, this.width - newWidth);
-      } else {
-        this.padRight(newWidth - this.width);
-      }
-      this.padBottom(newHeight - this.height);
     }
-    return this;
+    // right
+    return diff < 0 ? this.removeColumns(newWidth, -diff) : this.padRight(diff);
+  }
+
+  resizeV(newHeight, align = 'bottom') {
+    if (!this.height) return this.padBottom(newHeight);
+
+    const diff = newHeight - this.height;
+    switch (align) {
+      case 'top':
+      case 't':
+        return diff < 0 ? this.removeRows(0, -diff) : this.padTop(diff);
+      case 'center':
+      case 'c': {
+        const half = Math.abs(diff) >> 1;
+        return diff < 0
+          ? this.removeRows(0, half).removeRows(newHeight, half + 1)
+          : this.padTop(half).padBottom(diff - half);
+      }
+    }
+    // bottom
+    return diff < 0 ? this.removeRows(newHeight, -diff) : this.padBottom(diff);
+  }
+
+  resize(newWidth, newHeight, horizontal = 'right', vertical = 'bottom') {
+    if (!this.height) return this.padBottom(newHeight).padRight(newWidth);
+
+    return newHeight < this.height
+      ? this.resizeV(newHeight, vertical).resizeH(newWidth, horizontal)
+      : this.resizeH(newWidth, horizontal).resizeV(newHeight, vertical);
   }
 
   insertColumns(x, n) {

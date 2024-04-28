@@ -409,4 +409,104 @@ test('Panel', async t => {
     t.deepEqual(p.clone().rotateLeft().toBox().box, p.clone().transpose().flipV().toBox().box);
     t.deepEqual(p.clone().rotateRight().toBox().box, p.clone().transpose().flipH().toBox().box);
   });
+
+  await t.test('resize (checking sizes)', t => {
+    const p = new Panel(0, 0);
+    t.equal(p.width, 0);
+    t.equal(p.height, 0);
+
+    p.resize(2, 3);
+    t.equal(p.width, 2);
+    t.equal(p.height, 3);
+
+    p.resize(3, 2);
+    t.equal(p.width, 3);
+    t.equal(p.height, 2);
+
+    p.resize(3, 3);
+    t.equal(p.width, 3);
+    t.equal(p.height, 3);
+
+    p.resize(1, 1);
+    t.equal(p.width, 1);
+    t.equal(p.height, 1);
+
+    p.resize(0, 1);
+    t.equal(p.width, 0);
+    t.equal(p.height, 1);
+
+    p.resize(1, 0);
+    t.equal(p.width, 0);
+    t.equal(p.height, 0);
+  });
+
+  await t.test('resize (checking content)', t => {
+    let p = Panel.fromBox(['123', 'ab', 'c']).resize(2, 1);
+    t.deepEqual(p.toBox('*', {}).box, ['12']);
+
+    p = Panel.fromBox(['123', 'ab', 'c']).resize(2, 2);
+    t.deepEqual(p.toBox('*', {}).box, ['12', 'ab']);
+
+    p = Panel.fromBox(['123', 'ab', 'c']).resize(3, 3);
+    t.deepEqual(p.toBox('*', {}).box, ['123', 'ab ', 'c  ']);
+
+    p = Panel.fromBox(['123', 'ab', 'c']).resize(4, 4);
+    t.deepEqual(p.toBox('*', {}).box, ['123*', 'ab *', 'c  *', '****']);
+  });
+
+  await t.test('resize (checking alignment)', t => {
+    let p = Panel.fromBox(['123', 'ab', 'c']).resize(2, 2);
+    t.deepEqual(p.toBox('*', {}).box, ['12', 'ab']);
+
+    p.resize(3, 3);
+    t.deepEqual(p.toBox('*', {}).box, ['12*', 'ab*', '***']);
+
+    p = Panel.fromBox(['123', 'ab', 'c']).resize(2, 2, 'r', 't');
+    t.deepEqual(p.toBox('*', {}).box, ['ab', 'c ']);
+
+    p.resize(3, 3, 'r', 't');
+    t.deepEqual(p.toBox('*', {}).box, ['***', 'ab*', 'c *']);
+
+    p = Panel.fromBox(['123', 'ab', 'c']).resize(1, 1, 'r', 'c');
+    t.deepEqual(p.toBox('*', {}).box, ['a']);
+
+    p.resize(3, 3, 'r', 'c');
+    t.deepEqual(p.toBox('*', {}).box, ['***', 'a**', '***']);
+
+    p = Panel.fromBox(['123', 'ab', 'c']).resize(1, 1, 'c', 'b');
+    t.deepEqual(p.toBox('*', {}).box, ['2']);
+
+    p.resize(3, 3, 'c', 'b');
+    t.deepEqual(p.toBox('*', {}).box, ['*2*', '***', '***']);
+
+    p = Panel.fromBox(['123', 'ab', 'c']).resize(1, 1, 'c', 't');
+    t.deepEqual(p.toBox('*', {}).box, [' ']);
+
+    p.resize(3, 3, 'c', 't');
+    t.deepEqual(p.toBox('*', {}).box, ['***', '***', '* *']);
+
+    p = Panel.fromBox(['123', 'ab', 'c']).resize(1, 1, 'c', 'c');
+    t.deepEqual(p.toBox('*', {}).box, ['b']);
+
+    p.resize(3, 3, 'c', 'c');
+    t.deepEqual(p.toBox('*', {}).box, ['***', '*b*', '***']);
+
+    p = Panel.fromBox(['123', 'ab', 'c']).resize(1, 1, 'l', 'b');
+    t.deepEqual(p.toBox('*', {}).box, ['3']);
+
+    p.resize(3, 3, 'l', 'b');
+    t.deepEqual(p.toBox('*', {}).box, ['**3', '***', '***']);
+
+    p = Panel.fromBox(['123', 'ab', 'c']).resize(1, 1, 'l', 't');
+    t.deepEqual(p.toBox('*', {}).box, [' ']);
+
+    p.resize(3, 3, 'l', 't');
+    t.deepEqual(p.toBox('*', {}).box, ['***', '***', '** ']);
+
+    p = Panel.fromBox(['123', 'ab', 'c']).resize(1, 1, 'l', 'c');
+    t.deepEqual(p.toBox('*', {}).box, [' ']);
+
+    p.resize(3, 3, 'l', 'c');
+    t.deepEqual(p.toBox('*', {}).box, ['***', '** ', '***']);
+  });
 });
