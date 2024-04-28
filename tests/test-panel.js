@@ -256,6 +256,15 @@ test('Panel', async t => {
     t.equal(p.width, 5);
     t.equal(p.height, 2);
     t.deepEqual(p.toBox('*').box, ['12345', '\x1B[m***ab']);
+
+    p = Panel.fromBox(['123', 'ab']).addBottom(Panel.fromBox(['x']), {align: 'left'});
+    t.deepEqual(p.toBox('*', {}).box, ['123', 'ab ', 'x**']);
+
+    p = Panel.fromBox(['123', 'ab']).addBottom(Panel.fromBox(['x']), {align: 'center'});
+    t.deepEqual(p.toBox('*', {}).box, ['123', 'ab ', '*x*']);
+
+    p = Panel.fromBox(['123', 'ab']).addBottom(Panel.fromBox(['x']), {align: 'right'});
+    t.deepEqual(p.toBox('*', {}).box, ['123', 'ab ', '**x']);
   });
 
   await t.test('add right', t => {
@@ -276,6 +285,15 @@ test('Panel', async t => {
     t.equal(p.width, 6);
     t.equal(p.height, 3);
     t.deepEqual(p.toBox('*').box, ['123\x1B[m***', 'ab \x1B[m***', 'c  xyz']);
+
+    p = Panel.fromBox(['123', 'ab', 'c']).addRight(Panel.fromBox(['x']), {align: 'top'});
+    t.deepEqual(p.toBox('*', {}).box, ['123x', 'ab *', 'c  *']);
+
+    p = Panel.fromBox(['123', 'ab', 'c']).addRight(Panel.fromBox(['x']), {align: 'center'});
+    t.deepEqual(p.toBox('*', {}).box, ['123*', 'ab x', 'c  *']);
+
+    p = Panel.fromBox(['123', 'ab', 'c']).addRight(Panel.fromBox(['x']), {align: 'bottom'});
+    t.deepEqual(p.toBox('*', {}).box, ['123*', 'ab *', 'c  x']);
   });
 
   await t.test('transpose', t => {
