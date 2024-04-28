@@ -1,4 +1,4 @@
-import Bitmap from '../../src/plot/Bitmap.js';
+import Bitmap from '../../src/plot/bitmap.js';
 import style from '../../src/style.js';
 import {draw} from './utils.js';
 

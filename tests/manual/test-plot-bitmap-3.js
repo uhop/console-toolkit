@@ -1,4 +1,4 @@
-import Bitmap from '../../src/plot/Bitmap.js';
+import Bitmap from '../../src/plot/bitmap.js';
 import drawRect from '../../src/plot/draw-rect.js';
 import toQuads from '../../src/plot/to-quads.js';
 import style from '../../src/style.js';

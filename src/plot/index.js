@@ -1,4 +1,4 @@
-import Bitmap from './Bitmap.js';
+import Bitmap from './bitmap.js';
 import drawLine from './draw-line.js';
 import drawRect from './draw-rect.js';
 import toQuads from './to-quads.js';
