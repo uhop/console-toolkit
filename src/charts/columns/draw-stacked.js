@@ -1,6 +1,6 @@
 import defaultTheme from '../themes/default.js';
 import {normalizeData, sumValues} from '../utils.js';
-import Panel from '../../Panel.js';
+import Panel from '../../panel.js';
 import style from '../../style.js';
 
 export const drawChart =

@@ -1,7 +1,7 @@
 import drawChart from '../../src/charts/bars/plain-grouped.js';
 import style, {c} from '../../src/style.js';
 import {draw} from './utils.js';
-import Panel from '../../src/Panel.js';
+import Panel from '../../src/panel.js';
 
 const labelStyle = style.bold.bright.white,
   customTheme = [

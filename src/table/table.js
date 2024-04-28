@@ -1,5 +1,5 @@
 import Box from '../box.js';
-import Panel from '../Panel.js';
+import Panel from '../panel.js';
 import {draw as drawBorder} from './draw-borders.js';
 import style, {RESET_STATE} from '../style.js';
 

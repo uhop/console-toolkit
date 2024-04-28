@@ -1,5 +1,5 @@
 import {log} from '../../src/show.js';
-import Panel from '../../src/Panel.js';
+import Panel from '../../src/panel.js';
 import {getBgColor, getBgBrightColor, Colors} from '../../src/ansi/sgr.js';
 import {commandsToState} from '../../src/ansi/sgr-state.js';
 

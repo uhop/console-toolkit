@@ -1,4 +1,4 @@
-import Panel from '../../src/Panel.js';
+import Panel from '../../src/panel.js';
 import {draw} from './utils.js';
 
 const p = Panel.fromBox(['123', 'ab']);

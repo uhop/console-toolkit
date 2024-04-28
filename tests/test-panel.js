@@ -1,7 +1,7 @@
 import test from 'tape-six';
 
 import Box from '../src/box.js';
-import Panel from '../src/Panel.js';
+import Panel from '../src/panel.js';
 import style from '../src/style.js';
 
 test('Panel', async t => {

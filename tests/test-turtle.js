@@ -5,7 +5,7 @@ import lineAsciiTheme from '../src/themes/lines/ascii-rounded.js';
 import {draw as drawBorders} from '../src/table/index.js';
 import Turtle, {draw as drawTurtle} from '../src/turtle/index.js';
 import drawLineArt from '../src/turtle/draw-line-art.js';
-import Panel from '../src/Panel.js';
+import Panel from '../src/panel.js';
 
 test('Turtle', async t => {
   await t.test('Draw an axis', t => {

@@ -1,7 +1,7 @@
 import Turtle from '../../src/turtle/turtle.js';
 import lineTheme from '../../src/themes/lines/unicode-rounded.js';
 import drawLineArt from '../../src/turtle/draw-line-art.js';
-import Panel from '../../src/Panel.js';
+import Panel from '../../src/panel.js';
 import {draw} from './utils.js';
 
 const turtle = new Turtle(5, 1).markHalfDown().forward(2).markHalfUp().forward(2).markHalfDown(),
