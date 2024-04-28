@@ -17,6 +17,32 @@ test('Panel', async t => {
     t.deepEqual(p.toBox('*').box, ['\x1B[m***', '\x1B[m***']);
   });
 
+  await t.test('Panel() with 0 dimensions', t => {
+    let p = new Panel(0, 2);
+
+    t.equal(p.width, 0);
+    t.equal(p.height, 2);
+    t.deepEqual(p.box, [[], []]);
+
+    p = new Panel(2, 0);
+
+    t.equal(p.width, 0);
+    t.equal(p.height, 0);
+    t.deepEqual(p.box, []);
+
+    p = Panel.fromBox(['']);
+
+    t.equal(p.width, 0);
+    t.equal(p.height, 1);
+    t.deepEqual(p.box, [[]]);
+
+    p = Panel.fromBox([]);
+
+    t.equal(p.width, 0);
+    t.equal(p.height, 0);
+    t.deepEqual(p.box, []);
+  });
+
   await t.test('Panel.fromBox()', t => {
     const p = Panel.fromBox(['123', 'ab']);
 
@@ -267,6 +293,17 @@ test('Panel', async t => {
     t.deepEqual(p.toBox('*', {}).box, ['123', 'ab ', '**x']);
   });
 
+  await t.test('add bottom with 0 dimensions', t => {
+    let p = Panel.fromBox([]).addBottom(Panel.fromBox(['x']), {align: 'left'});
+    t.deepEqual(p.toBox('*', {}).box, ['x']);
+
+    p = Panel.fromBox([]).addBottom(Panel.fromBox(['x']), {align: 'center'});
+    t.deepEqual(p.toBox('*', {}).box, ['x']);
+
+    p = Panel.fromBox([]).addBottom(Panel.fromBox(['x']), {align: 'right'});
+    t.deepEqual(p.toBox('*', {}).box, ['x']);
+  });
+
   await t.test('add right', t => {
     let p = Panel.fromBox(['123', 'ab', 'c']).addRight(Panel.fromBox(['xyz']));
 
@@ -294,6 +331,17 @@ test('Panel', async t => {
 
     p = Panel.fromBox(['123', 'ab', 'c']).addRight(Panel.fromBox(['x']), {align: 'bottom'});
     t.deepEqual(p.toBox('*', {}).box, ['123*', 'ab *', 'c  x']);
+  });
+
+  await t.test('add right with 0 dimensions', t => {
+    let p = Panel.fromBox([]).addRight(Panel.fromBox(['x']), {align: 'top'});
+    t.deepEqual(p.toBox('*', {}).box, ['x']);
+
+    p = Panel.fromBox([]).addRight(Panel.fromBox(['x']), {align: 'center'});
+    t.deepEqual(p.toBox('*', {}).box, ['x']);
+
+    p = Panel.fromBox([]).addRight(Panel.fromBox(['x']), {align: 'bottom'});
+    t.deepEqual(p.toBox('*', {}).box, ['x']);
   });
 
   await t.test('transpose', t => {
