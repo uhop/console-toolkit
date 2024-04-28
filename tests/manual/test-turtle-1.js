@@ -1,4 +1,4 @@
-import Turtle from '../../src/turtle/Turtle.js';
+import Turtle from '../../src/turtle/turtle.js';
 import lineTheme from '../../src/themes/lines/unicode-rounded.js';
 import drawLineArt from '../../src/turtle/draw-line-art.js';
 import Panel from '../../src/Panel.js';

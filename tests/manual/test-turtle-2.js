@@ -1,4 +1,4 @@
-import Turtle from '../../src/turtle/Turtle.js';
+import Turtle from '../../src/turtle/turtle.js';
 import drawUnicode from '../../src/turtle/draw-unicode.js';
 import {draw} from './utils.js';
 

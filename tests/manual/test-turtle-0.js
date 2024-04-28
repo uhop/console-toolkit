@@ -1,4 +1,4 @@
-import Turtle from '../../src/turtle/Turtle.js';
+import Turtle from '../../src/turtle/turtle.js';
 import styleUnicode from '../../src/themes/lines/unicode.js';
 import styleAsciiRounded from '../../src/themes/lines/ascii-rounded.js';
 import drawLineArt from '../../src/turtle/draw-line-art.js';

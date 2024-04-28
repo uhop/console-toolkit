@@ -1,4 +1,4 @@
-import Turtle from './Turtle.js';
+import Turtle from './turtle.js';
 import draw from './draw-unicode.js';
 
 export {Turtle, draw};
