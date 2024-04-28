@@ -1,4 +1,4 @@
-import Box from '../../src/Box.js';
+import Box from '../../src/box.js';
 
 export const drawBox = box => box.box.forEach(line => console.log(line));
 

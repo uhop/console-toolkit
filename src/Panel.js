@@ -10,7 +10,7 @@ import {
   optimize,
   toState
 } from './ansi/sgr-state.js';
-import Box from './Box.js';
+import Box from './box.js';
 import {addAlias} from './meta.js';
 
 export class Panel {

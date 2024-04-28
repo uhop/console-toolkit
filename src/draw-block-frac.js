@@ -1,5 +1,5 @@
 import {fullBlock, hBlocks8th, vBlocks8th} from './symbols.js';
-import Box from './Box.js';
+import Box from './box.js';
 
 export const drawRealWidthBlock = (realWidth, height, drawEmptyBorder) => {
   realWidth = Math.max(0, realWidth);

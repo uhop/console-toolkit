@@ -1,6 +1,6 @@
 import test from 'tape-six';
 
-import Box from '../src/Box.js';
+import Box from '../src/box.js';
 
 test('Box', async t => {
   await t.test('Box()', t => {

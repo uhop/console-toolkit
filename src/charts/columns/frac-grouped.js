@@ -1,5 +1,5 @@
 import style from '../../style.js';
-import Box from '../../Box.js';
+import Box from '../../box.js';
 import {optimize} from '../../ansi/sgr-state.js';
 import {drawRealHeightBlock} from '../../draw-block-frac.js';
 import drawGroupedChart from './draw-grouped.js';

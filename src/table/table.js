@@ -1,4 +1,4 @@
-import Box from '../Box.js';
+import Box from '../box.js';
 import Panel from '../Panel.js';
 import {draw as drawBorder} from './draw-borders.js';
 import style, {RESET_STATE} from '../style.js';

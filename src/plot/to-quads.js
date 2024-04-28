@@ -1,4 +1,4 @@
-import Box from '../Box.js';
+import Box from '../box.js';
 import {quadrants} from '../symbols.js';
 
 export const toQuads = bmp => {

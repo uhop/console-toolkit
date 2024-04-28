@@ -1,4 +1,4 @@
-import Box from '../Box.js';
+import Box from '../box.js';
 import {addAlias} from '../meta.js';
 import {fullBlock} from '../symbols.js';
 

@@ -1,4 +1,4 @@
-import Box from '../../src/Box.js';
+import Box from '../../src/box.js';
 import drawStackedChart from '../../src/charts/bars/block.js';
 import drawGroupedChart from '../../src/charts/bars/block-grouped.js';
 import {draw} from './utils.js';

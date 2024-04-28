@@ -1,6 +1,6 @@
 import process from 'node:process';
 import {matchCsiNoGroups} from './ansi/utils.js';
-import Box from './Box.js';
+import Box from './box.js';
 
 const toBox = s => {
   if (s instanceof Box) return s;

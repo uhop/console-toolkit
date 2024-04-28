@@ -1,4 +1,4 @@
-import Box from '../../src/Box.js';
+import Box from '../../src/box.js';
 import {transcodeTables} from '../../src/alphanumeric/unicode-numbers.js';
 import drawChart, {drawItemLabel} from '../../src/charts/bars/plain.js';
 import makeTable from '../../src/table/index.js';

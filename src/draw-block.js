@@ -1,4 +1,4 @@
-import Box from './Box.js';
+import Box from './box.js';
 
 const getIndex = (h, v) => 4 * h + v;
 

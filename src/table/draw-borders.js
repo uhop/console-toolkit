@@ -1,4 +1,4 @@
-import Box from '../Box.js';
+import Box from '../box.js';
 
 // An axis structure is an array:
 //   - every even element is a drawing style defined by a table style
