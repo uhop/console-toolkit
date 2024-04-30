@@ -1,7 +1,7 @@
 import test from 'tape-six';
 
 import style from '../src/style.js';
-import {getLength, matchCsiNoGroups, getMaxLength, clip} from '../src/ansi/utils.js';
+import {getLength, matchCsiNoGroups, getMaxLength, clip} from '../src/strings.js';
 
 test('ANSI utilities', async t => {
   await t.test('Clean from CSI sequences', t => {

@@ -1,4 +1,4 @@
-import {getLength, clipStrings} from './ansi/utils.js';
+import {getLength, clipStrings} from './strings.js';
 
 const isPrimitive = {string: 1, number: 1, boolean: 1};
 

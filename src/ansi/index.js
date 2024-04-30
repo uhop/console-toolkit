@@ -2,7 +2,6 @@
 // This is a collection of escape sequences that are not part of other files (e.g., CSI, SGR).
 
 export * from './csi.js';
-export * from './utils.js';
 
 export const ESC = '\x1B';
 

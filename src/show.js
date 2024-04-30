@@ -1,5 +1,5 @@
 import process from 'node:process';
-import {matchCsiNoGroups} from './ansi/utils.js';
+import {matchCsiNoGroups} from './strings.js';
 import Box from './box.js';
 
 const toBox = s => {
