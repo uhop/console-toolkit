@@ -141,7 +141,7 @@ export class Table {
     // draw table borders
 
     const borderBox = drawBorder(this.lineTheme, hAxis, vAxis, {skip: this.skipList, symbol: '\x07'}),
-      panel = Panel.fromBox(borderBox, '\x07');
+      panel = Panel.make(borderBox, '\x07');
     panel.fillNonEmptyState(0, 0, panel.width, panel.height, {state: lineState});
 
     // draw cells

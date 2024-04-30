@@ -18,14 +18,14 @@ export const drawChart =
     const panel = new Panel(0, width);
     for (let i = 0; i < data.length; ++i) {
       if (i && gap > 0) panel.padRight(gap);
-      const p = Panel.fromBox(drawColumn(data[i], width, max, options));
+      const p = Panel.make(drawColumn(data[i], width, max, options));
       if (p) {
         panel.addRight(p, {align: reverse ? 'top' : 'bottom'});
       } else {
         panel.padRight(1);
       }
     }
-    return panel.toBox(symbol, emptyState).box;
+    return panel.toBox({emptySymbol: symbol, emptyState}).box;
   };
 
 export default drawChart;

@@ -5,7 +5,7 @@ import Box from './box.js';
 const toBox = s => {
   if (s instanceof Box) return s;
   if (s && typeof s == 'object' && typeof s.toBox == 'function') {
-    return s.toBox(' ');
+    return s.toBox({emptySymbol: ' '});
   }
   return new Box(s);
 };

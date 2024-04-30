@@ -43,3 +43,27 @@ export const clip = (s, width, includeLastCommand, matcher = matchCsiNoGroups) =
 
 export const clipStrings = (strings, width, includeLastCommand, matcher = matchCsiNoGroups) =>
   strings.map(s => clip(s, width, includeLastCommand, matcher));
+
+export const toStrings = s => {
+  main: for (;;) {
+    switch (typeof s) {
+      case 'function':
+        for (let i = 0; i < 10 && typeof s == 'function'; ++i) s = s();
+        if (typeof s == 'function') s = String(s);
+        continue main;
+      case 'number':
+      case 'boolean':
+        return [String(s)];
+      case 'string':
+        return String(s).split(/\r?\n/g);
+      case 'object':
+        if (Array.isArray(s)) return [...s];
+        if (!s) break main;
+        if (typeof s.toStrings == 'function') return s.toStrings();
+        s = String(s);
+        continue main;
+    }
+    break main;
+  }
+  return [];
+};

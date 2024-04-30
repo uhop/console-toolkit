@@ -1,6 +1,5 @@
-import {getLength, clipStrings} from './strings.js';
-
-const isPrimitive = {string: 1, number: 1, boolean: 1};
+import {addAlias} from './meta.js';
+import {getLength, clipStrings, toStrings} from './strings.js';
 
 export class Box {
   constructor(s, normalized) {
@@ -18,31 +17,44 @@ export class Box {
     return this.box.length;
   }
 
-  static make(box, {symbol = ' ', align = 'left'} = {}) {
-    if (isPrimitive[typeof box] === 1) return Box.make(String(box).split(/\r?\n/g), {symbol, align});
-    if (!box) return new Box([], true);
-    if (box.hasOwnProperty('value')) return Box.make(box.value, {symbol, align});
-    if (box.length <= 1) return new Box(box, true);
+  static make(s, options = {}) {
+    main: for (;;) {
+      switch (typeof s) {
+        case 'function':
+          for (let i = 0; i < 10 && typeof s == 'function'; ++i) s = s();
+          if (typeof s == 'function') s = String(s);
+          continue main;
+        case 'object':
+          if (s instanceof Box) return s.clone();
+          if (typeof s?.toBox == 'function') return s.toBox(options);
+          break;
+      }
+      s = toStrings(s);
+      break main;
+    }
 
-    const widths = box.map(s => getLength(s)),
+    if (s.length <= 1) return new Box(s, true);
+
+    const {symbol = ' ', align = 'left'} = options,
+      widths = s.map(s => getLength(s)),
       width = Math.max(0, ...widths);
     switch (align) {
       case 'left':
       case 'l':
         return new Box(
-          box.map((s, i) => s + symbol.repeat(width - widths[i])),
+          s.map((s, i) => s + symbol.repeat(width - widths[i])),
           true
         );
       case 'right':
       case 'r':
         return new Box(
-          box.map((s, i) => symbol.repeat(width - widths[i]) + s),
+          s.map((s, i) => symbol.repeat(width - widths[i]) + s),
           true
         );
     }
     // center
     return new Box(
-      box.map((s, i) => {
+      s.map((s, i) => {
         const n = width - widths[i];
         if (!n) return s;
         const half = n >> 1,
@@ -55,6 +67,14 @@ export class Box {
 
   static makeBlank(width, height, symbol = ' ') {
     return new Box(height <= 0 ? [] : new Array(height).fill(symbol.repeat(width)), true);
+  }
+
+  toStrings() {
+    return this.box;
+  }
+
+  clone() {
+    return new Box(this);
   }
 
   clip(width, includeLastCommand) {
@@ -224,5 +244,7 @@ export class Box {
     return new Box([...this.box].reverse(), true);
   }
 }
+
+addAlias(Box, 'toBox', 'clone');
 
 export default Box;

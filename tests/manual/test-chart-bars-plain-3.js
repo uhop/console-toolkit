@@ -13,7 +13,7 @@ const labelStyle = style.bold.bright.white,
     {state: labelStyle.bg.cyan, symbol: ' '}
   ];
 
-const panel = Panel.fromBox(drawChart([[40, 10, 30, 20]], 50, {theme: customTheme})).put(1, 0, [
+const panel = Panel.make(drawChart([[40, 10, 30, 20]], 50, {theme: customTheme})).put(1, 0, [
   '40%',
   '10%',
   c`{{inverse}}30%`,

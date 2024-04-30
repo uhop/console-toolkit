@@ -11,7 +11,7 @@ import {
   toState
 } from './ansi/sgr-state.js';
 import Box from './box.js';
-import {addAlias} from './meta.js';
+import {addAliases} from './meta.js';
 
 export class Panel {
   constructor(width, height) {
@@ -29,13 +29,27 @@ export class Panel {
     return this.box.length;
   }
 
-  static fromBox(box, ignore = '\x07') {
-    if (!(box instanceof Box)) box = new Box(box);
+  static make(s, options = {}) {
+    main: for (;;) {
+      switch (typeof s) {
+        case 'function':
+          for (let i = 0; i < 10 && typeof s == 'function'; ++i) s = s();
+          if (typeof s == 'function') s = String(s);
+          continue main;
+        case 'object':
+          if (s instanceof Panel) return s.clone();
+          if (typeof s?.toPanel == 'function') return s.toPanel(options);
+          break;
+      }
+      s = Box.make(s, options);
+      break main;
+    }
 
-    const panel = new Panel(box.width, box.height);
+    const {emptySymbol = '\x07'} = options,
+      panel = new Panel(s.width, s.height);
 
-    for (let i = 0, n = box.height; i < n; ++i) {
-      const row = box.box[i],
+    for (let i = 0, n = s.height; i < n; ++i) {
+      const row = s.box[i],
         panelRow = panel.box[i];
       let start = 0,
         pos = 0,
@@ -44,7 +58,7 @@ export class Panel {
       for (const match of row.matchAll(matchCsi)) {
         const str = [...row.substring(start, match.index)];
         for (let j = 0; j < str.length; ++j) {
-          panelRow[pos++] = str[j] === ignore ? null : {symbol: str[j], state};
+          panelRow[pos++] = str[j] === emptySymbol ? null : {symbol: str[j], state};
         }
         start = match.index + match[0].length;
         if (match[3] !== 'm') continue;
@@ -52,19 +66,19 @@ export class Panel {
       }
       const str = [...row.substring(start)];
       for (let j = 0; j < str.length; ++j) {
-        panelRow[pos++] = str[j] === ignore ? null : {symbol: str[j], state};
+        panelRow[pos++] = str[j] === emptySymbol ? null : {symbol: str[j], state};
       }
     }
 
     return panel;
   }
 
-  toBox(ignore = ' ', ignoreState = RESET_STATE) {
+  toStrings({emptySymbol = ' ', emptyState = RESET_STATE} = {}) {
     if (!this.height || !this.width) return Box.makeBlank(this.width, this.height);
-    ignoreState = toState(ignoreState);
+    emptyState = toState(emptyState);
 
-    const box = new Array(this.height),
-      emptyCell = {symbol: ignore, state: ignoreState};
+    const s = new Array(this.height),
+      emptyCell = {symbol: emptySymbol, state: emptyState};
 
     for (let i = 0; i < this.height; ++i) {
       const panelRow = this.box[i];
@@ -79,10 +93,14 @@ export class Panel {
         state = newState;
       }
       const commands = stateReverseTransition(initState, state);
-      box[i] = optimize(row + stringifyCommands(commands), initState);
+      s[i] = optimize(row + stringifyCommands(commands), initState);
     }
 
-    return new Box(box, true);
+    return s;
+  }
+
+  toBox(options) {
+    return new Box(this.toStrings(options), true);
   }
 
   extract(x, y, width, height) {
@@ -169,7 +187,7 @@ export class Panel {
     return this;
   }
 
-  put(x, y, text, ignore = '\x07') {
+  put(x, y, text, emptySymbol = '\x07') {
     if (text instanceof Panel) return this.copyFrom(x, y, text.width, text.height, text);
 
     // normalize arguments
@@ -199,7 +217,7 @@ export class Panel {
           if (x + pos >= row.length) break;
           const cell = row[x + pos];
           row[x + pos] =
-            str[j] === ignore ? null : {symbol: str[j], state: cell ? combineStates(cell.state, state) : state};
+            str[j] === emptySymbol ? null : {symbol: str[j], state: cell ? combineStates(cell.state, state) : state};
         }
         start = match.index + match[0].length;
         if (match[3] !== 'm') continue;
@@ -210,7 +228,7 @@ export class Panel {
         if (x + pos >= row.length) break;
         const cell = row[x + pos];
         row[x + pos] =
-          str[j] === ignore ? null : {symbol: str[j], state: cell ? combineStates(cell.state, state) : state};
+          str[j] === emptySymbol ? null : {symbol: str[j], state: cell ? combineStates(cell.state, state) : state};
       }
       if (x + pos < row.length) {
         const cell = row[x + pos];
@@ -260,7 +278,7 @@ export class Panel {
     return this.applyFn(x, y, width, height, () => ({symbol, state}));
   }
 
-  fillState(x, y, width, height, {state = {}, ignore = ' '} = {}) {
+  fillState(x, y, width, height, {state = {}, emptySymbol = ' '} = {}) {
     if (typeof state == 'string') {
       state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
@@ -268,7 +286,7 @@ export class Panel {
     } else {
       state = toState(state);
     }
-    return this.applyFn(x, y, width, height, (x, y, cell) => ({symbol: cell ? cell.symbol : ignore, state}));
+    return this.applyFn(x, y, width, height, (x, y, cell) => ({symbol: cell ? cell.symbol : emptySymbol, state}));
   }
 
   fillNonEmptyState(x, y, width, height, {state = {}} = {}) {
@@ -282,7 +300,7 @@ export class Panel {
     return this.applyFn(x, y, width, height, (x, y, cell) => cell && {symbol: cell.symbol, state});
   }
 
-  combineStateBefore(x, y, width, height, {state = {}, ignore = ' ', ignoreState = RESET_STATE} = {}) {
+  combineStateBefore(x, y, width, height, {state = {}, emptySymbol = ' ', emptyState = RESET_STATE} = {}) {
     if (typeof state == 'string') {
       state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
@@ -293,11 +311,11 @@ export class Panel {
     return this.applyFn(x, y, width, height, (x, y, cell) =>
       cell
         ? {symbol: cell.symbol, state: combineStates(state, cell.state)}
-        : {symbol: ignore, state: combineStates(state, ignoreState)}
+        : {symbol: emptySymbol, state: combineStates(state, emptyState)}
     );
   }
 
-  combineStateAfter(x, y, width, height, {state = {}, ignore = ' ', ignoreState = RESET_STATE} = {}) {
+  combineStateAfter(x, y, width, height, {state = {}, emptySymbol = ' ', emptyState = RESET_STATE} = {}) {
     if (typeof state == 'string') {
       state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
@@ -308,7 +326,7 @@ export class Panel {
     return this.applyFn(x, y, width, height, (x, y, cell) =>
       cell
         ? {symbol: cell.symbol, state: combineStates(cell.state, state)}
-        : {symbol: ignore, state: combineStates(ignoreState, state)}
+        : {symbol: emptySymbol, state: combineStates(emptyState, state)}
     );
   }
 
@@ -676,6 +694,6 @@ export class Panel {
   }
 }
 
-addAlias(Panel, 'combineState', 'combineStateAfter');
+addAliases(Panel, {combineState: 'combineStateAfter', toPanel: 'clone'});
 
 export default Panel;
