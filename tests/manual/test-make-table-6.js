@@ -22,4 +22,4 @@ const table = makeTable(data, lineTheme, {
   hDataSep: 0
 });
 
-draw(table.draw().toBox());
+draw(table);

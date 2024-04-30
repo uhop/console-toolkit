@@ -16,4 +16,4 @@ const table = new Table(data, lineTheme, {hAlign: ['l', 'c', 'r']});
 table.hAxis[2] = '2';
 table.vAxis[5] = '2';
 
-draw(table.draw({lineState: style.dim.getState()}).toBox());
+draw(table);

@@ -18,4 +18,4 @@ const table = makeTable(
   {hAlign: ['l', 'c', 'r'], vAlign: ['t', 'c', 'c', 'c', 'b']}
 );
 
-draw(table.draw().toBox());
+draw(table);

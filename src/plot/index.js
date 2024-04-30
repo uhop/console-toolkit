@@ -1,4 +1,3 @@
-import {addAlias} from '../meta.js';
 import Bitmap from './bitmap.js';
 import drawLine from './draw-line.js';
 import drawRect from './draw-rect.js';
@@ -20,8 +19,6 @@ Bitmap.prototype.toQuads = function () {
 Bitmap.prototype.toStrings = function () {
   return this.toBox().toStrings();
 };
-
-addAlias(Bitmap, 'toBox', 'toQuads');
 
 export {Bitmap, drawLine, drawRect, toQuads};
 export default Bitmap;

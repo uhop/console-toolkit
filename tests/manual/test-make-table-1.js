@@ -14,4 +14,4 @@ const data = [
 
 const table = makeTable(data, lineTheme, {rowFirst: '2', columnLast: '2', hCenter: [1], hRight: [2]});
 
-draw(table.draw().toBox());
+draw(table);

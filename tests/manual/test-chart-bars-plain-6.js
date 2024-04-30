@@ -51,4 +51,4 @@ const {roman} = transcodeTables,
   ];
 
 const table = makeTable(tableData, lineTheme, {rowFirst: 1, hDataSep: 0});
-draw(table.draw());
+draw(table);

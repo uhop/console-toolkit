@@ -1,6 +1,6 @@
 import makeTable from '../../src/table/index.js';
 import lineTheme from '../../src/themes/lines/unicode-rounded.js';
-import style, {s} from '../../src/style.js';
+import {s} from '../../src/style.js';
 import {draw} from './utils.js';
 
 const data = [
@@ -25,4 +25,4 @@ const table = makeTable(data, lineTheme, {
   }
 });
 
-draw(table.draw().toBox());
+draw(table);
