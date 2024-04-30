@@ -1,5 +1,5 @@
 import style, {s} from '../../src/style.js';
-import {draw, show} from './utils.js';
+import {draw} from './utils.js';
 
 console.log(s`{{bold.bright.cyan}}Supported commands{{reset.all}}\n`);
 
