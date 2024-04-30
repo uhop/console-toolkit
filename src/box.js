@@ -17,7 +17,7 @@ export class Box {
     return this.box.length;
   }
 
-  static make(s, options = {}) {
+  static make(s, options) {
     main: for (;;) {
       switch (typeof s) {
         case 'function':
@@ -35,7 +35,7 @@ export class Box {
 
     if (s.length <= 1) return new Box(s, true);
 
-    const {symbol = ' ', align = 'left'} = options,
+    const {symbol = ' ', align = 'left'} = options || {},
       widths = s.map(s => getLength(s)),
       width = Math.max(0, ...widths);
     switch (align) {

@@ -29,7 +29,7 @@ export class Panel {
     return this.box.length;
   }
 
-  static make(s, options = {}) {
+  static make(s, options) {
     main: for (;;) {
       switch (typeof s) {
         case 'function':
@@ -45,7 +45,7 @@ export class Panel {
       break main;
     }
 
-    const {emptySymbol = '\x07'} = options,
+    const {emptySymbol = '\x07'} = options || {},
       panel = new Panel(s.width, s.height);
 
     for (let i = 0, n = s.height; i < n; ++i) {
