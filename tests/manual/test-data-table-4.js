@@ -19,4 +19,4 @@ const table = new Table(data, lineTheme, {
   hMin: 8
 });
 
-draw(table.draw(style.dim.getState()).toBox());
+draw(table.draw({lineState: style.dim.yellow}).toBox());

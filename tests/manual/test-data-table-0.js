@@ -15,4 +15,4 @@ const table = new Table(data, lineTheme, {hAlign: ['l', 'c', 'r'], vAlign: ['t',
 table.hAxis[2] = '2';
 table.vAxis[1] = '2';
 
-draw(table.draw(style.dim.getState()).toBox());
+draw(table.draw({lineState: style.dim.getState()}).toBox());

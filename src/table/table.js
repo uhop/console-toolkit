@@ -119,7 +119,7 @@ export class Table {
   }
 
   // TODO: accept `states`, draw even/odd rows/columns, support bg on lines optionally
-  draw(lineState = DIM_STATE) {
+  draw({lineState = DIM_STATE} = {}) {
     // prepare axes
 
     const hAxis = new Array(this.hAxis.length + this.widths.length),
@@ -172,6 +172,18 @@ export class Table {
     }
 
     return panel;
+  }
+
+  toPanel(options) {
+    return this.draw(options);
+  }
+
+  toBox(options) {
+    return this.toPanel(options).toBox(options);
+  }
+
+  toStrings(options) {
+    return this.toBox(options).toStrings();
   }
 
   isVisible(x, y) {
