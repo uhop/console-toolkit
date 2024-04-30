@@ -172,7 +172,7 @@ class Reset {
 }
 
 export class Style {
-  constructor(initState = null, currentState, colorDepth = 24) {
+  constructor(initState, currentState, colorDepth = 24) {
     this[initStateSymbol] = toState(initState);
     this[stateSymbol] = currentState ? toState(currentState) : this[initStateSymbol];
     this[colorDepthSymbol] = colorDepth;
@@ -394,7 +394,11 @@ for (const [name, value] of Object.entries(sgr.Colors)) {
 
   addGetters(ExtendedColor, {
     [nameLower]: function () {
-      return this.make([this[optionsSymbol].extended, sgr.ColorFormat.COLOR_256, (this[isBrightSymbol] ? 8 : 0) + value]);
+      return this.make([
+        this[optionsSymbol].extended,
+        sgr.ColorFormat.COLOR_256,
+        (this[isBrightSymbol] ? 8 : 0) + value
+      ]);
     },
     ['bright' + nameCap]: function () {
       return this.make([this[optionsSymbol].extended, sgr.ColorFormat.COLOR_256, 8 + value]);
@@ -553,44 +557,46 @@ const processStringConstant = (strings, i, result, stack, style) => {
   return {result, style};
 };
 
-const makeBq = clear => (strings, ...args) => {
-  const callAsFunction = !Array.isArray(strings),
-    initState = callAsFunction && strings,
-    stack = [];
-  let style = new Style(initState);
+const makeBq =
+  clear =>
+  (strings, ...args) => {
+    const callAsFunction = !Array.isArray(strings),
+      states = callAsFunction && strings;
 
-  const bq = (strings, ...args) => {
-    let result = '';
-    for (let i = 0; i < args.length; ++i) {
-      // process a string constant
-      ({result, style} = processStringConstant(strings, i, result, stack, style));
-      // process an argument
-      const arg = args[i];
-      if (typeof arg == 'function') {
-        style = arg(style);
-        if (!(style instanceof Style)) throw new TypeError(`The returned object is not Style (argument #${i})`);
-        result += style;
+    const bq = (strings, ...args) => {
+      const stack = [];
+      let style = new Style(states?.initState, states?.setState),
+        result = '';
+      for (let i = 0; i < args.length; ++i) {
+        // process a string constant
+        ({result, style} = processStringConstant(strings, i, result, stack, style));
+        // process an argument
+        const arg = args[i];
+        if (typeof arg == 'function') {
+          style = arg(style);
+          if (!(style instanceof Style)) throw new TypeError(`The returned object is not Style (argument #${i})`);
+          result += style;
+          style = style.mark();
+          continue;
+        }
+        const input = String(arg);
+        style = style.add(input);
+        result += input;
         style = style.mark();
-        continue;
       }
-      const input = String(arg);
-      style = style.add(input);
-      result += input;
-      style = style.mark();
-    }
-    ({result, style} = processStringConstant(strings, strings.length - 1, result, stack, style));
-    if (clear) {
-        const cleanupCommands = stateReverseTransition(initState, style[stateSymbol]);
+      ({result, style} = processStringConstant(strings, strings.length - 1, result, stack, style));
+      if (clear) {
+        const cleanupCommands = stateReverseTransition(states?.initState, style[stateSymbol]);
         result += stringifyCommands(cleanupCommands);
-    }
-    return optimize(result, initState);
+      }
+      return optimize(result, states?.initState);
+    };
+
+    if (callAsFunction) return bq;
+    return bq(strings, ...args);
   };
 
-  if (callAsFunction) return bq;
-  return bq(strings, ...args);
-};
-
-export const s = makeBq();
+export const s = makeBq(false);
 export const c = makeBq(true);
 
 // singleton
