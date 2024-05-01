@@ -1,31 +1,36 @@
 import {compareDifference} from '../../src/alphanumeric/number-formatters.js';
 
 const showDiff = (a, b) => {
-  const result = compareDifference(a, b);
-  if (result.infinity) return console.log(Math.min(a, b), 'is INFINITELY smaller than', Math.max(a, b));
-  if (result.equality) return console.log(Math.min(a, b), 'is practically EQUAL to', Math.max(a, b));
+  const result = compareDifference(a, b),
+    smaller = result.less ? 'smaller' : 'bigger';
+  if (result.infinity) return console.log(a, 'is INFINITELY', smaller, 'than', b);
+  if (result.equality) return console.log(a, 'is practically EQUAL to', b);
   if (result.percentage)
-    return console.log(Math.min(a, b), 'is smaller than', Math.max(a, b), 'by', result.percentage + '%');
-  if (result.ratio) return console.log(Math.min(a, b), 'is smaller than', Math.max(a, b), 'by', result.ratio, 'times');
+    return console.log(a, 'is', smaller, 'than', b, 'by', result.percentage + '%');
+  if (result.ratio)
+    return console.log(a, 'is', smaller, 'than', b, 'by', result.ratio + 'x');
   if (result.magnitude)
     return console.log(
-      Math.min(a, b),
-      'is smaller than',
-      Math.max(a, b),
+      a,
+      'is',
+      smaller,
+      'than',
+      b,
       'by',
       result.magnitude,
       'orders of magnitude'
     );
-  console.log(Math.min(a, b), 'and', Math.max(a, b), 'cannot be compared');
+  console.log(a, 'and', b, 'cannot be compared');
 };
 
-showDiff(1, 1.000001);
-showDiff(1, Infinity);
-showDiff(1, 1.5);
-showDiff(1, 2);
-showDiff(1, Math.E);
-showDiff(1, Math.PI);
-showDiff(1, 5);
+showDiff(1.000001, 1);
+showDiff(Infinity, 1);
+showDiff(1.5, 1);
+showDiff(2, 1);
+showDiff(Math.E, 1);
+showDiff(Math.PI, 1);
+showDiff(5, 1);
+
 showDiff(1, 10);
 showDiff(1, 20);
 showDiff(1, 50);
