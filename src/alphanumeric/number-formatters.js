@@ -125,16 +125,11 @@ export const compareDifference = (a, b) => {
 
   const ratio = b / a;
 
-  if (ratio < 1000) {
+  if (ratio < 10000) {
     if (ratio < 10) return {less, ratio: formatNumber(ratio, {decimals: 2})};
     if (ratio < 100) return {less, ratio: formatNumber(ratio, {decimals: 1})};
     return {less, ratio: formatNumber(ratio, {decimals: 0})};
   }
 
-  const ma = Math.log(a) / Math.LN10,
-    mb = Math.log(b) / Math.LN10,
-    mag = mb - ma;
-
-  if (mag < 10) return {less, magnitude: formatNumber(mag, {decimals: 1})};
-  return {less, magnitude: formatNumber(mag, {decimals: 0})};
+  return {less, ratio: ratio.toPrecision(2).replace(/0+e/i, 'e').replace(/\.e/i, 'e').replace(/e\+/i, 'e')};
 };
