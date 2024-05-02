@@ -102,6 +102,8 @@ export const abbrNumber = (n, options) => {
   );
 };
 
+export const simplifyExponent = s => String(s).replace(/\.?0*e\+?/i, 'e');
+
 export const compareDifference = (a, b) => {
   // works only on positive numbers
   a = Math.abs(a);
@@ -131,5 +133,5 @@ export const compareDifference = (a, b) => {
     return {less, ratio: formatNumber(ratio, {decimals: 0})};
   }
 
-  return {less, ratio: ratio.toPrecision(2).replace(/0+e/i, 'e').replace(/\.e/i, 'e').replace(/e\+/i, 'e')};
+  return {less, ratio: simplifyExponent(ratio.toPrecision(2))};
 };
