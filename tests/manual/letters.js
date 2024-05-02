@@ -13,7 +13,7 @@ for (const name of Object.keys(transcodeTables)) {
 
 const table = makeTable(tableData, lineTheme, {rowFirst: 1, states: {rowFirst: style.bold.getState()}});
 
-draw(table.draw());
+draw(table);
 
 // VS15 = 0xFE0E, VS16 = 0xFE0F
 // console.log('\u{24C2} \u{24C2}\u{FE0E} \u{24C2}\u{FE0F}')

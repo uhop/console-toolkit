@@ -60,4 +60,4 @@ const table = makeTable(tableData, lineTheme, {
 });
 table.vAxis[1] = table.vAxis[2] = 1;
 
-draw(table.draw());
+draw(table);

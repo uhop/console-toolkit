@@ -16,4 +16,4 @@ for (const name of Object.keys(transcodeTables)) {
 
 const table = makeTable(tableData, lineTheme, {rowFirst: 1, hDataSep: 0, states: {rowFirst: style.bold.getState()}});
 
-draw(table.draw());
+draw(table);
