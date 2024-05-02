@@ -1,10 +1,25 @@
 import test from 'tape-six';
 
-import {formatNumber} from '../src/alphanumeric/number-formatters.js';
+import {abbrNumber, formatInteger, formatNumber, simplifyExponent} from '../src/alphanumeric/number-formatters.js';
 import {numberPunctuation} from '../src/alphanumeric/unicode-numbers.js';
 import {toRoman, toRomanUnicode, toRomanLowerUnicode} from '../src/alphanumeric/roman.js';
 
 test('Alphanumeric', async t => {
+  await t.test('format integer', t => {
+    t.equal(formatInteger(1), '1');
+    t.equal(formatInteger(12), '12');
+    t.equal(formatInteger(123), '123');
+    t.equal(formatInteger(1234), '1,234');
+    t.equal(formatInteger(12345), '12,345');
+    t.equal(formatInteger(123456), '123,456');
+    t.equal(formatInteger(1234567), '1,234,567');
+    t.equal(formatInteger(12345678), '12,345,678');
+    t.equal(formatInteger(123456789), '123,456,789');
+    t.equal(formatInteger(-123456789), '-123,456,789');
+    t.equal(formatInteger(123456789, {keepSign: true}), '+123,456,789');
+    t.equal(formatInteger(-123456789, {keepSign: true}), '-123,456,789');
+  });
+
   await t.test('format number', t => {
     const n = 123456789.123456123456,
       s = formatNumber(n, {decimals: 6}),
@@ -90,5 +105,41 @@ test('Alphanumeric', async t => {
     for (const [i, x] of Object.entries(values)) {
       t.equal(toRomanLowerUnicode(x), result[i]);
     }
+  });
+
+  await t.test('abbreviate numbers', t => {
+    t.equal(abbrNumber(1), '1');
+    t.equal(abbrNumber(12), '12');
+    t.equal(abbrNumber(123), '123');
+    t.equal(abbrNumber(1234), '1,234');
+    t.equal(abbrNumber(12345), '12k');
+    t.equal(abbrNumber(123456), '123k');
+    t.equal(abbrNumber(1234567), '1M');
+    t.equal(abbrNumber(12345678), '12M');
+    t.equal(abbrNumber(123456789), '123M');
+    t.equal(abbrNumber(1234567890), '1G');
+
+    t.equal(abbrNumber(1234567890, {decimals: 2}), '1.23G');
+    t.equal(abbrNumber(-1234567890, {decimals: 2}), '-1.23G');
+    t.equal(abbrNumber(1234567890, {decimals: 2, keepSign: true}), '+1.23G');
+    t.equal(abbrNumber(-1234567890, {decimals: 2, keepSign: true}), '-1.23G');
+
+    t.equal(abbrNumber(2_000_000, {decimals: 2}), '2M');
+    t.equal(abbrNumber(2_000_000, {decimals: 2, keepFractionAsIs: true}), '2.00M');
+  });
+
+  await t.test('simplify exponent', t => {
+    t.equal(simplifyExponent(1), '1');
+
+    t.equal(simplifyExponent(2e30), '2e30');
+    t.equal(simplifyExponent(2e30, {keepExpPlus: true}), '2e+30');
+
+    t.equal((2e30).toPrecision(4), '2.000e+30');
+    t.equal(simplifyExponent((2e30).toPrecision(4)), '2e30');
+    t.equal(simplifyExponent((2e30).toPrecision(4), {keepExpPlus: true}), '2e+30');
+
+    t.equal((-2e30).toPrecision(4), '-2.000e+30');
+    t.equal(simplifyExponent((-2e30).toPrecision(4)), '-2e30');
+    t.equal(simplifyExponent((-2e30).toPrecision(4), {keepExpPlus: true}), '-2e+30');
   });
 });
