@@ -87,7 +87,7 @@ export {hellip as ellipsis};
 export const infinity = '\u{221e}';
 export const plusMinus = '\u{00B1}';
 export const minusPlus = '\u{2213}';
-export const tilde = '\u{223C}'
+export const tilde = '\u{223C}';
 export const minus = '\u{2212}';
 export const multiplication = '\u{00D7}';
 export const division = '\u{00F7}';
@@ -97,7 +97,20 @@ export const forAll = '\u{2200}';
 export const exist = '\u{2203}';
 export const degree = '\u{00B0}';
 
+export {multiplication as times};
+
 export const superscriptPlus = '\u{207A}';
 export const superscriptMinus = '\u{207B}';
 export const subscriptPlus = '\u{208A}';
 export const subscriptMinus = '\u{208B}';
+
+export const permille = '\u{2030}'; // per thousand
+export const permyriad = '\u{2031}'; // per ten thousand
+
+// dashes
+
+export const hyphen = '\u{2010}';
+export const figureDash = '\u{2012}';
+export const ndash = '\u{2013}';
+export const mdash = '\u{2014}';
+export const horbar = '\u{2015}';
