@@ -1,25 +1,14 @@
 import {compareDifference} from '../../src/alphanumeric/number-formatters.js';
+import {multiplication} from '../../src/symbols.js';
 
 const showDiff = (a, b) => {
   const result = compareDifference(a, b),
     smaller = result.less ? 'smaller' : 'bigger';
   if (result.infinity) return console.log(a, 'is INFINITELY', smaller, 'than', b);
   if (result.equality) return console.log(a, 'is practically EQUAL to', b);
-  if (result.percentage)
-    return console.log(a, 'is', smaller, 'than', b, 'by', result.percentage + '%');
-  if (result.ratio)
-    return console.log(a, 'is', smaller, 'than', b, 'by', result.ratio + 'x');
-  if (result.magnitude)
-    return console.log(
-      a,
-      'is',
-      smaller,
-      'than',
-      b,
-      'by',
-      result.magnitude,
-      'orders of magnitude'
-    );
+  if (result.percentage) return console.log(a, 'is', smaller, 'than', b, 'by', result.percentage + '%');
+  if (result.ratio) return console.log(a, 'is', smaller, 'than', b, 'by', multiplication + result.ratio);
+  if (result.magnitude) return console.log(a, 'is', smaller, 'than', b, 'by', result.magnitude, 'orders of magnitude');
   console.log(a, 'and', b, 'cannot be compared');
 };
 

@@ -1,4 +1,4 @@
-import {formatNumber} from '../../src/alphanumeric/number-formatters.js';
+import {formatNumber, simplifyExponent} from '../../src/alphanumeric/number-formatters.js';
 import {numberPunctuation, numberExponent} from '../../src/alphanumeric/unicode-numbers.js';
 
 const sample1 = 123456789.123456;
@@ -26,3 +26,12 @@ const sample5 = 1.23456789e-33;
 console.log();
 console.log(sample5);
 console.log(numberExponent(sample5));
+
+const sample6 = (1.2e33).toPrecision(4);
+console.log();
+console.log(sample6);
+console.log(simplifyExponent(sample6));
+console.log(simplifyExponent(sample6, {keepExpPlus: true}));
+console.log(numberExponent(sample6));
+console.log(numberExponent(simplifyExponent(sample6)));
+console.log(numberExponent(simplifyExponent(sample6, {keepExpPlus: true})));

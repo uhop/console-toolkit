@@ -102,7 +102,8 @@ export const abbrNumber = (n, options) => {
   );
 };
 
-export const simplifyExponent = s => String(s).replace(/\.?0*e\+?/i, 'e');
+export const simplifyExponent = (s, {keepExpPlus} = {}) =>
+  String(s).replace(new RegExp('\\.?0*e' + (keepExpPlus ? '' : '\\+?'), 'i'), 'e');
 
 export const compareDifference = (a, b) => {
   // works only on positive numbers
