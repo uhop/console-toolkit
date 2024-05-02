@@ -49,12 +49,12 @@ const putCommasIn = (s, options) => {
 };
 
 export const formatInteger = (n, options) =>
-  isNaN(n) ? '' : (n < 0 ? '-' : options?.explicitSign ? '+' : '') + putCommasIn(Math.abs(n).toFixed(0), options);
+  isNaN(n) ? '' : (n < 0 ? '-' : options?.keepSign ? '+' : '') + putCommasIn(Math.abs(n).toFixed(0), options);
 
 export const formatNumber = (n, options) => {
   if (isNaN(n)) return '';
   const decimals = options?.decimals ?? 0;
-  let sign = options?.explicitSign ? '+' : '';
+  let sign = options?.keepSign ? '+' : '';
   if (n < 0) {
     n = -n;
     sign = '-';
@@ -75,7 +75,7 @@ const abbr = '***k**M**G**T';
 export const abbrNumber = (n, options) => {
   if (isNaN(n)) return '';
   const decimals = options?.decimals ?? 0;
-  let sign = options?.explicitSign ? '+' : '';
+  let sign = options?.keepSign ? '+' : '';
   if (n < 0) {
     n = -n;
     sign = '-';
