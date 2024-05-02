@@ -1,4 +1,4 @@
-import * as arrows from '../../src/alphanumeric/unicode-arrows.js';
+import * as arrows from '../../src/alphanumeric/arrows.js';
 import makeTable from '../../src/table/index.js';
 import lineTheme from '../../src/themes/lines/unicode-rounded.js';
 import style from '../../src/style.js';
