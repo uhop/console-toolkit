@@ -32,9 +32,6 @@ export const transcodeTables = {
   subscript: new SymbolRange('₀')
 };
 
-// const numbersWithDots = ['🄀'];
-// fill(numbersWithDots, '⒈', 1, 20);
-
 // patches
 
 const circled_21_35 = new SymbolRange('\u{3251}', 21, 35),
@@ -42,6 +39,8 @@ const circled_21_35 = new SymbolRange('\u{3251}', 21, 35),
 circled_36_50.overlay = {0: '\u{24EA}'};
 circled_21_35.overlay = circled_36_50;
 transcodeTables.circled.overlay = circled_21_35;
+
+transcodeTables.dots.overlay = {0: '🄀'};
 
 const negativeCircled_11_20 = new SymbolRange('\u{24EB}', 11, 20);
 negativeCircled_11_20.overlay = {0: '\u{24FF}'};
