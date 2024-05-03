@@ -1,8 +1,9 @@
 // Initially copied from https://github.com/uhop/nano-bench
 
-const units = ['s', 'ms', 'μs', 'ns', 'ps'];
+const units = ['s', 'ms', 'μs', 'ns', 'ps'],
+  unicodeUnits = ['s', '㎳', '㎲', '㎱', '㎰'];
 
-export const prepareTimeFormat = (data, scale = 1) => {
+export const prepareTimeFormat = (data, scale = 1, useUnicode) => {
   let mx = -1000,
     mn = 1000;
   for (let i = 0; i < data.length; ++i) {
@@ -24,7 +25,7 @@ export const prepareTimeFormat = (data, scale = 1) => {
   // TODO: get rid of the loop below
   let i = 0;
   for (; mx < 0 && i < units.length - 1; ++i, mx += 3, scale *= 1000);
-  return {scale, precision: digits - mx, unit: units[i]};
+  return {scale, precision: digits - mx, unit: (useUnicode ? unicodeUnits : units)[i]};
 };
 
 export const formatTime = (value, format) => {
