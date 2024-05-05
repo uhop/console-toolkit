@@ -11,11 +11,11 @@ import {
   getSixths,
   getEighths,
   getFraction
-} from '../../src/alphanumeric/fractions.js';
-import style, {c} from '../../src/style.js';
-import makeTable from '../../src/table/index.js';
-import lineTheme from '../../src/themes/lines/unicode-rounded.js';
-import {draw} from './utils.js';
+} from '../src/alphanumeric/fractions.js';
+import style, {c} from '../src/style.js';
+import makeTable from '../src/table/index.js';
+import lineTheme from '../src/themes/lines/unicode-rounded.js';
+import {draw} from '../tests/manual/utils.js';
 
 const getSymbols = fractions => fractions.map(x => x.symbol).join(' ');
 
