@@ -28,7 +28,7 @@ const DIM_STATE = style.dim.getState();
 
 export class Table {
   constructor(data, lineTheme, options = {}) {
-    const {hAxis = '1', vAxis = '1', hAlign = [], vAlign = [], hMin = 0, vMin = 0, cellPadding = {}} = options;
+    let {hAxis = '1', vAxis = '1', hAlign = [], vAlign = [], hMin = 0, vMin = 0, cellPadding = {}} = options;
 
     this.height = data.length;
     this.width = this.height ? data[0].length : 0;
