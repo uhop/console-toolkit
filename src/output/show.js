@@ -1,6 +1,6 @@
 import process from 'node:process';
-import {matchCsiNoGroups} from './strings.js';
-import Box from './box.js';
+import {matchCsiNoGroups} from '../strings.js';
+import Box from '../box.js';
 
 export const log = (s, {endOfLineCommand = '\x1B[m', colorDepth = 24} = {}) => {
   s = Box.make(s);

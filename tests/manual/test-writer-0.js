@@ -10,7 +10,7 @@ import {
   SCREEN_SAVE
 } from '../../src/ansi/index.js';
 import style from '../../src/style.js';
-import Writer from '../../src/writer.js';
+import Writer from '../../src/output/writer.js';
 
 const sleep = (ms = 1000) => new Promise(resolve => setTimeout(resolve, ms));
 

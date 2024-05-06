@@ -1,5 +1,5 @@
-import {CURSOR_DOWN1, CURSOR_RESTORE_POS, CURSOR_SAVE_POS} from './ansi/csi.js';
-import {getLength, matchCsiNoGroups, toStrings} from './strings.js';
+import {CURSOR_DOWN1, CURSOR_RESTORE_POS, CURSOR_SAVE_POS} from '../ansi/csi.js';
+import {getLength, matchCsiNoGroups, toStrings} from '../strings.js';
 
 const write = async (stream, chunk, encoding = 'utf8') =>
   new Promise((resolve, reject) => {
