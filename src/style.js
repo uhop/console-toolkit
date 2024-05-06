@@ -363,7 +363,9 @@ export class Style {
   }
   // wrap a string
   text(s) {
+    if (Array.isArray(s)) return s.map(s => this.text(s));
     s = String(s);
+
     let state = this[stateSymbol];
     const initialCommands = stateTransition(this[initStateSymbol], state);
     matchCsi.lastIndex = 0;
@@ -371,6 +373,7 @@ export class Style {
       if (match[3] !== 'm') continue;
       state = addCommandsToState(state, match[1].split(';'));
     }
+
     const cleanupCommands = stateReverseTransition(this[initStateSymbol], state);
     return stringifyCommands(initialCommands) + s + stringifyCommands(cleanupCommands);
   }
