@@ -6,7 +6,7 @@
   "main": "src/index.js",
   "module": "src/index.js",
   "exports": {
-    ".": "./src/index.js"
+    "./*": "./src/*"
   },
   "scripts": {
     "test": "tape6 --flags FO"
@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/uhop/console-painter#readme",
   "files": [
-    "src"
+    "./src"
   ],
   "tape6": {
     "tests": [
