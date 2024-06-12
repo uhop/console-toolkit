@@ -114,3 +114,18 @@ export const figureDash = '\u{2012}';
 export const ndash = '\u{2013}';
 export const mdash = '\u{2014}';
 export const horbar = '\u{2015}';
+
+// marks
+
+export const ballotBox = '\u{2610}';
+export const ballotBoxChecked = '\u{2611}';
+export const ballotBoxBoldChecked = '\u{1f5f9}';
+export const ballotBoxX = '\u{2612}';
+
+export const checkMark = '\u{2713}';
+export const checkMarkHeavy = '\u{2714}';
+export const checkMarkLight = '\u{1f5f8}';
+
+export const ballotX = '\u{2716}';
+export const ballotXHeavy = '\u{2717}';
+export const ballotXLight = '\u{1f5f7}';
