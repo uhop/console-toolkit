@@ -2,13 +2,13 @@ import spin, {Spinner} from '../../src/spinner/index.js';
 import {bouncingBall} from '../../src/spinner/spinners.js';
 import {CURSOR_UP1} from '../../src/ansi/csi.js';
 
-const spinner = spin`Spinner: [${new Spinner()}], ${new Spinner(bouncingBall)}`;
+const spinner = spin`Spinner: [${new Spinner()}], ${new Spinner(bouncingBall)}, state: ${state => state}`;
 
 // drawing frames
 
 let first = true;
 const frameInterval = setInterval(() => {
-  console.log((first ? '' : '\r' + CURSOR_UP1) + spinner.getFrame() + ' state: ' + spinner.state);
+  console.log((first ? '' : '\r' + CURSOR_UP1) + spinner.getFrame());
   first = false;
 }, 100);
 
