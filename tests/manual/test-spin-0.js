@@ -14,15 +14,15 @@ const frameInterval = setInterval(() => {
 
 // control spinner
 
-const timeout = ms => new Promise(resolve => setTimeout(resolve, ms));
+const sleep = (ms = 1000) => new Promise(resolve => setTimeout(resolve, ms));
 
-await timeout(1000);
+await sleep(1000);
 spinner.active = true;
-await timeout(3000);
+await sleep(3000);
 spinner.paused = true;
-await timeout(1000);
+await sleep(1000);
 spinner.paused = false;
-await timeout(3000);
+await sleep(3000);
 spinner.finished = true;
-await timeout(1000);
+await sleep(1000);
 clearInterval(frameInterval);
