@@ -1,8 +1,8 @@
 import spin, {Spinner} from '../../src/spinner/index.js';
-import * as spinners from '../../src/spinner/spinners.js';
+import {bouncingBall} from '../../src/spinner/spinners.js';
 import {CURSOR_UP1} from '../../src/ansi/csi.js';
 
-const spinner = spin`Spinner: [${new Spinner()}]`;
+const spinner = spin`Spinner: [${new Spinner()}], ${new Spinner(bouncingBall)}`;
 
 // drawing frames
 
