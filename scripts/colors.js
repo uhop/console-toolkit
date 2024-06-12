@@ -121,7 +121,7 @@ console.log('Blue scale: ', s);
 
 s = '';
 for (let i = 0; i < 256; i += 4) {
-  const rgb = hToRgb(i / 256);
+  const rgb = hueToRgb(i / 256);
   s += style.bg.trueColor(...rgb).text(' ');
 }
 console.log('Color range:', s);
@@ -132,27 +132,21 @@ function hToRgb(h) {
   const i = Math.floor(h * 6),
     f = h * 6 - i,
     q = 1 - f;
-
-  let r, g, b;
   switch (i % 6) {
     case 0:
-      (r = 1), (g = f), (b = 0);
-      break;
+      return [1, f, 0];
     case 1:
-      (r = q), (g = 1), (b = 0);
-      break;
+      return [q, 1, 0];
     case 2:
-      (r = 0), (g = 1), (b = f);
-      break;
+      return [0, 1, f];
     case 3:
-      (r = 0), (g = q), (b = 1);
-      break;
+      return [0, q, 1];
     case 4:
-      (r = f), (g = 0), (b = 1);
-      break;
-    case 5:
-      (r = 1), (g = 0), (b = q);
-      break;
+      return [f, 0, 1];
   }
-  return [r, g, b].map(value => Math.round(value * 255));
+  return [1, 0, q];
+}
+
+function hueToRgb(h) {
+  return hToRgb(h).map(value => Math.round(value * 255));
 }
