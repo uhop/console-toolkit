@@ -20,20 +20,23 @@ test('Table', async t => {
       {hAlign: ['l', 'c', 'r'], vAlign: ['t', 'c', 'c', 'c', 'b']}
     );
 
-    t.deepEqual(table.draw().toBox().box, [
-      '\x1B[2m╭────────┬───────────────╥────────╮\x1B[22m',
-      '\x1B[2m│\x1B[m \x1B[1mColor\x1B[m  \x1B[2m│\x1B[m    \x1B[1mSample\x1B[m     \x1B[2m║\x1B[m \x1B[1mNumber\x1B[m \x1B[2m│\x1B[m',
-      '\x1B[2m╞════════╪═══════════════╬════════╡\x1B[22m',
-      '\x1B[2m│\x1B[m blue   \x1B[2m│\x1B[m     \x1B[34mblue\x1B[m      \x1B[2m║\x1B[m      2 \x1B[2m│\x1B[m',
-      '\x1B[2m├────────┼───────────────╫────────┤\x1B[22m',
-      '\x1B[2m│\x1B[m        \x1B[2m│\x1B[m   \x1B[32m1st line\x1B[m    \x1B[2m║\x1B[m        \x1B[2m│\x1B[m',
-      '\x1B[2m│\x1B[m green  \x1B[2m│\x1B[m   \x1B[32m  2nd   \x1B[m    \x1B[2m║\x1B[m      3 \x1B[2m│\x1B[m',
-      '\x1B[2m│\x1B[m        \x1B[2m│\x1B[m   \x1B[32mand 3rd \x1B[m    \x1B[2m║\x1B[m        \x1B[2m│\x1B[m',
-      '\x1B[2m├────────┼───────────────╫────────┤\x1B[22m',
-      '\x1B[2m│\x1B[m \x1B[7mbright\x1B[m \x1B[2m│\x1B[m \x1B[93mbright yellow\x1B[m \x1B[2m║\x1B[m 12,345 \x1B[2m│\x1B[m',
-      '\x1B[2m│\x1B[m \x1B[7myellow\x1B[m \x1B[2m│\x1B[m               \x1B[2m║\x1B[m        \x1B[2m│\x1B[m',
-      '\x1B[2m╰────────┴───────────────╨────────╯\x1B[22m'
-    ]);
+    const expected = [
+        '\x1B[22;2m╭────────┬───────────────╥────────╮\x1B[22m',
+        '\x1B[22;2m│\x1B[m \x1B[1mColor\x1B[m  \x1B[2m│\x1B[m    \x1B[1mSample\x1B[m     \x1B[2m║\x1B[m \x1B[1mNumber\x1B[m \x1B[2m│\x1B[m',
+        '\x1B[22;2m╞════════╪═══════════════╬════════╡\x1B[22m',
+        '\x1B[22;2m│\x1B[m blue   \x1B[2m│\x1B[m     \x1B[34mblue\x1B[m      \x1B[2m║\x1B[m      2 \x1B[2m│\x1B[m',
+        '\x1B[22;2m├────────┼───────────────╫────────┤\x1B[22m',
+        '\x1B[22;2m│\x1B[m        \x1B[2m│\x1B[m   \x1B[32m1st line\x1B[m    \x1B[2m║\x1B[m        \x1B[2m│\x1B[m',
+        '\x1B[22;2m│\x1B[m green  \x1B[2m│\x1B[m   \x1B[32m  2nd   \x1B[m    \x1B[2m║\x1B[m      3 \x1B[2m│\x1B[m',
+        '\x1B[22;2m│\x1B[m        \x1B[2m│\x1B[m   \x1B[32mand 3rd \x1B[m    \x1B[2m║\x1B[m        \x1B[2m│\x1B[m',
+        '\x1B[22;2m├────────┼───────────────╫────────┤\x1B[22m',
+        '\x1B[22;2m│\x1B[m \x1B[7mbright\x1B[m \x1B[2m│\x1B[m \x1B[93mbright yellow\x1B[m \x1B[2m║\x1B[m 12,345 \x1B[2m│\x1B[m',
+        '\x1B[22;2m│\x1B[m \x1B[7myellow\x1B[m \x1B[2m│\x1B[m               \x1B[2m║\x1B[m        \x1B[2m│\x1B[m',
+        '\x1B[22;2m╰────────┴───────────────╨────────╯\x1B[22m'
+      ],
+      actual = table.draw().toBox().box;
+
+    t.deepEqual(actual, expected);
   });
 
   await t.test('Simple table with spans', t => {
@@ -49,19 +52,19 @@ test('Table', async t => {
     const table = makeTable(data, lineTheme, {rowFirst: '2', columnLast: '2', hCenter: [1], hRight: [2]});
 
     t.deepEqual(table.draw().toBox().box, [
-      '\x1B[2m╭──────┬─────────╥────────╮\x1B[22m',
-      '\x1B[2m│\x1B[m      \x1B[2m│\x1B[m \x1B[1mQuarter\x1B[m \x1B[2m║\x1B[m \x1B[1mNumber\x1B[m \x1B[2m│\x1B[m',
-      '\x1B[2m╞══════╪═════════╬════════╡\x1B[22m',
-      '\x1B[2m│\x1B[m      \x1B[2m│\x1B[m    I    \x1B[2m║\x1B[m     31 \x1B[2m│\x1B[m',
-      '\x1B[2m│\x1B[m      \x1B[2m├─────────╫────────┤\x1B[m',
-      '\x1B[2m│\x1B[m Year \x1B[2m│\x1B[m   II    \x1B[2m║\x1B[m     41 \x1B[2m│\x1B[m',
-      '\x1B[2m│\x1B[m 2024 \x1B[2m├─────────╫────────┤\x1B[m',
-      '\x1B[2m│\x1B[m      \x1B[2m│\x1B[m   III   \x1B[2m║\x1B[m     59 \x1B[2m│\x1B[m',
-      '\x1B[2m│\x1B[m      \x1B[2m├─────────╫────────┤\x1B[m',
-      '\x1B[2m│\x1B[m      \x1B[2m│\x1B[m   IV    \x1B[2m║\x1B[m     26 \x1B[2m│\x1B[m',
-      '\x1B[2m├──────┴─────────╫────────┤\x1B[22m',
-      '\x1B[2m│\x1B[m \x1B[1;96mTotal:\x1B[m         \x1B[2m║\x1B[m    \x1B[1;36m157\x1B[m \x1B[2m│\x1B[m',
-      '\x1B[2m╰────────────────╨────────╯\x1B[22m'
+      '\x1B[22;2m╭──────┬─────────╥────────╮\x1B[22m',
+      '\x1B[22;2m│\x1B[m      \x1B[2m│\x1B[m \x1B[1mQuarter\x1B[m \x1B[2m║\x1B[m \x1B[1mNumber\x1B[m \x1B[2m│\x1B[m',
+      '\x1B[22;2m╞══════╪═════════╬════════╡\x1B[22m',
+      '\x1B[22;2m│\x1B[m      \x1B[2m│\x1B[m    I    \x1B[2m║\x1B[m     31 \x1B[2m│\x1B[m',
+      '\x1B[22;2m│\x1B[m      \x1B[2m├─────────╫────────┤\x1B[m',
+      '\x1B[22;2m│\x1B[m Year \x1B[2m│\x1B[m   II    \x1B[2m║\x1B[m     41 \x1B[2m│\x1B[m',
+      '\x1B[22;2m│\x1B[m 2024 \x1B[2m├─────────╫────────┤\x1B[m',
+      '\x1B[22;2m│\x1B[m      \x1B[2m│\x1B[m   III   \x1B[2m║\x1B[m     59 \x1B[2m│\x1B[m',
+      '\x1B[22;2m│\x1B[m      \x1B[2m├─────────╫────────┤\x1B[m',
+      '\x1B[22;2m│\x1B[m      \x1B[2m│\x1B[m   IV    \x1B[2m║\x1B[m     26 \x1B[2m│\x1B[m',
+      '\x1B[22;2m├──────┴─────────╫────────┤\x1B[22m',
+      '\x1B[22;2m│\x1B[m \x1B[1;96mTotal:\x1B[m         \x1B[2m║\x1B[m    \x1B[1;36m157\x1B[m \x1B[2m│\x1B[m',
+      '\x1B[22;2m╰────────────────╨────────╯\x1B[22m'
     ]);
   });
 
@@ -85,16 +88,16 @@ test('Table', async t => {
     });
 
     t.deepEqual(table.draw().toBox().box, [
-      '\x1B[2m╭──────┬─────────╥────────╮\x1B[22m',
-      '\x1B[2m│\x1B[m      \x1B[2m│\x1B[m \x1B[1mQuarter\x1B[m \x1B[2m║\x1B[m \x1B[1mNumber\x1B[m \x1B[2m│\x1B[m',
-      '\x1B[2m╞══════╪═════════╬════════╡\x1B[22m',
-      '\x1B[2m│\x1B[m      \x1B[2m│\x1B[m    I    \x1B[2m║\x1B[m     31 \x1B[2m│\x1B[m',
-      '\x1B[2m│\x1B[m Year \x1B[2m│\x1B[m   II    \x1B[2m║\x1B[m     41 \x1B[2m│\x1B[m',
-      '\x1B[2m│\x1B[m 2024 \x1B[2m│\x1B[m   III   \x1B[2m║\x1B[m     59 \x1B[2m│\x1B[m',
-      '\x1B[2m│\x1B[m      \x1B[2m│\x1B[m   IV    \x1B[2m║\x1B[m     26 \x1B[2m│\x1B[m',
-      '\x1B[2m╞══════╧═════════╬════════╡\x1B[22m',
-      '\x1B[2m│\x1B[m \x1B[1;96mTotal:\x1B[m         \x1B[2m║\x1B[m    \x1B[1;36m157\x1B[m \x1B[2m│\x1B[m',
-      '\x1B[2m╰────────────────╨────────╯\x1B[22m'
+      '\x1B[22;2m╭──────┬─────────╥────────╮\x1B[22m',
+      '\x1B[22;2m│\x1B[m      \x1B[2m│\x1B[m \x1B[1mQuarter\x1B[m \x1B[2m║\x1B[m \x1B[1mNumber\x1B[m \x1B[2m│\x1B[m',
+      '\x1B[22;2m╞══════╪═════════╬════════╡\x1B[22m',
+      '\x1B[22;2m│\x1B[m      \x1B[2m│\x1B[m    I    \x1B[2m║\x1B[m     31 \x1B[2m│\x1B[m',
+      '\x1B[22;2m│\x1B[m Year \x1B[2m│\x1B[m   II    \x1B[2m║\x1B[m     41 \x1B[2m│\x1B[m',
+      '\x1B[22;2m│\x1B[m 2024 \x1B[2m│\x1B[m   III   \x1B[2m║\x1B[m     59 \x1B[2m│\x1B[m',
+      '\x1B[22;2m│\x1B[m      \x1B[2m│\x1B[m   IV    \x1B[2m║\x1B[m     26 \x1B[2m│\x1B[m',
+      '\x1B[22;2m╞══════╧═════════╬════════╡\x1B[22m',
+      '\x1B[22;2m│\x1B[m \x1B[1;96mTotal:\x1B[m         \x1B[2m║\x1B[m    \x1B[1;36m157\x1B[m \x1B[2m│\x1B[m',
+      '\x1B[22;2m╰────────────────╨────────╯\x1B[22m'
     ]);
   });
 
@@ -122,16 +125,16 @@ test('Table', async t => {
     });
 
     t.deepEqual(table.draw().toBox().box, [
-      '\x1B[2m╭──────┬─────────╥────────╮\x1B[22m',
-      '\x1B[2m│\x1B[m      \x1B[2m│\x1B[m \x1B[1mQuarter\x1B[m \x1B[2m║\x1B[m \x1B[1mNumber\x1B[m \x1B[2m│\x1B[m',
-      '\x1B[2m╞══════╪═════════╬════════╡\x1B[22m',
-      '\x1B[2m│\x1B[m      \x1B[2m│\x1B[m    I    \x1B[2m║\x1B[m     31 \x1B[2m│\x1B[m',
-      '\x1B[2m│\x1B[m Year \x1B[2m│\x1B[m   II    \x1B[2m║\x1B[m     41 \x1B[2m│\x1B[m',
-      '\x1B[2m│\x1B[m 2024 \x1B[2m│\x1B[m   III   \x1B[2m║\x1B[m     59 \x1B[2m│\x1B[m',
-      '\x1B[2m│\x1B[m      \x1B[2m│\x1B[m   IV    \x1B[2m║\x1B[m     26 \x1B[2m│\x1B[m',
-      '\x1B[2m╞══════╧═════════╬════════╡\x1B[22m',
-      '\x1B[2m│\x1B[m         \x1B[96mTotal:\x1B[m \x1B[2m║\x1B[m    \x1B[1;96m157\x1B[m \x1B[2m│\x1B[m',
-      '\x1B[2m╰────────────────╨────────╯\x1B[22m'
+      '\x1B[22;2m╭──────┬─────────╥────────╮\x1B[22m',
+      '\x1B[22;2m│\x1B[m      \x1B[2m│\x1B[m \x1B[1mQuarter\x1B[m \x1B[2m║\x1B[m \x1B[1mNumber\x1B[m \x1B[2m│\x1B[m',
+      '\x1B[22;2m╞══════╪═════════╬════════╡\x1B[22m',
+      '\x1B[22;2m│\x1B[m      \x1B[2m│\x1B[m    I    \x1B[2m║\x1B[m     31 \x1B[2m│\x1B[m',
+      '\x1B[22;2m│\x1B[m Year \x1B[2m│\x1B[m   II    \x1B[2m║\x1B[m     41 \x1B[2m│\x1B[m',
+      '\x1B[22;2m│\x1B[m 2024 \x1B[2m│\x1B[m   III   \x1B[2m║\x1B[m     59 \x1B[2m│\x1B[m',
+      '\x1B[22;2m│\x1B[m      \x1B[2m│\x1B[m   IV    \x1B[2m║\x1B[m     26 \x1B[2m│\x1B[m',
+      '\x1B[22;2m╞══════╧═════════╬════════╡\x1B[22m',
+      '\x1B[22;2m│\x1B[m         \x1B[96mTotal:\x1B[m \x1B[2m║\x1B[m    \x1B[1;96m157\x1B[m \x1B[2m│\x1B[m',
+      '\x1B[22;2m╰────────────────╨────────╯\x1B[22m'
     ]);
   });
 });

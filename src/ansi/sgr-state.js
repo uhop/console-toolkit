@@ -288,6 +288,14 @@ export const stateTransition = (prev, next) => {
       continue;
     }
     if (value) {
+      if (name === 'bold') {
+        // special transition for bold and dim
+        if (prev[name] !== value) {
+          if (prev[name] !== null) commands.push(Commands.RESET_BOLD);
+          commands.push(value);
+        }
+        continue;
+      }
       if (prev[name] !== value) commands.push(value);
     }
   }
@@ -321,6 +329,14 @@ export const stateReverseTransition = (prev, next) => {
     if (!value) {
       if (next[name]) commands.push(Commands['RESET_' + name.toUpperCase()]);
       if (value === null) ++resetCount;
+      continue;
+    }
+    if (name === 'bold') {
+      // special transition for bold and dim
+      if (next[name] !== value) {
+        if (next[name] !== null) commands.push(Commands.RESET_BOLD);
+        commands.push(value);
+      }
       continue;
     }
     if (next[name] !== value) commands.push(value);
