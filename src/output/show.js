@@ -33,3 +33,8 @@ export class Out {
     return out(s, this.stream, endOfLineCommand, colorDepth);
   }
 }
+
+export const debug = string =>
+  console.log(
+    string.replace(/[\x00-\x1F]/g, m => '\\x' + m[0].charCodeAt(0).toString(16).padStart(2, '0').toUpperCase())
+  );

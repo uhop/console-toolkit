@@ -10,11 +10,6 @@ import lineTheme from 'console-painter/themes/lines/unicode-bold.js';
 import makeTable from 'console-painter/table/index.js';
 import {formatInteger, abbrNumber} from 'console-painter/alphanumeric/number-formatters.js';
 
-export const show = string =>
-  console.log(
-    string.replace(/[\x00-\x1F]/g, m => '\\x' + m[0].charCodeAt(0).toString(16).padStart(2, '0').toUpperCase())
-  );
-
 const showDiff = (a, b) => {
   const s = formatInteger(a);
   if (b === null || a === b) return s;
