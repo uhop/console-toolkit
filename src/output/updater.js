@@ -43,12 +43,12 @@ export class Updater {
     throw new TypeError('Updater must be a function or implement getFrame()');
   }
 
-  async writeFrame() {
+  async writeFrame(state) {
     const prelude = (this.first ? this.prologue : '') + (this.lastHeight ? '\r' + cursorUp(this.lastHeight) : '');
     this.first = false;
-    prelude && await this.writer.writeString(prelude);
+    prelude && (await this.writer.writeString(prelude));
 
-    const frame = toStrings(this.getFrame());
+    const frame = toStrings(this.getFrame(state));
     this.lastHeight = frame.length;
     if (this.noLastNewLine) --this.lastHeight;
     await this.writer.write(frame, null, this.noLastNewLine);
@@ -61,9 +61,9 @@ export class Updater {
     await this.writer.writeString(this.epilogue);
   }
 
-  async update() {
+  async update(state = 'active') {
     if (this.isDone || !this.writer.isTTY) return;
-    await this.writeFrame('active');
+    await this.writeFrame(state);
   }
 
   async final() {
