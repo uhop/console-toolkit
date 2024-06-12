@@ -1,14 +1,17 @@
+'use strict';
+
+import process from 'node:process';
+
 import {CURSOR_DOWN1, CURSOR_RESTORE_POS, CURSOR_SAVE_POS} from '../ansi/csi.js';
-import {getLength, matchCsiNoGroups, toStrings} from '../strings.js';
+import {getLength, matchCsiNoGroups, matchCsiNoSgrNoGroups, toStrings} from '../strings.js';
 
 const write = async (stream, chunk, encoding = 'utf8') =>
-  new Promise((resolve, reject) => {
-    stream.write(chunk, encoding, error => (error ? reject(error) : resolve()));
-  });
+  new Promise((resolve, reject) => stream.write(chunk, encoding, error => (error ? reject(error) : resolve())));
 
 export class Writer {
-  constructor(stream) {
+  constructor(stream = process.stdout, forceColorDepth) {
     this.stream = stream;
+    this.forceColorDepth = forceColorDepth;
   }
 
   get isTTY() {
@@ -21,31 +24,53 @@ export class Writer {
     return this.stream.rows;
   }
   get size() {
-    const [columns, rows] = this.stream.getWindowSize();
+    const [columns, rows] = this.stream.getWindowSize?.() || [];
     return {columns, rows};
   }
-  get colorDepth() {
-    return this.stream.getColorDepth();
+  getColorDepth(...args) {
+    return this.forceColorDepth || this.stream.getColorDepth?.(...args);
   }
 
   hasColors(...args) {
-    return this.stream.hasColors(...args);
+    return this.forceColorDepth ? args[0] <= Math.pow(2, this.forceColorDepth) : this.stream.hasColors?.(...args);
   }
 
   clearLine(dir) {
-    return new Promise((resolve, reject) => this.stream.clearLine(dir, error => (error ? reject(error) : resolve())));
+    return new Promise((resolve, reject) => {
+      if (typeof this.stream.clearLine == 'function') {
+        this.stream.clearLine(dir, error => (error ? reject(error) : resolve(true)));
+      } else {
+        resolve(false);
+      }
+    });
   }
   clearScreenDown() {
-    return new Promise((resolve, reject) => this.stream.clearScreenDown(error => (error ? reject(error) : resolve())));
+    return new Promise((resolve, reject) => {
+      if (typeof this.stream.clearScreenDown == 'function') {
+        this.stream.clearScreenDown(error => (error ? reject(error) : resolve(true)));
+      } else {
+        resolve(false);
+      }
+    });
   }
 
   cursorTo(x, y) {
-    return new Promise((resolve, reject) => this.stream.cursorTo(x, y, error => (error ? reject(error) : resolve())));
+    return new Promise((resolve, reject) => {
+      if (typeof this.stream.cursorTo == 'function') {
+        this.stream.cursorTo(x, y, error => (error ? reject(error) : resolve(true)));
+      } else {
+        resolve(false);
+      }
+    });
   }
   moveCursor(dx, dy) {
-    return new Promise((resolve, reject) =>
-      this.stream.moveCursor(dx, dy, error => (error ? reject(error) : resolve()))
-    );
+    return new Promise((resolve, reject) => {
+      if (typeof this.stream.moveCursor == 'function') {
+        this.stream.moveCursor(dx, dy, error => (error ? reject(error) : resolve(true)));
+      } else {
+        resolve(false);
+      }
+    });
   }
 
   async writeString(s) {
@@ -56,18 +81,28 @@ export class Writer {
       return;
     }
 
+    // no cursor/screen commands
+    if (this.forceColorDepth) {
+      matchCsiNoSgrNoGroups.lastIndex = 0;
+      await write(this.stream, s.replace(matchCsiNoSgrNoGroups, ''));
+      return;
+    }
+
+    // no colors
     matchCsiNoGroups.lastIndex = 0;
     await write(this.stream, s.replace(matchCsiNoGroups, ''));
   }
 
-  async write(s, sameColumn) {
+  async write(s, sameColumn, noLastNewLine) {
     s = toStrings(s);
 
     if (!this.isTTY) {
-      for (const line of s) {
-        matchCsiNoGroups.lastIndex = 0;
-        await write(this.stream, line.replace(matchCsiNoGroups, '') + '\n');
-      }
+      const matcher = this.forceColorDepth ? matchCsiNoSgrNoGroups : matchCsiNoGroups;
+      let lines = Array.from(s).join('\n');
+      if (!noLastNewLine) lines += '\n';
+      matcher.lastIndex = 0;
+      lines = lines.replace(matcher, '');
+      await write(this.stream, lines);
       return;
     }
 
@@ -87,9 +122,9 @@ export class Writer {
       return;
     }
 
-    for (const line of s) {
-      await write(this.stream, line + '\n');
-    }
+    let lines = Array.from(s).join('\n');
+    if (!noLastNewLine) lines += '\n';
+    await write(this.stream, lines);
   }
 }
 
