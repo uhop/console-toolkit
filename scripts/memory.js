@@ -3,46 +3,60 @@ import process from 'node:process';
 import Writer from 'console-painter/output/writer.js';
 import Updater from 'console-painter/output/updater.js';
 
-import {CURSOR_INVISIBLE, CURSOR_NORMAL} from 'console-painter/ansi/csi.js';
+import Box from 'console-painter/box.js';
 
+import {CURSOR_INVISIBLE, CURSOR_NORMAL} from 'console-painter/ansi/csi.js';
 import style, {c} from 'console-painter/style.js';
+
 import lineTheme from 'console-painter/themes/lines/unicode-bold.js';
 import makeTable from 'console-painter/table/index.js';
 import {formatInteger, abbrNumber} from 'console-painter/alphanumeric/number-formatters.js';
 
+import drawChart from 'console-painter/charts/bars/plain.js';
+
 const showDiff = (a, b) => {
   const s = formatInteger(a);
-  if (b === null || a === b) return s;
+  if (typeof b !== 'number' || a === b) return s;
   return style.bright[a < b ? 'green' : 'red'].text(s);
 };
 
-const abbrOptions = {decimals: 1, keepFractionAsIs: true};
+const abbrOptions = {decimals: 1, keepFractionAsIs: true},
+  numberStyle = style.reset.bold.bright.yellow;
 
 let previousSnapshot = null;
 
 const memorySnapshot = () => {
-  const m = process.memoryUsage();
+  const m = process.memoryUsage(),
+    abbrHeapTotal = abbrNumber(m.heapTotal, abbrOptions),
+    abbrHeapUsed = abbrNumber(m.heapUsed, abbrOptions);
 
   const tableData = [
     ['Memory usage', 'Bytes', 'Abbr'],
     ['RSS', showDiff(m.rss, previousSnapshot?.rss), abbrNumber(m.rss, abbrOptions)],
-    ['Heap total', showDiff(m.heapTotal, previousSnapshot?.heapTotal), abbrNumber(m.heapTotal, abbrOptions)],
-    ['Heap used', showDiff(m.heapUsed, previousSnapshot?.heapUsed), abbrNumber(m.heapUsed, abbrOptions)],
+    ['Heap total', showDiff(m.heapTotal, previousSnapshot?.heapTotal), abbrHeapTotal],
+    ['Heap used', showDiff(m.heapUsed, previousSnapshot?.heapUsed), abbrHeapUsed],
     ['External', showDiff(m.external, previousSnapshot?.external), abbrNumber(m.external, abbrOptions)],
     ['Array buffers', showDiff(m.arrayBuffers, previousSnapshot?.arrayBuffers), abbrNumber(m.arrayBuffers, abbrOptions)]
   ];
 
   previousSnapshot = {...m};
 
-  const table = makeTable(tableData, lineTheme, {
+  const tableBox = makeTable(tableData, lineTheme, {
     rowFirst: 2,
     columnFirst: 2,
     hDataSep: 0,
     hRight: [1, 2, 3],
     states: {rowFirst: style.bold, columnFirst: style.bold}
-  });
+  }).toBox();
 
-  return table;
+  const chart = drawChart([[m.heapUsed, m.heapTotal - m.heapUsed]], tableBox.width - 2, {maxValue: -1});
+  chart.unshift(
+    c`{{bold}}Heap - {{save}}${numberStyle}${abbrHeapUsed}{{restore}} of {{save}}${numberStyle}${abbrHeapTotal}{{restore}}:`
+  );
+
+  const chartBox = new Box(chart).pad(0, 1);
+
+  return tableBox.addBottom(chartBox);
 };
 
 const writer = new Writer(),
@@ -54,9 +68,12 @@ process.once('SIGINT', () => {
 });
 
 await writer.writeString(c`{{bold}}Memory usage by this process {{dim}}(Press Ctrl+C to exit)\n`);
-await writer.writeString(c`{{dim}}Legend: RSS - resident set size, {{bright.green}}green{{reset.color}} - goes down, {{bright.red}}red{{reset.color}} - goes up\n`);
+await writer.writeString(
+  c`{{dim}}Legend: RSS - resident set size, {{bright.green}}green{{reset.color}} - goes down, {{bright.red}}red{{reset.color}} - goes up\n`
+);
 
 if (writer.isTTY) {
+  updater.update();
   updater.startRefreshing(500);
 } else {
   updater.final();
