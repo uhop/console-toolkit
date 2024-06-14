@@ -44,21 +44,27 @@ export class Updater {
   }
 
   async writeFrame(state) {
-    const prelude = (this.first ? this.prologue : '') + (this.lastHeight ? '\r' + cursorUp(this.lastHeight) : '');
-    this.first = false;
-    prelude && (await this.writer.writeString(prelude));
+    if (this.first) {
+      this.prologue && (await this.writer.writeString(this.prologue));
+      this.first = false;
+    }
 
     const frame = toStrings(this.getFrame(state));
+    if (!frame) return;
+
+    if (this.lastHeight) await this.writer.writeString('\r' + cursorUp(this.lastHeight));
+
     this.lastHeight = frame.length;
     if (this.noLastNewLine) --this.lastHeight;
-    await this.writer.write(frame, null, this.noLastNewLine);
+
+    await this.writer.write(frame, false, this.noLastNewLine);
   }
 
   async done() {
     if (this.isDone) return;
     this.isDone = true;
     this.stopRefreshing();
-    await this.writer.writeString(this.epilogue);
+    this.epilogue && (await this.writer.writeString(this.epilogue));
   }
 
   async update(state = 'active') {
