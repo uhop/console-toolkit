@@ -3,26 +3,26 @@ import test from 'tape-six';
 import style from '../src/style.js';
 import {getLength, matchCsiNoGroups, getMaxLength, clip} from '../src/strings.js';
 
-test('ANSI utilities', async t => {
-  await t.test('Clean from CSI sequences', t => {
+test('ANSI utilities', t => {
+  t.test('Clean from CSI sequences', t => {
     const s = style.cyan.text('cyan');
     t.equal(getLength(s), 4);
     t.equal(s.replace(matchCsiNoGroups, ''), 'cyan');
   });
 
-  await t.test('Unicode symbols', t => {
+  t.test('Unicode symbols', t => {
     const s = style.cyan.text('① ② ③ ④');
     t.equal(getLength(s), 7);
   });
 
-  await t.test('Get max length', t => {
+  t.test('Get max length', t => {
     t.equal(getMaxLength(['abc', '']), 3);
     t.equal(getMaxLength(['', 'ab']), 2);
     t.equal(getMaxLength(['']), 0);
     t.equal(getMaxLength([]), 0);
   });
 
-  await t.test('Clip', t => {
+  t.test('Clip', t => {
     t.equal(clip('ab', 0), '');
     t.equal(clip('ab', 1), 'a');
     t.equal(clip('ab', 2), 'ab');

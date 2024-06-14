@@ -3,8 +3,8 @@ import test from 'tape-six';
 import Bitmap from '../src/plot/index.js';
 import style from '../src/style.js';
 
-test('Plot', async t => {
-  await t.test('Simple drawing', t => {
+test('Plot', t => {
+  t.test('Simple drawing', t => {
     const bmp = new Bitmap(7, 7).line(0, 0, 6, 6).line(0, 6, 6, 0).line(0, 0, 6, 0).line(0, 6, 6, 6);
 
     t.equal(bmp.width, 7);
@@ -12,7 +12,7 @@ test('Plot', async t => {
     t.deepEqual(bmp.toBox('*').box, ['*******', ' *   * ', '  * *  ', '   *   ', '  * *  ', ' *   * ', '*******']);
   });
 
-  await t.test('Simple drawing - quads', t => {
+  t.test('Simple drawing - quads', t => {
     const bmp = new Bitmap(7, 7).line(0, 0, 6, 6).line(0, 6, 6, 0).line(0, 0, 6, 0).line(0, 6, 6, 6);
 
     t.equal(bmp.width, 7);
@@ -20,7 +20,7 @@ test('Plot', async t => {
     t.deepEqual(bmp.toQuads().box, ['▜▀▜▘', ' ▚▘ ', '▗▘▚ ', '▀▀▀▘']);
   });
 
-  await t.test('Rects - quads', t => {
+  t.test('Rects - quads', t => {
     const bmp = new Bitmap(27, 14)
       .rect(2, 1, 24, 12)
       .rect(4, 2, 22, 11, 0)
@@ -42,7 +42,7 @@ test('Plot', async t => {
     ]);
   });
 
-  await t.test('Combination - quads', t => {
+  t.test('Combination - quads', t => {
     const bmp = new Bitmap(15, 7)
       .line(0, 0, 30, 6)
       .line(0, 6, 30, 0)
@@ -57,7 +57,7 @@ test('Plot', async t => {
     t.deepEqual(bmp.toQuads().box, ['▀▚▄▄  ▝▘', '▞   ▀▀▚▖', '▝▗▄▄▀▀▘ ', '▀▘    ▝▘']);
   });
 
-  await t.test('XOR #1 - quads', t => {
+  t.test('XOR #1 - quads', t => {
     const bmp = new Bitmap(7, 7).line(0, 0, 6, 6).line(0, 6, 6, 0).rect(1, 1, 5, 5, -1);
 
     t.equal(bmp.width, 7);
@@ -65,7 +65,7 @@ test('Plot', async t => {
     t.deepEqual(bmp.toQuads().box, ['▘▄▖▘', '▐▞▟ ', '▝▟▞ ', '▘  ▘']);
   });
 
-  await t.test('XOR #2 - quads', t => {
+  t.test('XOR #2 - quads', t => {
     const bmp = new Bitmap(7, 7).rect(1, 1, 5, 5).line(0, 0, 6, 6, -1).line(0, 6, 6, 0, -1);
 
     t.equal(bmp.width, 7);
@@ -73,7 +73,7 @@ test('Plot', async t => {
     t.deepEqual(bmp.toQuads().box, ['▘▄▖▘', '▐▟▟ ', '▝▟▞ ', '▘  ▘']);
   });
 
-  await t.test('XOR #3 - quads', t => {
+  t.test('XOR #3 - quads', t => {
     const bmp = new Bitmap(7, 7).rect(1, 1, 5, 5).line(3, 0, 3, 6, -1).line(0, 3, 6, 3, -1);
 
     t.equal(bmp.width, 7);
@@ -81,7 +81,7 @@ test('Plot', async t => {
     t.deepEqual(bmp.toQuads().box, ['▗▞▄ ', '▞▚▀▖', '▐▌█ ', ' ▝  ']);
   });
 
-  await t.test('XOR #4 - quads', t => {
+  t.test('XOR #4 - quads', t => {
     const bmp = new Bitmap(7, 7).line(3, 0, 3, 6).line(0, 3, 6, 3).rect(1, 1, 5, 5, -1);
 
     t.equal(bmp.width, 7);

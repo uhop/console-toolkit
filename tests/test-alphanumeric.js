@@ -4,8 +4,8 @@ import {abbrNumber, formatInteger, formatNumber, simplifyExponent} from '../src/
 import {numberPunctuation} from '../src/alphanumeric/unicode-numbers.js';
 import {toRoman, toRomanUnicode, toRomanLowerUnicode} from '../src/alphanumeric/roman.js';
 
-test('Alphanumeric', async t => {
-  await t.test('format integer', t => {
+test('Alphanumeric', t => {
+  t.test('format integer', t => {
     t.equal(formatInteger(1), '1');
     t.equal(formatInteger(12), '12');
     t.equal(formatInteger(123), '123');
@@ -20,7 +20,7 @@ test('Alphanumeric', async t => {
     t.equal(formatInteger(-123456789, {keepSign: true}), '-123,456,789');
   });
 
-  await t.test('format number', t => {
+  t.test('format number', t => {
     const n = 123456789.123456123456,
       s = formatNumber(n, {decimals: 6}),
       p = numberPunctuation(s);
@@ -29,7 +29,7 @@ test('Alphanumeric', async t => {
     t.equal(p, '12🄄 45🄇 78⒐ 123456');
   });
 
-  await t.test('Roman numbers', t => {
+  t.test('Roman numbers', t => {
     const values = [1300, 1500, 1600, 1700, 1800, 1812, 1900, 1912, 1990, 2000, 2001, 2002, 2010, 2020, 2022, 2024],
       result = [
         'MCCC',
@@ -55,7 +55,7 @@ test('Alphanumeric', async t => {
     }
   });
 
-  await t.test('Roman numbers (Unicode)', t => {
+  t.test('Roman numbers (Unicode)', t => {
     const values = [1300, 1500, 1600, 1700, 1800, 1812, 1900, 1912, 1990, 2000, 2001, 2002, 2010, 2020, 2022, 2024],
       result = [
         'ⅯⅭⅭⅭ',
@@ -81,7 +81,7 @@ test('Alphanumeric', async t => {
     }
   });
 
-  await t.test('Roman numbers (Unicode) the lower case', t => {
+  t.test('Roman numbers (Unicode) the lower case', t => {
     const values = [1300, 1500, 1600, 1700, 1800, 1812, 1900, 1912, 1990, 2000, 2001, 2002, 2010, 2020, 2022, 2024],
       result = [
         'ⅿⅽⅽⅽ',
@@ -107,7 +107,7 @@ test('Alphanumeric', async t => {
     }
   });
 
-  await t.test('abbreviate numbers', t => {
+  t.test('abbreviate numbers', t => {
     t.equal(abbrNumber(1), '1');
     t.equal(abbrNumber(12), '12');
     t.equal(abbrNumber(123), '123');
@@ -128,7 +128,7 @@ test('Alphanumeric', async t => {
     t.equal(abbrNumber(2_000_000, {decimals: 2, keepFractionAsIs: true}), '2.00M');
   });
 
-  await t.test('simplify exponent', t => {
+  t.test('simplify exponent', t => {
     t.equal(simplifyExponent(1), '1');
 
     t.equal(simplifyExponent(2e30), '2e30');

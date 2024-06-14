@@ -4,8 +4,8 @@ import Box from '../src/box.js';
 import Panel from '../src/panel.js';
 import style from '../src/style.js';
 
-test('Panel', async t => {
-  await t.test('Panel()', t => {
+test('Panel', t => {
+  t.test('Panel()', t => {
     const p = new Panel(3, 2);
 
     t.equal(p.width, 3);
@@ -17,7 +17,7 @@ test('Panel', async t => {
     t.deepEqual(p.toBox({emptySymbol: '*'}).box, ['\x1B[m***', '\x1B[m***']);
   });
 
-  await t.test('Panel() with 0 dimensions', t => {
+  t.test('Panel() with 0 dimensions', t => {
     let p = new Panel(0, 2);
 
     t.equal(p.width, 0);
@@ -43,7 +43,7 @@ test('Panel', async t => {
     t.deepEqual(p.box, []);
   });
 
-  await t.test('Panel.make()', t => {
+  t.test('Panel.make()', t => {
     const p = Panel.make(['123', 'ab']);
 
     t.equal(p.width, 3);
@@ -51,7 +51,7 @@ test('Panel', async t => {
     t.deepEqual(p.toBox().box, ['123', 'ab ']);
   });
 
-  await t.test('Panel.make() with an emptySymbol', t => {
+  t.test('Panel.make() with an emptySymbol', t => {
     const p = Panel.make(['123', 'ab*'], {emptySymbol: '*'});
 
     t.equal(p.width, 3);
@@ -60,7 +60,7 @@ test('Panel', async t => {
     t.deepEqual(p.toBox({emptySymbol: '-'}).box, ['123', 'ab\x1B[m-']);
   });
 
-  await t.test('extract', t => {
+  t.test('extract', t => {
     const p = Panel.make(['one', 'two', 'three']);
 
     t.equal(p.width, 5);
@@ -68,7 +68,7 @@ test('Panel', async t => {
     t.deepEqual(p.extract(2, 1, 3, 2).toBox().box, ['o  ', 'ree']);
   });
 
-  await t.test('extract with clipping', t => {
+  t.test('extract with clipping', t => {
     const p = Panel.make(['one', 'two', 'three']);
     p.copyFrom(2, 1, 3, 2, Panel.make(['12345', '67890']), 2, 1);
 
@@ -77,7 +77,7 @@ test('Panel', async t => {
     t.deepEqual(p.toBox().box, ['one  ', 'tw890', 'three']);
   });
 
-  await t.test('put', t => {
+  t.test('put', t => {
     const p = Panel.make(['one', 'two', 'three']);
 
     t.equal(p.width, 5);
@@ -103,14 +103,14 @@ test('Panel', async t => {
     t.deepEqual(p.toBox().box, ['one  ', 'tw42u', 'th987']);
   });
 
-  await t.test('fill', t => {
+  t.test('fill', t => {
     const p = Panel.make(['one', 'two', 'three']);
 
     p.fill(2, 1, 3, 2, '*', style.red);
     t.deepEqual(p.toBox().box, ['one  ', 'tw\x1B[31m***\x1B[39m', 'th\x1B[31m***\x1B[39m']);
   });
 
-  await t.test('fillState', t => {
+  t.test('fillState', t => {
     const p = new Panel(5, 5).put(1, 1, ['one', 'two']);
 
     p.fillState(1, 1, 3, 3, {state: style.red, emptySymbol: '*'});
@@ -123,7 +123,7 @@ test('Panel', async t => {
     ]);
   });
 
-  await t.test('fillNonEmptyState', t => {
+  t.test('fillNonEmptyState', t => {
     const p = new Panel(5, 5).put(1, 1, ['one', 'two']);
 
     p.fillNonEmptyState(1, 1, 3, 3, {state: style.red});
@@ -136,7 +136,7 @@ test('Panel', async t => {
     ]);
   });
 
-  await t.test('combineStateBefore', t => {
+  t.test('combineStateBefore', t => {
     const p = new Panel(5, 5).put(1, 1, ['one', 'two']);
 
     p.combineStateBefore(1, 1, 3, 3, {state: style.bg.red, emptySymbol: '*'});
@@ -149,7 +149,7 @@ test('Panel', async t => {
     ]);
   });
 
-  await t.test('combineStateAfter', t => {
+  t.test('combineStateAfter', t => {
     const p = new Panel(5, 5).put(1, 1, ['one', 'two']);
 
     p.combineStateAfter(1, 1, 3, 3, {state: style.bg.red, emptySymbol: '*'});
@@ -162,14 +162,14 @@ test('Panel', async t => {
     ]);
   });
 
-  await t.test('clear', t => {
+  t.test('clear', t => {
     const p = Panel.make(['one', 'two', 'three']);
 
     p.clear(2, 1, 3, 2);
     t.deepEqual(p.toBox({emptySymbol: '*'}).box, ['one  ', 'tw\x1B[m***', 'th\x1B[m***']);
   });
 
-  await t.test('pad left', t => {
+  t.test('pad left', t => {
     const p = Panel.make(['123', 'ab']).padLeft(2);
 
     t.equal(p.width, 5);
@@ -177,7 +177,7 @@ test('Panel', async t => {
     t.deepEqual(p.toBox({emptySymbol: '-'}).box, ['\x1B[m--123', '\x1B[m--ab ']);
   });
 
-  await t.test('pad left/right', t => {
+  t.test('pad left/right', t => {
     const p = Panel.make(['123', 'ab']).padLeftRight(2, 3);
 
     t.equal(p.width, 8);
@@ -185,7 +185,7 @@ test('Panel', async t => {
     t.deepEqual(p.toBox({emptySymbol: '-'}).box, ['\x1B[m--123---', '\x1B[m--ab ---']);
   });
 
-  await t.test('pad right', t => {
+  t.test('pad right', t => {
     const p = Panel.make(['123', 'ab']).padRight(3);
 
     t.equal(p.width, 6);
@@ -193,7 +193,7 @@ test('Panel', async t => {
     t.deepEqual(p.toBox({emptySymbol: '-'}).box, ['123\x1B[m---', 'ab \x1B[m---']);
   });
 
-  await t.test('pad top', t => {
+  t.test('pad top', t => {
     const p = Panel.make(['123', 'ab']).padTop(1);
 
     t.equal(p.width, 3);
@@ -201,7 +201,7 @@ test('Panel', async t => {
     t.deepEqual(p.toBox({emptySymbol: '-'}).box, ['\x1B[m---', '123', 'ab ']);
   });
 
-  await t.test('pad top/bottom', t => {
+  t.test('pad top/bottom', t => {
     const p = Panel.make(['123', 'ab']).padTopBottom(1, 2);
 
     t.equal(p.width, 3);
@@ -209,7 +209,7 @@ test('Panel', async t => {
     t.deepEqual(p.toBox({emptySymbol: '-'}).box, ['\x1B[m---', '123', 'ab ', '\x1B[m---', '\x1B[m---']);
   });
 
-  await t.test('pad bottom', t => {
+  t.test('pad bottom', t => {
     const p = Panel.make(['123', 'ab']).padBottom(2);
 
     t.equal(p.width, 3);
@@ -217,7 +217,7 @@ test('Panel', async t => {
     t.deepEqual(p.toBox({emptySymbol: '-'}).box, ['123', 'ab ', '\x1B[m---', '\x1B[m---']);
   });
 
-  await t.test('pad', t => {
+  t.test('pad', t => {
     const p = Panel.make(['123', 'ab']).pad(1, 2, 3, 4);
 
     t.equal(p.width, 9);
@@ -232,7 +232,7 @@ test('Panel', async t => {
     ]);
   });
 
-  await t.test('removeColumns', t => {
+  t.test('removeColumns', t => {
     const p = Panel.make(['123', 'ab']).removeColumns(1, 2);
 
     t.equal(p.width, 1);
@@ -240,7 +240,7 @@ test('Panel', async t => {
     t.deepEqual(p.toBox().box, ['1', 'a']);
   });
 
-  await t.test('removeRows', t => {
+  t.test('removeRows', t => {
     const p = Panel.make(['123', 'ab']).removeRows(1, 2);
 
     t.equal(p.width, 3);
@@ -248,7 +248,7 @@ test('Panel', async t => {
     t.deepEqual(p.toBox().box, ['123']);
   });
 
-  await t.test('insertColumns', t => {
+  t.test('insertColumns', t => {
     const p = Panel.make(['123', 'ab']).insertColumns(1, 2);
 
     t.equal(p.width, 5);
@@ -256,7 +256,7 @@ test('Panel', async t => {
     t.deepEqual(p.toBox({emptySymbol: '*'}).box, ['1\x1B[m**23', 'a\x1B[m**b ']);
   });
 
-  await t.test('insertRows', t => {
+  t.test('insertRows', t => {
     const p = Panel.make(['123', 'ab']).insertRows(1, 2);
 
     t.equal(p.width, 3);
@@ -264,7 +264,7 @@ test('Panel', async t => {
     t.deepEqual(p.toBox({emptySymbol: '*'}).box, ['123', '\x1B[m***', '\x1B[m***', 'ab ']);
   });
 
-  await t.test('add bottom', t => {
+  t.test('add bottom', t => {
     let p = Panel.make(['12345']).addBottom(Panel.make(['ab']));
 
     t.equal(p.width, 5);
@@ -293,7 +293,7 @@ test('Panel', async t => {
     t.deepEqual(p.toBox({emptySymbol: '*', emptyState: {}}).box, ['123', 'ab ', '**x']);
   });
 
-  await t.test('add bottom with 0 dimensions', t => {
+  t.test('add bottom with 0 dimensions', t => {
     let p = Panel.make([]).addBottom(Panel.make(['x']), {align: 'left'});
     t.deepEqual(p.toBox({emptySymbol: '*', emptyState: {}}).box, ['x']);
 
@@ -304,7 +304,7 @@ test('Panel', async t => {
     t.deepEqual(p.toBox({emptySymbol: '*', emptyState: {}}).box, ['x']);
   });
 
-  await t.test('add right', t => {
+  t.test('add right', t => {
     let p = Panel.make(['123', 'ab', 'c']).addRight(Panel.make(['xyz']));
 
     t.equal(p.width, 6);
@@ -333,7 +333,7 @@ test('Panel', async t => {
     t.deepEqual(p.toBox({emptySymbol: '*', emptyState: {}}).box, ['123*', 'ab *', 'c  x']);
   });
 
-  await t.test('add right with 0 dimensions', t => {
+  t.test('add right with 0 dimensions', t => {
     let p = Panel.make([]).addRight(Panel.make(['x']), {align: 'top'});
     t.deepEqual(p.toBox({emptySymbol: '*', emptyState: {}}).box, ['x']);
 
@@ -344,7 +344,7 @@ test('Panel', async t => {
     t.deepEqual(p.toBox({emptySymbol: '*', emptyState: {}}).box, ['x']);
   });
 
-  await t.test('transpose', t => {
+  t.test('transpose', t => {
     let p = Panel.make(['123', 'ab']);
 
     t.equal(p.width, 3);
@@ -358,7 +358,7 @@ test('Panel', async t => {
     t.deepEqual(p.toBox().box, ['1a', '2b', '3 ']);
   });
 
-  await t.test('rotations', t => {
+  t.test('rotations', t => {
     const p = Panel.make(['123', 'ab']);
 
     t.equal(p.width, 3);
@@ -384,7 +384,7 @@ test('Panel', async t => {
     t.deepEqual(r.toBox().box, ['3 ', '2b', '1a']);
   });
 
-  await t.test('flips', t => {
+  t.test('flips', t => {
     const p = Panel.make(['123', 'ab']);
 
     t.equal(p.width, 3);
@@ -410,7 +410,7 @@ test('Panel', async t => {
     t.deepEqual(p.clone().rotateRight().toBox().box, p.clone().transpose().flipH().toBox().box);
   });
 
-  await t.test('resize (checking sizes)', t => {
+  t.test('resize (checking sizes)', t => {
     const p = new Panel(0, 0);
     t.equal(p.width, 0);
     t.equal(p.height, 0);
@@ -440,7 +440,7 @@ test('Panel', async t => {
     t.equal(p.height, 0);
   });
 
-  await t.test('resize (checking content)', t => {
+  t.test('resize (checking content)', t => {
     let p = Panel.make(['123', 'ab', 'c']).resize(2, 1);
     t.deepEqual(p.toBox({emptySymbol: '*', emptyState: {}}).box, ['12']);
 
@@ -454,7 +454,7 @@ test('Panel', async t => {
     t.deepEqual(p.toBox({emptySymbol: '*', emptyState: {}}).box, ['123*', 'ab *', 'c  *', '****']);
   });
 
-  await t.test('resize (checking alignment)', t => {
+  t.test('resize (checking alignment)', t => {
     let p = Panel.make(['123', 'ab', 'c']).resize(2, 2);
     t.deepEqual(p.toBox({emptySymbol: '*', emptyState: {}}).box, ['12', 'ab']);
 

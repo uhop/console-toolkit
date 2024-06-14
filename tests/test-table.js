@@ -4,8 +4,8 @@ import makeTable from '../src/table/index.js';
 import lineTheme from '../src/themes/lines/unicode-rounded.js';
 import {s} from '../src/style.js';
 
-test('Table', async t => {
-  await t.test('Simple table', t => {
+test('Table', t => {
+  t.test('Simple table', t => {
     const data = [
       ['Color', 'Sample', 'Number'].map(x => s`{{bold}}${x}`),
       ['blue', s`{{blue}}blue`, 2],
@@ -39,7 +39,7 @@ test('Table', async t => {
     t.deepEqual(actual, expected);
   });
 
-  await t.test('Simple table with spans', t => {
+  t.test('Simple table with spans', t => {
     const data = [
       [null, 'Quarter', 'Number'].map(x => x && s`{{bold}}${x}`),
       [{value: 'Year\n2024', height: 4, align: 'dc'}, 'I', 31],
@@ -68,7 +68,7 @@ test('Table', async t => {
     ]);
   });
 
-  await t.test('Simple table with no separators', t => {
+  t.test('Simple table with no separators', t => {
     const data = [
       [null, 'Quarter', 'Number'].map(x => x && s`{{bold}}${x}`),
       [{value: 'Year\n2024', height: 4, align: 'dc'}, 'I', 31],
@@ -101,7 +101,7 @@ test('Table', async t => {
     ]);
   });
 
-  await t.test('Fancy table', t => {
+  t.test('Fancy table', t => {
     const data = [
       [null, 'Quarter', 'Number'],
       [{value: 'Year\n2024', height: 4, align: 'dc'}, 'I', 31],
