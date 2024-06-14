@@ -12,6 +12,7 @@ import {
 
 export const RESET_STATE = {
   bold: null,
+  dim: null,
   italic: null,
   underline: null,
   blink: null,
@@ -83,8 +84,10 @@ export const commandsToState = commands => {
         state = RESET_STATE;
         continue;
       case Commands.BOLD:
-      case Commands.DIM:
         state.bold = currentCommand;
+        continue;
+      case Commands.DIM:
+        state.dim = currentCommand;
         continue;
       case Commands.ITALIC:
         state.italic = currentCommand;
@@ -112,7 +115,7 @@ export const commandsToState = commands => {
         continue;
       case Commands.RESET_BOLD:
         // case Commands.RESET_DIM:
-        state.bold = null;
+        state.bold = state.dim = null;
         continue;
       case Commands.RESET_ITALIC:
         state.italic = null;
@@ -212,12 +215,27 @@ const resetColorProperties = {
   decoration: Commands.RESET_DECORATION_COLOR
 };
 
+const chainedStates = {bold: 1, dim: 1};
+
 export const stateToCommands = state => {
   state = toState(state);
   const commands = [];
   let resetCount = 0;
 
+  // process chained states separately
+  if (state.bold === null) {
+    commands.push(Commands.RESET_BOLD);
+    ++resetCount;
+  }
+  if (state.dim === null) {
+    commands.push(Commands.RESET_DIM);
+    ++resetCount;
+  }
+  state.bold && commands.push(state.bold);
+  state.dim && commands.push(state.dim);
+
   for (const [name, value] of Object.entries(state)) {
+    if (chainedStates[name] === 1) continue; // skip chained states
     if (resetColorProperties.hasOwnProperty(name)) {
       // colors
       if (value === null) {
@@ -225,7 +243,7 @@ export const stateToCommands = state => {
         ++resetCount;
         continue;
       }
-      pushColor(commands, value);
+      value && pushColor(commands, value);
       continue;
     }
     if (value === null) {
@@ -233,30 +251,7 @@ export const stateToCommands = state => {
       ++resetCount;
       continue;
     }
-    commands.push(value);
-  }
-
-  return resetCount === TOTAL_RESETS ? [''] : commands;
-};
-
-export const stateToResetCommands = state => {
-  state = toState(state);
-  const commands = [];
-  let resetCount = 0;
-
-  for (const [name, value] of Object.entries(state)) {
-    if (resetColorProperties.hasOwnProperty(name)) {
-      // colors
-      if (value || value === null) {
-        commands.push(resetColorProperties[name]);
-        ++resetCount;
-      }
-      continue;
-    }
-    if (value || value === null) {
-      commands.push(Commands['RESET_' + name.toUpperCase()]);
-      ++resetCount;
-    }
+    value && commands.push(value);
   }
 
   return resetCount === TOTAL_RESETS ? [''] : commands;
@@ -268,7 +263,30 @@ export const stateTransition = (prev, next) => {
   const commands = [];
   let resetCount = 0;
 
+  // process chained states separately
+  if (prev.bold !== next.bold) {
+    if (next.bold === null) {
+      commands.push(Commands.RESET_BOLD);
+    } else if (next.bold) {
+      if (next.dim === null && prev.dim !== null) commands.push(Commands.RESET_DIM);
+      commands.push(next.bold);
+    }
+    next.dim && commands.push(next.dim);
+  } else {
+    if (prev.dim !== next.dim) {
+      if (next.dim === null) {
+        commands.push(Commands.RESET_DIM);
+        next.bold && commands.push(next.bold);
+      } else {
+        next.dim && commands.push(next.dim);
+      }
+    }
+  }
+  if (next.bold === null) ++resetCount;
+  if (next.dim === null) ++resetCount;
+
   for (const name of Object.keys(RESET_STATE)) {
+    if (chainedStates[name] === 1) continue; // skip chained states
     const value = next[name];
     if (resetColorProperties.hasOwnProperty(name)) {
       // color
@@ -288,14 +306,6 @@ export const stateTransition = (prev, next) => {
       continue;
     }
     if (value) {
-      if (name === 'bold') {
-        // special transition for bold and dim
-        if (prev[name] !== value) {
-          if (prev[name] !== null) commands.push(Commands.RESET_BOLD);
-          commands.push(value);
-        }
-        continue;
-      }
       if (prev[name] !== value) commands.push(value);
     }
   }
@@ -314,6 +324,28 @@ export const stateReverseTransition = (prev, next) => {
   const commands = [];
   let resetCount = 0;
 
+  // process chained states separately
+  if (next.bold !== prev.bold) {
+    if (!prev.bold) {
+      commands.push(Commands.RESET_BOLD);
+    } else {
+      if (!prev.dim && next.dim) commands.push(Commands.RESET_DIM);
+      commands.push(prev.bold);
+    }
+    prev.dim && commands.push(prev.dim);
+  } else {
+    if (next.dim !== prev.dim) {
+      if (!prev.dim) {
+        commands.push(Commands.RESET_DIM);
+        prev.bold && commands.push(prev.bold);
+      } else {
+        prev.dim && commands.push(prev.dim);
+      }
+    }
+  }
+  if (prev.bold === null) ++resetCount;
+  if (prev.dim === null) ++resetCount;
+
   for (const name of Object.keys(RESET_STATE)) {
     const value = prev[name];
     if (resetColorProperties.hasOwnProperty(name)) {
@@ -329,14 +361,6 @@ export const stateReverseTransition = (prev, next) => {
     if (!value) {
       if (next[name]) commands.push(Commands['RESET_' + name.toUpperCase()]);
       if (value === null) ++resetCount;
-      continue;
-    }
-    if (name === 'bold') {
-      // special transition for bold and dim
-      if (next[name] !== value) {
-        if (next[name] !== null) commands.push(Commands.RESET_BOLD);
-        commands.push(value);
-      }
       continue;
     }
     if (next[name] !== value) commands.push(value);

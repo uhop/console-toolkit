@@ -108,7 +108,7 @@ test('Styling', async t => {
       style.curlyUnderline +
       style.doubleUnderline +
       style.overline;
-    t.equal(s, '\x1B[22;1m\x1B[22;2m\x1B[3m\x1B[4m\x1B[5m\x1B[6m\x1B[7m\x1B[8m\x1B[9m\x1B[4:3m\x1B[21m\x1B[53m');
+    t.equal(s, '\x1B[1m\x1B[2m\x1B[3m\x1B[4m\x1B[5m\x1B[6m\x1B[7m\x1B[8m\x1B[9m\x1B[4:3m\x1B[21m\x1B[53m');
   });
 
   await t.test('List of color defaults', t => {
@@ -151,11 +151,11 @@ test('Styling', async t => {
 
   await t.test('Condense commands into a state', t => {
     const state = style.bold.bright.yellow.bg.blue.getState();
-    t.equal(style.italic.addState(state) + 'text' + style.reset.all, '\x1B[22;1;3;93;44mtext\x1B[m');
+    t.equal(style.italic.addState(state) + 'text' + style.reset.all, '\x1B[1;3;93;44mtext\x1B[m');
   });
 
   await t.test('Implicit getState()', t => {
     const state = style.bold.bright.yellow.bg.blue;
-    t.equal(style.italic.addState(state) + 'text' + style.reset.all, '\x1B[22;1;3;93;44mtext\x1B[m');
+    t.equal(style.italic.addState(state) + 'text' + style.reset.all, '\x1B[1;3;93;44mtext\x1B[m');
   });
 });

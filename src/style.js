@@ -169,6 +169,12 @@ class Reset {
   get all() {
     return this.make('');
   }
+  get bold() {
+    return this[styleSymbol].addState({bold: null});
+  }
+  get dim() {
+    return this[styleSymbol].addState({dim: null});
+  }
 }
 
 export class Style {
@@ -233,6 +239,12 @@ export class Style {
   // general commands: defined externally
   get resetAll() {
     return this.make('');
+  }
+  get resetBold() {
+    return this.addState({bold: null});
+  }
+  get resetDim() {
+    return this.addState({dim: null});
   }
   // color commands: defined externally
   stdRgb(r, g, b) {
