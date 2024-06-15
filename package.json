@@ -6,7 +6,16 @@
   "main": "src/index.js",
   "module": "src/index.js",
   "exports": {
-    "./*": "./src/*"
+    "./*": "./src/*",
+    "./ansi": "./src/ansi/index.js",
+    "./plot": "./src/plot/index.js",
+    "./spinner": "./src/spinner/index.js",
+    "./table": "./src/table/index.js",
+    "./turtle": "./src/turtle/index.js",
+    "./box": "./src/box.js",
+    "./panel": "./src/panel.js",
+    "./strings": "./src/strings.js",
+    "./style": "./src/style.js"
   },
   "scripts": {
     "test": "tape6 --flags FO"
