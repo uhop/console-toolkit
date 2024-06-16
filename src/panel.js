@@ -242,16 +242,23 @@ export class Panel {
   applyFn(x, y, width, height, fn) {
     // normalize arguments
 
-    if (x < 0) x = 0;
-    if (x >= this.width) return this;
-    if (x + width > this.width) {
-      width = this.width - x;
-    }
-
-    if (y < 0) y = 0;
-    if (y >= this.height) return this;
-    if (y + height > this.height) {
-      height = this.height - y;
+    if (typeof x == 'function') {
+      fn = x;
+      x = 0;
+      y = 0;
+      width = this.width;
+      height = this.height;
+    } else {
+      if (x < 0) x = 0;
+      if (x >= this.width) return this;
+      if (x + width > this.width) {
+        width = this.width - x;
+      }
+      if (y < 0) y = 0;
+      if (y >= this.height) return this;
+      if (y + height > this.height) {
+        height = this.height - y;
+      }
     }
 
     // fill cells
@@ -268,6 +275,14 @@ export class Panel {
   }
 
   fill(x, y, width, height, symbol, state = {}) {
+    if (typeof x === 'string') {
+      symbol = x;
+      state = y || {};
+      y = 0;
+      x = 0;
+      width = this.width;
+      height = this.height;
+    }
     if (typeof state == 'string') {
       state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
@@ -278,7 +293,15 @@ export class Panel {
     return this.applyFn(x, y, width, height, () => ({symbol, state}));
   }
 
-  fillState(x, y, width, height, {state = {}, emptySymbol = ' '} = {}) {
+  fillState(x, y, width, height, options) {
+    if (typeof x === 'object') {
+      options = x;
+      x = 0;
+      y = 0;
+      width = this.width;
+      height = this.height;
+    }
+    let {state = {}, emptySymbol = ' '} = options || {};
     if (typeof state == 'string') {
       state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
@@ -289,7 +312,15 @@ export class Panel {
     return this.applyFn(x, y, width, height, (x, y, cell) => ({symbol: cell ? cell.symbol : emptySymbol, state}));
   }
 
-  fillNonEmptyState(x, y, width, height, {state = {}} = {}) {
+  fillNonEmptyState(x, y, width, height, options) {
+    if (typeof x === 'object') {
+      options = x;
+      x = 0;
+      y = 0;
+      width = this.width;
+      height = this.height;
+    }
+    let {state = {}} = options || {};
     if (typeof state == 'string') {
       state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
@@ -300,7 +331,15 @@ export class Panel {
     return this.applyFn(x, y, width, height, (x, y, cell) => cell && {symbol: cell.symbol, state});
   }
 
-  combineStateBefore(x, y, width, height, {state = {}, emptySymbol = ' ', emptyState = RESET_STATE} = {}) {
+  combineStateBefore(x, y, width, height, options) {
+    if (typeof x === 'object') {
+      options = x;
+      x = 0;
+      y = 0;
+      width = this.width;
+      height = this.height;
+    }
+    let {state = {}, emptySymbol = ' ', emptyState = RESET_STATE} = options || {};
     if (typeof state == 'string') {
       state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
@@ -315,7 +354,15 @@ export class Panel {
     );
   }
 
-  combineStateAfter(x, y, width, height, {state = {}, emptySymbol = ' ', emptyState = RESET_STATE} = {}) {
+  combineStateAfter(x, y, width, height, options) {
+    if (typeof x === 'object') {
+      options = x;
+      x = 0;
+      y = 0;
+      width = this.width;
+      height = this.height;
+    }
+    let {state = {}, emptySymbol = ' ', emptyState = RESET_STATE} = options || {};
     if (typeof state == 'string') {
       state = commandsToState(state.split(';'));
     } else if (Array.isArray(state)) {
