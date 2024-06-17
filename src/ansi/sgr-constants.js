@@ -95,3 +95,5 @@ export const GRAY = BRIGHT_BLACK;
 export const GREY = GRAY;
 export const BG_GRAY = BG_BRIGHT_BLACK;
 export const BG_GREY = BG_GRAY;
+export const FG_GRAY = FG_BRIGHT_BLACK;
+export const FG_GREY = FG_GRAY;
