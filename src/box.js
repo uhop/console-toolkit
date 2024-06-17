@@ -153,7 +153,7 @@ export class Box {
 
   addBottom(box, {symbol = ' ', align = 'left'} = {}) {
     let a = this,
-      b = box;
+      b = toBox(box);
     const diff = a.width - b.width;
     if (diff) {
       const d = Math.abs(diff);
