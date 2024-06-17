@@ -743,4 +743,6 @@ export class Panel {
 
 addAliases(Panel, {combineState: 'combineStateAfter', toPanel: 'clone'});
 
+export const toPanel = Panel.make;
+
 export default Panel;

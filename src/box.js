@@ -247,4 +247,6 @@ export class Box {
 
 addAlias(Box, 'toBox', 'clone');
 
+export const toBox = Box.make;
+
 export default Box;
