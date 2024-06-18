@@ -61,6 +61,8 @@ export const toStrings = s => {
         if (Array.isArray(s)) return [...s];
         if (!s) break main;
         if (typeof s.toStrings == 'function') return s.toStrings();
+        if (typeof s.toBox == 'function') return s.toBox().box;
+        if (typeof s.toPanel == 'function') return s.toPanel().toStrings();
         s = String(s);
         continue main;
     }
