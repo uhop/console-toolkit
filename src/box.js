@@ -27,6 +27,7 @@ export class Box {
         case 'object':
           if (s instanceof Box) return s.clone();
           if (typeof s?.toBox == 'function') return s.toBox(options);
+          if (typeof s?.toPanel == 'function') return s.toPanel().toBox(options);
           break;
       }
       s = toStrings(s);
