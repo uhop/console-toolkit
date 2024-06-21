@@ -3,23 +3,17 @@
 const units = ['s', 'ms', 'μs', 'ns', 'ps'],
   unicodeUnits = ['s', '㎳', '㎲', '㎱', '㎰'];
 
-export const prepareTimeFormat = (data, scale = 1, useUnicode) => {
+export const prepareTimeFormat = (values, scale = 1, useUnicode) => {
   let mx = -1000,
     mn = 1000;
-  for (let i = 0; i < data.length; ++i) {
-    const p = Math.floor(Math.log(data[i] / scale) / Math.LN10);
+  for (let i = 0; i < values.length; ++i) {
+    const p = Math.floor(Math.log(values[i] / scale) / Math.LN10);
     if (isFinite(p)) {
-      if (mx < p) {
-        mx = p;
-      }
-      if (mn > p) {
-        mn = p;
-      }
+      if (mx < p) mx = p;
+      if (mn > p) mn = p;
     }
   }
-  if (mx < mn) {
-    mn = mx = -6;
-  }
+  if (mx < mn) mn = mx = -6;
   const digits = Math.max(mx - mn + 1, 2);
   scale = 1 / scale;
   // TODO: get rid of the loop below
@@ -30,9 +24,7 @@ export const prepareTimeFormat = (data, scale = 1, useUnicode) => {
 
 export const formatTime = (value, format) => {
   let result = (value * format.scale).toFixed(format.precision);
-  if (format.precision > 0) {
-    result = result.replace(/\.0+$/, '');
-  }
+  if (format.precision > 0) result = result.replace(/\.0+$/, '');
   return result + format.unit;
 };
 
@@ -49,23 +41,23 @@ const putCommasIn = (s, options) => {
   );
 };
 
-export const formatInteger = (n, options) =>
-  isNaN(n) ? '' : (n < 0 ? '-' : options?.keepSign ? '+' : '') + putCommasIn(Math.abs(n).toFixed(0), options);
+export const formatInteger = (value, options) =>
+  isNaN(value)
+    ? ''
+    : (value < 0 ? '-' : options?.keepSign ? '+' : '') + putCommasIn(Math.abs(value).toFixed(0), options);
 
-export const formatNumber = (n, options) => {
-  if (isNaN(n)) return '';
+export const formatNumber = (value, options) => {
+  if (isNaN(value)) return '';
   const decimals = options?.decimals ?? 0;
   let sign = options?.keepSign ? '+' : '';
-  if (n < 0) {
-    n = -n;
+  if (value < 0) {
+    value = -value;
     sign = '-';
   }
-  const s = n.toFixed(decimals);
+  const s = value.toFixed(decimals);
   if (decimals < 1) return sign + putCommasIn(s, options);
   let fraction = s.slice(-decimals);
-  if (!options?.keepFractionAsIs) {
-    fraction = fraction.replace(/0+$/, '');
-  }
+  if (!options?.keepFractionAsIs) fraction = fraction.replace(/0+$/, '');
   const dot = options?.dot ?? '.';
   return sign + putCommasIn(s.slice(0, -decimals - 1), options) + (fraction ? dot + fraction : '');
 };
@@ -73,27 +65,25 @@ export const formatNumber = (n, options) => {
 const exp = [0, 0, 0, 0, 3, 3, 6, 6, 6, 9, 9, 9, 12];
 const abbr = '***k**M**G**T';
 
-export const abbrNumber = (n, options) => {
-  if (isNaN(n)) return '';
+export const abbrNumber = (value, options) => {
+  if (isNaN(value)) return '';
   const decimals = options?.decimals ?? 0;
   let sign = options?.keepSign ? '+' : '';
-  if (n < 0) {
-    n = -n;
+  if (value < 0) {
+    value = -value;
     sign = '-';
   }
-  if (n <= 1) {
-    let t1 = n.toString(),
-      t2 = n.toFixed(decimals);
+  if (value <= 1) {
+    let t1 = value.toString(),
+      t2 = value.toFixed(decimals);
     return sign + (t1.length < t2.length ? t1 : t2);
   }
-  const digits = Math.min(Math.floor(Math.log(n) / Math.LN10), exp.length - 1),
+  const digits = Math.min(Math.floor(Math.log(value) / Math.LN10), exp.length - 1),
     e = exp[digits],
-    s = Math.round(n / Math.pow(10, e - decimals)).toFixed(0);
+    s = Math.round(value / Math.pow(10, e - decimals)).toFixed(0);
   if (decimals < 1) return sign + putCommasIn(s, options) + ((e && abbr.charAt(e)) || '');
   let fraction = s.slice(-decimals);
-  if (!options?.keepFractionAsIs) {
-    fraction = fraction.replace(/0+$/, '');
-  }
+  if (!options?.keepFractionAsIs) fraction = fraction.replace(/0+$/, '');
   const dot = options?.dot ?? '.';
   return (
     sign +
@@ -113,6 +103,8 @@ export const compareDifference = (a, b) => {
 
   const less = a < b;
   if (!less) [a, b] = [b, a];
+
+  if (a === b) return {less, equality: true};
 
   const absDiff = b - a,
     diff = absDiff / a;
