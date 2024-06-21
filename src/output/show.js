@@ -30,7 +30,7 @@ export class Out {
   }
   out(s, {endOfLineCommand = '\x1B[m', colorDepth} = {}) {
     if (typeof colorDepth != 'number' || isNaN(colorDepth)) colorDepth = this.colorDepth;
-    return out(s, this.stream, endOfLineCommand, colorDepth);
+    return out(s, {stream: this.stream, endOfLineCommand, colorDepth});
   }
 }
 
