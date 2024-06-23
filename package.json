@@ -1,7 +1,7 @@
 {
-  "name": "console-painter",
+  "name": "console-toolkit",
   "version": "1.0.0",
-  "description": "Toolkit to produce a fancy console output (boxes, tables, colors).",
+  "description": "Toolkit to produce a fancy console output (boxes, tables, charts, colors).",
   "type": "module",
   "main": "src/index.js",
   "module": "src/index.js",
@@ -20,10 +20,10 @@
   "scripts": {
     "test": "tape6 --flags FO"
   },
-  "github": "http://github.com/uhop/console-painter",
+  "github": "http://github.com/uhop/console-toolkit",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/uhop/console-painter.git"
+    "url": "git+https://github.com/uhop/console-toolkit.git"
   },
   "keywords": [
     "console",
@@ -32,14 +32,19 @@
     "box",
     "boxes",
     "table",
-    "tables"
+    "tables",
+    "chart",
+    "charts",
+    "turtle",
+    "CLI",
+    "TUI"
   ],
   "author": "Eugene Lazutkin <eugene.lazutkin@gmail.com> (https://www.lazutkin.com/)",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/uhop/console-painter/issues"
+    "url": "https://github.com/uhop/console-toolkit/issues"
   },
-  "homepage": "https://github.com/uhop/console-painter#readme",
+  "homepage": "https://github.com/uhop/console-toolkit#readme",
   "files": [
     "./src"
   ],

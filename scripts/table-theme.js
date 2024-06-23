@@ -1,7 +1,7 @@
 import process from 'node:process';
 
-import Box from 'console-painter/box.js';
-import makeTable from 'console-painter/table';
+import Box from 'console-toolkit/box.js';
+import makeTable from 'console-toolkit/table';
 
 if (process.argv.length < 3) {
   console.log('Usage: node table-theme.js <theme-name>');

@@ -1,18 +1,18 @@
 import process from 'node:process';
 
-import Writer from 'console-painter/output/writer.js';
-import Updater from 'console-painter/output/updater.js';
+import Writer from 'console-toolkit/output/writer.js';
+import Updater from 'console-toolkit/output/updater.js';
 
-import Box from 'console-painter/box.js';
+import Box from 'console-toolkit/box.js';
 
-import {CURSOR_INVISIBLE, CURSOR_NORMAL} from 'console-painter/ansi/csi.js';
-import style, {c} from 'console-painter/style.js';
+import {CURSOR_INVISIBLE, CURSOR_NORMAL} from 'console-toolkit/ansi/csi.js';
+import style, {c} from 'console-toolkit/style.js';
 
-import lineTheme from 'console-painter/themes/lines/unicode-bold.js';
-import makeTable from 'console-painter/table/index.js';
-import {formatInteger, abbrNumber} from 'console-painter/alphanumeric/number-formatters.js';
+import lineTheme from 'console-toolkit/themes/lines/unicode-bold.js';
+import makeTable from 'console-toolkit/table/index.js';
+import {formatInteger, abbrNumber} from 'console-toolkit/alphanumeric/number-formatters.js';
 
-import drawChart from 'console-painter/charts/bars/plain.js';
+import drawChart from 'console-toolkit/charts/bars/plain.js';
 
 const showDiff = (a, b) => {
   const s = formatInteger(a);

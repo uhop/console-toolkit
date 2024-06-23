@@ -1,6 +1,6 @@
 import test from "tape-six";
 
-import {BLACK, RED, RESET, RESET_COLOR} from 'console-painter/ansi/sgr-constants.js';
+import {BLACK, RED, RESET, RESET_COLOR} from 'console-toolkit/ansi/sgr-constants.js';
 
 test('SGR constants', t => {
   t.equal(BLACK, '\x1B[30m');
