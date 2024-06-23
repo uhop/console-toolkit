@@ -29,6 +29,10 @@
 
 ![Table + chart](https://github.com/uhop/console-toolkit/wiki/images/example-table-chart.png)
 
+### Turtle graphics
+
+![Turtle graphics](https://github.com/uhop/console-toolkit/wiki/images/example-turtle.png)
+
 ## Code example
 
 ```js
