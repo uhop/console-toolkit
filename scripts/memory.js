@@ -67,7 +67,7 @@ process.once('SIGINT', () => {
   process.exit(130);
 });
 
-await writer.writeString(c`{{bold}}Memory usage by this process {{dim}}(Press Ctrl+C to exit)\n`);
+await writer.writeString(c`{{bold}}Memory usage by this process {{reset.bold.dim}}(Press Ctrl+C to exit)\n`);
 await writer.writeString(
   c`{{dim}}Legend: RSS - resident set size, {{bright.green}}green{{reset.color}} - goes down, {{bright.red}}red{{reset.color}} - goes up\n`
 );
