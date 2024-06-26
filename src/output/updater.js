@@ -34,22 +34,22 @@ export class Updater {
     this.intervalHandle = null;
   }
 
-  getFrame(state) {
-    if (typeof this.updater == 'function') return this.updater(state);
+  getFrame(state, ...args) {
+    if (typeof this.updater == 'function') return this.updater(state, ...args);
     if (typeof this.updater?.getFrame == 'function') {
       this.updater.state = state;
-      return this.updater.getFrame();
+      return this.updater.getFrame(...args);
     }
     throw new TypeError('Updater must be a function or implement getFrame()');
   }
 
-  async writeFrame(state) {
+  async writeFrame(state, ...args) {
     if (this.first) {
       this.prologue && (await this.writer.writeString(this.prologue));
       this.first = false;
     }
 
-    const frame = toStrings(this.getFrame(state));
+    const frame = toStrings(this.getFrame(state, ...args));
     if (!frame) return;
 
     if (this.lastHeight) await this.writer.writeString('\r' + cursorUp(this.lastHeight));
@@ -67,14 +67,14 @@ export class Updater {
     this.epilogue && (await this.writer.writeString(this.epilogue));
   }
 
-  async update(state = 'active') {
+  async update(state = 'active', ...args) {
     if (this.isDone || !this.writer.isTTY) return;
-    await this.writeFrame(state);
+    await this.writeFrame(state, ...args);
   }
 
-  async final() {
+  async final(...args) {
     if (this.isDone) return;
-    await this.writeFrame('finished');
+    await this.writeFrame('finished', ...args);
     await this.done();
   }
 }
