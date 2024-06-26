@@ -23,10 +23,10 @@ await writer.writeString(style.inverse.text('123'));
 await writer.write(style.bg.blue.bold.bright.white.text(['xxx', 'yy', 'z']));
 
 await writer.cursorTo(10, 10);
-await writer.write(style.bold.bright.green.text(['xxx', 'yy', 'z']), true);
+await writer.write(style.bold.bright.green.text(['xxx', 'yy', 'z']), {sameColumn: true});
 
 await writer.moveCursor(10, -3);
-await writer.write(style.bold.bright.red.text('xxx\nyy\nz'), true);
+await writer.write(style.bold.bright.red.text('xxx\nyy\nz'), {sameColumn: true});
 
 await sleep(2000);
 
