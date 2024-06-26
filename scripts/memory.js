@@ -5,7 +5,7 @@ import Updater from 'console-toolkit/output/updater.js';
 
 import Box from 'console-toolkit/box.js';
 
-import {CURSOR_INVISIBLE, CURSOR_NORMAL} from 'console-toolkit/ansi/csi.js';
+import {CLEAR_EOL, CURSOR_INVISIBLE, CURSOR_NORMAL} from 'console-toolkit/ansi/csi.js';
 import style, {c} from 'console-toolkit/style.js';
 
 import lineTheme from 'console-toolkit/themes/lines/unicode-bold.js';
@@ -60,7 +60,11 @@ const memorySnapshot = () => {
 };
 
 const writer = new Writer(),
-  updater = new Updater(memorySnapshot, {prologue: CURSOR_INVISIBLE, epilogue: CURSOR_NORMAL}, writer);
+  updater = new Updater(
+    memorySnapshot,
+    {prologue: CURSOR_INVISIBLE, epilogue: CURSOR_NORMAL, afterLine: CLEAR_EOL},
+    writer
+  );
 
 process.once('SIGINT', () => {
   updater.done();
