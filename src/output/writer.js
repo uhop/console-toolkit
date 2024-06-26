@@ -93,12 +93,12 @@ export class Writer {
     await write(this.stream, s.replace(matchCsiNoGroups, ''));
   }
 
-  async write(s, sameColumn, noLastNewLine) {
+  async write(s, {sameColumn, noLastNewLine, beforeLine = '', afterLine = ''} = {}) {
     s = toStrings(s);
 
     if (!this.isTTY) {
       const matcher = this.forceColorDepth ? matchCsiNoSgrNoGroups : matchCsiNoGroups;
-      let lines = Array.from(s).join('\n');
+      let lines = Array.from(s).map(line => beforeLine + line + afterLine).join('\n');
       if (!noLastNewLine) lines += '\n';
       matcher.lastIndex = 0;
       lines = lines.replace(matcher, '');
@@ -108,21 +108,22 @@ export class Writer {
 
     if (sameColumn === 'save') {
       for (const line of s) {
-        await write(this.stream, CURSOR_SAVE_POS + line + CURSOR_RESTORE_POS + CURSOR_DOWN1);
+        await write(this.stream, CURSOR_SAVE_POS + beforeLine + line + afterline + CURSOR_RESTORE_POS + CURSOR_DOWN1);
       }
       return;
     }
 
     if (sameColumn) {
       for (const line of s) {
-        const length = getLength(line);
-        await write(this.stream, line);
+        const fullLine = beforeLine + line + afterLine,
+          length = getLength(fullLine);
+        await write(this.stream, fullLine);
         await this.moveCursor(-length, 1);
       }
       return;
     }
 
-    let lines = Array.from(s).join('\n');
+    let lines = Array.from(s).map(line => beforeLine + line + afterLine).join('\n');
     if (!noLastNewLine) lines += '\n';
     await write(this.stream, lines);
   }

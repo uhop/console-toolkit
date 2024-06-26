@@ -7,11 +7,15 @@ import {cursorUp, setCommands} from '../ansi/csi.js';
 const RESET = setCommands([]);
 
 export class Updater {
-  constructor(updater, {prologue, epilogue, noLastNewLine} = {}, writer = new Writer()) {
+  constructor(updater, {prologue, epilogue, beforeFrame, afterFrame, beforeLine, afterLine, noLastNewLine} = {}, writer = new Writer()) {
     this.updater = updater;
     this.writer = writer;
     this.prologue = prologue || RESET;
     this.epilogue = epilogue || RESET;
+    this.beforeFrame = beforeFrame || '';
+    this.afterFrame = afterFrame || '';
+    this.beforeLine = beforeLine || '';
+    this.afterLine = afterLine || '';
     this.noLastNewLine = noLastNewLine;
     this.lastHeight = 0;
     this.isDone = false;
@@ -52,12 +56,13 @@ export class Updater {
     const frame = toStrings(this.getFrame(state, ...args));
     if (!frame) return;
 
-    if (this.lastHeight) await this.writer.writeString('\r' + cursorUp(this.lastHeight));
+    if (this.lastHeight) await this.writer.writeString('\r' + cursorUp(this.lastHeight) + this.beforeFrame);
 
     this.lastHeight = frame.length;
     if (this.noLastNewLine) --this.lastHeight;
 
-    await this.writer.write(frame, false, this.noLastNewLine);
+    await this.writer.write(frame, {noLastNewLine: this.noLastNewLine, beforeLine: this.beforeLine, afterLine: this.afterLine});
+    this.afterFrame && (await this.writer.writeString(this.afterFrame));
   }
 
   async done() {
