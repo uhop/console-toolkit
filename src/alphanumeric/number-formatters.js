@@ -24,7 +24,7 @@ export const prepareTimeFormat = (values, scale = 1, useUnicode) => {
 
 export const formatTime = (value, format) => {
   let result = (value * format.scale).toFixed(format.precision);
-  if (format.precision > 0) result = result.replace(/\.0+$/, '');
+  if (format.precision > 0 && !format.keepFractionAsIs) result = result.replace(/\.0+$/, '');
   return result + format.unit;
 };
 
