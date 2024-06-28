@@ -14,10 +14,10 @@ const ensureSize = (cellSize, cellLength, cellGap, pos, lineTheme, axis, lengths
       perCell = Math.floor(diff / cellSize),
       remainder = diff % cellSize;
     if (perCell) {
-      for (let i = 0; i < cellSize; ++i) lengths[j + i] += perCell;
+      for (let i = 0; i < cellSize; ++i) lengths[pos + i] += perCell;
     }
     if (remainder) {
-      for (let i = 0; i < remainder; ++i) ++lengths[j + i];
+      for (let i = 0; i < remainder; ++i) ++lengths[pos + i];
     }
   }
 };
