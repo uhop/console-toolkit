@@ -89,5 +89,6 @@ BSD 3-Clause License
 
 ## Release history
 
+- 1.1.1: *Minor bugfixes in `Table`, some improvements, updated deps.*
 - 1.1.0: *Minor improvements, enhanced `Writer` and `Updater`.*
 - 1.0.0: *Initial release.*
