@@ -7,8 +7,11 @@ const getCellAlign = (align, index) => (typeof align == 'string' && align[index]
 
 const ensureSize = (cellSize, cellLength, cellGap, pos, lineTheme, axis, lengths) => {
   let available = (cellSize - 1) * cellGap;
-  for (let i = 0; i < cellSize; ++i)
-    available += lengths[pos + i] + (!axis[pos + i] ? 0 : lineTheme ? lineTheme['w_' + axis[pos + i]] : 1);
+  for (let i = 0; i < cellSize; ++i) {
+    available += lengths[pos + i];
+    if (i + 1 === cellSize || !axis[pos + i]) continue;
+    available += lineTheme ? lineTheme['w_' + axis[pos + i]] : 1;
+  }
   if (cellLength > available) {
     const diff = cellLength - available,
       perCell = Math.floor(diff / cellSize),
