@@ -10,6 +10,8 @@ import {
   optimize,
   toState
 } from './ansi/sgr-state.js';
+import parse from './strings/parse.js';
+import split from './strings/split.js';
 import Box from './box.js';
 import {addAliases} from './meta.js';
 
@@ -47,29 +49,7 @@ export class Panel {
 
     const {emptySymbol = '\x07'} = options || {},
       panel = new Panel(s.width, s.height);
-
-    for (let i = 0, n = s.height; i < n; ++i) {
-      const row = s.box[i],
-        panelRow = panel.box[i];
-      let start = 0,
-        pos = 0,
-        state = {};
-      matchCsi.lastIndex = 0;
-      for (const match of row.matchAll(matchCsi)) {
-        const str = [...row.substring(start, match.index)];
-        for (let j = 0; j < str.length; ++j) {
-          panelRow[pos++] = str[j] === emptySymbol ? null : {symbol: str[j], state};
-        }
-        start = match.index + match[0].length;
-        if (match[3] !== 'm') continue;
-        state = addCommandsToState(state, match[1].split(';'));
-      }
-      const str = [...row.substring(start)];
-      for (let j = 0; j < str.length; ++j) {
-        panelRow[pos++] = str[j] === emptySymbol ? null : {symbol: str[j], state};
-      }
-    }
-
+    panel.put(0, 0, s, emptySymbol);
     return panel;
   }
 
@@ -86,8 +66,9 @@ export class Panel {
         initState = {},
         state = initState;
       for (let j = 0; j < this.width; ++j) {
-        const cell = panelRow[j] || emptyCell,
-          newState = combineStates(state, cell.state),
+        const cell = panelRow[j] || emptyCell;
+        if (cell.ignore) continue;
+        const newState = combineStates(state, cell.state),
           commands = stateTransition(state, newState);
         row += stringifyCommands(commands) + cell.symbol;
         state = newState;
@@ -208,31 +189,36 @@ export class Panel {
     for (let i = 0; i < height; ++i) {
       const row = this.box[y + i],
         s = box.box[i];
-      let start = 0,
-        pos = 0;
+      let pos = 0;
       matchCsi.lastIndex = 0;
-      for (const match of s.matchAll(matchCsi)) {
-        const str = [...s.substring(start, match.index)];
-        for (let j = 0; j < str.length; ++j, ++pos) {
+      for (const {string, match} of parse(s, matchCsi)) {
+        const {graphemes} = split(string);
+        for (const grapheme of graphemes) {
           if (x + pos >= row.length) break;
-          const cell = row[x + pos];
-          row[x + pos] =
-            str[j] === emptySymbol ? null : {symbol: str[j], state: cell ? combineStates(cell.state, state) : state};
+          if (grapheme.symbol === emptySymbol) {
+            row[x + pos] = null;
+          } else {
+            const cell = row[x + pos];
+            row[x + pos] = {
+              symbol: grapheme.symbol,
+              state: cell && !cell.ignore ? combineStates(cell.state, state) : state
+            };
+          }
+          ++pos;
+          if (grapheme.width === 2) {
+            if (x + pos < row.length) {
+              row[x + pos] = {ignore: true};
+              ++pos;
+            } else {
+              row[x + pos - 1] = null;
+            }
+          }
         }
-        start = match.index + match[0].length;
-        if (match[3] !== 'm') continue;
-        state = addCommandsToState(state, match[1].split(';'));
-      }
-      const str = [...s.substring(start)];
-      for (let j = 0; j < str.length; ++j, ++pos) {
-        if (x + pos >= row.length) break;
-        const cell = row[x + pos];
-        row[x + pos] =
-          str[j] === emptySymbol ? null : {symbol: str[j], state: cell ? combineStates(cell.state, state) : state};
+        if (match && match[3] === 'm') state = addCommandsToState(state, match[1].split(';'));
       }
       if (x + pos < row.length) {
         const cell = row[x + pos];
-        if (cell) row[x + pos] = {symbol: cell.symbol, state: combineStates(state, cell.state)};
+        if (cell && !cell.ignore) row[x + pos] = {symbol: cell.symbol, state: combineStates(state, cell.state)};
       }
     }
 
