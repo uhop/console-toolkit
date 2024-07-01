@@ -38,6 +38,12 @@ export class Updater {
     this.intervalHandle = null;
   }
 
+  reset() {
+    this.stopRefreshing();
+    this.isDone = false;
+    this.lastHeight = 0;
+  }
+
   getFrame(state, ...args) {
     if (typeof this.updater == 'function') return this.updater(state, ...args);
     if (typeof this.updater?.getFrame == 'function') {
