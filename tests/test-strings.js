@@ -41,10 +41,10 @@ test('ANSI utilities', t => {
     t.equal(clip(text, 3), '\x1B[31mred');
     t.equal(clip(text, 4), text);
 
-    t.equal(clip(text, 0, true), '\x1B[31m');
-    t.equal(clip(text, 1, true), '\x1B[31mr');
-    t.equal(clip(text, 2, true), '\x1B[31mre');
-    t.equal(clip(text, 3, true), text);
-    t.equal(clip(text, 4, true), text);
+    t.equal(clip(text, 0, {includeLastCommand: true}), '\x1B[31m');
+    t.equal(clip(text, 1, {includeLastCommand: true}), '\x1B[31mr');
+    t.equal(clip(text, 2, {includeLastCommand: true}), '\x1B[31mre');
+    t.equal(clip(text, 3, {includeLastCommand: true}), text);
+    t.equal(clip(text, 4, {includeLastCommand: true}), text);
   });
 });

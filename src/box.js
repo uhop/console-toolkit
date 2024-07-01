@@ -78,8 +78,8 @@ export class Box {
     return new Box(this);
   }
 
-  clip(width, includeLastCommand) {
-    return new Box(clipStrings(this.box, width, includeLastCommand), true);
+  clip(width, options) {
+    return Box.make(clipStrings(this.box, width, options));
   }
 
   // padding
