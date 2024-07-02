@@ -41,6 +41,10 @@
   ],
   "author": "Eugene Lazutkin <eugene.lazutkin@gmail.com> (https://www.lazutkin.com/)",
   "license": "BSD-3-Clause",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/uhop"
+  },
   "bugs": {
     "url": "https://github.com/uhop/console-toolkit/issues"
   },
