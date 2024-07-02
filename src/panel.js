@@ -55,7 +55,7 @@ export class Panel {
   toStrings(options = {}) {
     if (!this.height || !this.width) return Box.makeBlank(this.width, this.height);
 
-    const {emptySymbol = ' ', emptyState = RESET_STATE} = options;
+    let {emptySymbol = ' ', emptyState = RESET_STATE} = options;
     emptyState = toState(emptyState);
 
     const s = new Array(this.height),
