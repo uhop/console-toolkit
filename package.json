@@ -54,6 +54,8 @@
     ]
   },
   "devDependencies": {
+    "emoji-regex": "^10.3.0",
+    "get-east-asian-width": "^1.2.0",
     "tape-six": "^0.9.6"
   }
 }
