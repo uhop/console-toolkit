@@ -11,7 +11,7 @@ import {
   toState
 } from './ansi/sgr-state.js';
 import parse from './strings/parse.js';
-import split from './strings/split.js';
+import split, {size} from './strings/split.js';
 import Box from './box.js';
 import {addAliases} from './meta.js';
 
@@ -251,9 +251,20 @@ export class Panel {
     for (let i = 0; i < height; ++i) {
       const row = this.box[y + i];
       for (let j = 0; j < width; ++j) {
-        const cell = row[x + j],
-          newCell = fn(x + j, y + i, cell);
-        if (newCell !== undefined) row[x + j] = newCell;
+        const cell = row[x + j];
+        if (cell?.ignore) continue;
+        const newCell = fn(x + j, y + i, cell);
+        if (newCell !== undefined) {
+          if (cell) {
+            const symbolWidth = size(cell.symbol);
+            if (symbolWidth > 1 && x + j + 1 < row.length) row[x + j + 1] = null;
+          }
+          if (newCell) {
+            const symbolWidth = size(newCell.symbol);
+            if (symbolWidth > 1 && x + j + 1 < row.length) row[x + j + 1] = {ignore: true};
+          }
+          row[x + j] = newCell;
+        }
       }
     }
 
