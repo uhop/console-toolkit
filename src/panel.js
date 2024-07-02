@@ -47,14 +47,15 @@ export class Panel {
       break main;
     }
 
-    const {emptySymbol = '\x07'} = options || {},
-      panel = new Panel(s.width, s.height);
-    panel.put(0, 0, s, emptySymbol);
+    const panel = new Panel(s.width, s.height);
+    panel.put(0, 0, s, options);
     return panel;
   }
 
-  toStrings({emptySymbol = ' ', emptyState = RESET_STATE} = {}) {
+  toStrings(options = {}) {
     if (!this.height || !this.width) return Box.makeBlank(this.width, this.height);
+
+    const {emptySymbol = ' ', emptyState = RESET_STATE} = options;
     emptyState = toState(emptyState);
 
     const s = new Array(this.height),
@@ -168,7 +169,7 @@ export class Panel {
     return this;
   }
 
-  put(x, y, text, emptySymbol = '\x07') {
+  put(x, y, text, options = {}) {
     if (text instanceof Panel) return this.copyFrom(x, y, text.width, text.height, text);
 
     // normalize arguments
@@ -184,6 +185,8 @@ export class Panel {
     if (y >= this.height) return this;
     if (y + height > this.height) height = this.height - y;
 
+    const {emptySymbol = '\x07'} = options;
+
     // copy characters
     let state = {};
     for (let i = 0; i < height; ++i) {
@@ -192,7 +195,7 @@ export class Panel {
       let pos = 0;
       matchCsi.lastIndex = 0;
       for (const {string, match} of parse(s, matchCsi)) {
-        const {graphemes} = split(string);
+        const {graphemes} = split(string, options);
         for (const grapheme of graphemes) {
           if (x + pos >= row.length) break;
           if (grapheme.symbol === emptySymbol) {
@@ -225,7 +228,7 @@ export class Panel {
     return this;
   }
 
-  applyFn(x, y, width, height, fn) {
+  applyFn(x, y, width, height, fn, options) {
     // normalize arguments
 
     if (typeof x == 'function') {
@@ -256,11 +259,11 @@ export class Panel {
         const newCell = fn(x + j, y + i, cell);
         if (newCell !== undefined) {
           if (cell) {
-            const symbolWidth = size(cell.symbol);
+            const symbolWidth = size(cell.symbol, options);
             if (symbolWidth > 1 && x + j + 1 < row.length) row[x + j + 1] = null;
           }
           if (newCell) {
-            const symbolWidth = size(newCell.symbol);
+            const symbolWidth = size(newCell.symbol, options);
             if (symbolWidth > 1 && x + j + 1 < row.length) row[x + j + 1] = {ignore: true};
           }
           row[x + j] = newCell;
@@ -271,7 +274,7 @@ export class Panel {
     return this;
   }
 
-  fill(x, y, width, height, symbol, state = {}) {
+  fill(x, y, width, height, symbol, state = {}, options) {
     if (typeof x === 'string') {
       symbol = x;
       state = y || {};
@@ -287,7 +290,7 @@ export class Panel {
     } else {
       state = toState(state);
     }
-    return this.applyFn(x, y, width, height, () => ({symbol, state}));
+    return this.applyFn(x, y, width, height, () => ({symbol, state}), options);
   }
 
   fillState(x, y, width, height, options) {
@@ -306,7 +309,14 @@ export class Panel {
     } else {
       state = toState(state);
     }
-    return this.applyFn(x, y, width, height, (x, y, cell) => ({symbol: cell ? cell.symbol : emptySymbol, state}));
+    return this.applyFn(
+      x,
+      y,
+      width,
+      height,
+      (x, y, cell) => ({symbol: cell ? cell.symbol : emptySymbol, state}),
+      options
+    );
   }
 
   fillNonEmptyState(x, y, width, height, options) {
@@ -325,7 +335,7 @@ export class Panel {
     } else {
       state = toState(state);
     }
-    return this.applyFn(x, y, width, height, (x, y, cell) => cell && {symbol: cell.symbol, state});
+    return this.applyFn(x, y, width, height, (x, y, cell) => cell && {symbol: cell.symbol, state}, options);
   }
 
   combineStateBefore(x, y, width, height, options) {
@@ -344,10 +354,16 @@ export class Panel {
     } else {
       state = toState(state);
     }
-    return this.applyFn(x, y, width, height, (x, y, cell) =>
-      cell
-        ? {symbol: cell.symbol, state: combineStates(state, cell.state)}
-        : {symbol: emptySymbol, state: combineStates(state, emptyState)}
+    return this.applyFn(
+      x,
+      y,
+      width,
+      height,
+      (x, y, cell) =>
+        cell
+          ? {symbol: cell.symbol, state: combineStates(state, cell.state)}
+          : {symbol: emptySymbol, state: combineStates(state, emptyState)},
+      options
     );
   }
 
@@ -367,14 +383,20 @@ export class Panel {
     } else {
       state = toState(state);
     }
-    return this.applyFn(x, y, width, height, (x, y, cell) =>
-      cell
-        ? {symbol: cell.symbol, state: combineStates(cell.state, state)}
-        : {symbol: emptySymbol, state: combineStates(emptyState, state)}
+    return this.applyFn(
+      x,
+      y,
+      width,
+      height,
+      (x, y, cell) =>
+        cell
+          ? {symbol: cell.symbol, state: combineStates(cell.state, state)}
+          : {symbol: emptySymbol, state: combineStates(emptyState, state)},
+      options
     );
   }
 
-  clear(x, y, width, height) {
+  clear(x, y, width, height, options) {
     // normalize arguments
     if (typeof x != 'number') {
       x = y = 0;
@@ -391,7 +413,7 @@ export class Panel {
       height = this.height;
     }
 
-    return this.applyFn(x, y, width, height, () => null);
+    return this.applyFn(x, y, width, height, () => null, options);
   }
 
   padLeft(n) {
