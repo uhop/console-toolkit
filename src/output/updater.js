@@ -28,20 +28,23 @@ export class Updater {
   }
 
   startRefreshing(ms = 100) {
-    if (this.intervalHandle || this.isDone || !this.writer.isTTY) return;
+    if (this.intervalHandle || this.isDone || !this.writer.isTTY) return this;
     this.intervalHandle = setInterval(this.update.bind(this), ms);
+    return this;
   }
 
   stopRefreshing() {
-    if (!this.intervalHandle) return;
+    if (!this.intervalHandle) return this;
     clearInterval(this.intervalHandle);
     this.intervalHandle = null;
+    return this;
   }
 
   reset() {
     this.stopRefreshing();
     this.isDone = false;
     this.lastHeight = 0;
+    return this;
   }
 
   getFrame(state, ...args) {
