@@ -2,16 +2,16 @@ import {size} from './strings/split.js';
 import parse, {matchCsiNoGroups, matchCsiNoSgrNoGroups} from './strings/parse.js';
 import clip from './strings/clip.js';
 
-export const getLength = (s, options) => {
+export const getLength = (s, matcher) => {
   let counter = 0;
-  for (const {string} of parse(s, options)) {
+  for (const {string} of parse(s, matcher)) {
     counter += size(string);
   }
   return counter;
 };
 
-export const getMaxLength = (strings, options) =>
-  strings.reduce((acc, s) => Math.max(acc, getLength(s, options)), 0);
+export const getMaxLength = (strings, matcher) =>
+  strings.reduce((acc, s) => Math.max(acc, getLength(s, matcher)), 0);
 
 export const clipStrings = (strings, width, options) =>
   strings.map(s => clip(s, width, options));
