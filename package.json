@@ -1,6 +1,6 @@
 {
   "name": "console-toolkit",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Toolkit to produce a fancy console output (boxes, tables, charts, colors).",
   "type": "module",
   "main": "src/index.js",
