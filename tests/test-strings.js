@@ -13,6 +13,7 @@ test('ANSI utilities', t => {
   t.test('Unicode symbols', t => {
     const s = style.cyan.text('① ② ③ ④');
     t.equal(getLength(s), 7);
+    t.equal(getLength('字\u1F920\u1F407'), 6);
   });
 
   t.test('Get max length', t => {

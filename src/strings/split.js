@@ -1,18 +1,19 @@
-// Loosely adapted on https://www.npmjs.com/package/string-width by
+// Loosely adapted from https://www.npmjs.com/package/string-width by
 // [Sindre Sorhus](https://www.npmjs.com/~sindresorhus) under the MIT license.
 
-let emojiRegex = null;
-try {
-  emojiRegex = (await import('emoji-regex')).default();
-} catch (error) {
-  // squelch
-}
-
-let eastAsianWidth = null;
-try {
-  eastAsianWidth = (await import('get-east-asian-width')).eastAsianWidth;
-} catch (error) {
-  // squelch
+let emojiRegex = null,
+  eastAsianWidth = null;
+if (!globalThis.Bun) {
+  try {
+    emojiRegex = (await import('emoji-regex')).default();
+  } catch (error) {
+    // squelch
+  }
+  try {
+    eastAsianWidth = (await import('get-east-asian-width')).eastAsianWidth;
+  } catch (error) {
+    // squelch
+  }
 }
 
 const segmenter = new Intl.Segmenter();
@@ -22,7 +23,8 @@ export const split = (s, options = {}) => {
   if (!s) return {graphemes: [], width: 0};
 
   const {ignoreControlSymbols = false, ambiguousAsWide = false} = options,
-    eastAsianWidthOptions = {ambiguousAsWide};
+    eastAsianWidthOptions = {ambiguousAsWide},
+    bunStringWidthOptions = {ambiguousAsNarrow: !ambiguousAsWide};
 
   const graphemes = [];
   let width = 0;
@@ -39,6 +41,12 @@ export const split = (s, options = {}) => {
       (codePoint >= 0xfe20 && codePoint <= 0xfe2f)
     ) {
       if (graphemes.length) graphemes[graphemes.length - 1].symbol += segment;
+      continue;
+    }
+    if (globalThis.Bun) {
+      const w = Bun.stringWidth(segment, bunStringWidthOptions);
+      graphemes.push({symbol: segment, width: w});
+      width += w;
       continue;
     }
     if (emojiRegex && ((emojiRegex.lastIndex = 0), emojiRegex.test(segment))) {
@@ -63,7 +71,8 @@ export const size = (s, options = {}) => {
   if (!s) return 0;
 
   const {ignoreControlSymbols = false, ambiguousAsWide = false} = options,
-    eastAsianWidthOptions = {ambiguousAsWide};
+    eastAsianWidthOptions = {ambiguousAsWide},
+    bunStringWidthOptions = {ambiguousAsNarrow: !ambiguousAsWide};
 
   let width = 0;
   for (const {segment} of segmenter.segment(s)) {
@@ -78,6 +87,10 @@ export const size = (s, options = {}) => {
       (codePoint >= 0x20d0 && codePoint <= 0x20ff) ||
       (codePoint >= 0xfe20 && codePoint <= 0xfe2f)
     ) {
+      continue;
+    }
+    if (globalThis.Bun) {
+      width += Bun.stringWidth(segment, bunStringWidthOptions);
       continue;
     }
     if (emojiRegex && ((emojiRegex.lastIndex = 0), emojiRegex.test(segment))) {
