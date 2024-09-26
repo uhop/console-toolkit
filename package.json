@@ -18,7 +18,10 @@
     "./style": "./src/style.js"
   },
   "scripts": {
-    "test": "tape6 --flags FO"
+    "test": "tape6 --flags FO",
+    "test:bun": "tape6-bun --flags FO",
+    "test:deno-original": "tape6-deno --flags FO",
+    "test:deno": "deno run -A `tape6-runner main` --flags FO"
   },
   "github": "http://github.com/uhop/console-toolkit",
   "repository": {
@@ -58,8 +61,8 @@
     ]
   },
   "devDependencies": {
-    "emoji-regex": "^10.3.0",
+    "emoji-regex": "^10.4.0",
     "get-east-asian-width": "^1.2.0",
-    "tape-six": "^0.9.6"
+    "tape-six": "^0.12.2"
   }
 }
