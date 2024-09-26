@@ -7,14 +7,14 @@ import Turtle, {draw as drawTurtle} from '../src/turtle/index.js';
 import drawLineArt from '../src/turtle/draw-line-art.js';
 import Panel from '../src/panel.js';
 
-test('Turtle', t => {
-  t.test('Draw an axis', t => {
+test('Turtle', async t => {
+  await t.test('Draw an axis', t => {
     const turtle = new Turtle(5, 1).markHalfDown().forward(2).markHalfUp().forward(2).markHalfDown(),
       axis = drawLineArt(turtle, lineTheme);
     t.deepEqual(axis.box, ['┌─┴─┐']);
   });
 
-  t.test('Draw a box with a cross (Unicode)', t => {
+  await t.test('Draw a box with a cross (Unicode)', t => {
     const turtle = new Turtle(5, 5)
       .forward(4)
       .right()
@@ -37,7 +37,7 @@ test('Turtle', t => {
     t.deepEqual(drawLineArt(turtle, lineAsciiTheme).box, ['.=.=.', '| | |', ':=+=:', '| | |', "'='='"]);
   });
 
-  t.test('Compare with table', t => {
+  await t.test('Compare with table', t => {
     const hTheme = 1,
       vTheme = 1;
 
@@ -93,7 +93,7 @@ test('Turtle', t => {
     t.deepEqual(turtle.box, table.box);
   });
 
-  t.test('A tree', t => {
+  await t.test('A tree', t => {
     const turtle = new Turtle(5, 1).markHalfDown().forward(2).markHalfUp().forward(2).markHalfDown(),
       branch = drawLineArt(turtle, lineTheme),
       panel = new Panel(7, 5)
@@ -114,7 +114,7 @@ test('Turtle', t => {
     ]);
   });
 
-  t.test('A fancy table', t => {
+  await t.test('A fancy table', t => {
     const turtle = new Turtle(5, 5)
       .forward(4)
       .right()

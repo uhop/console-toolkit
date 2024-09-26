@@ -2,8 +2,8 @@ import test from 'tape-six';
 
 import Box from '../src/box.js';
 
-test('Box', t => {
-  t.test('Box()', t => {
+test('Box', async t => {
+  await t.test('Box()', t => {
     const b = new Box(['one', 'two', 'three']);
 
     t.equal(b.width, 5);
@@ -11,7 +11,7 @@ test('Box', t => {
     t.deepEqual(b.box, ['one  ', 'two  ', 'three']);
   });
 
-  t.test('Box.make() with align=right', t => {
+  await t.test('Box.make() with align=right', t => {
     const b = Box.make(['one', 'two', 'three'], {symbol: '*', align: 'right'});
 
     t.equal(b.width, 5);
@@ -19,7 +19,7 @@ test('Box', t => {
     t.deepEqual(b.box, ['**one', '**two', 'three']);
   });
 
-  t.test('Box.make() with align=center', t => {
+  await t.test('Box.make() with align=center', t => {
     const b = Box.make(['one', 'two', 'three'], {symbol: '=', align: 'center'});
 
     t.equal(b.width, 5);
@@ -27,7 +27,7 @@ test('Box', t => {
     t.deepEqual(b.box, ['=one=', '=two=', 'three']);
   });
 
-  t.test('Box.makeBlank()', t => {
+  await t.test('Box.makeBlank()', t => {
     const b = Box.makeBlank(3, 3, '.');
 
     t.equal(b.width, 3);
@@ -35,7 +35,7 @@ test('Box', t => {
     t.deepEqual(b.box, ['...', '...', '...']);
   });
 
-  t.test('pad left', t => {
+  await t.test('pad left', t => {
     const b = new Box(['123', 'ab']).padLeft(2, '-');
 
     t.equal(b.width, 5);
@@ -43,7 +43,7 @@ test('Box', t => {
     t.deepEqual(b.box, ['--123', '--ab ']);
   });
 
-  t.test('pad left/right', t => {
+  await t.test('pad left/right', t => {
     const b = new Box(['123', 'ab']).padLeftRight(2, 3, '-');
 
     t.equal(b.width, 8);
@@ -51,7 +51,7 @@ test('Box', t => {
     t.deepEqual(b.box, ['--123---', '--ab ---']);
   });
 
-  t.test('pad right', t => {
+  await t.test('pad right', t => {
     const b = new Box(['123', 'ab']).padRight(3, '-');
 
     t.equal(b.width, 6);
@@ -59,7 +59,7 @@ test('Box', t => {
     t.deepEqual(b.box, ['123---', 'ab ---']);
   });
 
-  t.test('pad top', t => {
+  await t.test('pad top', t => {
     const b = new Box(['123', 'ab']).padTop(1, '-');
 
     t.equal(b.width, 3);
@@ -67,7 +67,7 @@ test('Box', t => {
     t.deepEqual(b.box, ['---', '123', 'ab ']);
   });
 
-  t.test('pad top/bottom', t => {
+  await t.test('pad top/bottom', t => {
     const b = new Box(['123', 'ab']).padTopBottom(1, 2, '-');
 
     t.equal(b.width, 3);
@@ -75,7 +75,7 @@ test('Box', t => {
     t.deepEqual(b.box, ['---', '123', 'ab ', '---', '---']);
   });
 
-  t.test('pad bottom', t => {
+  await t.test('pad bottom', t => {
     const b = new Box(['123', 'ab']).padBottom(2, '-');
 
     t.equal(b.width, 3);
@@ -83,7 +83,7 @@ test('Box', t => {
     t.deepEqual(b.box, ['123', 'ab ', '---', '---']);
   });
 
-  t.test('pad', t => {
+  await t.test('pad', t => {
     const b = new Box(['123', 'ab']).pad(1, 2, 3, 4, '-');
 
     t.equal(b.width, 9);
@@ -91,7 +91,7 @@ test('Box', t => {
     t.deepEqual(b.box, ['---------', '----123--', '----ab --', '---------', '---------', '---------']);
   });
 
-  t.test('clip', t => {
+  await t.test('clip', t => {
     let b = new Box(['one', 'two', 'three']);
     t.equal(b.width, 5);
     t.equal(b.height, 3);
@@ -103,7 +103,7 @@ test('Box', t => {
     t.deepEqual(b.box, ['one', 'two', 'thr']);
   });
 
-  t.test('add bottom', t => {
+  await t.test('add bottom', t => {
     let b = new Box(['12345']).addBottom(new Box(['ab']));
 
     t.equal(b.width, 5);
@@ -123,7 +123,7 @@ test('Box', t => {
     t.deepEqual(b.box, ['12345', '   ab']);
   });
 
-  t.test('add right', t => {
+  await t.test('add right', t => {
     let b = new Box(['123', 'ab', 'c']).addRight(new Box(['xyz']));
 
     t.equal(b.width, 6);
@@ -143,7 +143,7 @@ test('Box', t => {
     t.deepEqual(b.box, ['123   ', 'ab    ', 'c  xyz']);
   });
 
-  t.test('flips', t => {
+  await t.test('flips', t => {
     let b = new Box(['123', 'ab', 'c']);
 
     t.equal(b.width, 3);
@@ -157,7 +157,7 @@ test('Box', t => {
     t.deepEqual(b.box, ['c  ', 'ab ', '123']);
   });
 
-  t.test('remove rows', t => {
+  await t.test('remove rows', t => {
     const b = new Box(['123', 'ab', 'c']);
 
     t.equal(b.width, 3);

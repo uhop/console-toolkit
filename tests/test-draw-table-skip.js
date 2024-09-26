@@ -3,8 +3,8 @@ import test from 'tape-six';
 import {draw} from '../src/table/draw-borders.js';
 import lineTheme from '../src/themes/lines/unicode-rounded.js';
 
-test('Draw a table with skip rectangles', t => {
-  t.test('Round table with two merged cells', t => {
+test('Draw a table with skip rectangles', async t => {
+  await t.test('Round table with two merged cells', t => {
     const box = draw(lineTheme, [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], {
       skip: [
         {x: 1, y: 5, width: 3, height: 1},
@@ -18,7 +18,7 @@ test('Draw a table with skip rectangles', t => {
     t.deepEqual(box.box, ['╭───┬─╮', '│   │ │', '│   ├─┤', '│   │ │', '├───┼─┤', '│   │ │', '╰───┴─╯']);
   });
 
-  t.test('Double lines outside, single lines inside', t => {
+  await t.test('Double lines outside, single lines inside', t => {
     const box = draw(lineTheme, [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], {
       skip: [
         {x: 1, y: 1, width: 2, height: 1},
