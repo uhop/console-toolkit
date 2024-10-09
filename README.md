@@ -89,6 +89,7 @@ BSD 3-Clause License
 
 ## Release history
 
+* 1.2.3 *Updated deps + more tests.*
 * 1.2.2 *Updated deps.*
 * 1.2.1 *Added support for `Bun.stringWidth()`.*
 * 1.2.0 *Refactored `strings`.*
