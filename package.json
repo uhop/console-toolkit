@@ -63,6 +63,6 @@
   "devDependencies": {
     "emoji-regex": "^10.4.0",
     "get-east-asian-width": "^1.2.0",
-    "tape-six": "^0.12.2"
+    "tape-six": "^1.0.2"
   }
 }
