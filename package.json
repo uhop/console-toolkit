@@ -1,6 +1,6 @@
 {
   "name": "console-toolkit",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Toolkit to produce a fancy console output (boxes, tables, charts, colors).",
   "type": "module",
   "main": "src/index.js",
@@ -65,8 +65,8 @@
   },
   "devDependencies": {
     "emoji-regex": "^10.4.0",
-    "get-east-asian-width": "^1.2.0",
-    "tape-six": "^1.0.2",
-    "tape-six-proc": "^1.0.0"
+    "get-east-asian-width": "^1.3.0",
+    "tape-six": "^1.1.1",
+    "tape-six-proc": "^1.0.1"
   }
 }
