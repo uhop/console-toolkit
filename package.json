@@ -20,11 +20,10 @@
   "scripts": {
     "test": "tape6 --flags FO",
     "test:bun": "tape6-bun --flags FO",
-    "test:deno-original": "tape6-deno --flags FO",
-    "test:deno": "deno run -A `tape6-runner main` --flags FO",
+    "test:deno": "tape6-deno --flags FO",
     "test:proc": "tape6-proc --flags FO",
     "test:proc:bun": "bun run `npx tape6-proc --self` --flags FO",
-    "test:proc:deno": "deno run -A `npx tape6-proc --self` --flags FO --runFileArgs -A"
+    "test:proc:deno": "deno run -A `npx tape6-proc --self` --flags FO -r -A"
   },
   "github": "http://github.com/uhop/console-toolkit",
   "repository": {
@@ -64,9 +63,9 @@
     ]
   },
   "devDependencies": {
-    "emoji-regex": "^10.4.0",
-    "get-east-asian-width": "^1.3.0",
-    "tape-six": "^1.1.1",
-    "tape-six-proc": "^1.0.1"
+    "emoji-regex": "^10.6.0",
+    "get-east-asian-width": "^1.4.0",
+    "tape-six": "^1.4.1",
+    "tape-six-proc": "^1.1.2"
   }
 }
