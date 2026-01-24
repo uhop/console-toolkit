@@ -89,6 +89,7 @@ BSD 3-Clause License
 
 ## Release history
 
+* 1.2.6 *Updated dev deps.*
 * 1.2.5 *Updated dev deps.*
 * 1.2.4 *Updated deps.*
 * 1.2.3 *Updated deps + more tests.*
