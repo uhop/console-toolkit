@@ -26,7 +26,7 @@
     "test:proc:deno": "deno run -A `tape6-proc --self` --flags FO -r -A",
     "test:seq": "tape6-seq --flags FO",
     "test:seq:bun": "bun run `tape6-seq --self` --flags FO",
-    "test:seq:deno": "deno run -A `tape6-seq --self` --flags FO -r -A"
+    "test:seq:deno": "deno run -A `tape6-seq --self` --flags FO"
   },
   "github": "http://github.com/uhop/console-toolkit",
   "repository": {
