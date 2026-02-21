@@ -89,6 +89,8 @@ BSD 3-Clause License
 
 ## Release history
 
+* 1.2.11 *TBD*
+* 1.2.10 *Updated dev deps.*
 * 1.2.9 *Updated dev deps.*
 * 1.2.8 *Updated dev deps.*
 * 1.2.7 *Updated dev deps.*
