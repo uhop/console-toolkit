@@ -1,4 +1,4 @@
-import { SymbolRange } from './utils.js';
+import {SymbolRange} from './utils.js';
 
 export const transcodeTables: {
   circled: SymbolRange;
@@ -20,8 +20,8 @@ export const transcodeTables: {
   subscript: SymbolRange;
 };
 
-export function transcode(s: string, name: string | SymbolRange, options?: { missing?: string }): string;
+export function transcode(s: string, name: string | SymbolRange, options?: {missing?: string}): string;
 
-export function numberPunctuation(s: string, options?: { addBefore?: string; addAfter?: string }): string;
+export function numberPunctuation(s: string, options?: {addBefore?: string; addAfter?: string}): string;
 
-export function numberExponent(s: string, options?: { useSpecialMinus?: boolean }): string;
+export function numberExponent(s: string, options?: {useSpecialMinus?: boolean}): string;

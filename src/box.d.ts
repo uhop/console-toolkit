@@ -1,4 +1,4 @@
-import { ClipOptions } from './strings/clip.js';
+import {ClipOptions} from './strings/clip.js';
 
 /** Options for `Box.make()`. */
 export interface BoxMakeOptions {

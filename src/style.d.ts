@@ -1,6 +1,6 @@
-import { SgrState } from './ansi/sgr-state.js';
+import {SgrState} from './ansi/sgr-state.js';
 
-export { RESET_STATE } from './ansi/sgr-state.js';
+export {RESET_STATE} from './ansi/sgr-state.js';
 
 /** Methods available on color namespace objects (fg, bg, colorDecoration). */
 interface ColorMethods {

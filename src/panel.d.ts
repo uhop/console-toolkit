@@ -1,4 +1,4 @@
-import { SgrState } from './ansi/sgr-state.js';
+import {SgrState} from './ansi/sgr-state.js';
 import Box from './box.js';
 
 /** A single cell in a Panel. */
@@ -85,13 +85,27 @@ export class Panel {
   applyFn(x: number, y: number, width: number, height: number, fn: ApplyFn, options?: any): Panel;
 
   fill(symbol: string, state?: SgrState | string | string[], options?: any): Panel;
-  fill(x: number, y: number, width: number, height: number, symbol: string, state?: SgrState | string | string[], options?: any): Panel;
+  fill(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    symbol: string,
+    state?: SgrState | string | string[],
+    options?: any
+  ): Panel;
 
   fillState(options?: PanelFillStateOptions): Panel;
   fillState(x: number, y: number, width: number, height: number, options?: PanelFillStateOptions): Panel;
 
-  fillNonEmptyState(options?: { state?: SgrState | string | string[] }): Panel;
-  fillNonEmptyState(x: number, y: number, width: number, height: number, options?: { state?: SgrState | string | string[] }): Panel;
+  fillNonEmptyState(options?: {state?: SgrState | string | string[]}): Panel;
+  fillNonEmptyState(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    options?: {state?: SgrState | string | string[]}
+  ): Panel;
 
   combineStateBefore(options?: PanelCombineStateOptions): Panel;
   combineStateBefore(x: number, y: number, width: number, height: number, options?: PanelCombineStateOptions): Panel;

@@ -1,4 +1,4 @@
-import { ChartDatum } from '../utils.js';
+import {ChartDatum} from '../utils.js';
 
 export const chartTheme: ChartDatum[];
 

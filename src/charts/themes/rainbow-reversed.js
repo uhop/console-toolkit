@@ -1,4 +1,4 @@
-import rainbow from "./rainbow.js";
+import rainbow from './rainbow.js';
 
 export const chartTheme = rainbow.slice().reverse();
 

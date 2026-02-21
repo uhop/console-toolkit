@@ -1,19 +1,19 @@
 # console-toolkit [![NPM version][npm-img]][npm-url]
 
-[npm-img]:      https://img.shields.io/npm/v/console-toolkit.svg
-[npm-url]:      https://npmjs.org/package/console-toolkit
+[npm-img]: https://img.shields.io/npm/v/console-toolkit.svg
+[npm-url]: https://npmjs.org/package/console-toolkit
 
 `console-toolkit` is a set of tools to create rich CLI-based applications. It provides:
 
-* Styles based on [ANSI escape sequences](https://en.wikipedia.org/wiki/ANSI_escape_code):
-  * [SGR](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR): colors and text styles
-  * [CSI](https://en.wikipedia.org/wiki/ANSI_escape_code#CSIsection): cursor and screen control
-* Bitmap graphics
-* Vector graphics based on [Turtle graphics](https://en.wikipedia.org/wiki/Turtle_graphics)
-* Curated sets of Unicode symbols
-* Tables with themes
-* Bar and column charts with themes
-* Various helpers and examples
+- Styles based on [ANSI escape sequences](https://en.wikipedia.org/wiki/ANSI_escape_code):
+  - [SGR](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR): colors and text styles
+  - [CSI](https://en.wikipedia.org/wiki/ANSI_escape_code#CSIsection): cursor and screen control
+- Bitmap graphics
+- Vector graphics based on [Turtle graphics](https://en.wikipedia.org/wiki/Turtle_graphics)
+- Curated sets of Unicode symbols
+- Tables with themes
+- Bar and column charts with themes
+- Various helpers and examples
 
 ## Visual examples
 
@@ -54,7 +54,15 @@ console.log(c`{{bold}}Hello, {{bright.cyan}}world!`);
 
 // chart
 
-const chart = drawChart([[2, 1, 2], [5, 1, 4], [1, 1], [3, 1, 3]], 50);
+const chart = drawChart(
+  [
+    [2, 1, 2],
+    [5, 1, 4],
+    [1, 1],
+    [3, 1, 3]
+  ],
+  50
+);
 for (const line of chart) console.log(line);
 
 // table
@@ -89,18 +97,18 @@ BSD 3-Clause License
 
 ## Release history
 
-* 1.2.11 *TBD*
-* 1.2.10 *Updated dev deps.*
-* 1.2.9 *Updated dev deps.*
-* 1.2.8 *Updated dev deps.*
-* 1.2.7 *Updated dev deps.*
-* 1.2.6 *Updated dev deps.*
-* 1.2.5 *Updated dev deps.*
-* 1.2.4 *Updated deps.*
-* 1.2.3 *Updated deps + more tests.*
-* 1.2.2 *Updated deps.*
-* 1.2.1 *Added support for `Bun.stringWidth()`.*
-* 1.2.0 *Refactored `strings`.*
-* 1.1.1 *Minor bugfixes in `Table`, some improvements, updated deps.*
-* 1.1.0 *Minor improvements, enhanced `Writer` and `Updater`.*
-* 1.0.0 *Initial release.*
+- 1.2.11 _TBD_
+- 1.2.10 _Updated dev deps._
+- 1.2.9 _Updated dev deps._
+- 1.2.8 _Updated dev deps._
+- 1.2.7 _Updated dev deps._
+- 1.2.6 _Updated dev deps._
+- 1.2.5 _Updated dev deps._
+- 1.2.4 _Updated deps._
+- 1.2.3 _Updated deps + more tests._
+- 1.2.2 _Updated deps._
+- 1.2.1 _Added support for `Bun.stringWidth()`._
+- 1.2.0 _Refactored `strings`._
+- 1.1.1 _Minor bugfixes in `Table`, some improvements, updated deps._
+- 1.1.0 _Minor improvements, enhanced `Writer` and `Updater`._
+- 1.0.0 _Initial release._

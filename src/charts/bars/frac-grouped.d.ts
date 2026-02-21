@@ -1,5 +1,5 @@
-import { ChartDatum } from '../utils.js';
-import { GroupedChartOptions } from './draw-grouped.js';
+import {ChartDatum} from '../utils.js';
+import {GroupedChartOptions} from './draw-grouped.js';
 
 export interface FracGroupedBarOptions extends GroupedChartOptions {
   rectSize?: number;

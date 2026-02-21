@@ -21,8 +21,7 @@ export const getLength = (s, matcher) => {
  * @param {RegExp} [matcher=matchCsiNoGroups] - The regular expression used to match escape sequences.
  * @returns {number} The maximum visible display length.
  */
-export const getMaxLength = (strings, matcher) =>
-  strings.reduce((acc, s) => Math.max(acc, getLength(s, matcher)), 0);
+export const getMaxLength = (strings, matcher) => strings.reduce((acc, s) => Math.max(acc, getLength(s, matcher)), 0);
 
 /** Clips each string in an array to a specified display width.
  * @param {string[]} strings - The strings to clip.
@@ -30,8 +29,7 @@ export const getMaxLength = (strings, matcher) =>
  * @param {object} [options] - Options passed to `clip()`.
  * @returns {string[]} The clipped strings.
  */
-export const clipStrings = (strings, width, options) =>
-  strings.map(s => clip(s, width, options));
+export const clipStrings = (strings, width, options) => strings.map(s => clip(s, width, options));
 
 /** Converts a variety of inputs into an array of strings (the simplest text container).
  *

@@ -1,4 +1,4 @@
-import { SymbolRange } from './utils.js';
+import {SymbolRange} from './utils.js';
 
 export const transcodeTables: {
   arabicIndic: SymbolRange;

@@ -1,4 +1,4 @@
-import { ClipOptions } from './strings/clip.js';
+import {ClipOptions} from './strings/clip.js';
 
 /** Returns the display width of a string, ignoring ANSI escape sequences. */
 export function getLength(s: string, matcher?: RegExp): number;
@@ -9,5 +9,5 @@ export function clipStrings(strings: string[], width: number, options?: ClipOpti
 /** Converts various input types to a string array. */
 export function toStrings(s: any): string[];
 
-export { default as clip } from './strings/clip.js';
-export { matchCsiNoGroups, matchCsiNoSgrNoGroups } from './strings/parse.js';
+export {default as clip} from './strings/clip.js';
+export {matchCsiNoGroups, matchCsiNoSgrNoGroups} from './strings/parse.js';

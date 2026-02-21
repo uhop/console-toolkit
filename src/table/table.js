@@ -90,7 +90,10 @@ export class Table {
         const isObject = data?.hasOwnProperty('value'),
           value = isObject ? data.value : data,
           align = (isObject && data.align) || '',
-          box = value instanceof Box ? value : Box.make(value, {symbol: ' ', align: getCellAlign(align, 0) || hAlign[j] || 'left'}),
+          box =
+            value instanceof Box
+              ? value
+              : Box.make(value, {symbol: ' ', align: getCellAlign(align, 0) || hAlign[j] || 'left'}),
           width = box.width,
           height = box.height,
           cellWidth = isObject ? data.width || 1 : 1,

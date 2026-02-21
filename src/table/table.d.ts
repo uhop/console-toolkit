@@ -1,6 +1,6 @@
 import Box from '../box.js';
 import Panel from '../panel.js';
-import { SgrState } from '../ansi/sgr-state.js';
+import {SgrState} from '../ansi/sgr-state.js';
 
 /** Data for a single table cell. */
 export interface CellData {
@@ -90,8 +90,8 @@ export class Table {
   widths: number[];
   heights: number[];
   lineTheme: Record<string, any>;
-  skipList: { x: number; y: number; width: number; height: number }[];
-  options: { hAxis: any; vAxis: any; hAlign: string[]; vAlign: string[] };
+  skipList: {x: number; y: number; width: number; height: number}[];
+  options: {hAxis: any; vAxis: any; hAlign: string[]; vAlign: string[]};
   cellPadding: Required<CellPadding>;
   hAxis: (string | number)[];
   vAxis: (string | number)[];
@@ -108,9 +108,14 @@ export class Table {
   isVisible(x: number, y: number): boolean;
 
   static generateAxes(width: number, height: number, options: GenerateAxesOptions): TableOptions;
-  static processData(data: any[][], options?: { states?: DataStyleOptions }): any[][];
+  static processData(data: any[][], options?: {states?: DataStyleOptions}): any[][];
   /** Factory method that generates axes, processes data, and creates a Table. */
-  static make(data: any[][], lineTheme: Record<string, any>, options?: MakeOptions, overrides?: Partial<TableOptions>): Table;
+  static make(
+    data: any[][],
+    lineTheme: Record<string, any>,
+    options?: MakeOptions,
+    overrides?: Partial<TableOptions>
+  ): Table;
 }
 
 export default Table;

@@ -13,8 +13,7 @@ import Box from '../box.js';
 
 const isSkipped = (skip, x, y) => {
   for (const rect of skip) {
-    if (rect.x <= x && x < rect.x + rect.width && rect.y <= y && y < rect.y + rect.height)
-      return true;
+    if (rect.x <= x && x < rect.x + rect.width && rect.y <= y && y < rect.y + rect.height) return true;
   }
   return false;
 };

@@ -12,11 +12,11 @@ export class Turtle {
   static WEST: 2;
   static NORTH: 3;
 
-  cells: (({ u?: number; d?: number; l?: number; r?: number }) | null)[][];
+  cells: ({u?: number; d?: number; l?: number; r?: number} | null)[][];
   width: number;
   height: number;
   direction: number;
-  position: { x: number; y: number };
+  position: {x: number; y: number};
   theme: number;
   stack: [number, number, number, number][];
 

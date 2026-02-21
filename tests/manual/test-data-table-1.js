@@ -9,7 +9,7 @@ const data = [
   [null, 'II', 41],
   [null, 'III', 59],
   [null, 'IV', 26],
-  [{value: s`{{bold.bright.cyan}}Total:`, width: 2}, null, s`{{bold.cyan}}157`],
+  [{value: s`{{bold.bright.cyan}}Total:`, width: 2}, null, s`{{bold.cyan}}157`]
 ];
 
 const table = new Table(data, lineTheme, {hAlign: ['l', 'c', 'r']});

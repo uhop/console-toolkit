@@ -15,15 +15,4 @@ const symbol = '#',
 customTheme.empty = {symbol: '.'};
 
 console.log('Stacked columns + custom theme with an ASCII art and an empty fill:');
-draw(
-  drawChart(
-    [
-      [0],
-      [25],
-      [50],
-      [75]
-    ],
-    10,
-    {theme: customTheme, maxValue: 100}
-  )
-);
+draw(drawChart([[0], [25], [50], [75]], 10, {theme: customTheme, maxValue: 100}));

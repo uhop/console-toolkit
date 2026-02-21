@@ -14,8 +14,18 @@ export interface DrawBlockOptions {
 /** Draws a rectangular block using a block theme.
  * @see {@link https://github.com/uhop/console-toolkit/wiki/Module:-draw-block}
  */
-export function drawBlock(width: number, height: number, blockTheme: Record<string, any>, options?: DrawBlockOptions): Box;
+export function drawBlock(
+  width: number,
+  height: number,
+  blockTheme: Record<string, any>,
+  options?: DrawBlockOptions
+): Box;
 /** Draws a rectangular frame (block with space fill) using a block theme. */
-export function drawFrame(width: number, height: number, blockTheme: Record<string, any>, options?: DrawBlockOptions): Box;
+export function drawFrame(
+  width: number,
+  height: number,
+  blockTheme: Record<string, any>,
+  options?: DrawBlockOptions
+): Box;
 
 export default drawBlock;

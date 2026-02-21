@@ -1,4 +1,4 @@
-import { ChartDatum, ChartTheme } from '../utils.js';
+import {ChartDatum, ChartTheme} from '../utils.js';
 
 export interface StackedChartOptions {
   maxValue?: number;
@@ -14,6 +14,8 @@ export interface StackedChartOptions {
 type DrawRowFn = (data: ChartDatum[], width: number, maxValue: number, options?: any) => string | string[];
 
 /** Creates a stacked bar chart drawing function from a row-drawing function. */
-export function drawChart(drawRow: DrawRowFn): (values: any[], width: number, options?: StackedChartOptions) => string[];
+export function drawChart(
+  drawRow: DrawRowFn
+): (values: any[], width: number, options?: StackedChartOptions) => string[];
 
 export default drawChart;

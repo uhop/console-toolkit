@@ -1,4 +1,4 @@
-import { Writable } from 'node:stream';
+import {Writable} from 'node:stream';
 
 export interface LogOptions {
   endOfLineCommand?: string;
@@ -23,7 +23,7 @@ export class Out {
 
   constructor(stream: Writable);
 
-  out(s: any, options?: { endOfLineCommand?: string; colorDepth?: number }): void;
+  out(s: any, options?: {endOfLineCommand?: string; colorDepth?: number}): void;
 }
 
 /** Writes a debug string to stderr. */

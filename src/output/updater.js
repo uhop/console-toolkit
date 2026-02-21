@@ -21,7 +21,11 @@ export class Updater {
    * @param {boolean} [options.noLastNewLine] - If true, omit the trailing newline of each frame.
    * @param {Writer} [writer=new Writer()] - The Writer instance to use.
    */
-  constructor(updater, {prologue, epilogue, beforeFrame, afterFrame, beforeLine, afterLine, noLastNewLine} = {}, writer = new Writer()) {
+  constructor(
+    updater,
+    {prologue, epilogue, beforeFrame, afterFrame, beforeLine, afterLine, noLastNewLine} = {},
+    writer = new Writer()
+  ) {
     this.updater = updater;
     this.writer = writer;
     this.prologue = prologue || RESET;
@@ -105,7 +109,11 @@ export class Updater {
     this.lastHeight = frame.length;
     if (this.noLastNewLine) --this.lastHeight;
 
-    await this.writer.write(frame, {noLastNewLine: this.noLastNewLine, beforeLine: this.beforeLine, afterLine: this.afterLine});
+    await this.writer.write(frame, {
+      noLastNewLine: this.noLastNewLine,
+      beforeLine: this.beforeLine,
+      afterLine: this.afterLine
+    });
     this.afterFrame && (await this.writer.writeString(this.afterFrame));
   }
 

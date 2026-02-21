@@ -1,4 +1,4 @@
-import { ChartDatum, ChartTheme } from '../utils.js';
+import {ChartDatum, ChartTheme} from '../utils.js';
 
 export interface StackedColumnChartOptions {
   maxValue?: number;
@@ -13,6 +13,8 @@ export interface StackedColumnChartOptions {
 type DrawColumnFn = (data: ChartDatum[], width: number, maxValue: number, options?: any) => string[];
 
 /** Creates a stacked column chart drawing function from a column-drawing function. */
-export function drawChart(drawColumn: DrawColumnFn): (values: any[], width: number, options?: StackedColumnChartOptions) => string[];
+export function drawChart(
+  drawColumn: DrawColumnFn
+): (values: any[], width: number, options?: StackedColumnChartOptions) => string[];
 
 export default drawChart;

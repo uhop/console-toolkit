@@ -1,4 +1,4 @@
-import { ChartTheme } from '../utils.js';
+import {ChartTheme} from '../utils.js';
 
 export const chartTheme: ChartTheme;
 

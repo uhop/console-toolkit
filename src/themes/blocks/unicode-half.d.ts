@@ -1,4 +1,4 @@
-import { LineTheme } from '../utils.js';
+import {LineTheme} from '../utils.js';
 
 export const blockTheme: LineTheme;
 

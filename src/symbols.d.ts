@@ -51,7 +51,7 @@ export const ctdot: string;
 export const utdot: string;
 export const dtdot: string;
 
-export { hellip as ellipsis };
+export {hellip as ellipsis};
 
 // math
 export const infinity: string;
@@ -67,7 +67,7 @@ export const forAll: string;
 export const exist: string;
 export const degree: string;
 
-export { multiplication as times };
+export {multiplication as times};
 
 export const superscriptPlus: string;
 export const superscriptMinus: string;

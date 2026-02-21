@@ -77,8 +77,8 @@ export const SCREEN_SAVE = CSI + '?47h';
 export const SCREEN_RESTORE = CSI + '?47l';
 export const SCREEN_ALT_ON = CSI + '?1049h'; // alternative screen buffer
 export const SCREEN_ALT_OFF = CSI + '?1049l';
-export const SCREEN_SCROLL_UP1 = CSI + 'S'
-export const SCREEN_SCROLL_DOWN1 = CSI + 'T'
+export const SCREEN_SCROLL_UP1 = CSI + 'S';
+export const SCREEN_SCROLL_DOWN1 = CSI + 'T';
 export const SCREEN_REPORT_FOCUS_ON = CSI + '?1004h';
 export const SCREEN_REPORT_FOCUS_OFF = CSI + '?1004l';
 

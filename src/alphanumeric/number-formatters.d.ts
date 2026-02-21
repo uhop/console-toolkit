@@ -30,7 +30,7 @@ export function formatNumber(value: number, options?: FormatNumberOptions): stri
 export function abbrNumber(value: number, options?: FormatNumberOptions): string;
 
 /** Simplifies the exponent notation of a number string. */
-export function simplifyExponent(s: string | number, options?: { keepExpPlus?: boolean }): string;
+export function simplifyExponent(s: string | number, options?: {keepExpPlus?: boolean}): string;
 
 export interface CompareDifferenceResult {
   less: boolean;

@@ -11,12 +11,12 @@ export class SymbolRange {
   /** Gets the transcoded symbol for a value or character. */
   get(i: number | string): string | false;
   /** Transcodes a string by replacing each character with its mapped symbol. */
-  transcode(s: string, options?: { missing?: string }): string;
+  transcode(s: string, options?: {missing?: string}): string;
 }
 
 /** Transcodes a string using one or more lookup tables. */
 export function transcode(
   s: string,
   tables: ((m: string) => string | undefined) | SymbolRange | SymbolRange[] | Record<string, string>,
-  options?: { missing?: string }
+  options?: {missing?: string}
 ): string;

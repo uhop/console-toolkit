@@ -1,4 +1,4 @@
-import { SpinnerDefinition } from './spinner.js';
+import {SpinnerDefinition} from './spinner.js';
 
 export const dots: SpinnerDefinition;
 export const sand: SpinnerDefinition;

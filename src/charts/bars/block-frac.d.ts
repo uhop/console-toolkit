@@ -1,5 +1,5 @@
-import { ChartDatum } from '../utils.js';
-import { StackedChartOptions } from './draw-stacked.js';
+import {ChartDatum} from '../utils.js';
+import {StackedChartOptions} from './draw-stacked.js';
 
 export interface BlockFracBarOptions extends StackedChartOptions {
   rectSize?: number;

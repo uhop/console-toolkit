@@ -1,5 +1,5 @@
-import { ChartDatum } from '../utils.js';
-import { StackedColumnChartOptions } from './draw-stacked.js';
+import {ChartDatum} from '../utils.js';
+import {StackedColumnChartOptions} from './draw-stacked.js';
 
 export interface BlockColumnOptions extends StackedColumnChartOptions {
   blockTheme?: Record<string, any>;

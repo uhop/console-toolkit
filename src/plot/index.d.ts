@@ -1,7 +1,7 @@
-import { Bitmap } from './bitmap.js';
-import { drawLine } from './draw-line.js';
-import { drawRect } from './draw-rect.js';
-import { toQuads } from './to-quads.js';
+import {Bitmap} from './bitmap.js';
+import {drawLine} from './draw-line.js';
+import {drawRect} from './draw-rect.js';
+import {toQuads} from './to-quads.js';
 import Box from '../box.js';
 
 declare module './bitmap.js' {
@@ -13,5 +13,5 @@ declare module './bitmap.js' {
   }
 }
 
-export { Bitmap, drawLine, drawRect, toQuads };
+export {Bitmap, drawLine, drawRect, toQuads};
 export default Bitmap;

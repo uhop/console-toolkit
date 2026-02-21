@@ -9,8 +9,8 @@ export const makeBgFromFg = state => ({
   background: !state.foreground
     ? null
     : Array.isArray(state.foreground)
-    ? [Commands.BG_EXTENDED_COLOR, ...state.foreground.slice(1)]
-    : Number(state.foreground) + 10
+      ? [Commands.BG_EXTENDED_COLOR, ...state.foreground.slice(1)]
+      : Number(state.foreground) + 10
 });
 
 /** Converts a background color state to a foreground color state.
@@ -21,8 +21,8 @@ export const makeFgFromBg = state => ({
   foreground: !state.background
     ? null
     : Array.isArray(state.background)
-    ? [Commands.EXTENDED_COLOR, ...state.background.slice(1)]
-    : Number(state.background) - 10
+      ? [Commands.EXTENDED_COLOR, ...state.background.slice(1)]
+      : Number(state.background) - 10
 });
 
 /** Sums the values in a data series.

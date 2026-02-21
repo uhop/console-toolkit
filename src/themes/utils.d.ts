@@ -10,4 +10,9 @@ export interface TableDefinition {
 
 export type LineTheme = Record<string, any>;
 
-export function populateTheme(lineTheme: LineTheme, tableDefinition: TableDefinition, hTheme: number | string, vTheme: number | string): void;
+export function populateTheme(
+  lineTheme: LineTheme,
+  tableDefinition: TableDefinition,
+  hTheme: number | string,
+  vTheme: number | string
+): void;

@@ -1,4 +1,4 @@
-import { SymbolRange } from './utils.js';
+import {SymbolRange} from './utils.js';
 
 export const transcodeTables: {
   bold: SymbolRange[];
@@ -22,4 +22,4 @@ export const transcodeTables: {
   regionalIndicators: SymbolRange[];
 };
 
-export function transcode(s: string, name: string | SymbolRange[], options?: { missing?: string }): string;
+export function transcode(s: string, name: string | SymbolRange[], options?: {missing?: string}): string;

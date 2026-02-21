@@ -74,6 +74,6 @@ export const drawBlock = (
 export const drawFrame = (width, height, blockTheme, options) => {
   if (!options?.symbol) options = {...options, symbol: ' '};
   return drawBlock(width, height, blockTheme, options);
-}
+};
 
 export default drawBlock;

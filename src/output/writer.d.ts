@@ -1,4 +1,4 @@
-import { Writable } from 'node:stream';
+import {Writable} from 'node:stream';
 
 export interface WriteOptions {
   sameColumn?: boolean | 'save';
@@ -17,7 +17,7 @@ export class Writer {
   readonly isTTY: boolean;
   readonly columns: number;
   readonly rows: number;
-  readonly size: { columns: number; rows: number };
+  readonly size: {columns: number; rows: number};
 
   getColorDepth(...args: any[]): number;
   hasColors(...args: any[]): boolean;

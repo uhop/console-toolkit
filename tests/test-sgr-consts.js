@@ -1,4 +1,4 @@
-import test from "tape-six";
+import test from 'tape-six';
 
 import {BLACK, RED, RESET, RESET_COLOR} from 'console-toolkit/ansi/sgr-constants.js';
 

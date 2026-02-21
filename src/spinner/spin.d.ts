@@ -1,4 +1,4 @@
-import { SpinnerBase } from './spinner.js';
+import {SpinnerBase} from './spinner.js';
 
 type SpinArg = string[] | ((state: string) => string) | SpinnerBase | any;
 

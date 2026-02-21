@@ -13,6 +13,11 @@ export interface DrawOptions {
 }
 
 /** Draws table borders based on a line theme and axis definitions. */
-export function draw(lineTheme: Record<string, any>, hAxis: (string | number)[], vAxis: (string | number)[], options?: DrawOptions): Box;
+export function draw(
+  lineTheme: Record<string, any>,
+  hAxis: (string | number)[],
+  vAxis: (string | number)[],
+  options?: DrawOptions
+): Box;
 
 export default draw;

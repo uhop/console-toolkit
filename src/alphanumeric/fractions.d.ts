@@ -13,7 +13,7 @@ export const fifths: Fraction[];
 export const sixths: Fraction[];
 export const eighths: Fraction[];
 
-export { quarters as fourths };
+export {quarters as fourths};
 
 /** Finds the closest Unicode fraction symbol for a given value. */
 export function getFraction(value: number, useFractionForZero?: boolean): string;
@@ -23,4 +23,4 @@ export function getFifths(value: number, useFractionForZero?: boolean): string;
 export function getSixths(value: number, useFractionForZero?: boolean): string;
 export function getEighths(value: number, useFractionForZero?: boolean): string;
 
-export { getQuarters as getFourths };
+export {getQuarters as getFourths};

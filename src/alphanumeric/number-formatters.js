@@ -155,7 +155,7 @@ export const compareDifference = (a, b) => {
   if (diff === Infinity) return {less, infinity: true};
 
   if (diff < 2) {
-    const percentage = absDiff / (less ? a : b) * 100;
+    const percentage = (absDiff / (less ? a : b)) * 100;
     if (percentage < 0.001) return {less, equality: true};
     if (percentage < 1) return {less, percentage: formatNumber(percentage, {decimals: 3})};
     if (percentage < 10) return {less, percentage: formatNumber(percentage, {decimals: 2})};
