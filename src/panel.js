@@ -214,12 +214,12 @@ export class Panel {
     return this;
   }
 
-  /** Places text (Box, Panel, or string) onto this panel at the given position.
+  /** Places text onto this panel at the given position. Characters matching `emptySymbol` (default: '\x07' BELL) are treated as empty cells.
    * @param {number} x - Left column.
    * @param {number} y - Top row.
    * @param {Panel|import('./box.js').Box|string|string[]} text - Content to place.
-   * @param {object} [options] - Options.
-   * @param {string} [options.emptySymbol='\x07'] - Character treated as transparent/empty.
+   * @param {object} [options] - Put options.
+   * @param {string} [options.emptySymbol='\x07'] - Character treated as an empty cell.
    * @returns {this}
    */
   put(x, y, text, options = {}) {
@@ -365,7 +365,7 @@ export class Panel {
     return this.applyFn(x, y, width, height, () => ({symbol, state}), options);
   }
 
-  /** Fills a region's state while preserving existing symbols (or using emptySymbol for null cells).
+  /** Fills all cells with the given state, using `emptySymbol` for empty cells' symbol.
    * @param {number|object} x - Left column, or options if filling the entire panel.
    * @param {number} [y] - Top row.
    * @param {number} [width] - Width.
@@ -426,7 +426,7 @@ export class Panel {
     return this.applyFn(x, y, width, height, (x, y, cell) => cell && {symbol: cell.symbol, state}, options);
   }
 
-  /** Combines a state before existing cell states in a region.
+  /** Combines a state before existing cell states (applied state acts as a base that cells override).
    * @param {number|object} x - Left column, or options if filling the entire panel.
    * @param {number} [y] - Top row.
    * @param {number} [width] - Width.
@@ -463,7 +463,7 @@ export class Panel {
     );
   }
 
-  /** Combines a state after existing cell states in a region.
+  /** Combines a state after existing cell states (applied state overrides cell properties).
    * @param {number|object} x - Left column, or options if filling the entire panel.
    * @param {number} [y] - Top row.
    * @param {number} [width] - Width.
@@ -558,6 +558,11 @@ export class Panel {
     return this;
   }
 
+  /** Pads left and right sides with empty cells.
+   * @param {number} n - Left columns.
+   * @param {number} m - Right columns.
+   * @returns {this}
+   */
   padLeftRight(n, m) {
     if (n <= 0) return this.padRight(m);
     if (m <= 0) return this.padLeft(n);
@@ -597,6 +602,11 @@ export class Panel {
     return this;
   }
 
+  /** Pads top and bottom with empty rows.
+   * @param {number} n - Top rows.
+   * @param {number} m - Bottom rows.
+   * @returns {this}
+   */
   padTopBottom(n, m) {
     if (n <= 0) return this.padBottom(m);
     if (m <= 0) return this.padTop(n);
@@ -961,6 +971,9 @@ export class Panel {
 
 addAliases(Panel, {combineState: 'combineStateAfter', toPanel: 'clone'});
 
+/** Alias for `Panel.make()`. Creates a Panel from various input types.
+ * @type {typeof Panel.make}
+ */
 export const toPanel = Panel.make;
 
 export default Panel;

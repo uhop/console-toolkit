@@ -65,14 +65,14 @@ export class Box {
    * @returns A new Box copy.
    */
   toBox(): Box;
-  /** Creates a deep copy of this Box.
+  /** Creates a copy of this Box.
    * @returns A new Box copy.
    */
   clone(): Box;
   /** Clips the box to a given width.
    * @param width - Maximum display width.
    * @param options - Clip options.
-   * @returns This Box (mutated).
+   * @returns A new clipped Box.
    */
   clip(width: number, options?: ClipOptions): Box;
 
@@ -80,38 +80,38 @@ export class Box {
    * @param left - Left padding columns.
    * @param right - Right padding columns.
    * @param symbol - Pad character.
-   * @returns This Box (mutated).
+   * @returns A new padded Box.
    */
   padLeftRight(left: number, right: number, symbol?: string): Box;
   /** Pads the top and bottom with a symbol.
    * @param top - Top padding rows.
    * @param bottom - Bottom padding rows.
    * @param symbol - Pad character.
-   * @returns This Box (mutated).
+   * @returns A new padded Box.
    */
   padTopBottom(top: number, bottom: number, symbol?: string): Box;
   /** Pads the right side.
    * @param n - Columns.
    * @param symbol - Pad character.
-   * @returns This Box (mutated).
+   * @returns A new padded Box.
    */
   padRight(n: number, symbol?: string): Box;
   /** Pads the left side.
    * @param n - Columns.
    * @param symbol - Pad character.
-   * @returns This Box (mutated).
+   * @returns A new padded Box.
    */
   padLeft(n: number, symbol?: string): Box;
   /** Pads the top.
    * @param n - Rows.
    * @param symbol - Pad character.
-   * @returns This Box (mutated).
+   * @returns A new padded Box.
    */
   padTop(n: number, symbol?: string): Box;
   /** Pads the bottom.
    * @param n - Rows.
    * @param symbol - Pad character.
-   * @returns This Box (mutated).
+   * @returns A new padded Box.
    */
   padBottom(n: number, symbol?: string): Box;
   /** Pads using CSS-style shorthand (top, right, bottom, left).
@@ -120,34 +120,34 @@ export class Box {
    * @param b - Bottom padding (or symbol).
    * @param l - Left padding (or symbol).
    * @param symbol - Pad character.
-   * @returns This Box (mutated).
+   * @returns A new padded Box.
    */
   pad(t: number, r?: number | string, b?: number | string, l?: number | string, symbol?: string): Box;
 
   /** Removes `n` rows starting at row `y`.
    * @param y - Starting row index.
    * @param n - Number of rows to remove.
-   * @returns This Box (mutated).
+   * @returns A new Box with the specified rows removed.
    */
   removeRows(y: number, n: number): Box;
 
   /** Appends another box below this one.
    * @param box - Input convertible to a Box.
    * @param options - Alignment and padding options.
-   * @returns This Box (mutated).
+   * @returns A new combined Box.
    */
   // TODO_REVIEW: `box` accepts Box | string | string[] | {toBox(...): Box} — consider narrowing
   addBottom(box: any, options?: AddBottomOptions): Box;
   /** Appends another box to the right of this one.
    * @param box - Input convertible to a Box.
    * @param options - Alignment and padding options.
-   * @returns This Box (mutated).
+   * @returns A new combined Box.
    */
   // TODO_REVIEW: `box` accepts Box | string | string[] | {toBox(...): Box} — consider narrowing
   addRight(box: any, options?: AddRightOptions): Box;
 
   /** Flips the box vertically.
-   * @returns This Box (mutated).
+   * @returns A new vertically flipped Box.
    */
   flipV(): Box;
 }

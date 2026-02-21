@@ -21,7 +21,7 @@ export interface PanelToStringsOptions {
 
 /** Options for `Panel.put()`. */
 export interface PanelPutOptions {
-  /** Character used for empty cells (default: ' '). */
+  /** Character treated as an empty cell (default: '\x07' BELL). */
   emptySymbol?: string;
   /** If true, ignore control symbols when calculating width. */
   ignoreControlSymbols?: boolean;
@@ -133,7 +133,7 @@ export class Panel {
    * @returns This Panel (mutated).
    */
   copyFrom(x: number, y: number, width: number, height: number, panel: Panel, x1?: number, y1?: number): Panel;
-  /** Places text onto this panel at the given position.
+  /** Places text onto this panel at the given position. Characters matching `emptySymbol` (default: '\x07' BELL) are treated as empty cells.
    * @param x - Left column.
    * @param y - Top row.
    * @param text - Content to place (Panel, Box, string, or string array).
@@ -186,12 +186,12 @@ export class Panel {
     options?: any
   ): Panel;
 
-  /** Fills the SGR state for all cells.
+  /** Fills all cells with the given state, using `emptySymbol` for empty cells' symbol.
    * @param options - Fill state options.
    * @returns This Panel (mutated).
    */
   fillState(options?: PanelFillStateOptions): Panel;
-  /** Fills the SGR state for cells in a rectangular region.
+  /** Fills cells in a rectangular region with the given state, using `emptySymbol` for empty cells' symbol.
    * @param x - Left column.
    * @param y - Top row.
    * @param width - Region width.
@@ -222,12 +222,12 @@ export class Panel {
     options?: {state?: SgrState | string | string[]}
   ): Panel;
 
-  /** Combines a state before existing cell states.
+  /** Combines a state before existing cell states (applied state acts as a base that cells override).
    * @param options - Combine options.
    * @returns This Panel (mutated).
    */
   combineStateBefore(options?: PanelCombineStateOptions): Panel;
-  /** Combines a state before existing cell states in a region.
+  /** Combines a state before existing cell states in a region (applied state acts as a base that cells override).
    * @param x - Left column.
    * @param y - Top row.
    * @param width - Region width.
@@ -237,12 +237,12 @@ export class Panel {
    */
   combineStateBefore(x: number, y: number, width: number, height: number, options?: PanelCombineStateOptions): Panel;
 
-  /** Combines a state after existing cell states.
+  /** Combines a state after existing cell states (applied state overrides cell properties).
    * @param options - Combine options.
    * @returns This Panel (mutated).
    */
   combineStateAfter(options?: PanelCombineStateOptions): Panel;
-  /** Combines a state after existing cell states in a region.
+  /** Combines a state after existing cell states in a region (applied state overrides cell properties).
    * @param x - Left column.
    * @param y - Top row.
    * @param width - Region width.
@@ -257,14 +257,15 @@ export class Panel {
 
   /** Clears the entire panel (sets all cells to null). @returns This Panel (mutated). */
   clear(): Panel;
-  /** Clears a rectangular region.
+  /** Clears a rectangular region (sets cells to null).
    * @param x - Left column.
    * @param y - Top row.
    * @param width - Region width.
    * @param height - Region height.
+   * @param options - Options passed to `applyFn()`.
    * @returns This Panel (mutated).
    */
-  clear(x: number, y?: number, width?: number, height?: number): Panel;
+  clear(x: number, y?: number, width?: number, height?: number, options?: any): Panel;
 
   /** Pads the left side.
    * @param n - Columns.
@@ -322,24 +323,29 @@ export class Panel {
 
   /** Resizes horizontally.
    * @param newWidth - New width.
-   * @param align - Alignment.
+   * @param align - Alignment (default: 'right').
    * @returns This Panel (mutated).
    */
   resizeH(newWidth: number, align?: 'left' | 'l' | 'right' | 'r' | 'center' | 'c'): Panel;
   /** Resizes vertically.
    * @param newHeight - New height.
-   * @param align - Alignment.
+   * @param align - Alignment (default: 'bottom').
    * @returns This Panel (mutated).
    */
   resizeV(newHeight: number, align?: 'top' | 't' | 'bottom' | 'b' | 'center' | 'c'): Panel;
   /** Resizes both dimensions.
    * @param newWidth - New width.
    * @param newHeight - New height.
-   * @param horizontal - Horizontal alignment.
-   * @param vertical - Vertical alignment.
+   * @param horizontal - Horizontal alignment (default: 'right').
+   * @param vertical - Vertical alignment (default: 'bottom').
    * @returns This Panel (mutated).
    */
-  resize(newWidth: number, newHeight: number, horizontal?: string, vertical?: string): Panel;
+  resize(
+    newWidth: number,
+    newHeight: number,
+    horizontal?: 'left' | 'l' | 'right' | 'r' | 'center' | 'c',
+    vertical?: 'top' | 't' | 'bottom' | 'b' | 'center' | 'c'
+  ): Panel;
 
   /** Inserts empty columns at `x`.
    * @param x - Column index.

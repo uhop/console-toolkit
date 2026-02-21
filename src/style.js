@@ -183,8 +183,8 @@ class Reset {
  */
 export class Style {
   /**
-   * @param {object|string} [initState] - The initial SGR state.
-   * @param {object|string} [currentState] - The current SGR state (defaults to initState).
+   * @param {object|string|null} [initState] - The initial SGR state (SgrState, string, or null for reset).
+   * @param {object|string|null} [currentState] - The current SGR state (defaults to initState).
    * @param {number} [colorDepth=24] - Color depth (1, 4, 8, or 24).
    */
   constructor(initState, currentState, colorDepth = 24) {
@@ -209,7 +209,7 @@ export class Style {
     return state === this[stateSymbol] ? this : new Style(this[initStateSymbol], state, this[colorDepthSymbol]);
   }
   /** Combines an SGR state into the current state.
-   * @param {object|string} state - State to combine.
+   * @param {object|string|null} state - State to combine (SgrState, string, or null).
    * @returns {Style}
    */
   addState(state) {
@@ -654,12 +654,12 @@ const makeBq =
     return bq(strings, ...args);
   };
 
-/** Tagged template literal for styled text. Does NOT add cleanup codes at the end.
+/** Tagged template literal for styled text. Style changes persist after the string.
  * Can also be called as `s({initState, setState})` to create a configured tagger.
  * @type {Function}
  */
 export const s = makeBq(false);
-/** Tagged template literal for styled text. Adds cleanup codes at the end to restore the initial state.
+/** Tagged template literal for styled text. Automatically resets the style at the end.
  * Can also be called as `c({initState, setState})` to create a configured tagger.
  * @type {Function}
  */

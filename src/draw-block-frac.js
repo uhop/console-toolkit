@@ -5,8 +5,8 @@ import Box from './box.js';
  * The integer part is filled with full blocks; the fractional part appears on the right.
  * @param {number} realWidth - The real width (float). Fractional part is interpreted in 1/8th steps.
  * @param {number} height - The integer height of the block.
- * @param {boolean} [drawEmptyBorder=false] - If true, draw an empty border character even when the fractional part rounds to 0.
- * @returns {import('./box.js').Box} A Box with the drawn block.
+ * @param {boolean} [drawEmptyBorder=false] - If true, add an empty border column when the fractional part is close to 0 but not exactly 0.
+ * @returns {import('./box.js').Box} A Box containing the drawn block.
  */
 export const drawRealWidthBlock = (realWidth, height, drawEmptyBorder) => {
   realWidth = Math.max(0, realWidth);
@@ -26,8 +26,8 @@ export const drawRealWidthBlock = (realWidth, height, drawEmptyBorder) => {
  * The integer part is filled with full blocks; the fractional part appears on the top.
  * @param {number} width - The integer width of the block.
  * @param {number} realHeight - The real height (float). Fractional part is interpreted in 1/8th steps.
- * @param {boolean} [drawEmptyBorder=false] - If true, draw an empty border character even when the fractional part rounds to 0.
- * @returns {import('./box.js').Box} A Box with the drawn block.
+ * @param {boolean} [drawEmptyBorder=false] - If true, add an empty border row when the fractional part is close to 0 but not exactly 0.
+ * @returns {import('./box.js').Box} A Box containing the drawn block.
  */
 export const drawRealHeightBlock = (width, realHeight, drawEmptyBorder) => {
   width = Math.max(0, Math.floor(width));

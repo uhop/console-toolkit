@@ -11,21 +11,22 @@ const T = 1,
   LB = getIndex(L, B),
   RB = getIndex(R, B);
 
-/** Draws a rectangular block using a block theme.
- * The interior is filled with a symbol (from the theme or space by default).
- * @param {number} width - The interior width of the block.
- * @param {number} height - The interior height of the block.
- * @param {object} blockTheme - The block theme defining border characters.
- * @param {object} [options] - Options.
- * @param {number} [options.top] - Sub-theme for the top border (defaults to hTheme, then theme, then 1).
- * @param {number} [options.bottom] - Sub-theme for the bottom border.
- * @param {number} [options.left] - Sub-theme for the left border.
- * @param {number} [options.right] - Sub-theme for the right border.
- * @param {number} [options.vTheme] - Sub-theme for vertical borders (left and right).
- * @param {number} [options.hTheme] - Sub-theme for horizontal borders (top and bottom).
- * @param {number} [options.theme] - Sub-theme for all borders.
- * @param {string} [options.symbol] - Fill character for the interior.
- * @returns {import('./box.js').Box} A Box with the drawn block.
+/** Draws a filled rectangular block using a block theme.
+ * The interior is filled with a symbol from the theme's `f` property, or space by default.
+ * @param {number} width - Interior width in columns.
+ * @param {number} height - Interior height in rows.
+ * @param {object} blockTheme - Block theme object defining border characters.
+ * @param {object} [options] - Drawing options.
+ * @param {number} [options.top] - Sub-theme for the top border (defaults to `hTheme`, then `theme`, then `1`).
+ * @param {number} [options.bottom] - Sub-theme for the bottom border (defaults to `hTheme`, then `theme`, then `1`).
+ * @param {number} [options.left] - Sub-theme for the left border (defaults to `vTheme`, then `theme`, then `1`).
+ * @param {number} [options.right] - Sub-theme for the right border (defaults to `vTheme`, then `theme`, then `1`).
+ * @param {number} [options.vTheme] - Sub-theme for vertical borders (left and right). Defaults to `theme`, then `1`.
+ * @param {number} [options.hTheme] - Sub-theme for horizontal borders (top and bottom). Defaults to `theme`, then `1`.
+ * @param {number} [options.theme] - Sub-theme for all borders (default: `1`).
+ * @param {string} [options.symbol] - Fill character for the interior. Defaults to the theme's `f` property or space.
+ * @returns {import('./box.js').Box} A Box containing the drawn block.
+ * @see {@link https://github.com/uhop/console-toolkit/wiki/Module:-draw-block}
  */
 export const drawBlock = (
   width,
@@ -63,13 +64,12 @@ export const drawBlock = (
   );
 };
 
-/** Draws a frame (block with space-filled interior) using a block theme.
- * Same as `drawBlock()` but forces the interior fill to space if not specified.
- * @param {number} width - The interior width of the frame.
- * @param {number} height - The interior height of the frame.
- * @param {object} blockTheme - The block theme defining border characters.
- * @param {object} [options] - Same options as `drawBlock()`.
- * @returns {import('./box.js').Box} A Box with the drawn frame.
+/** Draws a rectangular frame using a block theme. Same as `drawBlock()` but defaults the interior fill to space if `symbol` is not specified.
+ * @param {number} width - Interior width in columns.
+ * @param {number} height - Interior height in rows.
+ * @param {object} blockTheme - Block theme object defining border characters.
+ * @param {object} [options] - Drawing options (same as `drawBlock()`).
+ * @returns {import('./box.js').Box} A Box containing the drawn frame.
  */
 export const drawFrame = (width, height, blockTheme, options) => {
   if (!options?.symbol) options = {...options, symbol: ' '};

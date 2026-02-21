@@ -211,6 +211,8 @@ export class Style {
     readonly inverse: Style;
     readonly hidden: Style;
     readonly strikethrough: Style;
+    readonly curlyUnderline: Style;
+    readonly doubleUnderline: Style;
     readonly overline: Style;
     readonly color: Style;
     readonly bgColor: Style;
@@ -445,9 +447,13 @@ type BqFunction = {
   (states: BqStates): (strings: TemplateStringsArray, ...args: any[]) => string;
 };
 
-/** Tagged template literal for styled text. Does NOT add cleanup codes at the end. */
+/** Tagged template literal for styled text. Style changes persist after the string.
+ * Can also be called as `s({initState, setState})` to create a configured tagger.
+ */
 export const s: BqFunction;
-/** Tagged template literal for styled text. Adds cleanup codes at the end. */
+/** Tagged template literal for styled text. Automatically resets the style at the end.
+ * Can also be called as `c({initState, setState})` to create a configured tagger.
+ */
 export const c: BqFunction;
 
 /** The default Style singleton with an empty initial state. */
