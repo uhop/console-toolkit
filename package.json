@@ -26,7 +26,10 @@
     "test:proc:deno": "deno run -A `tape6-proc --self` --flags FO -r -A",
     "test:seq": "tape6-seq --flags FO",
     "test:seq:bun": "bun run `tape6-seq --self` --flags FO",
-    "test:seq:deno": "deno run -A `tape6-seq --self` --flags FO"
+    "test:seq:deno": "deno run -A `tape6-seq --self` --flags FO",
+    "ts-check": "tsc --noEmit",
+    "lint": "prettier --check .",
+    "lint:fix": "prettier --write ."
   },
   "github": "http://github.com/uhop/console-toolkit",
   "repository": {
@@ -69,6 +72,7 @@
     "emoji-regex": "^10.6.0",
     "get-east-asian-width": "^1.5.0",
     "tape-six": "^1.7.2",
-    "tape-six-proc": "^1.2.3"
+    "tape-six-proc": "^1.2.3",
+    "typescript": "^5.9.3"
   }
 }
