@@ -10,7 +10,8 @@ const write = async (stream, chunk, encoding = 'utf8') =>
  * Handles TTY capabilities, color depth, cursor manipulation, and ANSI stripping for non-TTY streams.
  */
 export class Writer {
-  /** @param {import('node:stream').Writable} [stream=process.stdout] - The output stream.
+  /**
+   * @param {import('node:stream').Writable} [stream=process.stdout] - The output stream.
    * @param {number} [forceColorDepth] - Force a specific color depth instead of auto-detecting.
    */
   constructor(stream = process.stdout, forceColorDepth) {

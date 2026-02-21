@@ -33,7 +33,8 @@ const DIM_STATE = style.dim.getState();
  * @see {@link https://github.com/uhop/console-toolkit/wiki/Package:-table}
  */
 export class Table {
-  /** @param {any[][]} data - 2D array of cell data. Each cell can be a value, or `{value, align, width, height}`.
+  /**
+   * @param {any[][]} data - 2D array of cell data. Each cell can be a value, or `{value, align, width, height}`.
    * @param {object} lineTheme - The line theme for borders.
    * @param {object} [options] - Options.
    * @param {string|(string|number)[]} [options.hAxis='1'] - Horizontal axis definition.

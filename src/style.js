@@ -182,7 +182,8 @@ class Reset {
  * @see {@link https://github.com/uhop/console-toolkit/wiki/Module:-style}
  */
 export class Style {
-  /** @param {object|string} [initState] - The initial SGR state.
+  /**
+   * @param {object|string} [initState] - The initial SGR state.
    * @param {object|string} [currentState] - The current SGR state (defaults to initState).
    * @param {number} [colorDepth=24] - Color depth (1, 4, 8, or 24).
    */

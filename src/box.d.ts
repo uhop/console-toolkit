@@ -2,19 +2,25 @@ import {ClipOptions} from './strings/clip.js';
 
 /** Options for `Box.make()`. */
 export interface BoxMakeOptions {
+  /** Padding character (default: ' '). */
   symbol?: string;
+  /** Horizontal alignment for shorter strings (default: 'left'). */
   align?: 'left' | 'l' | 'right' | 'r' | 'center' | 'c';
 }
 
 /** Options for `Box.addBottom()`. */
 export interface AddBottomOptions {
+  /** Padding character (default: ' '). */
   symbol?: string;
+  /** Horizontal alignment (default: 'left'). */
   align?: 'left' | 'l' | 'right' | 'r' | 'center' | 'c';
 }
 
 /** Options for `Box.addRight()`. */
 export interface AddRightOptions {
+  /** Padding character (default: ' '). */
   symbol?: string;
+  /** Vertical alignment (default: 'top'). */
   align?: 'top' | 't' | 'bottom' | 'b' | 'center' | 'c';
 }
 
@@ -26,57 +32,132 @@ export class Box {
   box: string[];
 
   /** Creates a Box from a string, string array, or another Box.
-   * @param s - Input data.
-   * @param normalized - If true, skip normalization.
+   * @param s - Input data: a Box (copied), a string array, or a string.
+   * @param normalized - If true, assume strings are already equal width.
    */
-  constructor(s: Box | string | string[] | any, normalized?: boolean);
+  constructor(s: Box | string | string[], normalized?: boolean);
 
   /** The display width of the box in columns. */
   readonly width: number;
   /** The number of lines in the box. */
   readonly height: number;
 
-  /** Creates a Box from various input types. */
+  /** Creates a Box from various input types.
+   * @param s - Input: Box, object with `toBox()`/`toPanel()`, function, string, or string array.
+   * @param options - Make options.
+   * @returns A new Box instance.
+   */
+  // TODO_REVIEW: `s` accepts Box | {toBox(...): Box} | {toPanel(...): Panel} | Function | string | string[] — consider narrowing
   static make(s: any, options?: BoxMakeOptions): Box;
-  /** Creates a blank Box filled with a symbol. */
+  /** Creates a blank Box filled with a symbol.
+   * @param width - Width in columns.
+   * @param height - Height in rows.
+   * @param symbol - Fill character (default: ' ').
+   * @returns A new blank Box.
+   */
   static makeBlank(width: number, height: number, symbol?: string): Box;
 
-  /** Returns the box content as a string array. */
+  /** Returns the box content as a string array.
+   * @returns The array of strings.
+   */
   toStrings(): string[];
-  /** Returns a clone of this Box. */
+  /** Returns a clone of this Box.
+   * @returns A new Box copy.
+   */
   toBox(): Box;
-  /** Creates a deep copy of this Box. */
+  /** Creates a deep copy of this Box.
+   * @returns A new Box copy.
+   */
   clone(): Box;
-  /** Clips the box to a given width. */
+  /** Clips the box to a given width.
+   * @param width - Maximum display width.
+   * @param options - Clip options.
+   * @returns This Box (mutated).
+   */
   clip(width: number, options?: ClipOptions): Box;
 
-  /** Pads the left and right sides with a symbol. */
+  /** Pads the left and right sides with a symbol.
+   * @param left - Left padding columns.
+   * @param right - Right padding columns.
+   * @param symbol - Pad character.
+   * @returns This Box (mutated).
+   */
   padLeftRight(left: number, right: number, symbol?: string): Box;
-  /** Pads the top and bottom with a symbol. */
+  /** Pads the top and bottom with a symbol.
+   * @param top - Top padding rows.
+   * @param bottom - Bottom padding rows.
+   * @param symbol - Pad character.
+   * @returns This Box (mutated).
+   */
   padTopBottom(top: number, bottom: number, symbol?: string): Box;
-  /** Pads the right side. */
+  /** Pads the right side.
+   * @param n - Columns.
+   * @param symbol - Pad character.
+   * @returns This Box (mutated).
+   */
   padRight(n: number, symbol?: string): Box;
-  /** Pads the left side. */
+  /** Pads the left side.
+   * @param n - Columns.
+   * @param symbol - Pad character.
+   * @returns This Box (mutated).
+   */
   padLeft(n: number, symbol?: string): Box;
-  /** Pads the top. */
+  /** Pads the top.
+   * @param n - Rows.
+   * @param symbol - Pad character.
+   * @returns This Box (mutated).
+   */
   padTop(n: number, symbol?: string): Box;
-  /** Pads the bottom. */
+  /** Pads the bottom.
+   * @param n - Rows.
+   * @param symbol - Pad character.
+   * @returns This Box (mutated).
+   */
   padBottom(n: number, symbol?: string): Box;
-  /** Pads using CSS-style shorthand (top, right, bottom, left). */
+  /** Pads using CSS-style shorthand (top, right, bottom, left).
+   * @param t - Top padding.
+   * @param r - Right padding (or symbol).
+   * @param b - Bottom padding (or symbol).
+   * @param l - Left padding (or symbol).
+   * @param symbol - Pad character.
+   * @returns This Box (mutated).
+   */
   pad(t: number, r?: number | string, b?: number | string, l?: number | string, symbol?: string): Box;
 
-  /** Removes `n` rows starting at row `y`. */
+  /** Removes `n` rows starting at row `y`.
+   * @param y - Starting row index.
+   * @param n - Number of rows to remove.
+   * @returns This Box (mutated).
+   */
   removeRows(y: number, n: number): Box;
 
-  /** Appends another box below this one. */
+  /** Appends another box below this one.
+   * @param box - Input convertible to a Box.
+   * @param options - Alignment and padding options.
+   * @returns This Box (mutated).
+   */
+  // TODO_REVIEW: `box` accepts Box | string | string[] | {toBox(...): Box} — consider narrowing
   addBottom(box: any, options?: AddBottomOptions): Box;
-  /** Appends another box to the right of this one. */
+  /** Appends another box to the right of this one.
+   * @param box - Input convertible to a Box.
+   * @param options - Alignment and padding options.
+   * @returns This Box (mutated).
+   */
+  // TODO_REVIEW: `box` accepts Box | string | string[] | {toBox(...): Box} — consider narrowing
   addRight(box: any, options?: AddRightOptions): Box;
 
-  /** Flips the box vertically. */
+  /** Flips the box vertically.
+   * @returns This Box (mutated).
+   */
   flipV(): Box;
 }
 
+/** Alias for `Box.make()`. Creates a Box from various input types.
+ * @param s - Input convertible to a Box.
+ * @param options - Make options.
+ * @returns A new Box instance.
+ */
+// TODO_REVIEW: `s` accepts Box | {toBox(...): Box} | {toPanel(...): Panel} | Function | string | string[] — consider narrowing
 export function toBox(s: any, options?: BoxMakeOptions): Box;
 
 export default Box;

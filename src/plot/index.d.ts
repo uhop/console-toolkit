@@ -6,9 +6,31 @@ import Box from '../box.js';
 
 declare module './bitmap.js' {
   interface Bitmap {
+    /** Draws a line on this bitmap.
+     * @param x0 - Start X.
+     * @param y0 - Start Y.
+     * @param x1 - End X.
+     * @param y1 - End Y.
+     * @param value - Bit value.
+     * @returns This Bitmap.
+     */
     line(x0: number, y0: number, x1: number, y1: number, value?: number): Bitmap;
+    /** Draws a filled rectangle on this bitmap.
+     * @param x0 - Left X.
+     * @param y0 - Top Y.
+     * @param x1 - Right X.
+     * @param y1 - Bottom Y.
+     * @param value - Bit value.
+     * @returns This Bitmap.
+     */
     rect(x0: number, y0: number, x1: number, y1: number, value?: number): Bitmap;
+    /** Converts this bitmap to a Box using quadrant characters.
+     * @returns A Box.
+     */
     toQuads(): Box;
+    /** Converts this bitmap to a string array using quadrant characters.
+     * @returns Array of strings.
+     */
     toStrings(): string[];
   }
 }

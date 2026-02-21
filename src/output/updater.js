@@ -8,7 +8,8 @@ const RESET = setCommands([]);
  * Handles refreshing frames, prologue/epilogue sequences, and interacts with a Writer instance.
  */
 export class Updater {
-  /** @param {Function|{state?: string, getFrame: Function}} updater - A function `(state, ...args) => frame` or an object with `getFrame()`.
+  /**
+   * @param {Function|{state?: string, getFrame: Function}} updater - A function `(state, ...args) => frame` or an object with `getFrame()`.
    * @param {object} [options] - Options.
    * @param {string} [options.prologue] - String written before the first frame.
    * @param {string} [options.epilogue] - String written after the last frame.

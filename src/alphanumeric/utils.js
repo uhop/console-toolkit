@@ -2,7 +2,8 @@
  * Supports overlays for custom symbol replacements.
  */
 export class SymbolRange {
-  /** @param {string} fromSymbol - The Unicode character corresponding to the `from` value.
+  /**
+   * @param {string} fromSymbol - The Unicode character corresponding to the `from` value.
    * @param {number} [from=0] - Start of the range.
    * @param {number} [to=9] - End of the range (inclusive).
    * @param {string} [inputBase='0'] - The input character corresponding to 0.

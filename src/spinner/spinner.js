@@ -2,7 +2,9 @@ import {checkMarkHeavy} from '../symbols.js';
 
 /** Base class for spinners. Manages spinner state (active, paused, finished) and frame index. */
 export class SpinnerBase {
-  /** @param {boolean} [isStarted=false] - Whether the spinner starts in the active state. */
+  /**
+   * @param {boolean} [isStarted=false] - Whether the spinner starts in the active state.
+   */
   constructor(isStarted) {
     this.active = isStarted;
     this.paused = false;
@@ -75,7 +77,8 @@ const defaultSpinnerDefinition = {notStarted: [' '], finished: [checkMarkHeavy],
 
 /** A spinner with configurable frame sets for active, not-started, and finished states. */
 export class Spinner extends SpinnerBase {
-  /** @param {object} [spinnerDefinition] - Spinner definition with `frames`, `notStarted`, and `finished` arrays.
+  /**
+   * @param {object} [spinnerDefinition] - Spinner definition with `frames`, `notStarted`, and `finished` arrays.
    * @param {string[]} [spinnerDefinition.frames] - Animation frames for the active state.
    * @param {string[]} [spinnerDefinition.notStarted] - Frames shown before the spinner starts.
    * @param {string[]} [spinnerDefinition.finished] - Frames shown after the spinner finishes.
