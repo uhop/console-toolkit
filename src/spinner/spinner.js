@@ -1,5 +1,3 @@
-'use strict';
-
 import {checkMarkHeavy} from '../symbols.js';
 
 /** Base class for spinners. Manages spinner state (active, paused, finished) and frame index. */

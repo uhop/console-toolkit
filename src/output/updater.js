@@ -1,5 +1,3 @@
-'use strict';
-
 import Writer from './writer.js';
 import {toStrings} from '../strings.js';
 import {cursorUp, setCommands} from '../ansi/csi.js';

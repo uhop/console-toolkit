@@ -1,5 +1,3 @@
-'use strict';
-
 import {SpinnerBase} from './spinner.js';
 
 /** Internal composite spinner that handles multiple spinner parts and functions via tagged template literals. */
