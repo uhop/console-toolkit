@@ -5,6 +5,7 @@
   "type": "module",
   "main": "src/index.js",
   "module": "src/index.js",
+  "types": "src/index.d.ts",
   "exports": {
     "./*": "./src/*",
     "./ansi": "./src/ansi/index.js",
