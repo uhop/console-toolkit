@@ -59,7 +59,12 @@ export interface PanelAddRightOptions {
   align?: 'top' | 't' | 'bottom' | 'b' | 'center' | 'c';
 }
 
-/** Callback function for `Panel.applyFn()`. Receives cell coordinates and current cell, returns new cell or null/undefined. */
+/** Callback function for `Panel.applyFn()`. Receives cell coordinates and current cell, returns new cell or null/undefined.
+ * @param x - Column index.
+ * @param y - Row index.
+ * @param cell - The current cell or null if empty.
+ * @returns A new cell, null, or undefined.
+ */
 type ApplyFn = (x: number, y: number, cell: PanelCell | null) => PanelCell | null | undefined;
 
 /** A 2D array of styled cells for compositing styled text.

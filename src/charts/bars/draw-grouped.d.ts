@@ -20,7 +20,13 @@ export interface GroupedChartOptions {
   [key: string]: any;
 }
 
-/** Function that draws a single row of a chart. */
+/** Function that draws a single row of a chart.
+ * @param data - Array of chart data items.
+ * @param width - Available width in characters.
+ * @param maxValue - Maximum value for scaling.
+ * @param options - Optional chart options.
+ * @returns The drawn row as a string or string array.
+ */
 type DrawRowFn = (data: ChartDatum[], width: number, maxValue: number, options?: any) => string | string[];
 
 /** Creates a grouped bar chart drawing function from a row-drawing function.

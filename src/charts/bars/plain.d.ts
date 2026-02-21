@@ -3,7 +3,13 @@ import {StackedChartOptions} from './draw-stacked.js';
 
 /** Options for plain bar charts. */
 export interface PlainBarOptions extends StackedChartOptions {
-  /** Custom draw function for a single bar item. */
+  /** Custom draw function for a single bar item.
+   * @param datum - The chart data item or null.
+   * @param size - Allocated size in characters.
+   * @param info - Drawing info.
+   * @param options - Options.
+   * @returns The drawn string.
+   */
   drawItem?: (datum: ChartDatum | null, size: number, info: any, options: any) => string;
   /** Size of each rectangle in characters. */
   rectSize?: number;

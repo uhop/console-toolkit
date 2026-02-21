@@ -8,7 +8,13 @@ export interface StackedChartOptions {
   gap?: number;
   /** Chart theme. */
   theme?: ChartTheme;
-  /** Custom draw function for individual items. */
+  /** Custom draw function for individual items.
+   * @param datum - The chart data item or null.
+   * @param size - Allocated size in characters.
+   * @param info - Drawing info.
+   * @param options - Options.
+   * @returns The drawn string.
+   */
   drawItem?: (datum: ChartDatum | null, size: number, info: any, options: any) => string;
   /** Size of each rectangle in characters. */
   rectSize?: number;
@@ -20,7 +26,13 @@ export interface StackedChartOptions {
   [key: string]: any;
 }
 
-/** Function that draws a single row of a chart. */
+/** Function that draws a single row of a chart.
+ * @param data - Array of chart data items.
+ * @param width - Available width in characters.
+ * @param maxValue - Maximum value for scaling.
+ * @param options - Optional chart options.
+ * @returns The drawn row as a string or string array.
+ */
 type DrawRowFn = (data: ChartDatum[], width: number, maxValue: number, options?: any) => string | string[];
 
 /** Creates a stacked bar chart drawing function from a row-drawing function.

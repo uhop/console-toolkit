@@ -433,10 +433,13 @@ interface BqStates {
 /** Tagged template literal function for styled text. Can be called directly or configured with states first. */
 type BqFunction = {
   /** Direct tagged template usage.
+   * @param strings - Template string parts.
+   * @param args - Interpolated values.
    * @returns The styled string.
    */
   (strings: TemplateStringsArray, ...args: any[]): string;
   /** Configured usage — returns a tagged template function with the given states.
+   * @param states - Initial and current SGR state configuration.
    * @returns A tagged template function.
    */
   (states: BqStates): (strings: TemplateStringsArray, ...args: any[]) => string;

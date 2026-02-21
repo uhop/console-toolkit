@@ -20,7 +20,13 @@ export interface GroupedColumnChartOptions {
   [key: string]: any;
 }
 
-/** Function that draws a single column of a chart. */
+/** Function that draws a single column of a chart.
+ * @param data - Array of chart data items.
+ * @param width - Available width in characters.
+ * @param maxValue - Maximum value for scaling.
+ * @param options - Optional chart options.
+ * @returns Array of strings for the column.
+ */
 type DrawColumnFn = (data: ChartDatum[], width: number, maxValue: number, options?: any) => string[];
 
 /** Creates a grouped column chart drawing function from a column-drawing function.
