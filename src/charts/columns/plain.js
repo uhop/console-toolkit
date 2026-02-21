@@ -11,6 +11,13 @@ import defaultTheme from '../themes/default.js';
 
 const defaultSymbol = hBlocks8th[7];
 
+/** Draws a single stacked column using plain symbols.
+ * @param {object[]} data - Normalized data series.
+ * @param {number} width - Total height.
+ * @param {number} maxValue - Maximum value for scaling.
+ * @param {object} [options] - Options including `reverse`, `rectSize`, `initState`, `theme`.
+ * @returns {string[]} The drawn column lines.
+ */
 export const drawColumn = (data, width, maxValue, options = {}) => {
   const {reverse, rectSize = 1, initState = {}, theme = defaultTheme} = options,
     {symbol = ' ', state = null, colorState} = theme?.empty || {},

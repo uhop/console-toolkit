@@ -1,5 +1,6 @@
 export * from './sgr.js';
 
+/** RegExp matching CSI (Control Sequence Introducer) escape sequences. */
 export const matchCsi: RegExp;
 
 export const CURSOR_UP1: string;
@@ -17,13 +18,18 @@ export const CURSOR_RESTORE_POS: string;
 export const CURSOR_NORMAL: string;
 export const CURSOR_INVISIBLE: string;
 
+/** Moves the cursor up by `n` rows. */
 export function cursorUp(n?: number): string;
+/** Moves the cursor down by `n` rows. */
 export function cursorDown(n?: number): string;
+/** Moves the cursor forward by `n` columns. */
 export function cursorForward(n?: number): string;
+/** Moves the cursor back by `n` columns. */
 export function cursorBack(n?: number): string;
 export function cursorNextLine(n?: number): string;
 export function cursorPrevLine(n?: number): string;
 export function cursorColumn(n?: number): string;
+/** Sets the cursor to row `n`, column `m` (1-based). */
 export function cursorSetPos(n: number, m: number): string;
 export function cursorSetPosAlt(n: number, m: number): string;
 
@@ -49,7 +55,9 @@ export const SCREEN_SCROLL_DOWN1: string;
 export const SCREEN_REPORT_FOCUS_ON: string;
 export const SCREEN_REPORT_FOCUS_OFF: string;
 
+/** Scrolls the screen up by `n` lines. */
 export function screenScrollUp(n?: number): string;
+/** Scrolls the screen down by `n` lines. */
 export function screenScrollDown(n?: number): string;
 
 export const WRAPPING_ON: string;

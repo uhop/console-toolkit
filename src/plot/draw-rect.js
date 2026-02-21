@@ -1,3 +1,11 @@
+/** Draws a filled rectangle on a Bitmap by efficiently manipulating the underlying bit array.
+ * @param {import('./bitmap.js').Bitmap} bmp - The bitmap to draw on.
+ * @param {number} x0 - First corner x coordinate.
+ * @param {number} y0 - First corner y coordinate.
+ * @param {number} x1 - Opposite corner x coordinate.
+ * @param {number} y1 - Opposite corner y coordinate.
+ * @param {number} [value=1] - Bit value: positive to set, 0 to clear, negative to toggle.
+ */
 export const drawRect = (bmp, x0, y0, x1, y1, value = 1) => {
   if (x1 < x0) [x0, x1] = [x1, x0];
   if (y1 < y0) [y0, y1] = [y1, y0];

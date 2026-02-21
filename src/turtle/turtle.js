@@ -1,5 +1,8 @@
 import {addAliases} from '../meta.js';
 
+/** Turtle graphics on a grid. Supports directional movement, line drawing, state save/restore, and various aliases.
+ * @see {@link https://github.com/uhop/console-toolkit/wiki/Package:-turtle}
+ */
 export class Turtle {
   static RIGHT = 0;
   static DOWN = 1;
@@ -11,6 +14,11 @@ export class Turtle {
   static WEST = 2;
   static NORTH = 3;
 
+  /** Creates a new Turtle on a grid of the given size.
+   * @param {number} width - Grid width.
+   * @param {number} height - Grid height.
+   * @param {number} [theme=1] - The line theme/pen width.
+   */
   constructor(width, height, theme = 1) {
     this.cells = new Array(height);
     for (let i = 0; i < height; ++i) {
@@ -25,10 +33,18 @@ export class Turtle {
     this.stack = [];
   }
 
+  /** Resets the turtle position to (0, 0).
+   * @returns {this}
+   */
   reset() {
     this.position.x = this.position.y = 0;
     return this;
   }
+  /** Sets the turtle position (clamped to grid bounds).
+   * @param {number} x
+   * @param {number} y
+   * @returns {this}
+   */
   set(x, y) {
     this.position.x = Math.max(0, Math.min(this.width - 1, x));
     this.position.y = Math.max(0, Math.min(this.height - 1, y));
@@ -52,11 +68,19 @@ export class Turtle {
     return this.setY(y + dy);
   }
 
+  /** Sets the line theme/pen width.
+   * @param {number} theme
+   * @returns {this}
+   */
   setTheme(theme) {
     this.theme = theme;
     return this;
   }
 
+  /** Sets the turtle direction (0=right, 1=down, 2=left, 3=up).
+   * @param {number} direction
+   * @returns {this}
+   */
   setDirection(direction) {
     this.direction = direction % 4;
     return this;
@@ -73,23 +97,39 @@ export class Turtle {
   setRight() {
     return this.setDirection(Turtle.RIGHT);
   }
+  /** Turns the turtle 90° to the left.
+   * @returns {this}
+   */
   left() {
     return this.setDirection((this.direction + 3) % 4);
   }
+  /** Turns the turtle 90° to the right.
+   * @returns {this}
+   */
   right() {
     return this.setDirection((this.direction + 1) % 4);
   }
 
+  /** Saves the current position, direction, and theme onto the stack.
+   * @returns {this}
+   */
   save() {
     this.stack.push([this.position.x, this.position.y, this.direction, this.theme]);
     return this;
   }
+  /** Restores the position, direction, and theme from the stack.
+   * @returns {this}
+   */
   restore() {
     if (!this.stack) throw new ReferenceError('Unmatched restore');
     [this.position.x, this.position.y, this.direction, this.theme] = this.stack.pop();
     return this;
   }
 
+  /** Moves the turtle up, drawing a line.
+   * @param {number} distance - Number of cells to move.
+   * @returns {this}
+   */
   moveUp(distance) {
     if (!distance) return this;
     if (distance < 0) return this.moveDown(-distance);
@@ -116,6 +156,10 @@ export class Turtle {
     this.position.y = last;
     return this;
   }
+  /** Moves the turtle down, drawing a line.
+   * @param {number} distance - Number of cells to move.
+   * @returns {this}
+   */
   moveDown(distance) {
     if (!distance) return this;
     if (distance < 0) return this.moveUp(-distance);
@@ -142,6 +186,10 @@ export class Turtle {
     this.position.y = last;
     return this;
   }
+  /** Moves the turtle left, drawing a line.
+   * @param {number} distance - Number of cells to move.
+   * @returns {this}
+   */
   moveLeft(distance) {
     if (!distance) return this;
     if (distance < 0) return this.moveRight(-distance);
@@ -168,6 +216,10 @@ export class Turtle {
     this.position.x = last;
     return this;
   }
+  /** Moves the turtle right, drawing a line.
+   * @param {number} distance - Number of cells to move.
+   * @returns {this}
+   */
   moveRight(distance) {
     if (!distance) return this;
     if (distance < 0) return this.moveLeft(-distance);
@@ -194,6 +246,11 @@ export class Turtle {
     this.position.x = last;
     return this;
   }
+  /** Moves the turtle in the given direction, drawing a line.
+   * @param {number} direction - Direction (0=right, 1=down, 2=left, 3=up).
+   * @param {number} distance - Number of cells to move.
+   * @returns {this}
+   */
   move(direction, distance) {
     switch (direction) {
       case Turtle.UP:
@@ -207,13 +264,25 @@ export class Turtle {
     }
     return this;
   }
+  /** Moves the turtle forward in its current direction.
+   * @param {number} distance - Number of cells to move.
+   * @returns {this}
+   */
   forward(distance) {
     return this.move(this.direction, distance);
   }
+  /** Moves the turtle backward (opposite of current direction).
+   * @param {number} distance - Number of cells to move.
+   * @returns {this}
+   */
   backward(distance) {
     return this.move((this.direction + 2) % 4, distance);
   }
 
+  /** Marks a half-line from the center of the current cell in the given direction.
+   * @param {number} direction - Direction (0=right, 1=down, 2=left, 3=up).
+   * @returns {this}
+   */
   markHalf(direction) {
     let cell = this.cells[this.position.y][this.position.x];
     if (!cell) cell = this.cells[this.position.y][this.position.x] = {};

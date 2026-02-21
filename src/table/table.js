@@ -29,7 +29,21 @@ const dataInstructions = 'rowFirst,rowLast,columnFirst,columnLast,data,rowOdd,ro
 
 const DIM_STATE = style.dim.getState();
 
+/** Creates and renders tables with themes, supporting cell alignment, merged cells, and border drawing.
+ * @see {@link https://github.com/uhop/console-toolkit/wiki/Package:-table}
+ */
 export class Table {
+  /** @param {any[][]} data - 2D array of cell data. Each cell can be a value, or `{value, align, width, height}`.
+   * @param {object} lineTheme - The line theme for borders.
+   * @param {object} [options] - Options.
+   * @param {string|(string|number)[]} [options.hAxis='1'] - Horizontal axis definition.
+   * @param {string|(string|number)[]} [options.vAxis='1'] - Vertical axis definition.
+   * @param {string|string[]} [options.hAlign=[]] - Horizontal alignment per column.
+   * @param {string|string[]} [options.vAlign=[]] - Vertical alignment per row.
+   * @param {number|number[]} [options.hMin=0] - Minimum column widths.
+   * @param {number|number[]} [options.vMin=0] - Minimum row heights.
+   * @param {{l?: number, r?: number, t?: number, b?: number}} [options.cellPadding={}] - Cell padding.
+   */
   constructor(data, lineTheme, options = {}) {
     let {hAxis = '1', vAxis = '1', hAlign = [], vAlign = [], hMin = 0, vMin = 0, cellPadding = {}} = options;
 
@@ -122,6 +136,11 @@ export class Table {
   }
 
   // TODO: accept `states`, draw even/odd rows/columns, support bg on lines optionally
+  /** Draws the table as a Panel with borders and cell content.
+   * @param {object} [options] - Options.
+   * @param {object} [options.lineState] - SGR state for border lines (defaults to dim).
+   * @returns {import('../panel.js').default} A Panel with the rendered table.
+   */
   draw({lineState = DIM_STATE} = {}) {
     // prepare axes
 
@@ -177,18 +196,35 @@ export class Table {
     return panel;
   }
 
+  /** Converts the table to a Panel.
+   * @param {object} [options] - Options passed to `draw()`.
+   * @returns {import('../panel.js').default}
+   */
   toPanel(options) {
     return this.draw(options);
   }
 
+  /** Converts the table to a Box.
+   * @param {object} [options] - Options passed to `draw()`.
+   * @returns {import('../box.js').default}
+   */
   toBox(options) {
     return this.toPanel(options).toBox(options);
   }
 
+  /** Converts the table to an array of strings.
+   * @param {object} [options] - Options passed to `draw()`.
+   * @returns {string[]}
+   */
   toStrings(options) {
     return this.toBox(options).toStrings();
   }
 
+  /** Checks if a cell is visible (not hidden by a merged cell).
+   * @param {number} x - Column index.
+   * @param {number} y - Row index.
+   * @returns {boolean}
+   */
   isVisible(x, y) {
     const i = 2 * y + 1,
       j = 2 * x + 1;
@@ -199,6 +235,12 @@ export class Table {
     return true;
   }
 
+  /** Generates axis definitions and alignment arrays from a declarative options object.
+   * @param {number} width - Number of columns.
+   * @param {number} height - Number of rows.
+   * @param {object} options - Axis generation options.
+   * @returns {object} An object with `hAxis`, `vAxis`, `hAlign`, `vAlign`, `hMin`, `vMin`.
+   */
   static generateAxes(
     width,
     height,
@@ -278,6 +320,11 @@ export class Table {
     return {hAxis, vAxis, hAlign, vAlign, hMin: hMinArray, vMin: vMinArray};
   }
 
+  /** Processes data by applying styles to rows, columns, and special positions.
+   * @param {any[][]} data - The raw data.
+   * @param {object} [options] - Style options with properties like `rowFirst`, `rowLast`, `data`, `rowOdd`, etc.
+   * @returns {any[][]} The styled data.
+   */
   static processData(data, options) {
     if (!options) return data;
 
@@ -322,6 +369,13 @@ export class Table {
     });
   }
 
+  /** Convenience factory that generates axes, processes data, and creates a Table.
+   * @param {any[][]} data - The raw data.
+   * @param {object} lineTheme - The line theme.
+   * @param {object} [options] - Combined axis generation and style options.
+   * @param {object} [overrides] - Additional overrides for the Table constructor options.
+   * @returns {Table}
+   */
   static make(data, lineTheme, options, overrides) {
     return new Table(Table.processData(data, options?.states), lineTheme, {
       ...(options && Table.generateAxes(data.length && data[0].length, data.length, options)),

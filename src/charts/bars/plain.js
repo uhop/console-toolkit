@@ -10,6 +10,13 @@ import defaultTheme from '../themes/default.js';
 
 const defaultSymbol = vBlocks8th[7];
 
+/** Default draw function for a single bar item.
+ * @param {object} datum - Data item with `value`, `colorState`, `symbol`, `state`.
+ * @param {number} size - Allocated size in characters.
+ * @param {object} _ - Context (index, data, sizes, etc.).
+ * @param {object} options - Draw options.
+ * @returns {string} Styled string.
+ */
 export const defaultDrawItem = (datum, size, _, {initState = {}}) =>
   datum
     ? style
@@ -19,6 +26,13 @@ export const defaultDrawItem = (datum, size, _, {initState = {}}) =>
         .text((datum.symbol || defaultSymbol).repeat(size))
     : '';
 
+/** Draws a bar item with a text label instead of a filled symbol.
+ * @param {object} datum - Data item with `label`, `symbol`, `colorState`, `state`.
+ * @param {number} size - Allocated size.
+ * @param {object} _ - Context.
+ * @param {object} options - Draw options including `reverse`, `truncate`, `useEllipsis`.
+ * @returns {string} Styled string.
+ */
 export const drawItemLabel = (datum, size, _, {reverse, truncate, useEllipsis = true, initState = {}}) => {
   if (!datum) return '';
   const symbol = datum.symbol || ' ';
@@ -37,6 +51,13 @@ export const drawItemLabel = (datum, size, _, {reverse, truncate, useEllipsis = 
     .text(label);
 };
 
+/** Draws a single stacked bar row.
+ * @param {object[]} data - Normalized data series.
+ * @param {number} width - Total width.
+ * @param {number} maxValue - Maximum value for scaling.
+ * @param {object} [options] - Options including `drawItem`, `rectSize`, `theme`, `initState`, `reverse`.
+ * @returns {string|string[]} The drawn row(s).
+ */
 export const drawRow = (data, width, maxValue, options = {}) => {
   const {drawItem = defaultDrawItem, rectSize = 0, theme = defaultTheme, initState, reverse} = options,
     {symbol = ' ', state = null, colorState} = theme?.empty || {},

@@ -7,6 +7,9 @@
 export * from './sgr.js';
 
 // matcher
+/** RegExp matching CSI (Control Sequence Introducer) escape sequences with parameter, intermediate, and final byte groups.
+ * @type {RegExp}
+ */
 export const matchCsi = /\x1B\[([\x30-\x3F]*)([\x20-\x2F]*)([\x40-\x7E])/g;
 
 const CSI = '\x1B[';
@@ -26,13 +29,34 @@ export const CURSOR_RESTORE_POS = CSI + 'u';
 export const CURSOR_NORMAL = CSI + '?25h';
 export const CURSOR_INVISIBLE = CSI + '?25l';
 
+/** Moves the cursor up by `n` rows.
+ * @param {number} [n=1]
+ * @returns {string} CSI sequence.
+ */
 export const cursorUp = (n = 1) => CSI + (n > 1 ? n.toFixed() : '') + 'A';
+/** Moves the cursor down by `n` rows.
+ * @param {number} [n=1]
+ * @returns {string} CSI sequence.
+ */
 export const cursorDown = (n = 1) => CSI + (n > 1 ? n.toFixed() : '') + 'B';
+/** Moves the cursor forward by `n` columns.
+ * @param {number} [n=1]
+ * @returns {string} CSI sequence.
+ */
 export const cursorForward = (n = 1) => CSI + (n > 1 ? n.toFixed() : '') + 'C';
+/** Moves the cursor back by `n` columns.
+ * @param {number} [n=1]
+ * @returns {string} CSI sequence.
+ */
 export const cursorBack = (n = 1) => CSI + (n > 1 ? n.toFixed() : '') + 'D';
 export const cursorNextLine = (n = 1) => CSI + (n > 1 ? n.toFixed() : '') + 'E';
 export const cursorPrevLine = (n = 1) => CSI + (n > 1 ? n.toFixed() : '') + 'F';
 export const cursorColumn = (n = 1) => CSI + (n > 1 ? n.toFixed() : '') + 'G';
+/** Sets the cursor to row `n`, column `m` (1-based).
+ * @param {number} n - Row.
+ * @param {number} m - Column.
+ * @returns {string} CSI sequence.
+ */
 export const cursorSetPos = (n, m) => CSI + (n > 1 ? n.toFixed() : '') + ';' + (m > 1 ? m.toFixed() : '') + 'H';
 export const cursorSetPosAlt = (n, m) => CSI + (n > 1 ? n.toFixed() : '') + ';' + (m > 1 ? m.toFixed() : '') + 'f'; // HVP
 
@@ -58,7 +82,15 @@ export const SCREEN_SCROLL_DOWN1 = CSI + 'T'
 export const SCREEN_REPORT_FOCUS_ON = CSI + '?1004h';
 export const SCREEN_REPORT_FOCUS_OFF = CSI + '?1004l';
 
+/** Scrolls the screen up by `n` lines.
+ * @param {number} [n=1]
+ * @returns {string} CSI sequence.
+ */
 export const screenScrollUp = (n = 1) => CSI + (n > 1 ? n.toFixed() : '') + 'S';
+/** Scrolls the screen down by `n` lines.
+ * @param {number} [n=1]
+ * @returns {string} CSI sequence.
+ */
 export const screenScrollDown = (n = 1) => CSI + (n > 1 ? n.toFixed() : '') + 'T';
 
 export const WRAPPING_ON = CSI + '=7h';

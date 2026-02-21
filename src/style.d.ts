@@ -2,6 +2,7 @@ import { SgrState } from './ansi/sgr-state.js';
 
 export { RESET_STATE } from './ansi/sgr-state.js';
 
+/** Methods available on color namespace objects (fg, bg, colorDecoration). */
 interface ColorMethods {
   color(c: number): Style;
   stdRgb256(r: number, g: number, b: number): Style;
@@ -55,18 +56,33 @@ interface ColorMethods {
   readonly grey: Style;
 }
 
+/** Chainable API for building SGR (Select Graphics Rendition) states.
+ * @see {@link https://github.com/uhop/console-toolkit/wiki/Module:-style}
+ */
 export class Style {
+  /** @param initState - The initial SGR state.
+   * @param currentState - The current SGR state (defaults to initState).
+   * @param colorDepth - Color depth (1, 4, 8, or 24).
+   */
   constructor(initState: any, currentState?: any, colorDepth?: number);
 
+  /** Creates a new Style with additional SGR commands applied. */
   make(newCommands?: string | number | (string | number)[]): Style;
   addCommands: Style['make'];
+  /** Adds SGR commands from an escape sequence string. */
   add(commandSequence: string): Style;
+  /** Combines an SGR state into the current state. */
   addState(state: any): Style;
+  /** Creates a new Style with the current state as the initial state. */
   mark(fn?: (style: Style) => void): Style;
+  /** Returns the initial state, or passes it to a callback. */
   getInitialState(fn?: (state: SgrState) => void): SgrState | Style;
+  /** Returns the current state, or passes it to a callback. */
   getState(fn?: (state: SgrState) => void): SgrState | Style;
 
+  /** The color depth (1, 4, 8, or 24). */
   readonly colorDepth: number;
+  /** Creates a new Style with a different color depth. */
   setColorDepth(colorDepth: number): Style;
 
   readonly fg: ColorMethods;
@@ -278,11 +294,15 @@ export class Style {
   decorationGreyscale256(i: number): Style;
   decorationTrueGreyscale(i: number): Style;
 
+  /** Wraps a string with SGR escape sequences for the current style. */
   text(s: string): string;
+  /** Wraps an array of strings with SGR escape sequences for the current style. */
   text(s: string[]): string[];
+  /** Converts the style to an SGR escape sequence string. */
   toString(): string;
 }
 
+/** Configuration for the `s` and `c` tagged template literal functions. */
 interface BqStates {
   initState?: any;
   setState?: any;
@@ -293,9 +313,12 @@ type BqFunction = {
   (states: BqStates): (strings: TemplateStringsArray, ...args: any[]) => string;
 };
 
+/** Tagged template literal for styled text. Does NOT add cleanup codes at the end. */
 export const s: BqFunction;
+/** Tagged template literal for styled text. Adds cleanup codes at the end. */
 export const c: BqFunction;
 
+/** The default Style singleton with an empty initial state. */
 export const style: Style;
 
 export default style;

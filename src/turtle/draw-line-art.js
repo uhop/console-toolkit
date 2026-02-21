@@ -15,6 +15,13 @@ const getIndex = cell => {
   return {skipFlag, hTheme, vTheme, hIndex, vIndex};
 };
 
+/** Draws a Turtle's path as line art using a line theme.
+ * @param {import('./turtle.js').Turtle} turtle - The turtle to draw.
+ * @param {object} lineTheme - The line theme defining border characters.
+ * @param {object} [options] - Options.
+ * @param {string} [options.ignore=' '] - Character for empty cells.
+ * @returns {import('../box.js').Box} A Box with the rendered line art.
+ */
 export const draw = (turtle, lineTheme, {ignore = ' '} = {}) =>
   new Box(
     turtle.cells.map(row =>

@@ -10,6 +10,13 @@
 
 // The default value for 'w': 1
 
+/** Populates a line theme object from a table definition matrix.
+ * Sets `t_`, `h_`, `v_`, `w_`, and `f` properties on the lineTheme.
+ * @param {object} lineTheme - The line theme object to populate.
+ * @param {object} tableDefinition - Definition with `t`, `m`, `b`, `v`, `h`, optional `w` and `f` properties.
+ * @param {string} hTheme - Horizontal theme identifier.
+ * @param {string} vTheme - Vertical theme identifier.
+ */
 export const populateTheme = (lineTheme, tableDefinition, hTheme, vTheme) => {
   const w = tableDefinition.w || 1,
     s = [0, w, w << 1],

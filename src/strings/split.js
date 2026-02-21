@@ -18,6 +18,14 @@ if (!globalThis.Bun) {
 
 const segmenter = new Intl.Segmenter();
 
+/** Splits a string into graphemes (individual symbols) and calculates its display width.
+ * Optionally detects double-width characters using `emoji-regex` and `get-east-asian-width` if available.
+ * @param {string} s - The string to split.
+ * @param {object} [options] - Options.
+ * @param {boolean} [options.ignoreControlSymbols=false] - If true, control symbols are ignored.
+ * @param {boolean} [options.ambiguousAsWide=false] - If true, ambiguous East Asian characters are treated as double-wide.
+ * @returns {{graphemes: {symbol: string, width: number}[], width: number}} The graphemes and total display width.
+ */
 export const split = (s, options = {}) => {
   s = String(s);
   if (!s) return {graphemes: [], width: 0};
@@ -66,6 +74,13 @@ export const split = (s, options = {}) => {
   return {graphemes, width};
 };
 
+/** Calculates the display width of a string, accounting for double-width characters.
+ * @param {string} s - The string to measure.
+ * @param {object} [options] - Options.
+ * @param {boolean} [options.ignoreControlSymbols=false] - If true, control symbols are ignored.
+ * @param {boolean} [options.ambiguousAsWide=false] - If true, ambiguous East Asian characters are treated as double-wide.
+ * @returns {number} The display width of the string.
+ */
 export const size = (s, options = {}) => {
   s = String(s);
   if (!s) return 0;

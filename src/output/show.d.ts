@@ -11,9 +11,12 @@ export interface OutOptions {
   colorDepth?: number;
 }
 
+/** Logs a text container to the console via `console.log()`. Strips ANSI codes if colorDepth < 4. */
 export function log(s: any, options?: LogOptions): void;
+/** Writes a text container to a stream (default: stdout). */
 export function out(s: any, options?: OutOptions): void;
 
+/** Wraps a writable stream for outputting styled text. */
 export class Out {
   stream: Writable;
   colorDepth: number;
@@ -23,4 +26,5 @@ export class Out {
   out(s: any, options?: { endOfLineCommand?: string; colorDepth?: number }): void;
 }
 
+/** Writes a debug string to stderr. */
 export function debug(string: string): void;

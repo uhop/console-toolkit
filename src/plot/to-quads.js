@@ -1,6 +1,11 @@
 import Box from '../box.js';
 import {quadrants} from '../symbols.js';
 
+/** Converts a Bitmap to a Box using Unicode quadrant characters (2x2 pixels per character).
+ * Provides higher resolution representation than `toBox()`.
+ * @param {import('./bitmap.js').Bitmap} bmp - The bitmap to convert.
+ * @returns {import('../box.js').Box} A Box with quadrant characters.
+ */
 export const toQuads = bmp => {
   const result = [],
     rowSize = Math.floor((bmp.width + 1) / 2),

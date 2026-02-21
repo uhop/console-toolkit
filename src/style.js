@@ -177,34 +177,66 @@ class Reset {
   }
 }
 
+/** Chainable API for building SGR (Select Graphics Rendition) states.
+ * Provides namespaces for foreground (`fg`), background (`bg`), decoration colors, brightness, and reset.
+ * @see {@link https://github.com/uhop/console-toolkit/wiki/Module:-style}
+ */
 export class Style {
+  /** @param {object|string} [initState] - The initial SGR state.
+   * @param {object|string} [currentState] - The current SGR state (defaults to initState).
+   * @param {number} [colorDepth=24] - Color depth (1, 4, 8, or 24).
+   */
   constructor(initState, currentState, colorDepth = 24) {
     this[initStateSymbol] = toState(initState);
     this[stateSymbol] = currentState ? toState(currentState) : this[initStateSymbol];
     this[colorDepthSymbol] = colorDepth;
   }
+  /** Creates a new Style with additional SGR commands applied.
+   * @param {string|string[]} [newCommands=[]] - SGR command(s) to add.
+   * @returns {Style}
+   */
   make(newCommands = []) {
     if (!Array.isArray(newCommands)) newCommands = [newCommands];
     return new Style(this[initStateSymbol], addCommandsToState(this[stateSymbol], newCommands), this[colorDepthSymbol]);
   }
+  /** Adds SGR commands from an escape sequence string.
+   * @param {string} commandSequence - An ANSI escape sequence string.
+   * @returns {Style}
+   */
   add(commandSequence) {
     const state = extractState(String(commandSequence), this[stateSymbol]);
     return state === this[stateSymbol] ? this : new Style(this[initStateSymbol], state, this[colorDepthSymbol]);
   }
+  /** Combines an SGR state into the current state.
+   * @param {object|string} state - State to combine.
+   * @returns {Style}
+   */
   addState(state) {
     return new Style(this[initStateSymbol], combineStates(this[stateSymbol], toState(state)), this[colorDepthSymbol]);
   }
+  /** Creates a new Style with the current state as the initial state, optionally calling a function.
+   * @param {Function} [fn] - Optional callback receiving the new Style.
+   * @returns {Style|this}
+   */
   mark(fn) {
     const newStyle = new Style(this[stateSymbol], null, this[colorDepthSymbol]);
     if (typeof fn != 'function') return newStyle;
     fn(newStyle);
     return this;
   }
+  /** Returns the initial state, or passes it to a callback.
+   * @param {Function} [fn] - Optional callback.
+   * @returns {object|this}
+   */
   getInitialState(fn) {
     if (typeof fn != 'function') return this[initStateSymbol];
     fn(this[initStateSymbol]);
     return this;
   }
+  /** Returns the current state, or passes it to a callback.
+   * @param {Function} [fn] - Optional callback.
+   * @returns {object|this}
+   */
   getState(fn) {
     if (typeof fn != 'function') return this[stateSymbol];
     fn(this[stateSymbol]);
@@ -214,6 +246,10 @@ export class Style {
   get colorDepth() {
     return this[colorDepthSymbol]; // 1, 4, 8, 24
   }
+  /** Creates a new Style with a different color depth.
+   * @param {number} colorDepth - New color depth (1, 4, 8, or 24).
+   * @returns {Style}
+   */
   setColorDepth(colorDepth) {
     return new Style(this[initStateSymbol], this[stateSymbol], colorDepth);
   }
@@ -373,7 +409,11 @@ export class Style {
   decorationHex(hex) {
     return this[colorDepthSymbol] > 8 ? this.decorationHexTrueColor(hex) : this.decorationHex256(hex);
   }
-  // wrap a string
+  /** Wraps a string (or array of strings) with SGR escape sequences for the current style.
+   * Applies the style at the start and reverses it at the end.
+   * @param {string|string[]} s - String(s) to wrap.
+   * @returns {string|string[]} The styled string(s).
+   */
   text(s) {
     if (Array.isArray(s)) return s.map(s => this.text(s));
     s = String(s);
@@ -389,7 +429,9 @@ export class Style {
     const cleanupCommands = stateReverseTransition(this[initStateSymbol], state);
     return stringifyCommands(initialCommands) + s + stringifyCommands(cleanupCommands);
   }
-  // convert to string
+  /** Converts the style to an SGR escape sequence string (transition from initial to current state).
+   * @returns {string}
+   */
   toString() {
     const initialCommands = stateTransition(this[initStateSymbol], this[stateSymbol]);
     return stringifyCommands(initialCommands);
@@ -611,10 +653,21 @@ const makeBq =
     return bq(strings, ...args);
   };
 
+/** Tagged template literal for styled text. Does NOT add cleanup codes at the end.
+ * Can also be called as `s({initState, setState})` to create a configured tagger.
+ * @type {Function}
+ */
 export const s = makeBq(false);
+/** Tagged template literal for styled text. Adds cleanup codes at the end to restore the initial state.
+ * Can also be called as `c({initState, setState})` to create a configured tagger.
+ * @type {Function}
+ */
 export const c = makeBq(true);
 
 // singleton
+/** The default Style singleton with an empty initial state.
+ * @type {Style}
+ */
 export const style = new Style({});
 
 export default style;

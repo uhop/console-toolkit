@@ -1,6 +1,10 @@
 import {Commands} from '../ansi/sgr.js';
 import defaultTheme from './themes/default.js';
 
+/** Converts a foreground color state to a background color state.
+ * @param {object} state - SGR state with a `foreground` property.
+ * @returns {object} State with a `background` property.
+ */
 export const makeBgFromFg = state => ({
   background: !state.foreground
     ? null
@@ -9,6 +13,10 @@ export const makeBgFromFg = state => ({
     : Number(state.foreground) + 10
 });
 
+/** Converts a background color state to a foreground color state.
+ * @param {object} state - SGR state with a `background` property.
+ * @returns {object} State with a `foreground` property.
+ */
 export const makeFgFromBg = state => ({
   foreground: !state.background
     ? null
@@ -17,8 +25,17 @@ export const makeFgFromBg = state => ({
     : Number(state.background) - 10
 });
 
+/** Sums the values in a data series.
+ * @param {{value?: number}[]} series
+ * @returns {number}
+ */
 export const sumValues = series => series.reduce((acc, datum) => acc + (datum?.value || 0), 0);
 
+/** Normalizes chart data, merging with default and custom themes.
+ * @param {(number|object|Array)[]} data - Raw chart data.
+ * @param {object[]} theme - Theme array for series styling.
+ * @returns {object[][]} Normalized data.
+ */
 export const normalizeData = (data, theme) =>
   data.map(series => {
     if (!Array.isArray(series)) series = [series];
@@ -31,6 +48,12 @@ export const normalizeData = (data, theme) =>
     });
   });
 
+/** Allocates pixel/character sizes to data values proportionally.
+ * @param {{value?: number}[]} data - Data series.
+ * @param {number} maxValue - Maximum value (-1 for auto).
+ * @param {number} size - Total available size.
+ * @returns {number[]} Allocated sizes per datum plus one extra for remainder.
+ */
 export const allocateSizes = (data, maxValue, size) => {
   const values = data.map((datum, index) => ({value: datum?.value || 0, index})),
     seriesValue = values.reduce((acc, datum) => acc + datum.value, 0);
@@ -65,6 +88,11 @@ export const allocateSizes = (data, maxValue, size) => {
   return sizes;
 };
 
+/** Calculates the integer size needed for a fractional value.
+ * @param {number} value - The fractional value.
+ * @param {boolean} [drawEmptyBorder] - Whether to draw a border for empty fractional parts.
+ * @returns {number} The integer size.
+ */
 export const getFracSize = (value, drawEmptyBorder) => {
   const intValue = Math.floor(value),
     hasFrac = value - intValue > 0,

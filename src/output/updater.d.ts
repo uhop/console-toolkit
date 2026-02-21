@@ -15,6 +15,7 @@ export interface UpdaterTarget {
   getFrame(...args: any[]): any;
 }
 
+/** Manages auto-refreshing console output for spinners, progress bars, etc. */
 export class Updater {
   updater: ((state: string, ...args: any[]) => any) | UpdaterTarget;
   writer: Writer;
@@ -38,12 +39,15 @@ export class Updater {
 
   readonly isRefreshing: boolean;
 
+  /** Starts auto-refreshing at the given interval. */
   startRefreshing(ms?: number): this;
+  /** Stops auto-refreshing. */
   stopRefreshing(): this;
   reset(): this;
 
   getFrame(state: string, ...args: any[]): any;
   writeFrame(state: string, ...args: any[]): Promise<void>;
+  /** Marks the updater as done and writes the final frame. */
   done(): Promise<void>;
   update(state?: string, ...args: any[]): Promise<void>;
   final(...args: any[]): Promise<void>;

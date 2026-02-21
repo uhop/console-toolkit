@@ -5,10 +5,17 @@
 // See https://en.wikipedia.org/wiki/ANSI_escape_code for more details.
 
 // matcher
+/** RegExp matching SGR (Select Graphics Rendition) escape sequences.
+ * @type {RegExp}
+ */
 export const matchSgr = /\x1B\[([\x30-\x3F]*)([\x20-\x2F]*)m/g;
 
+/** Standard color name-to-number mapping.
+ * @type {{BLACK: 0, RED: 1, GREEN: 2, YELLOW: 3, BLUE: 4, MAGENTA: 5, CYAN: 6, WHITE: 7, DEFAULT: 9}}
+ */
 export const Colors = {BLACK: 0, RED: 1, GREEN: 2, YELLOW: 3, BLUE: 4, MAGENTA: 5, CYAN: 6, WHITE: 7, DEFAULT: 9};
 
+/** SGR command code constants (e.g., BOLD='1', UNDERLINE='4'). */
 export const Commands = {
   RESET_ALL: '0',
   BOLD: '1',
@@ -79,11 +86,23 @@ for (const [k, v] of Object.entries(Commands)) {
   resetCommands[Commands[cmd]] = v;
 }
 
+/** Checks if a command is a foreground color command.
+ * @param {string} command
+ * @returns {boolean}
+ */
 export const isFgColorCommand = command => (command >= '30' && command <= '37') || (command >= '90' && command <= '97');
+/** Checks if a command is a background color command.
+ * @param {string} command
+ * @returns {boolean}
+ */
 export const isBgColorCommand = command =>
   (command >= '40' && command <= '47') || (command >= '100' && command <= '107');
 export const isFontCommand = command => command >= '10' && command <= '20';
 
+/** Returns the reset command for a given SGR command.
+ * @param {string} command - The SGR command string or name.
+ * @returns {string|undefined} The reset command, or undefined if not found.
+ */
 export const reset = command => {
   command = String(command).toUpperCase();
   if (Commands.hasOwnProperty(command)) {
@@ -96,8 +115,16 @@ export const reset = command => {
   // return undefined in all other cases
 };
 
+/** Creates an SGR escape sequence from one or more commands.
+ * @param {string|string[]|number[]} commands - Command(s) to encode.
+ * @returns {string} The SGR escape sequence.
+ */
 export const setCommands = commands => `\x1B[${Array.isArray(commands) ? commands.join(';') : commands}m`;
 
+/** Converts a color name or number to a standard color number (0-9).
+ * @param {string|number} color - Color name or number.
+ * @returns {number} The color number.
+ */
 export const colorNumber = color => {
   if (typeof color == 'string') {
     if (/^\d+$/.test(color)) {
@@ -111,6 +138,10 @@ export const colorNumber = color => {
 };
 export const colorStdRgb = (r, g, b) => (r ? 1 : 0) + (g ? 2 : 0) + (b ? 4 : 0);
 
+/** Returns the foreground color SGR code.
+ * @param {string|number} color
+ * @returns {number}
+ */
 export const getColor = color => 30 + colorNumber(color);
 export const getBgColor = color => 40 + colorNumber(color);
 export const getBrightColor = color => 90 + colorNumber(color);
@@ -178,8 +209,20 @@ export const setBgHexColor256 = (r, g, b) => setCommands(getBgHexColor256(r, g, 
 export const setBgGrayColor24 = i => setCommands(getBgGrayColor24(i));
 export const setBgGrayColor256 = i => setCommands(geBgtGrayColor256(i));
 
+/** Returns the foreground true color (24-bit) SGR command array.
+ * @param {number} r - Red (0-255).
+ * @param {number} g - Green (0-255).
+ * @param {number} b - Blue (0-255).
+ * @returns {string[]}
+ */
 export const getTrueColor = (r, g, b) => [Commands.EXTENDED_COLOR, ColorFormat.TRUE_COLOR, r, g, b];
 export const getHexTrueColor = hex => getTrueColor((hex >> 16) & 0xff, (hex >> 8) & 0xff, hex & 0xff);
+/** Returns the background true color (24-bit) SGR command array.
+ * @param {number} r - Red (0-255).
+ * @param {number} g - Green (0-255).
+ * @param {number} b - Blue (0-255).
+ * @returns {string[]}
+ */
 export const getBgTrueColor = (r, g, b) => [Commands.BG_EXTENDED_COLOR, ColorFormat.TRUE_COLOR, r, g, b];
 export const getBgHexTrueColor = hex => getBgTrueColor((hex >> 16) & 0xff, (hex >> 8) & 0xff, hex & 0xff);
 

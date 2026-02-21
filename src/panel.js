@@ -15,7 +15,15 @@ import split, {size} from './strings/split.js';
 import Box from './box.js';
 import {addAliases} from './meta.js';
 
+/** A 2D array of cells, where each cell has a character symbol and an SGR state.
+ * Provides methods for manipulation, styling, geometric transforms, and conversion to Box/strings.
+ * @see {@link https://github.com/uhop/console-toolkit/wiki/Module:-panel}
+ */
 export class Panel {
+  /** Creates an empty Panel of the given dimensions.
+   * @param {number} width - Width in columns.
+   * @param {number} height - Height in rows.
+   */
   constructor(width, height) {
     this.box = new Array(height);
     for (let i = 0; i < height; ++i) {
@@ -23,14 +31,21 @@ export class Panel {
     }
   }
 
+  /** The width of the panel in columns. */
   get width() {
     return this.box.length && this.box[0].length;
   }
 
+  /** The height of the panel in rows. */
   get height() {
     return this.box.length;
   }
 
+  /** Creates a Panel from various input types (Panel, Box, string, string[], function).
+   * @param {*} s - Input data.
+   * @param {object} [options] - Options passed to Box.make() or put().
+   * @returns {Panel}
+   */
   static make(s, options) {
     main: for (;;) {
       switch (typeof s) {
@@ -52,6 +67,12 @@ export class Panel {
     return panel;
   }
 
+  /** Converts the panel to an array of strings with embedded ANSI escape sequences.
+   * @param {object} [options] - Options.
+   * @param {string} [options.emptySymbol=' '] - Character for empty cells.
+   * @param {object} [options.emptyState] - SGR state for empty cells.
+   * @returns {string[]}
+   */
   toStrings(options = {}) {
     if (!this.height || !this.width) return Box.makeBlank(this.width, this.height);
 
@@ -81,10 +102,21 @@ export class Panel {
     return s;
   }
 
+  /** Converts the panel to a Box.
+   * @param {object} [options] - Options passed to toStrings().
+   * @returns {import('./box.js').Box}
+   */
   toBox(options) {
     return new Box(this.toStrings(options), true);
   }
 
+  /** Extracts a rectangular region as a new Panel.
+   * @param {number} [x=0] - Left column.
+   * @param {number} [y=0] - Top row.
+   * @param {number} [width] - Width (defaults to panel width).
+   * @param {number} [height] - Height (defaults to panel height).
+   * @returns {Panel}
+   */
   extract(x, y, width, height) {
     // normalize arguments
 
@@ -131,10 +163,23 @@ export class Panel {
     return panel;
   }
 
+  /** Creates a deep copy of this panel.
+   * @returns {Panel}
+   */
   clone() {
     return this.extract();
   }
 
+  /** Copies cells from another panel into this panel.
+   * @param {number} x - Destination x.
+   * @param {number} y - Destination y.
+   * @param {number} width - Width to copy.
+   * @param {number} height - Height to copy.
+   * @param {Panel} panel - Source panel.
+   * @param {number} [x1=0] - Source x.
+   * @param {number} [y1=0] - Source y.
+   * @returns {this}
+   */
   copyFrom(x, y, width, height, panel, x1 = 0, y1 = 0) {
     // normalize arguments
 
@@ -169,6 +214,14 @@ export class Panel {
     return this;
   }
 
+  /** Places text (Box, Panel, or string) onto this panel at the given position.
+   * @param {number} x - Left column.
+   * @param {number} y - Top row.
+   * @param {Panel|import('./box.js').Box|string|string[]} text - Content to place.
+   * @param {object} [options] - Options.
+   * @param {string} [options.emptySymbol='\x07'] - Character treated as transparent/empty.
+   * @returns {this}
+   */
   put(x, y, text, options = {}) {
     if (text instanceof Panel) return this.copyFrom(x, y, text.width, text.height, text);
 
@@ -228,6 +281,15 @@ export class Panel {
     return this;
   }
 
+  /** Applies a function to each cell in a rectangular region.
+   * @param {number|Function} x - Left column, or the function if called with a single argument.
+   * @param {number} [y] - Top row.
+   * @param {number} [width] - Width.
+   * @param {number} [height] - Height.
+   * @param {Function} [fn] - Function `(x, y, cell) => newCell`.
+   * @param {object} [options] - Options.
+   * @returns {this}
+   */
   applyFn(x, y, width, height, fn, options) {
     // normalize arguments
 
@@ -274,6 +336,16 @@ export class Panel {
     return this;
   }
 
+  /** Fills a rectangular region with a symbol and state.
+   * @param {number|string} x - Left column, or symbol if filling the entire panel.
+   * @param {number} [y] - Top row.
+   * @param {number} [width] - Width.
+   * @param {number} [height] - Height.
+   * @param {string} [symbol] - Fill character.
+   * @param {object|string|string[]} [state={}] - SGR state.
+   * @param {object} [options] - Options.
+   * @returns {this}
+   */
   fill(x, y, width, height, symbol, state = {}, options) {
     if (typeof x === 'string') {
       symbol = x;
@@ -293,6 +365,14 @@ export class Panel {
     return this.applyFn(x, y, width, height, () => ({symbol, state}), options);
   }
 
+  /** Fills a region's state while preserving existing symbols (or using emptySymbol for null cells).
+   * @param {number|object} x - Left column, or options if filling the entire panel.
+   * @param {number} [y] - Top row.
+   * @param {number} [width] - Width.
+   * @param {number} [height] - Height.
+   * @param {object} [options] - Options with `state` and `emptySymbol`.
+   * @returns {this}
+   */
   fillState(x, y, width, height, options) {
     if (typeof x === 'object') {
       options = x;
@@ -319,6 +399,14 @@ export class Panel {
     );
   }
 
+  /** Fills state only for non-empty cells in a region.
+   * @param {number|object} x - Left column, or options if filling the entire panel.
+   * @param {number} [y] - Top row.
+   * @param {number} [width] - Width.
+   * @param {number} [height] - Height.
+   * @param {object} [options] - Options with `state`.
+   * @returns {this}
+   */
   fillNonEmptyState(x, y, width, height, options) {
     if (typeof x === 'object') {
       options = x;
@@ -338,6 +426,14 @@ export class Panel {
     return this.applyFn(x, y, width, height, (x, y, cell) => cell && {symbol: cell.symbol, state}, options);
   }
 
+  /** Combines a state before existing cell states in a region.
+   * @param {number|object} x - Left column, or options if filling the entire panel.
+   * @param {number} [y] - Top row.
+   * @param {number} [width] - Width.
+   * @param {number} [height] - Height.
+   * @param {object} [options] - Options with `state`, `emptySymbol`, `emptyState`.
+   * @returns {this}
+   */
   combineStateBefore(x, y, width, height, options) {
     if (typeof x === 'object') {
       options = x;
@@ -367,6 +463,14 @@ export class Panel {
     );
   }
 
+  /** Combines a state after existing cell states in a region.
+   * @param {number|object} x - Left column, or options if filling the entire panel.
+   * @param {number} [y] - Top row.
+   * @param {number} [width] - Width.
+   * @param {number} [height] - Height.
+   * @param {object} [options] - Options with `state`, `emptySymbol`, `emptyState`.
+   * @returns {this}
+   */
   combineStateAfter(x, y, width, height, options) {
     if (typeof x === 'object') {
       options = x;
@@ -396,6 +500,14 @@ export class Panel {
     );
   }
 
+  /** Clears (nullifies) cells in a rectangular region.
+   * @param {number} [x=0] - Left column.
+   * @param {number} [y=0] - Top row.
+   * @param {number} [width] - Width.
+   * @param {number} [height] - Height.
+   * @param {object} [options] - Options.
+   * @returns {this}
+   */
   clear(x, y, width, height, options) {
     // normalize arguments
     if (typeof x != 'number') {
@@ -416,6 +528,10 @@ export class Panel {
     return this.applyFn(x, y, width, height, () => null, options);
   }
 
+  /** Pads the left side with `n` empty columns.
+   * @param {number} n
+   * @returns {this}
+   */
   padLeft(n) {
     if (n <= 0) return this;
 
@@ -427,6 +543,10 @@ export class Panel {
     return this;
   }
 
+  /** Pads the right side with `n` empty columns.
+   * @param {number} n
+   * @returns {this}
+   */
   padRight(n) {
     if (n <= 0) return this;
 
@@ -449,6 +569,10 @@ export class Panel {
     return this;
   }
 
+  /** Pads the top with `n` empty rows.
+   * @param {number} n
+   * @returns {this}
+   */
   padTop(n) {
     if (n <= 0) return this;
 
@@ -459,6 +583,10 @@ export class Panel {
     return this;
   }
 
+  /** Pads the bottom with `n` empty rows.
+   * @param {number} n
+   * @returns {this}
+   */
   padBottom(n) {
     if (n <= 0) return this;
 
@@ -484,6 +612,13 @@ export class Panel {
     return this;
   }
 
+  /** Pads the panel using CSS-style shorthand (top, right, bottom, left).
+   * @param {number} t - Top (or all sides if only argument).
+   * @param {number} [r] - Right.
+   * @param {number} [b] - Bottom.
+   * @param {number} [l] - Left.
+   * @returns {this}
+   */
   pad(t, r, b, l) {
     // use values according to CSS rules
     if (typeof r != 'number') {
@@ -498,6 +633,11 @@ export class Panel {
     return this.padLeftRight(l, r).padTopBottom(t, b);
   }
 
+  /** Removes `n` columns starting at column `x`.
+   * @param {number} x - Start column.
+   * @param {number} n - Number of columns to remove.
+   * @returns {this}
+   */
   removeColumns(x, n) {
     // normalize arguments
     if (x < 0) {
@@ -511,6 +651,11 @@ export class Panel {
     return this;
   }
 
+  /** Removes `n` rows starting at row `y`.
+   * @param {number} y - Start row.
+   * @param {number} n - Number of rows to remove.
+   * @returns {this}
+   */
   removeRows(y, n) {
     // normalize arguments
     if (y < 0) {
@@ -524,6 +669,11 @@ export class Panel {
     return this;
   }
 
+  /** Resizes the panel horizontally.
+   * @param {number} newWidth - New width.
+   * @param {'left'|'center'|'right'} [align='right'] - Alignment when adding/removing columns.
+   * @returns {this}
+   */
   resizeH(newWidth, align = 'right') {
     if (!this.width) return this.padRight(newWidth);
 
@@ -544,6 +694,11 @@ export class Panel {
     return diff < 0 ? this.removeColumns(newWidth, -diff) : this.padRight(diff);
   }
 
+  /** Resizes the panel vertically.
+   * @param {number} newHeight - New height.
+   * @param {'top'|'center'|'bottom'} [align='bottom'] - Alignment when adding/removing rows.
+   * @returns {this}
+   */
   resizeV(newHeight, align = 'bottom') {
     if (!this.height) return this.padBottom(newHeight);
 
@@ -564,6 +719,13 @@ export class Panel {
     return diff < 0 ? this.removeRows(newHeight, -diff) : this.padBottom(diff);
   }
 
+  /** Resizes the panel in both dimensions.
+   * @param {number} newWidth - New width.
+   * @param {number} newHeight - New height.
+   * @param {'left'|'center'|'right'} [horizontal='right'] - Horizontal alignment.
+   * @param {'top'|'center'|'bottom'} [vertical='bottom'] - Vertical alignment.
+   * @returns {this}
+   */
   resize(newWidth, newHeight, horizontal = 'right', vertical = 'bottom') {
     if (!this.height) return this.padBottom(newHeight).padRight(newWidth);
 
@@ -572,6 +734,11 @@ export class Panel {
       : this.resizeH(newWidth, horizontal).resizeV(newHeight, vertical);
   }
 
+  /** Inserts `n` empty columns at position `x`.
+   * @param {number} x - Insert position.
+   * @param {number} n - Number of columns.
+   * @returns {this}
+   */
   insertColumns(x, n) {
     // normalize arguments
     if (n <= 0) return this;
@@ -582,6 +749,11 @@ export class Panel {
     return this;
   }
 
+  /** Inserts `n` empty rows at position `y`.
+   * @param {number} y - Insert position.
+   * @param {number} n - Number of rows.
+   * @returns {this}
+   */
   insertRows(y, n) {
     // normalize arguments
     if (n <= 0) return this;
@@ -593,6 +765,12 @@ export class Panel {
     return this;
   }
 
+  /** Appends another panel below this one.
+   * @param {Panel} panel - Panel to append.
+   * @param {object} [options] - Options.
+   * @param {'left'|'center'|'right'} [options.align='left'] - Horizontal alignment.
+   * @returns {this}
+   */
   addBottom(panel, {align = 'left'} = {}) {
     panel = panel.clone();
 
@@ -635,6 +813,12 @@ export class Panel {
     return this;
   }
 
+  /** Appends another panel to the right of this one.
+   * @param {Panel} panel - Panel to append.
+   * @param {object} [options] - Options.
+   * @param {'top'|'center'|'bottom'} [options.align='top'] - Vertical alignment.
+   * @returns {this}
+   */
   addRight(panel, {align = 'top'} = {}) {
     panel = panel.clone();
 
@@ -713,6 +897,9 @@ export class Panel {
     return this;
   }
 
+  /** Returns a new Panel that is the transpose of this one (rows become columns).
+   * @returns {Panel}
+   */
   transpose() {
     const panel = new Panel(this.height, this.width);
     for (let i = 0; i < this.height; ++i) {
@@ -725,6 +912,9 @@ export class Panel {
     return panel;
   }
 
+  /** Returns a new Panel rotated 90° clockwise.
+   * @returns {Panel}
+   */
   rotateRight() {
     const panel = new Panel(this.height, this.width);
     for (let i = 0; i < this.height; ++i) {
@@ -737,6 +927,9 @@ export class Panel {
     return panel;
   }
 
+  /** Returns a new Panel rotated 90° counter-clockwise.
+   * @returns {Panel}
+   */
   rotateLeft() {
     const panel = new Panel(this.height, this.width);
     for (let i = 0; i < this.height; ++i) {
@@ -749,11 +942,17 @@ export class Panel {
     return panel;
   }
 
+  /** Flips the panel horizontally (mirrors left-right) in place.
+   * @returns {this}
+   */
   flipH() {
     for (const row of this.box) row.reverse();
     return this;
   }
 
+  /** Flips the panel vertically (mirrors top-bottom) in place.
+   * @returns {this}
+   */
   flipV() {
     this.box.reverse();
     return this;

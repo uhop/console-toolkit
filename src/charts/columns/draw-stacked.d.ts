@@ -12,6 +12,7 @@ export interface StackedColumnChartOptions {
 
 type DrawColumnFn = (data: ChartDatum[], width: number, maxValue: number, options?: any) => string[];
 
+/** Creates a stacked column chart drawing function from a column-drawing function. */
 export function drawChart(drawColumn: DrawColumnFn): (values: any[], width: number, options?: StackedColumnChartOptions) => string[];
 
 export default drawChart;

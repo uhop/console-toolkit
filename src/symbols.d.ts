@@ -1,5 +1,11 @@
-// blocks
+/** @module symbols
+ * Unicode characters for drawing lines, tables, charts, and other visual elements.
+ * @see {@link https://github.com/uhop/console-toolkit/wiki/Module:-symbols}
+ */
+
+/** Vertical block elements in 1/8th increments (index 0 = space, 7 = full block). */
 export const vBlocks8th: string[];
+/** Horizontal block elements in 1/8th increments (index 0 = space, 7 = full block). */
 export const hBlocks8th: string[];
 export const fullBlock: string;
 
@@ -26,11 +32,13 @@ export const blNegativeQuadrant: string;
 export const trNegativeQuadrant: string;
 export const brNegativeQuadrant: string;
 
+/** All 16 quadrant block characters indexed by bitmask (TL=1, TR=2, BL=4, BR=8). */
 export const quadrants: string[];
 
+/** Returns the quadrant character for the given corner flags. */
 export function quadrant(tl: boolean, tr: boolean, bl: boolean, br: boolean): string;
 
-// shades
+/** Shade characters from empty to full: space, light, medium, dark, full block. */
 export const shades: string[];
 export const shadeLight: string;
 export const shadeMedium: string;

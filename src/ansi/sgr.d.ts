@@ -1,5 +1,7 @@
+/** RegExp matching SGR (Select Graphics Rendition) escape sequences. */
 export const matchSgr: RegExp;
 
+/** Standard color name-to-number mapping. */
 export const Colors: {
   BLACK: 0;
   RED: 1;
@@ -12,6 +14,7 @@ export const Colors: {
   DEFAULT: 9;
 };
 
+/** SGR command code constants. */
 export const Commands: {
   RESET_ALL: string;
   BOLD: string;
@@ -70,17 +73,23 @@ export const FgColorOptions: ColorOptions;
 export const BgColorOptions: ColorOptions;
 export const DecorationColorOptions: ColorOptions;
 
+/** Checks if a command is a foreground color command. */
 export function isFgColorCommand(command: string): boolean;
+/** Checks if a command is a background color command. */
 export function isBgColorCommand(command: string): boolean;
 export function isFontCommand(command: string): boolean;
 
+/** Returns the reset command for a given SGR command. */
 export function reset(command: string | number): string | undefined;
 
+/** Creates an SGR escape sequence from one or more commands. */
 export function setCommands(commands: string | string[] | number): string;
 
+/** Converts a color name or number to a standard color number (0-9). */
 export function colorNumber(color: string | number): number;
 export function colorStdRgb(r: number, g: number, b: number): number;
 
+/** Returns the foreground color SGR code. */
 export function getColor(color: string | number): number;
 export function getBgColor(color: string | number): number;
 export function getBrightColor(color: string | number): number;
@@ -139,8 +148,10 @@ export function setBgHexColor256(hex: number): string;
 export function setBgGrayColor24(i: number): string;
 export function setBgGrayColor256(i: number): string;
 
+/** Returns the foreground true color (24-bit) SGR command array. */
 export function getTrueColor(r: number, g: number, b: number): string[];
 export function getHexTrueColor(hex: number): string[];
+/** Returns the background true color (24-bit) SGR command array. */
 export function getBgTrueColor(r: number, g: number, b: number): string[];
 export function getBgHexTrueColor(hex: number): string[];
 

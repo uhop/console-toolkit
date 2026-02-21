@@ -8,6 +8,7 @@ export interface BlockFracColumnOptions extends StackedColumnChartOptions {
   drawEmptyBorder?: boolean;
 }
 
+/** Draws a single stacked column using fractional block characters. */
 export function drawColumn(data: ChartDatum[], width: number, maxValue: number, options?: BlockFracColumnOptions): string[];
 
 export function drawChart(values: any[], width: number, options?: BlockFracColumnOptions): string[];

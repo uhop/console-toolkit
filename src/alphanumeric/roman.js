@@ -24,6 +24,10 @@ const romanGroup = (value, one, five, ten) => {
   return one + ten;
 };
 
+/** Converts a positive integer (1-3999) to a Roman numeral string using ASCII characters.
+ * @param {number} value - Integer between 1 and 3999.
+ * @returns {string} Roman numeral string.
+ */
 export const toRoman = value => {
   value = Math.round(value);
   if (value < 1 || value > 3999)
@@ -82,5 +86,13 @@ const toRomanUnicodeFn = (roman, L, C, D, M) => value => {
   return result.reverse().join('');
 };
 
+/** Converts a positive integer (1-3999) to a Roman numeral string using Unicode Roman numeral characters.
+ * @param {number} value - Integer between 1 and 3999.
+ * @returns {string} Unicode Roman numeral string.
+ */
 export const toRomanUnicode = toRomanUnicodeFn(roman, upperL, upperC, upperD, upperM);
+/** Converts a positive integer (1-3999) to a lowercase Unicode Roman numeral string.
+ * @param {number} value - Integer between 1 and 3999.
+ * @returns {string} Lowercase Unicode Roman numeral string.
+ */
 export const toRomanLowerUnicode = toRomanUnicodeFn(romanLower, lowerL, lowerC, lowerD, lowerM);

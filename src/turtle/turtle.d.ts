@@ -1,3 +1,6 @@
+/** Turtle graphics on a grid with directional movement and line drawing.
+ * @see {@link https://github.com/uhop/console-toolkit/wiki/Module:-turtle}
+ */
 export class Turtle {
   static RIGHT: 0;
   static DOWN: 1;
@@ -19,9 +22,11 @@ export class Turtle {
 
   constructor(width: number, height: number, theme?: number);
 
+  /** Resets the turtle to the origin facing right. */
   reset(): this;
   home: Turtle['reset'];
 
+  /** Sets the turtle position. */
   set(x: number, y: number): this;
   goto: Turtle['set'];
   setPos: Turtle['set'];
@@ -55,13 +60,17 @@ export class Turtle {
   setRight(): this;
   setEast: Turtle['setRight'];
 
+  /** Turns the turtle 90° left. */
   left(): this;
   lt: Turtle['left'];
 
+  /** Turns the turtle 90° right. */
   right(): this;
   rt: Turtle['right'];
 
+  /** Saves the current state onto the stack. */
   save(): this;
+  /** Restores the last saved state from the stack. */
   restore(): this;
 
   moveUp(distance: number): this;
@@ -78,10 +87,12 @@ export class Turtle {
 
   move(direction: number, distance: number): this;
 
+  /** Moves the turtle forward, drawing a line. */
   forward(distance: number): this;
   fd: Turtle['forward'];
   fwd: Turtle['forward'];
 
+  /** Moves the turtle backward, drawing a line. */
   backward(distance: number): this;
   bk: Turtle['backward'];
   back: Turtle['backward'];

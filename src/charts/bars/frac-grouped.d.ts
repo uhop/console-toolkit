@@ -7,6 +7,7 @@ export interface FracGroupedBarOptions extends GroupedChartOptions {
   reverse?: boolean;
 }
 
+/** Draws a single grouped bar row using fractional width block characters. */
 export function drawRow(data: ChartDatum[], width: number, maxValue: number, options?: FracGroupedBarOptions): string[];
 
 export function drawChart(values: any[], width: number, options?: FracGroupedBarOptions): string[];

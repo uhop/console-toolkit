@@ -6,6 +6,7 @@ export interface DrawUnicodeOptions {
   useArcs?: boolean;
 }
 
+/** Draws a Turtle's path using Unicode box-drawing characters. */
 export function draw(turtle: Turtle, options?: DrawUnicodeOptions): Box;
 
 export default draw;

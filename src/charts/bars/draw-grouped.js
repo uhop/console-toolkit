@@ -1,6 +1,10 @@
 import defaultTheme from '../themes/default.js';
 import {normalizeData} from '../utils.js';
 
+/** Creates a grouped bar chart drawing function from a row-drawing function.
+ * @param {Function} drawRow - Function `(data, width, maxValue, options) => string|string[]`.
+ * @returns {Function} Chart drawing function `(values, width, options) => string[]`.
+ */
 export const drawChart =
   drawRow =>
   (values, width, options = {}) => {

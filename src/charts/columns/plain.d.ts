@@ -7,6 +7,7 @@ export interface PlainColumnOptions extends StackedColumnChartOptions {
   reverse?: boolean;
 }
 
+/** Draws a single stacked column using plain symbols. */
 export function drawColumn(data: ChartDatum[], width: number, maxValue: number, options?: PlainColumnOptions): string[];
 
 export function drawChart(values: any[], width: number, options?: PlainColumnOptions): string[];

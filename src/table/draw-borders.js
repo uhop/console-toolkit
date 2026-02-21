@@ -69,6 +69,15 @@ const drawRow = (lineTheme, hAxis, vAxis, skip, symbol, y, i) =>
     })
     .join('');
 
+/** Draws table borders using a line theme and axis definitions.
+ * @param {object} lineTheme - The line theme defining border characters.
+ * @param {(string|number)[]} hAxis - Horizontal axis definition (alternating style/size values).
+ * @param {(string|number)[]} vAxis - Vertical axis definition (alternating style/size values).
+ * @param {object} [options] - Options.
+ * @param {{x: number, y: number, width: number, height: number}[]} [options.skip=[]] - Rectangles to skip (for merged cells).
+ * @param {string} [options.symbol=' '] - Fill character for cell interiors.
+ * @returns {import('../box.js').Box} A Box with the drawn borders.
+ */
 export const draw = (lineTheme, hAxis, vAxis, {skip = [], symbol = ' '} = {}) =>
   new Box(
     vAxis

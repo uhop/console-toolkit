@@ -3,6 +3,10 @@ import {normalizeData, sumValues} from '../utils.js';
 import Panel from '../../panel.js';
 import style from '../../style.js';
 
+/** Creates a stacked column chart drawing function from a column-drawing function.
+ * @param {Function} drawColumn - Function `(data, width, maxValue, options) => string[]`.
+ * @returns {Function} Chart drawing function `(values, width, options) => string[]`.
+ */
 export const drawChart =
   drawColumn =>
   (values, width, options = {}) => {

@@ -1,6 +1,13 @@
 import {fullBlock, hBlocks8th, vBlocks8th} from './symbols.js';
 import Box from './box.js';
 
+/** Draws a block with a fractional width using 1/8th Unicode block characters.
+ * The integer part is filled with full blocks; the fractional part appears on the right.
+ * @param {number} realWidth - The real width (float). Fractional part is interpreted in 1/8th steps.
+ * @param {number} height - The integer height of the block.
+ * @param {boolean} [drawEmptyBorder=false] - If true, draw an empty border character even when the fractional part rounds to 0.
+ * @returns {import('./box.js').Box} A Box with the drawn block.
+ */
 export const drawRealWidthBlock = (realWidth, height, drawEmptyBorder) => {
   realWidth = Math.max(0, realWidth);
   height = Math.max(0, Math.floor(height));
@@ -15,6 +22,13 @@ export const drawRealWidthBlock = (realWidth, height, drawEmptyBorder) => {
   return new Box(new Array(height).fill(line), true);
 };
 
+/** Draws a block with a fractional height using 1/8th Unicode block characters.
+ * The integer part is filled with full blocks; the fractional part appears on the top.
+ * @param {number} width - The integer width of the block.
+ * @param {number} realHeight - The real height (float). Fractional part is interpreted in 1/8th steps.
+ * @param {boolean} [drawEmptyBorder=false] - If true, draw an empty border character even when the fractional part rounds to 0.
+ * @returns {import('./box.js').Box} A Box with the drawn block.
+ */
 export const drawRealHeightBlock = (width, realHeight, drawEmptyBorder) => {
   width = Math.max(0, Math.floor(width));
   realHeight = Math.max(0, realHeight);

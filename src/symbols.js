@@ -1,3 +1,8 @@
+/** @module symbols
+ * A collection of frequently used Unicode characters for drawing lines, tables, charts, and other visual elements.
+ * @see {@link https://github.com/uhop/console-toolkit/wiki/Module:-symbols}
+ */
+
 const generateSequence = (base, from, to) => {
   const result = [];
 
@@ -16,7 +21,13 @@ const generateSequence = (base, from, to) => {
 
 // blocks
 
+/** Vertical block elements in 1/8th increments (index 0 = space, 7 = full block).
+ * @type {string[]}
+ */
 export const vBlocks8th = [' ', ...generateSequence(0x2581, 0, 7)];
+/** Horizontal block elements in 1/8th increments (index 0 = space, 7 = full block).
+ * @type {string[]}
+ */
 export const hBlocks8th = [' ', ...generateSequence(0x2588, 7, 0, -1)];
 export const fullBlock = '\u{2588}';
 
@@ -43,6 +54,9 @@ export const blNegativeQuadrant = '\u{259C}';
 export const trNegativeQuadrant = '\u{2599}';
 export const brNegativeQuadrant = '\u{259B}';
 
+/** All 16 quadrant block characters indexed by bitmask (TL=1, TR=2, BL=4, BR=8).
+ * @type {string[]}
+ */
 export const quadrants = [
   ' ',
   tlQuadrant,
@@ -62,10 +76,20 @@ export const quadrants = [
   fullBlock
 ];
 
+/** Returns the quadrant character for the given corner flags.
+ * @param {boolean} tl - Top-left.
+ * @param {boolean} tr - Top-right.
+ * @param {boolean} bl - Bottom-left.
+ * @param {boolean} br - Bottom-right.
+ * @returns {string}
+ */
 export const quadrant = (tl, tr, bl, br) => quadrants[(tl ? 1 : 0) + (tr ? 2 : 0) + (bl ? 4 : 0) + (br ? 8 : 0)];
 
 // shades
 
+/** Shade characters from empty to full: space, light, medium, dark, full block.
+ * @type {string[]}
+ */
 export const shades = [' ', ...generateSequence(0x2591, 0, 2), fullBlock];
 
 export const shadeLight = shades[1];

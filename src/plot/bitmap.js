@@ -2,7 +2,16 @@ import Box from '../box.js';
 import {addAlias} from '../meta.js';
 import {fullBlock} from '../symbols.js';
 
+/** A bitmap image using a compact bit-packed representation.
+ * Supports setting/getting individual bits and converting to a Box for console display.
+ */
 export class Bitmap {
+  /** Creates a new Bitmap.
+   * @param {number} width - The width in pixels.
+   * @param {number} height - The height in pixels.
+   * @param {number} [blockWidth=5] - The width of each internal block (blockWidth * blockHeight <= 32).
+   * @param {number} [blockHeight=5] - The height of each internal block.
+   */
   constructor(width, height, blockWidth = 5, blockHeight = 5) {
     // parameters check
     width = Math.round(width);
@@ -49,6 +58,11 @@ export class Bitmap {
     return 1 << (shiftX + this.blockWidth * shiftY);
   }
 
+  /** Gets the value of a bit at the given position.
+   * @param {number} x - The x coordinate.
+   * @param {number} y - The y coordinate.
+   * @returns {number} Non-zero if the bit is set, 0 otherwise.
+   */
   getBit(x, y) {
     if (x < 0 || x >= this.width || y < 0 || y >= this.height) return 0;
     const index = this.getWordIndex(x, y),
@@ -56,6 +70,12 @@ export class Bitmap {
     return this.bitmap[index] & mask;
   }
 
+  /** Sets or clears a bit at the given position.
+   * @param {number} x - The x coordinate.
+   * @param {number} y - The y coordinate.
+   * @param {number} [value=1] - Positive to set, 0 to clear, negative to toggle.
+   * @returns {this}
+   */
   setBit(x, y, value = 1) {
     if (x < 0 || x >= this.width || y < 0 || y >= this.height) return this;
     const index = this.getWordIndex(x, y),
@@ -65,6 +85,10 @@ export class Bitmap {
     return this;
   }
 
+  /** Clears the entire bitmap.
+   * @param {boolean} [value=false] - If true, sets all bits; if false, clears all bits.
+   * @returns {this}
+   */
   clear(value) {
     this.bitmap.fill(value ? ~0 : 0);
     return this;
@@ -81,6 +105,11 @@ export class Bitmap {
   //   return result;
   // }
 
+  /** Converts the bitmap to a Box for console display.
+   * @param {string} [one=fullBlock] - Character for set bits.
+   * @param {string} [zero=' '] - Character for unset bits.
+   * @returns {import('../box.js').Box} A Box representation of the bitmap.
+   */
   toBox(one = fullBlock, zero = ' ') {
     const result = [];
     for (let k = 0, kBase = 0; k < this.lineCount; ++k, kBase += this.blockHeight) {

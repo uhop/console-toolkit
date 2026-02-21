@@ -2,6 +2,7 @@ import Box from '../box.js';
 import Panel from '../panel.js';
 import { SgrState } from '../ansi/sgr-state.js';
 
+/** Data for a single table cell. */
 export interface CellData {
   value: any;
   align?: string;
@@ -16,6 +17,7 @@ export interface CellPadding {
   b?: number;
 }
 
+/** Options for the Table constructor. */
 export interface TableOptions {
   hAxis?: string | (string | number)[];
   vAxis?: string | (string | number)[];
@@ -30,6 +32,7 @@ export interface TableDrawOptions {
   lineState?: SgrState;
 }
 
+/** Options for `Table.generateAxes()`. */
 export interface GenerateAxesOptions {
   hTheme?: string;
   vTheme?: string;
@@ -77,6 +80,9 @@ export interface MakeOptions extends GenerateAxesOptions {
   states?: DataStyleOptions;
 }
 
+/** Renders tabular data with borders, alignment, and merged cells.
+ * @see {@link https://github.com/uhop/console-toolkit/wiki/Package:-table}
+ */
 export class Table {
   height: number;
   width: number;
@@ -93,6 +99,7 @@ export class Table {
 
   constructor(data: any[][], lineTheme: Record<string, any>, options?: TableOptions);
 
+  /** Draws the table as a Panel. */
   draw(options?: TableDrawOptions): Panel;
   toPanel(options?: TableDrawOptions): Panel;
   toBox(options?: TableDrawOptions): Box;
@@ -102,6 +109,7 @@ export class Table {
 
   static generateAxes(width: number, height: number, options: GenerateAxesOptions): TableOptions;
   static processData(data: any[][], options?: { states?: DataStyleOptions }): any[][];
+  /** Factory method that generates axes, processes data, and creates a Table. */
   static make(data: any[][], lineTheme: Record<string, any>, options?: MakeOptions, overrides?: Partial<TableOptions>): Table;
 }
 

@@ -1,3 +1,7 @@
+/** Pre-built SGR escape sequences for common text styling commands.
+ * @see {@link https://github.com/uhop/console-toolkit/wiki/Module:-ansi}
+ */
+
 // Commands
 export const BOLD: string;
 export const DIM: string;

@@ -7,6 +7,7 @@ export interface WriteOptions {
   afterLine?: string;
 }
 
+/** Manages writing to a stream with cursor manipulation and color depth awareness. */
 export class Writer {
   stream: Writable;
   forceColorDepth: number | undefined;
@@ -27,7 +28,9 @@ export class Writer {
   cursorTo(x: number, y?: number): Promise<boolean>;
   moveCursor(dx: number, dy: number): Promise<boolean>;
 
+  /** Writes a raw string to the stream. */
   writeString(s: string): Promise<void>;
+  /** Writes a Box/string to the stream with optional cursor control. */
   write(s: any, options?: WriteOptions): Promise<void>;
 }
 

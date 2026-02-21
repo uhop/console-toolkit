@@ -8,6 +8,13 @@ import {drawRealHeightBlock} from '../../draw-block-frac.js';
 // data = [datum]
 // datum = {value, colorState, symbol, state}
 
+/** Draws a single stacked bar row using fractional block characters.
+ * @param {object[]} data - Normalized data series.
+ * @param {number} width - Total width.
+ * @param {number} maxValue - Maximum value for scaling.
+ * @param {object} [options] - Options including `reverse`, `drawEmptyBorder`, `rectSize`, `initState`.
+ * @returns {string[]} The drawn row lines.
+ */
 export const drawRow = (data, width, maxValue, options = {}) => {
   const {reverse, drawEmptyBorder, initState = {}} = options,
     rectSize = Math.max(0, options.rectSize ?? 0.5),

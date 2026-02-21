@@ -1,3 +1,4 @@
+/** Base class for managing spinner state (active, paused, finished). */
 export class SpinnerBase {
   active: boolean;
   paused: boolean;
@@ -23,6 +24,9 @@ export interface SpinnerDefinition {
   finished?: string[];
 }
 
+/** A spinner with configurable frame sets for different states.
+ * @see {@link https://github.com/uhop/console-toolkit/wiki/Module:-spinner}
+ */
 export class Spinner extends SpinnerBase {
   spinner: Required<SpinnerDefinition>;
 

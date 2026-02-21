@@ -1,3 +1,7 @@
+/** All available Unicode fraction characters, sorted by value.
+ * Each entry has `numerator`, `denominator`, `symbol`, and `value` properties.
+ * @type {{numerator: number, denominator: number, symbol: string, value: number}[]}
+ */
 export const fractions = [
   [1, 7, '\u2150'],
   [1, 9, '\u2151'],
@@ -72,6 +76,11 @@ const findSymbol = (fractions, value, useFractionForZero) => {
   return (int || '') + chosen.symbol;
 };
 
+/** Finds the closest Unicode fraction symbol for a given value.
+ * @param {number} value - The value to approximate.
+ * @param {boolean} [useFractionForZero] - If true, use a fraction symbol even for zero.
+ * @returns {string} The integer part plus the closest fraction symbol.
+ */
 export const getFraction = (value, useFractionForZero) => findSymbol(fractions, value, useFractionForZero);
 export const getThirds = (value, useFractionForZero) => findSymbol(thirds, value, useFractionForZero);
 export const getQuarters = (value, useFractionForZero) => findSymbol(quarters, value, useFractionForZero);

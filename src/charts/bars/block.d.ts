@@ -12,6 +12,7 @@ export interface BlockBarOptions extends StackedChartOptions {
   r?: number;
 }
 
+/** Draws a single stacked bar row using block-drawing characters. */
 export function drawRow(data: ChartDatum[], width: number, maxValue: number, options?: BlockBarOptions): string[];
 
 export function drawChart(values: any[], width: number, options?: BlockBarOptions): string[];
