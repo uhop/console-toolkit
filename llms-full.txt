@@ -1,0 +1,429 @@
+# console-toolkit
+
+> A zero-dependency JavaScript toolkit for building rich CLI/TUI applications with styled text, boxes, tables, charts, plots, turtle graphics, and spinners.
+
+- NPM: https://npmjs.org/package/console-toolkit
+- GitHub: https://github.com/uhop/console-toolkit
+- Wiki: https://github.com/uhop/console-toolkit/wiki
+- License: BSD-3-Clause
+- Runtime: Node.js 20+, Bun, Deno
+- Module system: ESM only (`"type": "module"`)
+
+## Installation
+
+```bash
+npm install console-toolkit
+```
+
+## Quick start
+
+```js
+import style, {c} from 'console-toolkit/style.js';
+import Box from 'console-toolkit/box';
+import Panel from 'console-toolkit/panel';
+import makeTable from 'console-toolkit/table';
+import lineTheme from 'console-toolkit/themes/lines/unicode-rounded.js';
+
+// Styled text
+console.log(c`{{bold}}Hello, {{bright.cyan}}world!`);
+
+// Box (immutable rectangular text container)
+const box = Box.make(['Hello', 'World']);
+const padded = box.pad(1);
+for (const line of padded.toStrings()) console.log(line);
+
+// Table
+const table = makeTable([['Name', 'Value'], ['Alice', 42]], lineTheme);
+for (const line of table.toStrings()) console.log(line);
+```
+
+---
+
+## Module: strings (`console-toolkit/strings`)
+
+String array utilities. The simplest text container.
+
+```ts
+function getLength(s: string, matcher?: RegExp): number;
+function getMaxLength(strings: string[], matcher?: RegExp): number;
+function clipStrings(strings: string[], width: number, options?: ClipOptions): string[];
+function toStrings(s: any): string[];
+```
+
+### ClipOptions
+
+```ts
+interface ClipOptions {
+  ellipsis?: string;    // Ellipsis string (default: '…')
+  position?: 'right' | 'left' | 'center';  // Where to clip (default: 'right')
+}
+```
+
+---
+
+## Module: Box (`console-toolkit/box`)
+
+Rectangular text container where all lines have equal display width. **Immutable** — all methods return new Box instances.
+
+```ts
+class Box {
+  box: string[];
+  readonly width: number;
+  readonly height: number;
+
+  constructor(s: Box | string | string[], normalized?: boolean);
+
+  static make(s: any, options?: BoxMakeOptions): Box;
+  static makeBlank(width: number, height: number, symbol?: string): Box;
+
+  toStrings(): string[];
+  toBox(): Box;
+  clone(): Box;
+  clip(width: number, options?: ClipOptions): Box;
+
+  padLeftRight(left: number, right: number, symbol?: string): Box;
+  padTopBottom(top: number, bottom: number, symbol?: string): Box;
+  padRight(n: number, symbol?: string): Box;
+  padLeft(n: number, symbol?: string): Box;
+  padTop(n: number, symbol?: string): Box;
+  padBottom(n: number, symbol?: string): Box;
+  pad(t: number, r?: number | string, b?: number | string, l?: number | string, symbol?: string): Box;
+
+  removeRows(y: number, n: number): Box;
+  addBottom(box: any, options?: AddBottomOptions): Box;
+  addRight(box: any, options?: AddRightOptions): Box;
+  flipV(): Box;
+}
+
+function toBox(s: any, options?: BoxMakeOptions): Box;  // Alias for Box.make()
+```
+
+### BoxMakeOptions
+
+```ts
+interface BoxMakeOptions {
+  symbol?: string;  // Padding character (default: ' ')
+  align?: 'left' | 'l' | 'right' | 'r' | 'center' | 'c';  // Default: 'left'
+}
+```
+
+---
+
+## Module: Panel (`console-toolkit/panel`)
+
+2D cell grid where each cell has a character symbol and an SGR state. **Mutable** — methods mutate `this` and return `this` for chaining.
+
+```ts
+class Panel {
+  readonly width: number;
+  readonly height: number;
+
+  constructor(width: number, height: number);
+
+  static make(s: any, options?: object): Panel;
+
+  toStrings(options?: {emptySymbol?: string; emptyState?: object}): string[];
+  toBox(options?: object): Box;
+  extract(x?: number, y?: number, width?: number, height?: number): Panel;
+  clone(): Panel;
+
+  copyFrom(x: number, y: number, width: number, height: number, panel: Panel, x1?: number, y1?: number): this;
+  put(x: number, y: number, text: any, options?: {emptySymbol?: string}): this;
+  applyFn(x: number | Function, y?: number, width?: number, height?: number, fn?: Function, options?: object): this;
+
+  fill(x: number | string, y?: number, width?: number, height?: number, symbol?: string, state?: object): this;
+  fillState(x: number | object, y?: number, width?: number, height?: number, options?: object): this;
+  fillNonEmptyState(x: number | object, y?: number, width?: number, height?: number, options?: object): this;
+  combineStateBefore(x: number | object, y?: number, width?: number, height?: number, options?: object): this;
+  combineStateAfter(x: number | object, y?: number, width?: number, height?: number, options?: object): this;
+  clear(x?: number, y?: number, width?: number, height?: number, options?: object): this;
+
+  padLeft(n: number): this;
+  padRight(n: number): this;
+  padTop(n: number): this;
+  padBottom(n: number): this;
+  padLeftRight(n: number, m: number): this;
+  padTopBottom(n: number, m: number): this;
+  pad(t: number, r?: number, b?: number, l?: number): this;
+
+  removeColumns(x: number, n: number): this;
+  removeRows(y: number, n: number): this;
+  insertColumns(x: number, n: number): this;
+  insertRows(y: number, n: number): this;
+  resizeH(newWidth: number, align?: 'left' | 'center' | 'right'): this;
+  resizeV(newHeight: number, align?: 'top' | 'center' | 'bottom'): this;
+  resize(newWidth: number, newHeight: number, horizontal?: string, vertical?: string): this;
+
+  addBottom(panel: Panel, options?: {align?: string}): this;
+  addRight(panel: Panel, options?: {align?: string}): this;
+
+  transpose(): Panel;
+  rotateRight(): Panel;
+  rotateLeft(): Panel;
+  flipH(): this;
+  flipV(): this;
+}
+
+function toPanel(s: any, options?: object): Panel;  // Alias for Panel.make()
+```
+
+---
+
+## Module: Style (`console-toolkit/style`)
+
+Fluent API for ANSI SGR styling.
+
+```ts
+class Style {
+  constructor(initState?: SgrState | string | null, currentState?: SgrState | string | null, colorDepth?: number);
+
+  // Fluent property access for SGR attributes
+  readonly bold: Style;
+  readonly dim: Style;
+  readonly italic: Style;
+  readonly underline: Style;
+  readonly blink: Style;
+  readonly inverse: Style;
+  readonly hidden: Style;
+  readonly strikethrough: Style;
+  readonly overline: Style;
+
+  // Colors (foreground)
+  readonly black: Style;
+  readonly red: Style;
+  readonly green: Style;
+  readonly yellow: Style;
+  readonly blue: Style;
+  readonly magenta: Style;
+  readonly cyan: Style;
+  readonly white: Style;
+
+  // Bright colors
+  readonly bright: ColorMethods;
+
+  // Background colors
+  readonly bg: ColorMethods;
+
+  // Extended colors
+  fg256(n: number): Style;
+  bg256(n: number): Style;
+  fgRgb(r: number, g: number, b: number): Style;
+  bgRgb(r: number, g: number, b: number): Style;
+
+  // Reset
+  readonly reset: { readonly all: Style; readonly bold: Style; /* ... */ };
+
+  // Conversion
+  toString(): string;
+  text(s: string): string;
+  addState(state: SgrState | string | null): Style;
+  getState(): SgrState;
+}
+
+// Tagged template literals
+const s: BqFunction;  // Style persists after the string
+const c: BqFunction;  // Auto-resets style at end
+
+// Usage: c`{{bold}}Hello, {{bright.cyan}}world!`
+
+export default Style;
+```
+
+---
+
+## Module: draw-block (`console-toolkit/draw-block.js`)
+
+```ts
+function drawBlock(width: number, height: number, blockTheme: object, options?: DrawBlockOptions): Box;
+function drawFrame(width: number, height: number, blockTheme: object, options?: DrawBlockOptions): Box;
+
+interface DrawBlockOptions {
+  top?: number;      // Sub-theme for top border
+  bottom?: number;   // Sub-theme for bottom border
+  left?: number;     // Sub-theme for left border
+  right?: number;    // Sub-theme for right border
+  vTheme?: number;   // Sub-theme for vertical borders
+  hTheme?: number;   // Sub-theme for horizontal borders
+  theme?: number;    // Sub-theme for all borders (default: 1)
+  symbol?: string;   // Fill character for interior
+}
+```
+
+---
+
+## Module: draw-block-frac (`console-toolkit/draw-block-frac.js`)
+
+```ts
+function drawRealWidthBlock(realWidth: number, height: number, drawEmptyBorder?: boolean): Box;
+function drawRealHeightBlock(width: number, realHeight: number, drawEmptyBorder?: boolean): Box;
+```
+
+---
+
+## Module: symbols (`console-toolkit/symbols.js`)
+
+Curated Unicode constants for drawing.
+
+```ts
+// Block elements (1/8th increments)
+const vBlocks8th: string[];   // Vertical blocks [space..fullBlock]
+const hBlocks8th: string[];   // Horizontal blocks [space..fullBlock]
+const fullBlock: string;      // █
+
+// Lines (1/8th block edges)
+const lLine, rLine, tLine, bLine: string;
+
+// Half blocks
+const lHalf, rHalf, tHalf, bHalf: string;
+
+// Quadrants
+const tlQuadrant, trQuadrant, blQuadrant, brQuadrant: string;
+const quadrants: string[];    // All 16 quadrant chars indexed by bitmask
+function quadrant(tl: boolean, tr: boolean, bl: boolean, br: boolean): string;
+
+// Shades
+const shades: string[];       // [space, light, medium, dark, fullBlock]
+const shadeLight, shadeMedium, shadeDark: string;
+
+// Ellipses
+const hellip, vellip, ctdot, utdot, dtdot: string;
+const ellipsis: string;       // Alias for hellip
+
+// Math symbols
+const infinity, plusMinus, minusPlus, tilde, minus: string;
+const multiplication, division, product, sum: string;
+const forAll, exist, degree: string;
+const times: string;          // Alias for multiplication
+const superscriptPlus, superscriptMinus, subscriptPlus, subscriptMinus: string;
+const permille, permyriad: string;
+
+// Dashes
+const hyphen, figureDash, ndash, mdash, horbar: string;
+
+// Marks
+const ballotBox, ballotBoxChecked, ballotBoxBoldChecked, ballotBoxX: string;
+const checkMark, checkMarkHeavy, checkMarkLight: string;
+const ballotX, ballotXHeavy, ballotXLight: string;
+```
+
+---
+
+## Package: table (`console-toolkit/table`)
+
+```ts
+import Table from 'console-toolkit/table';
+
+// Create a table from 2D data array with a line theme
+const table = Table.make(data, lineTheme, options?);
+// or use the default export (alias for Table.make)
+const table = make(data, lineTheme, options?);
+
+table.toStrings();  // string[]
+table.toBox();      // Box
+```
+
+---
+
+## Package: plot (`console-toolkit/plot`)
+
+Bitmap plotting using quadrant characters.
+
+```ts
+import Bitmap from 'console-toolkit/plot';
+
+const bmp = new Bitmap(width, height);
+bmp.line(x0, y0, x1, y1, value?);
+bmp.rect(x0, y0, x1, y1, value?);
+const box = bmp.toQuads();  // Box
+```
+
+---
+
+## Package: turtle (`console-toolkit/turtle`)
+
+Turtle graphics for vector line drawing.
+
+```ts
+import Turtle from 'console-toolkit/turtle';
+
+const t = new Turtle();
+t.forward(10).right(90).forward(10);
+const box = t.toBox({useArcs: true});
+```
+
+---
+
+## Package: charts
+
+Bar and column charts with themes.
+
+```ts
+// Horizontal bar chart
+import drawChart from 'console-toolkit/charts/bars/plain.js';
+const lines = drawChart(data, maxWidth, options?);
+
+// Vertical column chart
+import drawChart from 'console-toolkit/charts/columns/plain.js';
+const box = drawChart(data, maxHeight, options?);
+```
+
+Variants: `plain`, `block`, `block-frac`, `frac`, `plain-stacked`, `block-stacked`, `plain-grouped`, `block-grouped`, `block-frac-grouped`, `frac-grouped`.
+
+---
+
+## Themes
+
+### Line themes (for tables)
+
+```ts
+import theme from 'console-toolkit/themes/lines/unicode.js';
+import theme from 'console-toolkit/themes/lines/unicode-bold.js';
+import theme from 'console-toolkit/themes/lines/unicode-rounded.js';
+import theme from 'console-toolkit/themes/lines/ascii.js';
+import theme from 'console-toolkit/themes/lines/ascii-compact.js';
+import theme from 'console-toolkit/themes/lines/ascii-dots.js';
+import theme from 'console-toolkit/themes/lines/ascii-girder.js';
+import theme from 'console-toolkit/themes/lines/ascii-github.js';
+import theme from 'console-toolkit/themes/lines/ascii-reddit.js';
+import theme from 'console-toolkit/themes/lines/ascii-rounded.js';
+```
+
+### Block themes (for draw-block)
+
+```ts
+import theme from 'console-toolkit/themes/blocks/unicode-half.js';
+import theme from 'console-toolkit/themes/blocks/unicode-thin.js';
+```
+
+---
+
+## Package: spinner (`console-toolkit/spinner`)
+
+```ts
+import spin from 'console-toolkit/spinner';
+
+const stop = spin(message, options?);
+// ... do async work ...
+stop();
+```
+
+---
+
+## Package: ansi (`console-toolkit/ansi`)
+
+Low-level ANSI escape sequence handling.
+
+```ts
+import {cursorUp, cursorDown, cursorForward, cursorBack} from 'console-toolkit/ansi';
+import {eraseScreen, eraseLine} from 'console-toolkit/ansi';
+```
+
+---
+
+## Optional peer dependencies
+
+For double-wide character support (CJK, emoji), optionally install:
+- `emoji-regex` — detects double-wide emojis
+- `get-east-asian-width` — East Asian character width detection
+
+These are auto-detected at runtime. Not required for basic usage.

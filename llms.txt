@@ -1,0 +1,80 @@
+# console-toolkit
+
+> A zero-dependency JavaScript toolkit for building rich CLI/TUI applications with styled text, boxes, tables, charts, plots, turtle graphics, and spinners.
+
+## Overview
+
+console-toolkit provides utilities to produce fancy console output. It supports ANSI escape sequences (SGR colors/styles, CSI cursor/screen control), Unicode symbols, bitmap and vector graphics, tables with themes, and bar/column charts.
+
+- NPM: https://npmjs.org/package/console-toolkit
+- GitHub: https://github.com/uhop/console-toolkit
+- Wiki: https://github.com/uhop/console-toolkit/wiki
+- License: BSD-3-Clause
+
+## Installation
+
+```bash
+npm install console-toolkit
+```
+
+## Quick start
+
+```js
+import style, {c} from 'console-toolkit/style.js';
+import Box from 'console-toolkit/box';
+import makeTable from 'console-toolkit/table';
+import lineTheme from 'console-toolkit/themes/lines/unicode-rounded.js';
+
+// Styled text with tagged template literal
+console.log(c`{{bold}}Hello, {{bright.cyan}}world!`);
+
+// Table
+const table = makeTable([['Name', 'Value'], ['Alice', 42]], lineTheme);
+for (const line of table.toStrings()) console.log(line);
+```
+
+## Modules
+
+### Text containers
+
+- **strings** (`console-toolkit/strings`) — string array utilities: getLength, clip, toStrings.
+- **Box** (`console-toolkit/box`) — rectangular text container where all lines have equal display width. Immutable — methods return new Box instances. Supports padding, stacking, clipping, flipping.
+- **Panel** (`console-toolkit/panel`) — 2D cell grid where each cell has a character and SGR state. Mutable — methods return `this`. Supports fill, copy, apply, resize, rotate, flip, transpose.
+
+### Styling
+
+- **Style** (`console-toolkit/style`) — fluent API for ANSI SGR states. Provides `s` and `c` tagged template literals for inline styling. `c` auto-resets at end; `s` persists style changes.
+
+### Drawing
+
+- **draw-block** (`console-toolkit/draw-block.js`) — draws filled blocks and frames using block themes.
+- **draw-block-frac** (`console-toolkit/draw-block-frac.js`) — draws blocks with fractional width/height using 1/8th Unicode block characters.
+- **symbols** (`console-toolkit/symbols.js`) — curated Unicode constants: block elements, quadrants, shades, math symbols, dashes, marks, ellipses.
+
+### Packages
+
+- **ansi** (`console-toolkit/ansi`) — low-level ANSI CSI/SGR sequence handling.
+- **table** (`console-toolkit/table`) — table renderer with line themes.
+- **charts** — bar and column chart renderers (plain, block, frac, stacked, grouped) with chart themes.
+- **themes** — line themes (unicode, ascii variants) and block themes for drawing.
+- **plot** (`console-toolkit/plot`) — bitmap plotting using quadrant and braille characters.
+- **turtle** (`console-toolkit/turtle`) — turtle graphics for vector line drawing.
+- **spinner** (`console-toolkit/spinner`) — spinner animations and updatable output.
+- **output** — output helpers: Writer (streaming), Updater (in-place updates).
+- **alphanumeric** — decorative Unicode number and letter sets.
+
+## Key types
+
+- `Box` — class with `box: string[]`, `width`, `height`, padding/stacking/clipping methods.
+- `Panel` — class with 2D cell array, `width`, `height`, fill/copy/resize/transform methods.
+- `Style` — class with fluent property access for SGR states (e.g., `style.bold.bright.cyan`).
+- `SgrState` — plain object representing SGR state properties.
+- `PanelCell` — `{symbol: string, state: SgrState}` or `{ignore: true}` or `null`.
+
+## Optional peer dependencies
+
+For double-wide character support (CJK, emoji), install optionally:
+- `emoji-regex` — detects double-wide emojis.
+- `get-east-asian-width` — East Asian character width detection.
+
+These are auto-detected at runtime. Not required for basic usage.
