@@ -29,9 +29,13 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for a detailed module map and dependenc
 ### Running tests
 
 ```bash
-npm test                # Run all automated tests
-npm run test:bun        # Run with Bun
-npm run test:deno       # Run with Deno
+npm test                                        # Run all automated tests
+node tests/test-<name>.js                       # Run a single test file directly
+npm test -- test-foo.js test-bar.js             # Run selected files (workers)
+npm run test:seq -- test-foo.js test-bar.js     # Run selected files (sequential)
+npm run test:proc -- test-foo.js test-bar.js    # Run selected files (subprocesses)
+npm run test:bun                                # Run with Bun
+npm run test:deno                               # Run with Deno
 ```
 
 ### Type checking

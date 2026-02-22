@@ -86,8 +86,10 @@ Higher-level modules (`table`, `charts`, `plot`, `turtle`, `spinner`) depend on 
 
 ## Testing
 
-- **Framework**: [tape-six](https://github.com/nicedreams/tape-six)
+- **Framework**: [tape-six](https://github.com/uhop/tape-six)
 - **Run**: `npm test` (also supports Bun and Deno variants)
+- **Run single file**: `node tests/test-<name>.js` (no test runner needed)
+- **Run selected files**: `npm test -- test-foo.js test-bar.js` (also `test:seq`, `test:proc` variants)
 - **Test files**: `tests/test-*.js` — automated unit tests
 - **Manual tests**: `tests/manual/` — visual verification scripts (run individually with `node`)
 - **Type checking**: `npm run ts-check` (runs `tsc --noEmit`)

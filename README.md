@@ -124,7 +124,7 @@ npm install --save console-toolkit
 
 See [wiki](https://github.com/uhop/console-toolkit/wiki) for detailed usage docs.
 
-For project internals see [ARCHITECTURE.md](./ARCHITECTURE.md). For development setup see [CONTRIBUTING.md](./CONTRIBUTING.md).
+For project internals see [ARCHITECTURE.md](./ARCHITECTURE.md). For development setup see [CONTRIBUTING.md](./CONTRIBUTING.md). For AI agent rules see [AGENTS.md](./AGENTS.md).
 
 ## License
 
