@@ -82,6 +82,7 @@
   "devDependencies": {
     "emoji-regex": "^10.6.0",
     "get-east-asian-width": "^1.5.0",
+    "prettier": "^3.8.1",
     "tape-six": "^1.7.2",
     "tape-six-proc": "^1.2.3",
     "typescript": "^5.9.3"
