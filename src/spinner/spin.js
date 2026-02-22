@@ -2,6 +2,9 @@ import {SpinnerBase} from './spinner.js';
 
 /** Internal composite spinner that handles multiple spinner parts and functions via tagged template literals. */
 class Spinner extends SpinnerBase {
+  /** @param {TemplateStringsArray} strings - Template literal strings.
+   * @param {any[]} args - Interpolated values.
+   */
   constructor(strings, args) {
     super(false);
     this.strings = strings;
@@ -9,6 +12,9 @@ class Spinner extends SpinnerBase {
     this.indices = new WeakMap();
   }
 
+  /** Returns the current composite frame string.
+   * @returns {string}
+   */
   getFrame() {
     let result = '';
     for (let i = 0; i < this.args.length; ++i) {

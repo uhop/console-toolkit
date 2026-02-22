@@ -16,7 +16,7 @@ export class SpinnerBase {
 
   /** Whether the spinner has been started. */
   readonly isStarted: boolean;
-  /** Whether the spinner is currently active (started and not paused/finished). */
+  /** Whether the spinner is currently active. */
   readonly isActive: boolean;
   /** Whether the spinner is finished. */
   readonly isFinished: boolean;
