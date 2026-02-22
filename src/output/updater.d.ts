@@ -92,17 +92,21 @@ export class Updater {
   getFrame(state: string, ...args: any[]): any;
   /** Writes a frame to the stream.
    * @param state - State string.
+   * @returns A promise that resolves when the frame is written.
    */
   writeFrame(state: string, ...args: any[]): Promise<void>;
-  /** Marks the updater as done and writes the final frame.
+  /** Finishes updating: writes the epilogue and stops refreshing.
    * @returns A promise that resolves when done.
    */
   done(): Promise<void>;
   /** Updates with a new state and writes the frame.
    * @param state - State string.
+   * @returns A promise that resolves when the update is written.
    */
   update(state?: string, ...args: any[]): Promise<void>;
-  /** Writes the final frame and epilogue. */
+  /** Writes the final frame with state 'finished' and calls `done()`.
+   * @returns A promise that resolves when done.
+   */
   final(...args: any[]): Promise<void>;
 }
 

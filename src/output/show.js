@@ -40,10 +40,19 @@ export const out = (s, {stream = process.stdout, endOfLineCommand = '\x1B[m', co
  * Auto-detects color depth from the stream.
  */
 export class Out {
+  /**
+   * @param {import('node:stream').Writable} stream - The writable stream to wrap.
+   */
   constructor(stream) {
     this.stream = stream;
     this.colorDepth = stream.isTTY ? stream.getColorDepth() : 1;
   }
+  /** Writes a text container to the stream.
+   * @param {*} s - Input convertible to a Box.
+   * @param {object} [options] - Options.
+   * @param {string} [options.endOfLineCommand='\x1B[m'] - ANSI command appended to each line.
+   * @param {number} [options.colorDepth] - Color depth override.
+   */
   out(s, {endOfLineCommand = '\x1B[m', colorDepth} = {}) {
     if (typeof colorDepth != 'number' || isNaN(colorDepth)) colorDepth = this.colorDepth;
     return out(s, {stream: this.stream, endOfLineCommand, colorDepth});

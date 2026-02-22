@@ -51,7 +51,7 @@ export class Out {
   out(s: any, options?: {endOfLineCommand?: string; colorDepth?: number}): void;
 }
 
-/** Writes a debug string to stderr.
- * @param string - The debug message.
+/** Logs a string with non-printable characters visualized as hex escape sequences via `console.log()`.
+ * @param string - The string to debug.
  */
 export function debug(string: string): void;
