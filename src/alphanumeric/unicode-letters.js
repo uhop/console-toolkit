@@ -5,6 +5,7 @@ const range = (fromCapital, fromSmall) =>
     x => x
   );
 
+/** Transcode tables for mathematical and decorative letter styles. */
 export const transcodeTables = {
   bold: range('\u{1D400}', '\u{1D41A}'),
   italic: range('\u{1D434}', '\u{1D44E}'),
@@ -56,6 +57,13 @@ transcodeTables.script[1].overlay = {e: '\u{212F}', g: '\u{210A}', o: '\u{2134}'
 
 // API
 
+/** Transcodes a string to a Unicode letter style.
+ * @param {string} s - The string to transcode.
+ * @param {string|import('./utils.js').SymbolRange[]} name - Style name (key of `transcodeTables`) or an array of SymbolRanges.
+ * @param {object} [options] - Options.
+ * @param {string} [options.missing] - Replacement for unmapped characters.
+ * @returns {string} The transcoded string.
+ */
 export const transcode = (s, name, options) => {
   let tables = typeof name == 'string' ? transcodeTables[name] : name;
   if (!tables) throw new Error(`There is no transcode table "${name}"`);

@@ -28,10 +28,25 @@ export const fractions = [
 
 const pick = denominator => fractions.filter(x => !(denominator % x.denominator));
 
+/** Unicode fraction characters with denominator 3.
+ * @type {import('./fractions.js').Fraction[]}
+ */
 export const thirds = pick(3);
+/** Unicode fraction characters with denominator 4.
+ * @type {import('./fractions.js').Fraction[]}
+ */
 export const quarters = [{numerator: 0, denominator: 4, symbol: '0', value: 0}, ...pick(4)];
+/** Unicode fraction characters with denominator 5.
+ * @type {import('./fractions.js').Fraction[]}
+ */
 export const fifths = [{numerator: 0, denominator: 5, symbol: '0', value: 0}, ...pick(5)];
+/** Unicode fraction characters with denominator 6.
+ * @type {import('./fractions.js').Fraction[]}
+ */
 export const sixths = pick(6);
+/** Unicode fraction characters with denominator 8.
+ * @type {import('./fractions.js').Fraction[]}
+ */
 export const eighths = [{numerator: 0, denominator: 8, symbol: '0', value: 0}, ...pick(8)];
 
 export {quarters as fourths};
@@ -82,10 +97,35 @@ const findSymbol = (fractions, value, useFractionForZero) => {
  * @returns {string} The integer part plus the closest fraction symbol.
  */
 export const getFraction = (value, useFractionForZero) => findSymbol(fractions, value, useFractionForZero);
+/** Finds the closest Unicode fraction symbol from thirds.
+ * @param {number} value - The value to approximate.
+ * @param {boolean} [useFractionForZero] - If true, use a fraction symbol even for zero.
+ * @returns {string} The integer part plus the closest fraction symbol.
+ */
 export const getThirds = (value, useFractionForZero) => findSymbol(thirds, value, useFractionForZero);
+/** Finds the closest Unicode fraction symbol from quarters.
+ * @param {number} value - The value to approximate.
+ * @param {boolean} [useFractionForZero] - If true, use a fraction symbol even for zero.
+ * @returns {string} The integer part plus the closest fraction symbol.
+ */
 export const getQuarters = (value, useFractionForZero) => findSymbol(quarters, value, useFractionForZero);
+/** Finds the closest Unicode fraction symbol from fifths.
+ * @param {number} value - The value to approximate.
+ * @param {boolean} [useFractionForZero] - If true, use a fraction symbol even for zero.
+ * @returns {string} The integer part plus the closest fraction symbol.
+ */
 export const getFifths = (value, useFractionForZero) => findSymbol(fifths, value, useFractionForZero);
+/** Finds the closest Unicode fraction symbol from sixths.
+ * @param {number} value - The value to approximate.
+ * @param {boolean} [useFractionForZero] - If true, use a fraction symbol even for zero.
+ * @returns {string} The integer part plus the closest fraction symbol.
+ */
 export const getSixths = (value, useFractionForZero) => findSymbol(sixths, value, useFractionForZero);
+/** Finds the closest Unicode fraction symbol from eighths.
+ * @param {number} value - The value to approximate.
+ * @param {boolean} [useFractionForZero] - If true, use a fraction symbol even for zero.
+ * @returns {string} The integer part plus the closest fraction symbol.
+ */
 export const getEighths = (value, useFractionForZero) => findSymbol(eighths, value, useFractionForZero);
 
 export {getQuarters as getFourths};

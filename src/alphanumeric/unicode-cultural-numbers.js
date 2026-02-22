@@ -1,5 +1,6 @@
 import {SymbolRange} from './utils.js';
 
+/** Transcode tables for cultural number systems, mapping ASCII digits to their Unicode equivalents. */
 export const transcodeTables = {
   arabicIndic: new SymbolRange('٠'),
   arabicIndicExtended: new SymbolRange('۰'),
