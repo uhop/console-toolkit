@@ -118,13 +118,13 @@ export function setCommands(commands: string | string[] | number): string;
  * @returns The standard color number.
  */
 export function colorNumber(color: string | number): number;
-/** Converts RGB values (0-5 each) to a standard 6x6x6 color cube number.
- * @param r - Red component (0-5).
- * @param g - Green component (0-5).
- * @param b - Blue component (0-5).
- * @returns The color number.
+/** Converts RGB values to a standard color number (0-7).
+ * @param r - Red component (truthy/falsy).
+ * @param g - Green component (truthy/falsy).
+ * @param b - Blue component (truthy/falsy).
+ * @returns The standard color number from 0 to 7
  */
-export function colorStdRgb(r: number, g: number, b: number): number;
+export function colorStdRgb(r: number | boolean, g: number | boolean, b: number | boolean): number;
 
 /** Returns the foreground color SGR code.
  * @param color - Color name or number.
@@ -147,33 +147,33 @@ export function getBrightColor(color: string | number): number;
  */
 export function getBgBrightColor(color: string | number): number;
 /** Returns the foreground standard RGB color SGR code.
- * @param r - Red (0-5).
- * @param g - Green (0-5).
- * @param b - Blue (0-5).
+ * @param r - Red component (truthy/falsy).
+ * @param g - Green component (truthy/falsy).
+ * @param b - Blue component (truthy/falsy).
  * @returns The SGR code.
  */
-export function getStdRgb(r: number, g: number, b: number): number;
+export function getStdRgb(r: number | boolean, g: number | boolean, b: number | boolean): number;
 /** Returns the background standard RGB color SGR code.
- * @param r - Red (0-5).
- * @param g - Green (0-5).
- * @param b - Blue (0-5).
+ * @param r - Red component (truthy/falsy).
+ * @param g - Green component (truthy/falsy).
+ * @param b - Blue component (truthy/falsy).
  * @returns The SGR code.
  */
-export function getBgStdRgb(r: number, g: number, b: number): number;
+export function getBgStdRgb(r: number | boolean, g: number | boolean, b: number | boolean): number;
 /** Returns the bright foreground standard RGB color SGR code.
- * @param r - Red (0-5).
- * @param g - Green (0-5).
- * @param b - Blue (0-5).
+ * @param r - Red component (truthy/falsy).
+ * @param g - Green component (truthy/falsy).
+ * @param b - Blue component (truthy/falsy).
  * @returns The SGR code.
  */
-export function getBrightStdRgb(r: number, g: number, b: number): number;
+export function getBrightStdRgb(r: number | boolean, g: number | boolean, b: number | boolean): number;
 /** Returns the bright background standard RGB color SGR code.
- * @param r - Red (0-5).
- * @param g - Green (0-5).
- * @param b - Blue (0-5).
+ * @param r - Red component (truthy/falsy).
+ * @param g - Green component (truthy/falsy).
+ * @param b - Blue component (truthy/falsy).
  * @returns The SGR code.
  */
-export function getBgBrightStdRgb(r: number, g: number, b: number): number;
+export function getBgBrightStdRgb(r: number | boolean, g: number | boolean, b: number | boolean): number;
 
 /** Sets the foreground color.
  * @param color - Color name or number.
@@ -196,33 +196,33 @@ export function setBrightColor(color: string | number): string;
  */
 export function setBgBrightColor(color: string | number): string;
 /** Sets the foreground standard RGB color.
- * @param r - Red (0-5).
- * @param g - Green (0-5).
- * @param b - Blue (0-5).
+ * @param r - Red component (truthy/falsy).
+ * @param g - Green component (truthy/falsy).
+ * @param b - Blue component (truthy/falsy).
  * @returns SGR escape sequence.
  */
-export function setStdRgb(r: number, g: number, b: number): string;
+export function setStdRgb(r: number | boolean, g: number | boolean, b: number | boolean): string;
 /** Sets the background standard RGB color.
- * @param r - Red (0-5).
- * @param g - Green (0-5).
- * @param b - Blue (0-5).
+ * @param r - Red component (truthy/falsy).
+ * @param g - Green component (truthy/falsy).
+ * @param b - Blue component (truthy/falsy).
  * @returns SGR escape sequence.
  */
-export function setBgStdRgb(r: number, g: number, b: number): string;
+export function setBgStdRgb(r: number | boolean, g: number | boolean, b: number | boolean): string;
 /** Sets the bright foreground standard RGB color.
- * @param r - Red (0-5).
- * @param g - Green (0-5).
- * @param b - Blue (0-5).
+ * @param r - Red component (truthy/falsy).
+ * @param g - Green component (truthy/falsy).
+ * @param b - Blue component (truthy/falsy).
  * @returns SGR escape sequence.
  */
-export function setBrightStdRgb(r: number, g: number, b: number): string;
+export function setBrightStdRgb(r: number | boolean, g: number | boolean, b: number | boolean): string;
 /** Sets the bright background standard RGB color.
- * @param r - Red (0-5).
- * @param g - Green (0-5).
- * @param b - Blue (0-5).
+ * @param r - Red component (truthy/falsy).
+ * @param g - Green component (truthy/falsy).
+ * @param b - Blue component (truthy/falsy).
  * @returns SGR escape sequence.
  */
-export function setBgBrightStdRgb(r: number, g: number, b: number): string;
+export function setBgBrightStdRgb(r: number | boolean, g: number | boolean, b: number | boolean): string;
 
 /** Converts a font number to a valid font index.
  * @param font - Font number.
@@ -256,9 +256,9 @@ export function getStdColor256(color: string | number): string[];
  */
 export function getBrightStdColor256(color: string | number): string[];
 /** Returns foreground 256-color command array for a 6x6x6 RGB color.
- * @param r - Red (0-5).
- * @param g - Green (0-5).
- * @param b - Blue (0-5).
+ * @param r - Red component (0-5).
+ * @param g - Green component (0-5).
+ * @param b - Blue component (0-5).
  * @returns SGR command array.
  */
 export function getColor6(r: number, g: number, b: number): string[];

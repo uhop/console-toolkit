@@ -49,8 +49,20 @@ export const cursorForward = (n = 1) => CSI + (n > 1 ? n.toFixed() : '') + 'C';
  * @returns {string} CSI sequence.
  */
 export const cursorBack = (n = 1) => CSI + (n > 1 ? n.toFixed() : '') + 'D';
+/** Moves cursor to beginning of line `n` lines down.
+ * @param {number} [n=1]
+ * @returns {string} CSI sequence.
+ */
 export const cursorNextLine = (n = 1) => CSI + (n > 1 ? n.toFixed() : '') + 'E';
+/** Moves cursor to beginning of line `n` lines up.
+ * @param {number} [n=1]
+ * @returns {string} CSI sequence.
+ */
 export const cursorPrevLine = (n = 1) => CSI + (n > 1 ? n.toFixed() : '') + 'F';
+/** Moves cursor to column `n`.
+ * @param {number} [n=1]
+ * @returns {string} CSI sequence.
+ */
 export const cursorColumn = (n = 1) => CSI + (n > 1 ? n.toFixed() : '') + 'G';
 /** Sets the cursor to row `n`, column `m` (1-based).
  * @param {number} n - Row.
@@ -58,6 +70,11 @@ export const cursorColumn = (n = 1) => CSI + (n > 1 ? n.toFixed() : '') + 'G';
  * @returns {string} CSI sequence.
  */
 export const cursorSetPos = (n, m) => CSI + (n > 1 ? n.toFixed() : '') + ';' + (m > 1 ? m.toFixed() : '') + 'H';
+/** Sets the cursor position (alternative HVP sequence).
+ * @param {number} n - Row.
+ * @param {number} m - Column.
+ * @returns {string} CSI sequence.
+ */
 export const cursorSetPosAlt = (n, m) => CSI + (n > 1 ? n.toFixed() : '') + ';' + (m > 1 ? m.toFixed() : '') + 'f'; // HVP
 
 export const CURSOR_RIGHT1 = CURSOR_FORWARD1;
