@@ -1,4 +1,5 @@
 <!-- Canonical source: AGENTS.md — keep this file in sync -->
+
 # console-toolkit — Copilot Instructions
 
 console-toolkit is a zero-dependency ESM JavaScript library for rich CLI/TUI output. Node.js 20+, Bun, Deno.

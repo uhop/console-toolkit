@@ -91,34 +91,34 @@ npm install --save console-toolkit
 
 ### Text containers
 
-| Module | Import | Description |
-|--------|--------|-------------|
-| **strings** | `console-toolkit/strings` | String array utilities: `getLength`, `clip`, `toStrings` |
-| **Box** | `console-toolkit/box` | Rectangular text container — all lines equal width. Immutable. |
-| **Panel** | `console-toolkit/panel` | 2D cell grid with per-cell SGR state. Mutable. |
+| Module      | Import                    | Description                                                    |
+| ----------- | ------------------------- | -------------------------------------------------------------- |
+| **strings** | `console-toolkit/strings` | String array utilities: `getLength`, `clip`, `toStrings`       |
+| **Box**     | `console-toolkit/box`     | Rectangular text container — all lines equal width. Immutable. |
+| **Panel**   | `console-toolkit/panel`   | 2D cell grid with per-cell SGR state. Mutable.                 |
 
 ### Styling and drawing
 
-| Module | Import | Description |
-|--------|--------|-------------|
-| **Style** | `console-toolkit/style` | Fluent SGR styling API + `s`/`c` tagged template literals |
-| **draw-block** | `console-toolkit/draw-block.js` | Draw filled blocks and frames with block themes |
-| **draw-block-frac** | `console-toolkit/draw-block-frac.js` | Fractional-width/height blocks (1/8th Unicode steps) |
-| **symbols** | `console-toolkit/symbols.js` | Curated Unicode constants (blocks, shades, math, marks) |
+| Module              | Import                               | Description                                               |
+| ------------------- | ------------------------------------ | --------------------------------------------------------- |
+| **Style**           | `console-toolkit/style`              | Fluent SGR styling API + `s`/`c` tagged template literals |
+| **draw-block**      | `console-toolkit/draw-block.js`      | Draw filled blocks and frames with block themes           |
+| **draw-block-frac** | `console-toolkit/draw-block-frac.js` | Fractional-width/height blocks (1/8th Unicode steps)      |
+| **symbols**         | `console-toolkit/symbols.js`         | Curated Unicode constants (blocks, shades, math, marks)   |
 
 ### Packages
 
-| Package | Import | Description |
-|---------|--------|-------------|
-| **ansi** | `console-toolkit/ansi` | Low-level ANSI CSI/SGR escape sequence handling |
-| **table** | `console-toolkit/table` | Table renderer with line themes |
-| **charts** | `console-toolkit/charts/...` | Bar and column charts (plain, block, frac, stacked, grouped) |
-| **themes** | `console-toolkit/themes/...` | Line and block themes (unicode, ascii variants) |
-| **plot** | `console-toolkit/plot` | Bitmap plotting (quadrant and braille characters) |
-| **turtle** | `console-toolkit/turtle` | Turtle graphics for vector line drawing |
-| **spinner** | `console-toolkit/spinner` | Spinner animations and updatable output |
-| **output** | `console-toolkit/output/...` | Output helpers: Writer (streaming), Updater (in-place) |
-| **alphanumeric** | `console-toolkit/alphanumeric/...` | Decorative Unicode number and letter sets |
+| Package          | Import                             | Description                                                  |
+| ---------------- | ---------------------------------- | ------------------------------------------------------------ |
+| **ansi**         | `console-toolkit/ansi`             | Low-level ANSI CSI/SGR escape sequence handling              |
+| **table**        | `console-toolkit/table`            | Table renderer with line themes                              |
+| **charts**       | `console-toolkit/charts/...`       | Bar and column charts (plain, block, frac, stacked, grouped) |
+| **themes**       | `console-toolkit/themes/...`       | Line and block themes (unicode, ascii variants)              |
+| **plot**         | `console-toolkit/plot`             | Bitmap plotting (quadrant and braille characters)            |
+| **turtle**       | `console-toolkit/turtle`           | Turtle graphics for vector line drawing                      |
+| **spinner**      | `console-toolkit/spinner`          | Spinner animations and updatable output                      |
+| **output**       | `console-toolkit/output/...`       | Output helpers: Writer (streaming), Updater (in-place)       |
+| **alphanumeric** | `console-toolkit/alphanumeric/...` | Decorative Unicode number and letter sets                    |
 
 ## Documentation
 

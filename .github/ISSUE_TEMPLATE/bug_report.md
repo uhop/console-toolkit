@@ -25,10 +25,10 @@ What actually happened. Include any error messages or screenshots.
 
 ## Environment
 
-- **Node.js version**: 
+- **Node.js version**:
 - **Runtime**: Node.js / Bun / Deno
-- **OS**: 
-- **console-toolkit version**: 
+- **OS**:
+- **console-toolkit version**:
 - **Optional deps installed**: emoji-regex / get-east-asian-width / neither
 
 ## Minimal reproduction

@@ -44,11 +44,11 @@ wiki/                 # GitHub wiki (git submodule)
 
 The library is built around three text container types that can convert between each other:
 
-| Container | Description | Mutability | File |
-|-----------|-------------|------------|------|
-| `strings` | `string[]` — simplest container | Immutable | `strings.js` |
-| `Box` | `string[]` where all strings have equal display width | Immutable (methods return new Box) | `box.js` |
-| `Panel` | 2D array of `{symbol, state}` cells | Mutable (methods return `this`) | `panel.js` |
+| Container | Description                                           | Mutability                         | File         |
+| --------- | ----------------------------------------------------- | ---------------------------------- | ------------ |
+| `strings` | `string[]` — simplest container                       | Immutable                          | `strings.js` |
+| `Box`     | `string[]` where all strings have equal display width | Immutable (methods return new Box) | `box.js`     |
+| `Panel`   | 2D array of `{symbol, state}` cells                   | Mutable (methods return `this`)    | `panel.js`   |
 
 Conversion: any object implementing `toStrings()`, `toBox()`, or `toPanel()` integrates with the toolkit.
 
