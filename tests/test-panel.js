@@ -509,4 +509,20 @@ test('Panel', async t => {
     p.resize(3, 3, 'l', 'c');
     t.deepEqual(p.toBox({emptySymbol: '*', emptyState: {}}).box, ['***', '** ', '***']);
   });
+
+  await t.test('resize center shrink even diff', t => {
+    // resizeH center: 6->2, diff=-4, half=2: removeColumns(0,2).removeColumns(2,2) => '34'
+    // resizeV center: 2->1, diff=-1, half=0: removeRows(0,0).removeRows(1,1) => row 0
+    let p = Panel.make(['123456', 'abcdef']).resize(2, 1, 'c', 'c');
+    t.equal(p.width, 2);
+    t.equal(p.height, 1);
+    t.deepEqual(p.toBox({emptySymbol: '*', emptyState: {}}).box, ['34']);
+
+    // resizeH center: 6->2, diff=-4, half=2
+    // resizeV center: 4->2, diff=-2, half=1: removeRows(0,1).removeRows(2,1)
+    p = Panel.make(['123456', 'abcdef', 'ABCDEF', 'uvwxyz']).resize(2, 2, 'c', 'c');
+    t.equal(p.width, 2);
+    t.equal(p.height, 2);
+    t.deepEqual(p.toBox({emptySymbol: '*', emptyState: {}}).box, ['cd', 'CD']);
+  });
 });

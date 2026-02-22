@@ -1,9 +1,20 @@
 import test from 'tape-six';
 
 import Bitmap from '../src/plot/index.js';
-import style from '../src/style.js';
 
 test('Plot', async t => {
+  await t.test('Bitmap constructor validates parameters', t => {
+    t.throws(() => new Bitmap(NaN, 7), 'NaN width throws');
+    t.throws(() => new Bitmap(7, NaN), 'NaN height throws');
+    t.throws(() => new Bitmap(7, 7, NaN), 'NaN blockWidth throws');
+    t.throws(() => new Bitmap(7, 7, 5, NaN), 'NaN blockHeight throws');
+    t.throws(() => new Bitmap(-1, 7), 'negative width throws');
+    t.throws(() => new Bitmap(7, -1), 'negative height throws');
+    t.throws(() => new Bitmap(7, 7, -1), 'negative blockWidth throws');
+    t.throws(() => new Bitmap(7, 7, 5, -1), 'negative blockHeight throws');
+    t.throws(() => new Bitmap(7, 7, 6, 6), 'blockWidth*blockHeight > 32 throws');
+  });
+
   await t.test('Simple drawing', t => {
     const bmp = new Bitmap(7, 7).line(0, 0, 6, 6).line(0, 6, 6, 0).line(0, 0, 6, 0).line(0, 6, 6, 6);
 

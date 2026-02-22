@@ -157,6 +157,30 @@ test('Box', async t => {
     t.deepEqual(b.box, ['c  ', 'ab ', '123']);
   });
 
+  await t.test('add bottom center with symbol', t => {
+    const b = new Box(['12345']).addBottom(new Box(['ab']), {align: 'center', symbol: '-'});
+
+    t.equal(b.width, 5);
+    t.equal(b.height, 2);
+    t.deepEqual(b.box, ['12345', '-ab--']);
+  });
+
+  await t.test('add right with raw string', t => {
+    const b = new Box(['123', 'ab', 'c']).addRight('xyz');
+
+    t.equal(b.width, 6);
+    t.equal(b.height, 3);
+    t.deepEqual(b.box, ['123xyz', 'ab    ', 'c     ']);
+  });
+
+  await t.test('add right with string array', t => {
+    const b = new Box(['123', 'ab', 'c']).addRight(['xyz', 'w']);
+
+    t.equal(b.width, 6);
+    t.equal(b.height, 3);
+    t.deepEqual(b.box, ['123xyz', 'ab w  ', 'c     ']);
+  });
+
   await t.test('remove rows', t => {
     const b = new Box(['123', 'ab', 'c']);
 

@@ -114,6 +114,47 @@ test('Turtle', async t => {
     ]);
   });
 
+  await t.test('add/addX/addY relative movement', t => {
+    const turtle = new Turtle(5, 5);
+    t.deepEqual(turtle.position, {x: 0, y: 0});
+
+    turtle.add(2, 3);
+    t.deepEqual(turtle.position, {x: 2, y: 3});
+
+    turtle.addX(1);
+    t.deepEqual(turtle.position, {x: 3, y: 3});
+
+    turtle.addY(-2);
+    t.deepEqual(turtle.position, {x: 3, y: 1});
+
+    turtle.add(-10, -10);
+    t.deepEqual(turtle.position, {x: 0, y: 0}, 'clamped to 0');
+
+    turtle.add(100, 100);
+    t.deepEqual(turtle.position, {x: 4, y: 4}, 'clamped to width-1');
+  });
+
+  await t.test('restore on empty stack throws', t => {
+    const turtle = new Turtle(5, 5);
+    t.throws(() => turtle.restore(), 'should throw on empty stack');
+  });
+
+  await t.test('save/restore round-trip', t => {
+    const turtle = new Turtle(5, 5);
+    turtle.set(2, 3).setTheme(2).setDirection(Turtle.LEFT);
+    turtle.save();
+    turtle.set(0, 0).setTheme(1).setDirection(Turtle.RIGHT);
+
+    t.deepEqual(turtle.position, {x: 0, y: 0});
+    t.equal(turtle.theme, 1);
+    t.equal(turtle.direction, Turtle.RIGHT);
+
+    turtle.restore();
+    t.deepEqual(turtle.position, {x: 2, y: 3});
+    t.equal(turtle.theme, 2);
+    t.equal(turtle.direction, Turtle.LEFT);
+  });
+
   await t.test('A fancy table', t => {
     const turtle = new Turtle(5, 5)
       .forward(4)
