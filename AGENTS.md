@@ -32,7 +32,10 @@ console-toolkit is a zero-dependency ESM JavaScript library for rich CLI/TUI out
 
 - `npm test` — run the full test suite (tape-six)
 - `node tests/test-<name>.js` — run a single test file directly (no test runner needed)
-- `npm test -- test-foo.js test-bar.js` — run selected test files by name
+- Run selected test files by name:
+  - `npm test -- test-foo.js test-bar.js` — run using workers
+  - `npm run test:seq -- test-foo.js test-bar.js` — run sequentially
+  - `npm run test:proc -- test-foo.js test-bar.js` — run using subprocesses
 - `npm run ts-check` — TypeScript type checking (tsc --noEmit)
 - `npm run lint` — Prettier format check
 
