@@ -3,7 +3,7 @@ import {matchCsiNoGroups} from '../strings.js';
 import Box from '../box.js';
 
 /** Logs a text container to the console via `console.log()`. Strips ANSI codes if colorDepth < 4.
- * @param {*} s - Input convertible to a Box.
+ * @param {import('../strings.js').StringsInput} s - Input convertible to a Box.
  * @param {object} [options] - Options.
  * @param {string} [options.endOfLineCommand='\x1B[m'] - ANSI command appended to each line.
  * @param {number} [options.colorDepth=24] - Color depth (1 = no color, 4/8/24 = color).
@@ -19,7 +19,7 @@ export const log = (s, {endOfLineCommand = '\x1B[m', colorDepth = 24} = {}) => {
 };
 
 /** Writes a text container to a stream. Strips ANSI codes if colorDepth < 4.
- * @param {*} s - Input convertible to a Box.
+ * @param {import('../strings.js').StringsInput} s - Input convertible to a Box.
  * @param {object} [options] - Options.
  * @param {import('node:stream').Writable} [options.stream=process.stdout] - The output stream.
  * @param {string} [options.endOfLineCommand='\x1B[m'] - ANSI command appended to each line.
@@ -48,7 +48,7 @@ export class Out {
     this.colorDepth = stream.isTTY ? stream.getColorDepth() : 1;
   }
   /** Writes a text container to the stream.
-   * @param {*} s - Input convertible to a Box.
+   * @param {import('../strings.js').StringsInput} s - Input convertible to a Box.
    * @param {object} [options] - Options.
    * @param {string} [options.endOfLineCommand='\x1B[m'] - ANSI command appended to each line.
    * @param {number} [options.colorDepth] - Color depth override.

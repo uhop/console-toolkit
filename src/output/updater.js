@@ -9,7 +9,7 @@ const RESET = setCommands([]);
  */
 export class Updater {
   /**
-   * @param {Function|{state?: string, getFrame: Function}} updater - A function `(state, ...args) => frame` or an object with `getFrame()`.
+   * @param {((state: string, ...args: unknown[]) => import('../strings.js').StringsInput)|{state?: string, getFrame: (...args: unknown[]) => import('../strings.js').StringsInput}} updater - A function `(state, ...args) => frame` or an object with `getFrame()`.
    * @param {object} [options] - Options.
    * @param {string} [options.prologue] - String written before the first frame.
    * @param {string} [options.epilogue] - String written after the last frame.
@@ -18,7 +18,7 @@ export class Updater {
    * @param {string} [options.beforeLine] - String prepended to each line.
    * @param {string} [options.afterLine] - String appended to each line.
    * @param {boolean} [options.noLastNewLine] - If true, omit the trailing newline of each frame.
-   * @param {Writer} [writer=new Writer()] - The Writer instance to use.
+   * @param {import('./writer.js').default} [writer=new Writer()] - The Writer instance to use.
    */
   constructor(
     updater,
@@ -77,8 +77,8 @@ export class Updater {
 
   /** Gets a frame from the updater function or object.
    * @param {string} state - The current state ('active', 'paused', 'finished', etc.).
-   * @param {...*} args - Additional arguments.
-   * @returns {*} The frame content.
+   * @param {...unknown} args - Additional arguments.
+   * @returns {import('../strings.js').StringsInput} The frame content.
    */
   getFrame(state, ...args) {
     if (typeof this.updater == 'function') return this.updater(state, ...args);
@@ -91,7 +91,7 @@ export class Updater {
 
   /** Writes a single frame to the output, handling cursor repositioning.
    * @param {string} state - The current state.
-   * @param {...*} args - Additional arguments passed to `getFrame()`.
+   * @param {...unknown} args - Additional arguments passed to `getFrame()`.
    * @returns {Promise<void>}
    */
   async writeFrame(state, ...args) {
@@ -128,7 +128,7 @@ export class Updater {
 
   /** Updates the display with a new frame.
    * @param {string} [state='active'] - The current state.
-   * @param {...*} args - Additional arguments passed to `getFrame()`.
+   * @param {...unknown} args - Additional arguments passed to `getFrame()`.
    * @returns {Promise<void>}
    */
   async update(state = 'active', ...args) {
@@ -137,7 +137,7 @@ export class Updater {
   }
 
   /** Writes the final frame with state 'finished' and calls `done()`.
-   * @param {...*} args - Additional arguments passed to `getFrame()`.
+   * @param {...unknown} args - Additional arguments passed to `getFrame()`.
    * @returns {Promise<void>}
    */
   async final(...args) {

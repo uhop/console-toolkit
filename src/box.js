@@ -28,7 +28,7 @@ export class Box {
   }
 
   /** Creates a Box from various input types.
-   * @param {*} s - Input: Box, object with toBox()/toPanel(), function, string, array, etc.
+   * @param {import('./strings.js').StringsInput} s - Input: Box, object with toBox()/toPanel(), function, string, array, etc.
    * @param {object} [options] - Options.
    * @param {string} [options.symbol=' '] - The padding character.
    * @param {'left'|'l'|'right'|'r'|'center'|'c'} [options.align='left'] - Alignment for shorter strings.
@@ -234,7 +234,7 @@ export class Box {
   // stack
 
   /** Stacks another box below this one.
-   * @param {*} box - The box to add at the bottom.
+   * @param {import('./strings.js').StringsInput} box - The box to add at the bottom.
    * @param {object} [options] - Options.
    * @param {string} [options.symbol=' '] - The padding character for width alignment.
    * @param {'left'|'l'|'right'|'r'|'center'|'c'} [options.align='left'] - Horizontal alignment if widths differ.
@@ -268,7 +268,7 @@ export class Box {
   }
 
   /** Stacks another box to the right of this one.
-   * @param {*} box - The box to add on the right.
+   * @param {import('./strings.js').StringsInput} box - The box to add on the right.
    * @param {object} [options] - Options.
    * @param {string} [options.symbol=' '] - The padding character for height alignment.
    * @param {'top'|'t'|'bottom'|'b'|'center'|'c'} [options.align='top'] - Vertical alignment if heights differ.

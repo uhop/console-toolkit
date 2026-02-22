@@ -42,7 +42,7 @@ export class Panel {
   }
 
   /** Creates a Panel from various input types (Panel, Box, string, string[], function).
-   * @param {*} s - Input data.
+   * @param {import('./strings.js').StringsInput} s - Input data.
    * @param {object} [options] - Options passed to Box.make() or put().
    * @returns {Panel}
    */
@@ -217,7 +217,7 @@ export class Panel {
   /** Places text onto this panel at the given position. Characters matching `emptySymbol` (default: '\x07' BELL) are treated as empty cells.
    * @param {number} x - Left column.
    * @param {number} y - Top row.
-   * @param {Panel|import('./box.js').Box|string|string[]} text - Content to place.
+   * @param {import('./strings.js').StringsInput} text - Content to place.
    * @param {object} [options] - Put options.
    * @param {string} [options.emptySymbol='\x07'] - Character treated as an empty cell.
    * @returns {this}

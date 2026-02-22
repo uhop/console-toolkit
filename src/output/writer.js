@@ -37,16 +37,17 @@ export class Writer {
     return {columns, rows};
   }
   /** Returns the color depth of the stream.
-   * @param {...*} args - Arguments forwarded to `stream.getColorDepth()`.
-   * @returns {number} The color depth.
+   * @param {object} [env] - Environment variables to check (default: `process.env`).
+   * @returns {number} The color depth (1, 4, 8, or 24).
    */
   getColorDepth(...args) {
     return this.forceColorDepth || this.stream.getColorDepth?.(...args);
   }
 
   /** Checks if the stream supports the given number of colors.
-   * @param {...*} args - Arguments forwarded to `stream.hasColors()`.
-   * @returns {boolean}
+   * @param {number} [count] - Number of colors to check for.
+   * @param {object} [env] - Environment variables to check.
+   * @returns {boolean} True if supported.
    */
   hasColors(...args) {
     return this.forceColorDepth ? args[0] <= Math.pow(2, this.forceColorDepth) : this.stream.hasColors?.(...args);
@@ -132,7 +133,7 @@ export class Writer {
   }
 
   /** Writes a text container to the stream.
-   * @param {*} s - Input convertible to strings.
+   * @param {import('../strings.js').StringsInput} s - Input convertible to strings.
    * @param {object} [options] - Options.
    * @param {boolean|'save'} [options.sameColumn] - If true or 'save', keep cursor in the same column between lines.
    * @param {boolean} [options.noLastNewLine] - If true, omit the trailing newline.
