@@ -55,7 +55,7 @@ export class Box {
 
     const {symbol = ' ', align = 'left'} = options || {},
       widths = s.map(s => getLength(s)),
-      width = Math.max(0, ...widths);
+      width = widths.reduce((a, b) => (a > b ? a : b), 0);
     switch (align) {
       case 'left':
       case 'l':
@@ -125,12 +125,10 @@ export class Box {
    * @returns {Box} A new padded Box.
    */
   padLeftRight(left, right, symbol = ' ') {
-    const paddingSmall = symbol.repeat(Math.min(left, right)),
-      paddingLarge = paddingSmall + symbol.repeat(Math.max(left - right, right - left));
+    const paddingLeft = symbol.repeat(left),
+      paddingRight = symbol.repeat(right);
     return new Box(
-      left < right
-        ? this.box.map(s => paddingSmall + s + paddingLarge)
-        : this.box.map(s => paddingLarge + s + paddingSmall),
+      this.box.map(s => paddingLeft + s + paddingRight),
       true
     );
   }
@@ -260,7 +258,7 @@ export class Box {
           break;
         default: // center
           const half = d >> 1;
-          x = x.padLeftRight(half, half + (d & 1 ? 1 : 0));
+          x = x.padLeftRight(half, half + (d & 1 ? 1 : 0), symbol);
           break;
       }
       a = diff < 0 ? x : a;
@@ -277,6 +275,7 @@ export class Box {
    * @returns {Box} A new combined Box.
    */
   addRight(box, {symbol = ' ', align = 'top'} = {}) {
+    box = toBox(box);
     const ah = this.height,
       bh = box.height;
     if (ah == bh)
@@ -341,8 +340,7 @@ export class Box {
    * @returns {Box} A new vertically flipped Box.
    */
   flipV() {
-    // return new Box(this.box.toReversed(), true);
-    return new Box([...this.box].reverse(), true);
+    return new Box(this.box.toReversed(), true);
   }
 }
 

@@ -382,6 +382,7 @@ export const stateReverseTransition = (prev, next) => {
   if (prev.dim === null) ++resetCount;
 
   for (const name of Object.keys(RESET_STATE)) {
+    if (chainedStates[name] === 1) continue; // skip chained states
     const value = prev[name];
     if (resetColorProperties.hasOwnProperty(name)) {
       // color

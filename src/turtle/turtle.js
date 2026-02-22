@@ -72,21 +72,21 @@ export class Turtle {
    * @returns {this}
    */
   add(dx, dy) {
-    return this.set(x + dx, y + dy);
+    return this.set(this.position.x + dx, this.position.y + dy);
   }
   /** Adds to the X coordinate.
    * @param {number} dx - X offset.
    * @returns {this}
    */
   addX(dx) {
-    return this.setX(x + dx);
+    return this.setX(this.position.x + dx);
   }
   /** Adds to the Y coordinate.
    * @param {number} dy - Y offset.
    * @returns {this}
    */
   addY(dy) {
-    return this.setY(y + dy);
+    return this.setY(this.position.y + dy);
   }
 
   /** Sets the line theme/pen width.
@@ -154,7 +154,7 @@ export class Turtle {
    * @returns {this}
    */
   restore() {
-    if (!this.stack) throw new ReferenceError('Unmatched restore');
+    if (!this.stack.length) throw new ReferenceError('Unmatched restore');
     [this.position.x, this.position.y, this.direction, this.theme] = this.stack.pop();
     return this;
   }

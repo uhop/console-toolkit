@@ -696,7 +696,7 @@ export class Panel {
       case 'c': {
         const half = Math.abs(diff) >> 1;
         return diff < 0
-          ? this.removeColumns(0, half).removeColumns(newWidth, half + 1)
+          ? this.removeColumns(0, half).removeColumns(newWidth, -diff - half)
           : this.padLeft(half).padRight(diff - half);
       }
     }
@@ -721,7 +721,7 @@ export class Panel {
       case 'c': {
         const half = Math.abs(diff) >> 1;
         return diff < 0
-          ? this.removeRows(0, half).removeRows(newHeight, half + 1)
+          ? this.removeRows(0, half).removeRows(newHeight, -diff - half)
           : this.padTop(half).padBottom(diff - half);
       }
     }
@@ -755,7 +755,8 @@ export class Panel {
     if (x > this.width) x = this.width;
     else if (x < 0) x = 0;
 
-    for (const row of this.box) row.splice(x, 0, ...new Array(n).fill(null));
+    const padding = new Array(n).fill(null);
+    for (const row of this.box) row.splice(x, 0, ...padding);
     return this;
   }
 
@@ -770,8 +771,9 @@ export class Panel {
     if (y > this.height) y = this.height;
     else if (y < 0) y = 0;
 
-    this.box.splice(y, 0, ...new Array(n).fill(null));
-    for (let i = 0; i < n; ++i) this.box[y + i] = new Array(this.width).fill(null);
+    const rows = new Array(n);
+    for (let i = 0; i < n; ++i) rows[i] = new Array(this.width).fill(null);
+    this.box.splice(y, 0, ...rows);
     return this;
   }
 

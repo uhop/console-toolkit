@@ -157,7 +157,7 @@ export class Writer {
 
     if (sameColumn === 'save') {
       for (const line of s) {
-        await write(this.stream, CURSOR_SAVE_POS + beforeLine + line + afterline + CURSOR_RESTORE_POS + CURSOR_DOWN1);
+        await write(this.stream, CURSOR_SAVE_POS + beforeLine + line + afterLine + CURSOR_RESTORE_POS + CURSOR_DOWN1);
       }
       return;
     }

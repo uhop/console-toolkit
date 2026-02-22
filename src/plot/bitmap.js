@@ -17,14 +17,14 @@ export class Bitmap {
     width = Math.round(width);
     if (isNaN(width) || width <= 0) throw new Error(`Width should be a positive integer instead of "${width}"`);
     height = Math.round(height);
-    if (isNaN(width) || height <= 0) throw new Error(`Height should be a positive integer instead of "${height}"`);
+    if (isNaN(height) || height <= 0) throw new Error(`Height should be a positive integer instead of "${height}"`);
     blockWidth = Math.round(blockWidth);
-    if (isNaN(width) || blockWidth <= 0)
+    if (isNaN(blockWidth) || blockWidth <= 0)
       throw new Error(`Block width should be a positive integer instead of "${blockWidth}"`);
     blockHeight = Math.round(blockHeight);
-    if (isNaN(width) || blockHeight <= 0)
+    if (isNaN(blockHeight) || blockHeight <= 0)
       throw new Error(`Block height should be a positive integer instead of "${blockHeight}"`);
-    if (isNaN(width) || blockWidth * blockHeight > 32)
+    if (blockWidth * blockHeight > 32)
       throw new Error("Multiplication of 'blockWidth' and 'blockHeight' should be equal or less than 32");
 
     this.width = width;
