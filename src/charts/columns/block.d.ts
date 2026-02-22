@@ -11,13 +11,13 @@ export interface BlockColumnOptions extends StackedColumnChartOptions {
   initState?: any;
   /** If true, reverse the drawing direction. */
   reverse?: boolean;
-  /** Top padding. */
+  /** If set, draw the top border. */
   t?: number;
-  /** Bottom padding. */
+  /** If set, draw the bottom border. */
   b?: number;
-  /** Left padding. */
+  /** If set, draw the left border. */
   l?: number;
-  /** Right padding. */
+  /** If set, draw the right border. */
   r?: number;
 }
 

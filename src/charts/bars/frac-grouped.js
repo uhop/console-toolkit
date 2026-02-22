@@ -35,6 +35,12 @@ export const drawRow = (data, width, maxValue, options = {}) => {
   return result.map(line => optimize(line));
 };
 
+/** Draws a complete fractional grouped bar chart.
+ * @param {any[]} values - Chart data.
+ * @param {number} width - Available width.
+ * @param {object} [options] - Options.
+ * @returns {string[]} Array of strings representing the chart.
+ */
 export const drawChart = drawGroupedChart(drawRow);
 
 export default drawChart;

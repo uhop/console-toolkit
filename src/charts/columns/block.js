@@ -39,6 +39,12 @@ export const drawColumn = (data, width, maxValue, options = {}) => {
   return result.map(line => optimize(line));
 };
 
+/** Draws a complete block stacked column chart.
+ * @param {any[]} values - Chart data.
+ * @param {number} width - Available height.
+ * @param {object} [options] - Options.
+ * @returns {string[]} Array of strings representing the chart.
+ */
 export const drawChart = drawStackedChart(drawColumn);
 
 export default drawChart;

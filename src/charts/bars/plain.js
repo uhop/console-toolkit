@@ -79,6 +79,12 @@ export const drawRow = (data, width, maxValue, options = {}) => {
   return new Array(rectSize).fill(row);
 };
 
+/** Draws a complete plain stacked bar chart.
+ * @param {any[]} values - Chart data.
+ * @param {number} width - Available width.
+ * @param {object} [options] - Bar options.
+ * @returns {string[]} Array of strings representing the chart.
+ */
 export const drawChart = drawStackedChart(drawRow);
 
 export default drawChart;

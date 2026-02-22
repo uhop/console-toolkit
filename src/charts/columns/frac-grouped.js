@@ -29,6 +29,12 @@ export const drawColumn = (data, width, maxValue, options = {}) => {
   return result.map(line => optimize(line));
 };
 
+/** Draws a complete fractional grouped column chart.
+ * @param {any[]} values - Chart data.
+ * @param {number} width - Available height.
+ * @param {object} [options] - Options.
+ * @returns {string[]} Array of strings representing the chart.
+ */
 export const drawChart = drawGroupedChart(drawColumn);
 
 export default drawChart;
