@@ -42,7 +42,7 @@ export class Turtle {
    */
   constructor(width: number, height: number, theme?: number);
 
-  /** Resets the turtle to the origin facing right.
+  /** Resets the turtle position to (0, 0).
    * @returns This Turtle.
    */
   reset(): this;

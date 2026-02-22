@@ -50,20 +50,41 @@ export class Turtle {
     this.position.y = Math.max(0, Math.min(this.height - 1, y));
     return this;
   }
+  /** Sets the X coordinate.
+   * @param {number} x
+   * @returns {this}
+   */
   setX(x) {
     this.position.x = Math.max(0, Math.min(this.width - 1, x));
     return this;
   }
+  /** Sets the Y coordinate.
+   * @param {number} y
+   * @returns {this}
+   */
   setY(y) {
     this.position.y = Math.max(0, Math.min(this.height - 1, y));
     return this;
   }
+  /** Moves the turtle by a relative offset without drawing.
+   * @param {number} dx - X offset.
+   * @param {number} dy - Y offset.
+   * @returns {this}
+   */
   add(dx, dy) {
     return this.set(x + dx, y + dy);
   }
+  /** Adds to the X coordinate.
+   * @param {number} dx - X offset.
+   * @returns {this}
+   */
   addX(dx) {
     return this.setX(x + dx);
   }
+  /** Adds to the Y coordinate.
+   * @param {number} dy - Y offset.
+   * @returns {this}
+   */
   addY(dy) {
     return this.setY(y + dy);
   }
@@ -85,15 +106,27 @@ export class Turtle {
     this.direction = direction % 4;
     return this;
   }
+  /** Sets direction to up.
+   * @returns {this}
+   */
   setUp() {
     return this.setDirection(Turtle.UP);
   }
+  /** Sets direction to down.
+   * @returns {this}
+   */
   setDown() {
     return this.setDirection(Turtle.DOWN);
   }
+  /** Sets direction to left.
+   * @returns {this}
+   */
   setLeft() {
     return this.setDirection(Turtle.LEFT);
   }
+  /** Sets direction to right.
+   * @returns {this}
+   */
   setRight() {
     return this.setDirection(Turtle.RIGHT);
   }
@@ -302,21 +335,39 @@ export class Turtle {
     }
     return this;
   }
+  /** Marks a half-step line forward.
+   * @returns {this}
+   */
   markHalfForward() {
     return this.markHalf(this.direction);
   }
+  /** Marks a half-step line backward.
+   * @returns {this}
+   */
   markHalfBackward() {
     return this.markHalf((this.direction + 2) % 4);
   }
+  /** Marks a half-step line up.
+   * @returns {this}
+   */
   markHalfUp() {
     return this.markHalf(Turtle.UP);
   }
+  /** Marks a half-step line down.
+   * @returns {this}
+   */
   markHalfDown() {
     return this.markHalf(Turtle.DOWN);
   }
+  /** Marks a half-step line left.
+   * @returns {this}
+   */
   markHalfLeft() {
     return this.markHalf(Turtle.LEFT);
   }
+  /** Marks a half-step line right.
+   * @returns {this}
+   */
   markHalfRight() {
     return this.markHalf(Turtle.RIGHT);
   }
