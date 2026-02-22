@@ -16,10 +16,10 @@ declare module './bitmap.js' {
      */
     line(x0: number, y0: number, x1: number, y1: number, value?: number): Bitmap;
     /** Draws a filled rectangle on this bitmap.
-     * @param x0 - Left X.
-     * @param y0 - Top Y.
-     * @param x1 - Right X.
-     * @param y1 - Bottom Y.
+     * @param x0 - First corner x coordinate.
+     * @param y0 - First corner y coordinate.
+     * @param x1 - Opposite corner x coordinate.
+     * @param y1 - Opposite corner y coordinate.
      * @param value - Bit value.
      * @returns This Bitmap.
      */
@@ -28,7 +28,7 @@ declare module './bitmap.js' {
      * @returns A Box.
      */
     toQuads(): Box;
-    /** Converts this bitmap to a string array using quadrant characters.
+    /** Converts this bitmap to a string array via `toBox()`.
      * @returns Array of strings.
      */
     toStrings(): string[];

@@ -8,9 +8,9 @@ export class Bitmap {
   width: number;
   /** Height in pixels. */
   height: number;
-  /** Width of a character block in pixels (default: 2). */
+  /** Width of each internal block (default: 5). */
   blockWidth: number;
-  /** Height of a character block in pixels (default: 4). */
+  /** Height of each internal block (default: 5). */
   blockHeight: number;
   /** Number of words per line. */
   lineSize: number;
@@ -22,8 +22,8 @@ export class Bitmap {
   /**
    * @param width - Width in pixels.
    * @param height - Height in pixels.
-   * @param blockWidth - Pixels per character column (default: 2).
-   * @param blockHeight - Pixels per character row (default: 4).
+   * @param blockWidth - Width of each internal block (default: 5).
+   * @param blockHeight - Height of each internal block (default: 5).
    */
   constructor(width: number, height: number, blockWidth?: number, blockHeight?: number);
 
@@ -50,7 +50,7 @@ export class Bitmap {
   /** Gets the bit value at (x, y).
    * @param x - X coordinate.
    * @param y - Y coordinate.
-   * @returns 1 if set, 0 if clear.
+   * @returns Non-zero if the bit is set, 0 otherwise.
    */
   getBit(x: number, y: number): number;
   /** Sets the bit value at (x, y).
