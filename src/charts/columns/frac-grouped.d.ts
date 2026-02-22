@@ -1,4 +1,5 @@
-import {ChartDatum} from '../utils.js';
+import {ChartDatum, ChartDataInput} from '../utils.js';
+import {SgrState} from '../../ansi/sgr-state.js';
 import {GroupedColumnChartOptions} from './draw-grouped.js';
 
 /** Options for fractional grouped column charts. */
@@ -6,7 +7,7 @@ export interface FracGroupedColumnOptions extends GroupedColumnChartOptions {
   /** Size of each rectangle in characters. */
   rectSize?: number;
   /** Initial SGR state. */
-  initState?: any;
+  initState?: SgrState | string | null;
   /** If true, reverse the drawing direction. */
   reverse?: boolean;
 }
@@ -31,6 +32,6 @@ export function drawColumn(
  * @param options - Options.
  * @returns Array of strings representing the chart.
  */
-export function drawChart(values: any[], width: number, options?: FracGroupedColumnOptions): string[];
+export function drawChart(values: ChartDataInput, width: number, options?: FracGroupedColumnOptions): string[];
 
 export default drawChart;

@@ -439,12 +439,12 @@ type BqFunction = {
    * @param args - Interpolated values.
    * @returns The styled string.
    */
-  (strings: TemplateStringsArray, ...args: any[]): string;
+  (strings: TemplateStringsArray, ...args: unknown[]): string;
   /** Configured usage — returns a tagged template function with the given states.
    * @param states - Initial and current SGR state configuration.
    * @returns A tagged template function.
    */
-  (states: BqStates): (strings: TemplateStringsArray, ...args: any[]) => string;
+  (states: BqStates): (strings: TemplateStringsArray, ...args: unknown[]) => string;
 };
 
 /** Tagged template literal for styled text. Style changes persist after the string.

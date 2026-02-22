@@ -19,12 +19,26 @@ export function getMaxLength(strings: string[], matcher?: RegExp): number;
  * @returns The clipped strings.
  */
 export function clipStrings(strings: string[], width: number, options?: ClipOptions): string[];
+
+export type StringsValue =
+  | null
+  | undefined
+  | boolean
+  | number
+  | string
+  | string[]
+  | object
+  | {toStrings(): string[]}
+  | {toBox(): {box: string[]}}
+  | {toPanel(): {toStrings(): string[]}};
+export type StringsFunction = () => StringsFunction | StringsValue;
+export type StringsInput = StringsValue | StringsFunction;
+
 /** Converts various input types to a string array.
  * @param s - Input: string, string array, Box, number, null/undefined, or object with `toStrings()`.
  * @returns An array of strings.
  */
-// TODO_REVIEW: `s` accepts string | string[] | Box | number | null | {toStrings(): string[]} — consider narrowing
-export function toStrings(s: any): string[];
+export function toStrings(s: StringsInput): string[];
 
 export {default as clip} from './strings/clip.js';
 export {matchCsiNoGroups, matchCsiNoSgrNoGroups} from './strings/parse.js';

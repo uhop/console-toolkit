@@ -4,12 +4,12 @@ import {SgrState} from '../ansi/sgr-state.js';
  * @param state - The SGR state with foreground color.
  * @returns An object with the background property.
  */
-export function makeBgFromFg(state: SgrState): {background: any};
+export function makeBgFromFg(state: SgrState): {background: string | string[] | null};
 /** Converts a background color state to a foreground color state.
  * @param state - The SGR state with background color.
  * @returns An object with the foreground property.
  */
-export function makeFgFromBg(state: SgrState): {foreground: any};
+export function makeFgFromBg(state: SgrState): {foreground: string | string[] | null};
 
 /** Sums the values in a data series.
  * @param series - Array of data items with optional `value` properties.
@@ -30,7 +30,24 @@ export interface ChartDatum {
   /** Text label for the item. */
   label?: string;
   /** Additional custom properties. */
-  [key: string]: any;
+  [key: string]: unknown;
+}
+
+/** Input type for chart data: each series can be a number, a ChartDatum, or an array of either. */
+export type ChartDataInput = (number | ChartDatum | (number | ChartDatum)[])[];
+
+/** Context object passed to custom `drawItem` callbacks. */
+export interface DrawItemInfo {
+  /** Index of the current datum within the series. */
+  index: number;
+  /** The full data series. */
+  data: ChartDatum[];
+  /** Allocated sizes per datum. */
+  sizes: number[];
+  /** Maximum value for scaling. */
+  maxValue: number;
+  /** Available width in characters. */
+  width: number;
 }
 
 /** A chart theme: an array of ChartDatum defaults with an optional `empty` style. */

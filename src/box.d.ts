@@ -1,4 +1,5 @@
 import {ClipOptions} from './strings/clip.js';
+import {StringsInput} from './strings.js';
 
 /** Options for `Box.make()`. */
 export interface BoxMakeOptions {
@@ -47,8 +48,7 @@ export class Box {
    * @param options - Make options.
    * @returns A new Box instance.
    */
-  // TODO_REVIEW: `s` accepts Box | {toBox(...): Box} | {toPanel(...): Panel} | Function | string | string[] — consider narrowing
-  static make(s: any, options?: BoxMakeOptions): Box;
+  static make(s: StringsInput, options?: BoxMakeOptions): Box;
   /** Creates a blank Box filled with a symbol.
    * @param width - Width in columns.
    * @param height - Height in rows.
@@ -136,15 +136,13 @@ export class Box {
    * @param options - Alignment and padding options.
    * @returns A new combined Box.
    */
-  // TODO_REVIEW: `box` accepts Box | string | string[] | {toBox(...): Box} — consider narrowing
-  addBottom(box: any, options?: AddBottomOptions): Box;
+  addBottom(box: StringsInput, options?: AddBottomOptions): Box;
   /** Appends another box to the right of this one.
    * @param box - Input convertible to a Box.
    * @param options - Alignment and padding options.
    * @returns A new combined Box.
    */
-  // TODO_REVIEW: `box` accepts Box | string | string[] | {toBox(...): Box} — consider narrowing
-  addRight(box: any, options?: AddRightOptions): Box;
+  addRight(box: StringsInput, options?: AddRightOptions): Box;
 
   /** Flips the box vertically.
    * @returns A new vertically flipped Box.
@@ -157,7 +155,6 @@ export class Box {
  * @param options - Make options.
  * @returns A new Box instance.
  */
-// TODO_REVIEW: `s` accepts Box | {toBox(...): Box} | {toPanel(...): Panel} | Function | string | string[] — consider narrowing
-export function toBox(s: any, options?: BoxMakeOptions): Box;
+export function toBox(s: StringsInput, options?: BoxMakeOptions): Box;
 
 export default Box;

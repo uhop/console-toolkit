@@ -1,4 +1,5 @@
-import {ChartDatum, ChartTheme} from '../utils.js';
+import {ChartDatum, ChartDataInput, ChartTheme} from '../utils.js';
+import {SgrState} from '../../ansi/sgr-state.js';
 
 /** Options for grouped bar/column charts. */
 export interface GroupedChartOptions {
@@ -13,11 +14,11 @@ export interface GroupedChartOptions {
   /** Size of each rectangle in characters. */
   rectSize?: number;
   /** Initial SGR state. */
-  initState?: any;
+  initState?: SgrState | string | null;
   /** If true, reverse the drawing direction. */
   reverse?: boolean;
   /** Additional custom options. */
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /** Function that draws a single row of a chart.
@@ -27,7 +28,7 @@ export interface GroupedChartOptions {
  * @param options - Optional chart options.
  * @returns The drawn row as a string or string array.
  */
-type DrawRowFn = (data: ChartDatum[], width: number, maxValue: number, options?: any) => string | string[];
+type DrawRowFn = (data: ChartDatum[], width: number, maxValue: number, options?: GroupedChartOptions) => string | string[];
 
 /** Creates a grouped bar chart drawing function from a row-drawing function.
  * @param drawRow - The row-drawing function.
@@ -35,6 +36,6 @@ type DrawRowFn = (data: ChartDatum[], width: number, maxValue: number, options?:
  */
 export function drawChart(
   drawRow: DrawRowFn
-): (values: any[], width: number, options?: GroupedChartOptions) => string[];
+): (values: ChartDataInput, width: number, options?: GroupedChartOptions) => string[];
 
 export default drawChart;

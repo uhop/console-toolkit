@@ -1,4 +1,5 @@
-import {ChartDatum, ChartTheme} from '../utils.js';
+import {ChartDatum, ChartDataInput, ChartTheme, DrawItemInfo} from '../utils.js';
+import {SgrState} from '../../ansi/sgr-state.js';
 
 /** Options for stacked bar/column charts. */
 export interface StackedChartOptions {
@@ -15,15 +16,15 @@ export interface StackedChartOptions {
    * @param options - Options.
    * @returns The drawn string.
    */
-  drawItem?: (datum: ChartDatum | null, size: number, info: any, options: any) => string;
+  drawItem?: (datum: ChartDatum | null, size: number, info: DrawItemInfo, options: StackedChartOptions) => string;
   /** Size of each rectangle in characters. */
   rectSize?: number;
   /** Initial SGR state. */
-  initState?: any;
+  initState?: SgrState | string | null;
   /** If true, reverse the drawing direction. */
   reverse?: boolean;
   /** Additional custom options. */
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /** Function that draws a single row of a chart.
@@ -33,7 +34,7 @@ export interface StackedChartOptions {
  * @param options - Optional chart options.
  * @returns The drawn row as a string or string array.
  */
-type DrawRowFn = (data: ChartDatum[], width: number, maxValue: number, options?: any) => string | string[];
+type DrawRowFn = (data: ChartDatum[], width: number, maxValue: number, options?: StackedChartOptions) => string | string[];
 
 /** Creates a stacked bar chart drawing function from a row-drawing function.
  * @param drawRow - The row-drawing function.
@@ -41,6 +42,6 @@ type DrawRowFn = (data: ChartDatum[], width: number, maxValue: number, options?:
  */
 export function drawChart(
   drawRow: DrawRowFn
-): (values: any[], width: number, options?: StackedChartOptions) => string[];
+): (values: ChartDataInput, width: number, options?: StackedChartOptions) => string[];
 
 export default drawChart;

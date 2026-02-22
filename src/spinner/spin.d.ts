@@ -1,7 +1,7 @@
 import {SpinnerBase} from './spinner.js';
 
 /** A spinner argument: frame array, state-to-string function, SpinnerBase instance, or other value. */
-type SpinArg = string[] | ((state: string) => string) | SpinnerBase | any;
+type SpinArg = string[] | ((state: string) => string) | SpinnerBase | unknown;
 
 /** Tagged template literal for creating composite spinners from multiple parts.
  * @param strings - Template string parts.

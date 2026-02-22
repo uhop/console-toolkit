@@ -60,13 +60,13 @@ export function fromKebabCase(name: string): string[];
  * @param force - If true, overwrite existing properties.
  * @returns The modified class/object.
  */
-export function addGetter<T>(Class: T, name: string, getter: () => any, force?: boolean): T;
+export function addGetter<T>(Class: T, name: string, getter: () => unknown, force?: boolean): T;
 /** Adds multiple getter properties to a class prototype or object.
  * @param Class - The class or object to modify.
  * @param getters - Map of property names to getter functions.
  * @param force - If true, overwrite existing properties.
  */
-export function addGetters<T>(Class: T, getters: Record<string, () => any>, force?: boolean): void;
+export function addGetters<T>(Class: T, getters: Record<string, () => unknown>, force?: boolean): void;
 
 /** Adds an alias property that mirrors an existing property descriptor.
  * @param Class - The class or object to modify.

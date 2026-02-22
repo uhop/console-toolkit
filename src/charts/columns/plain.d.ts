@@ -1,4 +1,5 @@
-import {ChartDatum} from '../utils.js';
+import {ChartDatum, ChartDataInput} from '../utils.js';
+import {SgrState} from '../../ansi/sgr-state.js';
 import {StackedColumnChartOptions} from './draw-stacked.js';
 
 /** Options for plain column charts. */
@@ -6,7 +7,7 @@ export interface PlainColumnOptions extends StackedColumnChartOptions {
   /** Size of each rectangle in characters. */
   rectSize?: number;
   /** Initial SGR state. */
-  initState?: any;
+  initState?: SgrState | string | null;
   /** If true, reverse the drawing direction. */
   reverse?: boolean;
 }
@@ -26,6 +27,6 @@ export function drawColumn(data: ChartDatum[], width: number, maxValue: number, 
  * @param options - Options.
  * @returns Array of strings representing the chart.
  */
-export function drawChart(values: any[], width: number, options?: PlainColumnOptions): string[];
+export function drawChart(values: ChartDataInput, width: number, options?: PlainColumnOptions): string[];
 
 export default drawChart;

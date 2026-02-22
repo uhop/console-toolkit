@@ -1,4 +1,5 @@
 import {Writable} from 'node:stream';
+import {StringsInput} from '../strings.js';
 
 /** Options for `Writer.write()`. */
 export interface WriteOptions {
@@ -35,13 +36,17 @@ export class Writer {
   readonly size: {columns: number; rows: number};
 
   /** Returns the color depth of the stream.
+   * @param env - Environment variables to check (default: `process.env`).
    * @returns Color depth (1, 4, 8, or 24).
    */
-  getColorDepth(...args: any[]): number;
+  getColorDepth(env?: object): number;
   /** Checks if the stream supports the given number of colors.
+   * @param count - Number of colors to check for.
+   * @param env - Environment variables to check.
    * @returns True if supported.
    */
-  hasColors(...args: any[]): boolean;
+  hasColors(count?: number, env?: object): boolean;
+  hasColors(env?: object): boolean;
 
   /** Clears the current line.
    * @param dir - Direction: -1 left, 0 entire, 1 right.
@@ -76,8 +81,7 @@ export class Writer {
    * @param options - Write options.
    * @returns Promise resolving when done.
    */
-  // TODO_REVIEW: `s` accepts Box | string | string[] — consider narrowing
-  write(s: any, options?: WriteOptions): Promise<void>;
+  write(s: StringsInput, options?: WriteOptions): Promise<void>;
 }
 
 export default Writer;

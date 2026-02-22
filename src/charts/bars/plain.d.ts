@@ -1,4 +1,5 @@
-import {ChartDatum} from '../utils.js';
+import {ChartDatum, ChartDataInput, DrawItemInfo} from '../utils.js';
+import {SgrState} from '../../ansi/sgr-state.js';
 import {StackedChartOptions} from './draw-stacked.js';
 
 /** Options for plain bar charts. */
@@ -10,11 +11,11 @@ export interface PlainBarOptions extends StackedChartOptions {
    * @param options - Options.
    * @returns The drawn string.
    */
-  drawItem?: (datum: ChartDatum | null, size: number, info: any, options: any) => string;
+  drawItem?: (datum: ChartDatum | null, size: number, info: DrawItemInfo, options: PlainBarOptions) => string;
   /** Size of each rectangle in characters. */
   rectSize?: number;
   /** Initial SGR state. */
-  initState?: any;
+  initState?: SgrState | string | null;
   /** If true, reverse the drawing direction. */
   reverse?: boolean;
 }
@@ -26,7 +27,7 @@ export interface PlainBarOptions extends StackedChartOptions {
  * @param options - Options.
  * @returns The drawn string.
  */
-export function defaultDrawItem(datum: ChartDatum | null, size: number, info: any, options: any): string;
+export function defaultDrawItem(datum: ChartDatum | null, size: number, info: DrawItemInfo, options: PlainBarOptions): string;
 
 /** Options for `drawItemLabel()`. */
 export interface DrawItemLabelOptions {
@@ -37,7 +38,7 @@ export interface DrawItemLabelOptions {
   /** If true, use ellipsis when truncating. */
   useEllipsis?: boolean;
   /** Initial SGR state. */
-  initState?: any;
+  initState?: SgrState | string | null;
 }
 
 /** Draws a bar item with a text label.
@@ -47,7 +48,7 @@ export interface DrawItemLabelOptions {
  * @param options - Label options.
  * @returns The drawn string.
  */
-export function drawItemLabel(datum: ChartDatum | null, size: number, info: any, options: DrawItemLabelOptions): string;
+export function drawItemLabel(datum: ChartDatum | null, size: number, info: DrawItemInfo, options: DrawItemLabelOptions): string;
 
 /** Draws a single stacked bar row.
  * @param data - Array of chart data items.
@@ -69,6 +70,6 @@ export function drawRow(
  * @param options - Bar options.
  * @returns Array of strings representing the chart.
  */
-export function drawChart(values: any[], width: number, options?: PlainBarOptions): string[];
+export function drawChart(values: ChartDataInput, width: number, options?: PlainBarOptions): string[];
 
 export default drawChart;

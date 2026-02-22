@@ -1,4 +1,5 @@
-import {ChartDatum, ChartTheme} from '../utils.js';
+import {ChartDatum, ChartDataInput, ChartTheme} from '../utils.js';
+import {SgrState} from '../../ansi/sgr-state.js';
 
 /** Options for grouped column charts. */
 export interface GroupedColumnChartOptions {
@@ -13,11 +14,11 @@ export interface GroupedColumnChartOptions {
   /** Size of each rectangle in characters. */
   rectSize?: number;
   /** Initial SGR state. */
-  initState?: any;
+  initState?: SgrState | string | null;
   /** If true, reverse the drawing direction. */
   reverse?: boolean;
   /** Additional custom options. */
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /** Function that draws a single column of a chart.
@@ -27,7 +28,7 @@ export interface GroupedColumnChartOptions {
  * @param options - Optional chart options.
  * @returns Array of strings for the column.
  */
-type DrawColumnFn = (data: ChartDatum[], width: number, maxValue: number, options?: any) => string[];
+type DrawColumnFn = (data: ChartDatum[], width: number, maxValue: number, options?: GroupedColumnChartOptions) => string[];
 
 /** Creates a grouped column chart drawing function from a column-drawing function.
  * @param drawColumn - The column-drawing function.
@@ -35,6 +36,6 @@ type DrawColumnFn = (data: ChartDatum[], width: number, maxValue: number, option
  */
 export function drawChart(
   drawColumn: DrawColumnFn
-): (values: any[], width: number, options?: GroupedColumnChartOptions) => string[];
+): (values: ChartDataInput, width: number, options?: GroupedColumnChartOptions) => string[];
 
 export default drawChart;

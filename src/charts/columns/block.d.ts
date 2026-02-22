@@ -1,14 +1,16 @@
-import {ChartDatum} from '../utils.js';
+import {ChartDatum, ChartDataInput} from '../utils.js';
+import {SgrState} from '../../ansi/sgr-state.js';
+import {LineTheme} from '../../themes/utils.js';
 import {StackedColumnChartOptions} from './draw-stacked.js';
 
 /** Options for block column charts. */
 export interface BlockColumnOptions extends StackedColumnChartOptions {
   /** Block theme for drawing. */
-  blockTheme?: Record<string, any>;
+  blockTheme?: LineTheme;
   /** Size of each rectangle in characters. */
   rectSize?: number;
   /** Initial SGR state. */
-  initState?: any;
+  initState?: SgrState | string | null;
   /** If true, reverse the drawing direction. */
   reverse?: boolean;
   /** If set, draw the top border. */
@@ -36,6 +38,6 @@ export function drawColumn(data: ChartDatum[], width: number, maxValue: number, 
  * @param options - Options.
  * @returns Array of strings representing the chart.
  */
-export function drawChart(values: any[], width: number, options?: BlockColumnOptions): string[];
+export function drawChart(values: ChartDataInput, width: number, options?: BlockColumnOptions): string[];
 
 export default drawChart;

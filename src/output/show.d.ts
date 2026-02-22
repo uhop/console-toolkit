@@ -1,4 +1,5 @@
 import {Writable} from 'node:stream';
+import {StringsInput} from '../strings.js';
 
 /** Options for `log()`. */
 export interface LogOptions {
@@ -22,14 +23,12 @@ export interface OutOptions {
  * @param s - Input: Box, string, string array, or object with `toStrings()`.
  * @param options - Log options.
  */
-// TODO_REVIEW: `s` accepts Box | string | string[] | {toStrings(): string[]} — consider narrowing
-export function log(s: any, options?: LogOptions): void;
+export function log(s: StringsInput, options?: LogOptions): void;
 /** Writes a text container to a stream (default: stdout).
  * @param s - Input: Box, string, string array, or object with `toStrings()`.
  * @param options - Output options.
  */
-// TODO_REVIEW: `s` accepts Box | string | string[] | {toStrings(): string[]} — consider narrowing
-export function out(s: any, options?: OutOptions): void;
+export function out(s: StringsInput, options?: OutOptions): void;
 
 /** Wraps a writable stream for outputting styled text. */
 export class Out {
@@ -47,8 +46,7 @@ export class Out {
    * @param s - Input: Box, string, string array, or object with `toStrings()`.
    * @param options - Output options.
    */
-  // TODO_REVIEW: `s` accepts Box | string | string[] | {toStrings(): string[]} — consider narrowing
-  out(s: any, options?: {endOfLineCommand?: string; colorDepth?: number}): void;
+  out(s: StringsInput, options?: {endOfLineCommand?: string; colorDepth?: number}): void;
 }
 
 /** Logs a string with non-printable characters visualized as hex escape sequences via `console.log()`.

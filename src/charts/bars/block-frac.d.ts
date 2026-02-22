@@ -1,4 +1,5 @@
-import {ChartDatum} from '../utils.js';
+import {ChartDatum, ChartDataInput} from '../utils.js';
+import {SgrState} from '../../ansi/sgr-state.js';
 import {StackedChartOptions} from './draw-stacked.js';
 
 /** Options for fractional block bar charts. */
@@ -6,7 +7,7 @@ export interface BlockFracBarOptions extends StackedChartOptions {
   /** Size of each rectangle in characters. */
   rectSize?: number;
   /** Initial SGR state. */
-  initState?: any;
+  initState?: SgrState | string | null;
   /** If true, reverse the drawing direction. */
   reverse?: boolean;
   /** If true, draw an empty border when fractional part is 0. */
@@ -28,6 +29,6 @@ export function drawRow(data: ChartDatum[], width: number, maxValue: number, opt
  * @param options - Options.
  * @returns Array of strings representing the chart.
  */
-export function drawChart(values: any[], width: number, options?: BlockFracBarOptions): string[];
+export function drawChart(values: ChartDataInput, width: number, options?: BlockFracBarOptions): string[];
 
 export default drawChart;

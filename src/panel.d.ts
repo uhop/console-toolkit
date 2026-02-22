@@ -1,5 +1,6 @@
 import {SgrState} from './ansi/sgr-state.js';
 import Box from './box.js';
+import {StringsInput} from './strings.js';
 
 /** A single cell in a Panel. */
 export interface PanelCell {
@@ -90,9 +91,7 @@ export class Panel {
    * @param options - Options passed to the conversion.
    * @returns A new Panel instance.
    */
-  // TODO_REVIEW: `s` accepts Panel | Box | string | string[] | {toPanel(...): Panel} | {toBox(...): Box} — consider narrowing
-  // TODO_REVIEW: `options` type depends on input — consider narrowing
-  static make(s: any, options?: any): Panel;
+  static make(s: StringsInput, options?: PanelPutOptions): Panel;
 
   /** Converts the panel to an array of strings with ANSI escape sequences.
    * @param options - Rendering options.
@@ -140,8 +139,7 @@ export class Panel {
    * @param options - Put options.
    * @returns This Panel (mutated).
    */
-  // TODO_REVIEW: `text` accepts Panel | Box | string | string[] — consider narrowing
-  put(x: number, y: number, text: Panel | Box | any, options?: PanelPutOptions): Panel;
+  put(x: number, y: number, text: StringsInput, options?: PanelPutOptions): Panel;
 
   /** Applies a function to each cell in the entire panel.
    * @param fn - Cell transformation function.
@@ -157,7 +155,7 @@ export class Panel {
    * @param options - Reserved for future use.
    * @returns This Panel (mutated).
    */
-  applyFn(x: number, y: number, width: number, height: number, fn: ApplyFn, options?: any): Panel;
+  applyFn(x: number, y: number, width: number, height: number, fn: ApplyFn): Panel;
 
   /** Fills the entire panel with a symbol and optional state.
    * @param symbol - Fill character.
@@ -165,7 +163,7 @@ export class Panel {
    * @param options - Reserved.
    * @returns This Panel (mutated).
    */
-  fill(symbol: string, state?: SgrState | string | string[], options?: any): Panel;
+  fill(symbol: string, state?: SgrState | string | string[]): Panel;
   /** Fills a rectangular region with a symbol and optional state.
    * @param x - Left column.
    * @param y - Top row.
@@ -182,8 +180,7 @@ export class Panel {
     width: number,
     height: number,
     symbol: string,
-    state?: SgrState | string | string[],
-    options?: any
+    state?: SgrState | string | string[]
   ): Panel;
 
   /** Fills all cells with the given state, using `emptySymbol` for empty cells' symbol.
@@ -265,7 +262,7 @@ export class Panel {
    * @param options - Options passed to `applyFn()`.
    * @returns This Panel (mutated).
    */
-  clear(x: number, y?: number, width?: number, height?: number, options?: any): Panel;
+  clear(x: number, y?: number, width?: number, height?: number): Panel;
 
   /** Pads the left side.
    * @param n - Columns.
@@ -400,7 +397,6 @@ export class Panel {
  * @param options - Options passed to the conversion.
  * @returns A new Panel instance.
  */
-// TODO_REVIEW: `s` and `options` accept flexible types — consider narrowing
-export function toPanel(s: any, options?: any): Panel;
+export function toPanel(s: StringsInput, options?: PanelPutOptions): Panel;
 
 export default Panel;

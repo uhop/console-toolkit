@@ -17,7 +17,7 @@ export interface TableDefinition {
 }
 
 /** A line theme mapping theme keys to border/line character definitions. */
-export type LineTheme = Record<string, any>;
+export type LineTheme = Record<string, string | number | string[]>;
 
 /** Populates a line theme with characters from a table definition.
  * @param lineTheme - The theme object to populate.

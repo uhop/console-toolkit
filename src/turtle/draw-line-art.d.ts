@@ -1,5 +1,6 @@
 import Box from '../box.js';
 import Turtle from './turtle.js';
+import {LineTheme} from '../themes/utils.js';
 
 /** Options for `draw()`. */
 export interface DrawLineArtOptions {
@@ -13,6 +14,6 @@ export interface DrawLineArtOptions {
  * @param options - Draw options.
  * @returns A Box containing the drawn line art.
  */
-export function draw(turtle: Turtle, lineTheme: Record<string, any>, options?: DrawLineArtOptions): Box;
+export function draw(turtle: Turtle, lineTheme: LineTheme, options?: DrawLineArtOptions): Box;
 
 export default draw;

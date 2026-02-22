@@ -1,11 +1,16 @@
 import Box from '../box.js';
 import Panel from '../panel.js';
 import {SgrState} from '../ansi/sgr-state.js';
+import {StringsInput} from '../strings.js';
+import {LineTheme} from '../themes/utils.js';
+
+/** Input type for a single table cell: a raw value, a CellData object, or null. */
+export type TableCellInput = string | number | boolean | Box | Panel | CellData | null | undefined;
 
 /** Data for a single table cell. */
 export interface CellData {
   /** Cell content (string, Box, Panel, or other renderable). */
-  value: any;
+  value: StringsInput;
   /** Horizontal alignment override for this cell. */
   align?: string;
   /** Column span (number of columns this cell occupies). */
@@ -143,17 +148,17 @@ export class Table {
   /** Number of data columns. */
   width: number;
   /** The raw data grid. */
-  data: any[][];
+  data: TableCellInput[][];
   /** Computed column widths. */
   widths: number[];
   /** Computed row heights. */
   heights: number[];
   /** Line theme for borders. */
-  lineTheme: Record<string, any>;
+  lineTheme: LineTheme;
   /** List of cells to skip (merged cell regions). */
   skipList: {x: number; y: number; width: number; height: number}[];
   /** Resolved table options. */
-  options: {hAxis: any; vAxis: any; hAlign: string[]; vAlign: string[]};
+  options: {hAxis: string | (string | number)[]; vAxis: string | (string | number)[]; hAlign: string[]; vAlign: string[]};
   /** Resolved cell padding. */
   cellPadding: Required<CellPadding>;
   /** Horizontal axis pattern. */
@@ -161,14 +166,14 @@ export class Table {
   /** Vertical axis pattern. */
   vAxis: (string | number)[];
   /** Processed cell grid. */
-  cells: any[][];
+  cells: (object | null)[][];
 
   /**
    * @param data - 2D array of cell data.
    * @param lineTheme - Line theme for borders.
    * @param options - Table options.
    */
-  constructor(data: any[][], lineTheme: Record<string, any>, options?: TableOptions);
+  constructor(data: TableCellInput[][], lineTheme: LineTheme, options?: TableOptions);
 
   /** Draws the table as a Panel.
    * @param options - Draw options.
@@ -210,7 +215,7 @@ export class Table {
    * @param options - Data style options.
    * @returns Processed data grid.
    */
-  static processData(data: any[][], options?: DataStyleOptions): any[][];
+  static processData(data: TableCellInput[][], options?: DataStyleOptions): TableCellInput[][];
   /** Factory method that generates axes, processes data, and creates a Table.
    * @param data - 2D array of cell data.
    * @param lineTheme - Line theme for borders.
@@ -219,8 +224,8 @@ export class Table {
    * @returns A new Table.
    */
   static make(
-    data: any[][],
-    lineTheme: Record<string, any>,
+    data: TableCellInput[][],
+    lineTheme: LineTheme,
     options?: MakeOptions,
     overrides?: Partial<TableOptions>
   ): Table;

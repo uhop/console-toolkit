@@ -1,4 +1,5 @@
 import Box from './box.js';
+import {LineTheme} from './themes/utils.js';
 
 /** Options for `drawBlock()` and `drawFrame()`. */
 export interface DrawBlockOptions {
@@ -32,7 +33,7 @@ export interface DrawBlockOptions {
 export function drawBlock(
   width: number,
   height: number,
-  blockTheme: Record<string, any>,
+  blockTheme: LineTheme,
   options?: DrawBlockOptions
 ): Box;
 /** Draws a rectangular frame using a block theme. Same as `drawBlock()` but defaults the interior fill to space if `symbol` is not specified.
@@ -45,7 +46,7 @@ export function drawBlock(
 export function drawFrame(
   width: number,
   height: number,
-  blockTheme: Record<string, any>,
+  blockTheme: LineTheme,
   options?: DrawBlockOptions
 ): Box;
 

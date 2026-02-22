@@ -1,14 +1,16 @@
-import {ChartDatum} from '../utils.js';
+import {ChartDatum, ChartDataInput} from '../utils.js';
+import {SgrState} from '../../ansi/sgr-state.js';
+import {LineTheme} from '../../themes/utils.js';
 import {StackedChartOptions} from './draw-stacked.js';
 
 /** Options for block bar charts. */
 export interface BlockBarOptions extends StackedChartOptions {
   /** Block theme for drawing. */
-  blockTheme?: Record<string, any>;
+  blockTheme?: LineTheme;
   /** Size of each rectangle in characters. */
   rectSize?: number;
   /** Initial SGR state. */
-  initState?: any;
+  initState?: SgrState | string | null;
   /** If true, reverse the drawing direction. */
   reverse?: boolean;
   /** If set, draw the top border. */
@@ -36,6 +38,6 @@ export function drawRow(data: ChartDatum[], width: number, maxValue: number, opt
  * @param options - Block bar options.
  * @returns Array of strings representing the chart.
  */
-export function drawChart(values: any[], width: number, options?: BlockBarOptions): string[];
+export function drawChart(values: ChartDataInput, width: number, options?: BlockBarOptions): string[];
 
 export default drawChart;

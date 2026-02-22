@@ -1,4 +1,5 @@
 import Writer from './writer.js';
+import {StringsInput} from '../strings.js';
 
 /** Options for `Updater` constructor. */
 export interface UpdaterOptions {
@@ -25,13 +26,13 @@ export interface UpdaterTarget {
   /** Returns the current frame content.
    * @returns Frame content (Box, string, or string array).
    */
-  getFrame(...args: any[]): any;
+  getFrame(...args: unknown[]): StringsInput;
 }
 
 /** Manages auto-refreshing console output for spinners, progress bars, etc. */
 export class Updater {
   /** The updater function or target object. */
-  updater: ((state: string, ...args: any[]) => any) | UpdaterTarget;
+  updater: ((state: string, ...args: unknown[]) => StringsInput) | UpdaterTarget;
   /** The Writer instance used for output. */
   writer: Writer;
   /** String written before the first frame. */
@@ -63,7 +64,7 @@ export class Updater {
    * @param writer - Writer instance (default: new Writer).
    */
   constructor(
-    updater: ((state: string, ...args: any[]) => any) | UpdaterTarget,
+    updater: ((state: string, ...args: unknown[]) => StringsInput) | UpdaterTarget,
     options?: UpdaterOptions,
     writer?: Writer
   );
@@ -89,12 +90,12 @@ export class Updater {
    * @param state - State string.
    * @returns Frame content.
    */
-  getFrame(state: string, ...args: any[]): any;
+  getFrame(state: string, ...args: unknown[]): StringsInput;
   /** Writes a frame to the stream.
    * @param state - State string.
    * @returns A promise that resolves when the frame is written.
    */
-  writeFrame(state: string, ...args: any[]): Promise<void>;
+  writeFrame(state: string, ...args: unknown[]): Promise<void>;
   /** Finishes updating: writes the epilogue and stops refreshing.
    * @returns A promise that resolves when done.
    */
@@ -103,11 +104,11 @@ export class Updater {
    * @param state - State string.
    * @returns A promise that resolves when the update is written.
    */
-  update(state?: string, ...args: any[]): Promise<void>;
+  update(state?: string, ...args: unknown[]): Promise<void>;
   /** Writes the final frame with state 'finished' and calls `done()`.
    * @returns A promise that resolves when done.
    */
-  final(...args: any[]): Promise<void>;
+  final(...args: unknown[]): Promise<void>;
 }
 
 export default Updater;

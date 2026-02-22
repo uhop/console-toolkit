@@ -1,4 +1,5 @@
 import Box from '../box.js';
+import {LineTheme} from '../themes/utils.js';
 
 /** A rectangular region to skip when drawing borders (merged cell area). */
 export interface SkipRect {
@@ -28,7 +29,7 @@ export interface DrawOptions {
  * @returns A Box containing the drawn borders.
  */
 export function draw(
-  lineTheme: Record<string, any>,
+  lineTheme: LineTheme,
   hAxis: (string | number)[],
   vAxis: (string | number)[],
   options?: DrawOptions

@@ -1,3 +1,4 @@
+import {ChartDataInput} from '../utils.js';
 import {GroupedChartOptions} from './draw-grouped.js';
 
 /** Draws a complete block grouped bar chart.
@@ -6,6 +7,6 @@ import {GroupedChartOptions} from './draw-grouped.js';
  * @param options - Options.
  * @returns Array of strings representing the chart.
  */
-export function drawChart(values: any[], width: number, options?: GroupedChartOptions): string[];
+export function drawChart(values: ChartDataInput, width: number, options?: GroupedChartOptions): string[];
 
 export default drawChart;
