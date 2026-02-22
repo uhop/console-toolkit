@@ -1,5 +1,6 @@
 import {populateTheme} from '../utils.js';
 
+/** Unicode thin-block theme. */
 export const blockTheme = {};
 
 const table11 = {t: ' ▁ ', m: '▕ ▏', b: ' ▔ ', v: '▕ ▏', h: '▁ ▔', f: '█'};

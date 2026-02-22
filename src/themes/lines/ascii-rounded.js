@@ -1,5 +1,6 @@
 import {populateTheme} from '../utils.js';
 
+/** ASCII rounded line theme. */
 export const lineTheme = {};
 
 const rounded11 = {t: '...', m: ':+:', b: "'''", v: '|||', h: '---'},
