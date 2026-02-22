@@ -207,14 +207,14 @@ export class Box {
   pad(t, r, b, l, symbol = ' ') {
     // implemented the CSS padding order
     if (typeof r != 'number') {
-      symbol = r;
+      symbol = r || symbol;
       r = b = l = t;
     } else if (typeof b != 'number') {
-      symbol = b;
+      symbol = b || symbol;
       l = r;
       b = t;
     } else if (typeof l != 'number') {
-      symbol = l;
+      symbol = l || symbol;
       l = r;
     }
     return this.padLeftRight(l, r, symbol).padTopBottom(t, b, symbol);
