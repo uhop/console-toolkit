@@ -22,7 +22,8 @@ export interface DrawOptions {
 
 /** Draws table borders based on a line theme and axis definitions.
  * @param lineTheme - Line theme object defining border characters.
- * @param hAxis - Horizontal axis pattern. @param vAxis - Vertical axis pattern.
+ * @param hAxis - Horizontal axis pattern.
+ * @param vAxis - Vertical axis pattern.
  * @param options - Draw options.
  * @returns A Box containing the drawn borders.
  */

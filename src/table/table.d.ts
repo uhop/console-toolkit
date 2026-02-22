@@ -207,10 +207,10 @@ export class Table {
   static generateAxes(width: number, height: number, options: GenerateAxesOptions): TableOptions;
   /** Processes data cells, applying styles.
    * @param data - 2D array of cell data.
-   * @param options - Style options.
+   * @param options - Data style options.
    * @returns Processed data grid.
    */
-  static processData(data: any[][], options?: {states?: DataStyleOptions}): any[][];
+  static processData(data: any[][], options?: DataStyleOptions): any[][];
   /** Factory method that generates axes, processes data, and creates a Table.
    * @param data - 2D array of cell data.
    * @param lineTheme - Line theme for borders.
