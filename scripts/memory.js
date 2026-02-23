@@ -1,3 +1,7 @@
+// Live-updating display of Node.js memory usage with a heap bar chart.
+// Showcases: output/writer, output/updater, box, ansi/csi, style, c tagged literal,
+//   themes/lines, table, alphanumeric/number-formatters, charts/bars/plain.
+
 import process from 'node:process';
 
 import Writer from 'console-toolkit/output/writer.js';

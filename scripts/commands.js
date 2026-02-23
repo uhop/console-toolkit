@@ -1,3 +1,6 @@
+// Displays supported SGR text commands: bold, italic, underline variants, decoration colors.
+// Showcases: style (text decorations, underline styles, decoration colors), s tagged literal.
+
 import style, {s} from '../src/style.js';
 import {draw} from '../tests/manual/utils.js';
 

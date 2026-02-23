@@ -1,3 +1,6 @@
+// Displays Unicode fraction symbols and a mapping table of values to closest fractions.
+// Showcases: alphanumeric/fractions, table, themes/lines, style, c tagged literal.
+
 import {
   fractions,
   thirds,

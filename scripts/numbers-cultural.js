@@ -1,3 +1,6 @@
+// Displays Unicode number symbols from various cultural writing systems.
+// Showcases: alphanumeric/utils (transcode), alphanumeric/unicode-cultural-numbers, table, themes/lines, style.
+
 import {transcode} from '../src/alphanumeric/utils.js';
 import {transcodeTables} from '../src/alphanumeric/unicode-cultural-numbers.js';
 import makeTable from '../src/table/index.js';

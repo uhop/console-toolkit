@@ -1,3 +1,6 @@
+// Demonstrates all color depth levels: 4-bit (16), 8-bit (256), and 24-bit (true color).
+// Showcases: style (bg colors, stdRgb, rgb6, grayscale, trueColor).
+
 import style from '../src/style.js';
 import {draw} from '../tests/manual/utils.js';
 

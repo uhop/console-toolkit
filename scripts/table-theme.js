@@ -1,3 +1,7 @@
+// Renders a sample table for a given theme file to preview all its sub-theme combinations.
+// Usage: node table-theme.js <theme-path>  (e.g., lines/unicode.js)
+// Showcases: box, table, themes (dynamic import).
+
 import process from 'node:process';
 
 import Box from 'console-toolkit/box.js';

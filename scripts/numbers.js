@@ -1,3 +1,6 @@
+// Displays all decorative Unicode number transcoding tables.
+// Showcases: alphanumeric/unicode-numbers, table, themes/lines, style.
+
 import {transcode, transcodeTables} from '../src/alphanumeric/unicode-numbers.js';
 import makeTable from '../src/table/index.js';
 import lineTheme from '../src/themes/lines/unicode-rounded.js';

@@ -1,3 +1,6 @@
+// Displays all decorative Unicode letter transcoding tables.
+// Showcases: alphanumeric/unicode-letters, table, themes/lines, style.
+
 import {transcode, transcodeTables} from '../src/alphanumeric/unicode-letters.js';
 import makeTable from '../src/table/index.js';
 import lineTheme from '../src/themes/lines/unicode-rounded.js';
