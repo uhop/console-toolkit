@@ -9,10 +9,11 @@ Run through this checklist before publishing a new version.
 ## Steps
 
 // turbo
+
 1. Run the full test suite: `npm test`
-// turbo
+   // turbo
 2. Run TypeScript type checking: `npm run ts-check`
-// turbo
+   // turbo
 3. Run Prettier lint check: `npm run lint`
 4. Verify `package.json`:
    - `version` is bumped appropriately.
@@ -23,5 +24,5 @@ Run through this checklist before publishing a new version.
 7. Check that `wiki/Home.md` links to all module/package wiki pages.
 8. Check that `llms.txt` and `llms-full.txt` are up to date with any new or changed modules.
 9. Review `README.md` — update release history if needed.
-// turbo
+   // turbo
 10. Dry-run publish to verify package contents: `npm pack --dry-run`
