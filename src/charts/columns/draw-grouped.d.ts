@@ -28,7 +28,12 @@ export interface GroupedColumnChartOptions {
  * @param options - Optional chart options.
  * @returns Array of strings for the column.
  */
-type DrawColumnFn = (data: ChartDatum[], width: number, maxValue: number, options?: GroupedColumnChartOptions) => string[];
+type DrawColumnFn = (
+  data: ChartDatum[],
+  width: number,
+  maxValue: number,
+  options?: GroupedColumnChartOptions
+) => string[];
 
 /** Creates a grouped column chart drawing function from a column-drawing function.
  * @param drawColumn - The column-drawing function.

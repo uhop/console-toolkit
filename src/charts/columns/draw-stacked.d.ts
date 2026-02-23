@@ -26,7 +26,12 @@ export interface StackedColumnChartOptions {
  * @param options - Optional chart options.
  * @returns Array of strings for the column.
  */
-type DrawColumnFn = (data: ChartDatum[], width: number, maxValue: number, options?: StackedColumnChartOptions) => string[];
+type DrawColumnFn = (
+  data: ChartDatum[],
+  width: number,
+  maxValue: number,
+  options?: StackedColumnChartOptions
+) => string[];
 
 /** Creates a stacked column chart drawing function from a column-drawing function.
  * @param drawColumn - The column-drawing function.

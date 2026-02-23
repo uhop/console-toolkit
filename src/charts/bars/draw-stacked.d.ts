@@ -34,7 +34,12 @@ export interface StackedChartOptions {
  * @param options - Optional chart options.
  * @returns The drawn row as a string or string array.
  */
-type DrawRowFn = (data: ChartDatum[], width: number, maxValue: number, options?: StackedChartOptions) => string | string[];
+type DrawRowFn = (
+  data: ChartDatum[],
+  width: number,
+  maxValue: number,
+  options?: StackedChartOptions
+) => string | string[];
 
 /** Creates a stacked bar chart drawing function from a row-drawing function.
  * @param drawRow - The row-drawing function.

@@ -158,7 +158,12 @@ export class Table {
   /** List of cells to skip (merged cell regions). */
   skipList: {x: number; y: number; width: number; height: number}[];
   /** Resolved table options. */
-  options: {hAxis: string | (string | number)[]; vAxis: string | (string | number)[]; hAlign: string[]; vAlign: string[]};
+  options: {
+    hAxis: string | (string | number)[];
+    vAxis: string | (string | number)[];
+    hAlign: string[];
+    vAlign: string[];
+  };
   /** Resolved cell padding. */
   cellPadding: Required<CellPadding>;
   /** Horizontal axis pattern. */

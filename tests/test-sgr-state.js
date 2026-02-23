@@ -1,10 +1,6 @@
 import test from 'tape-six';
 
-import {
-  stateTransition,
-  stateReverseTransition,
-  commandsToState
-} from '../src/ansi/sgr-state.js';
+import {stateTransition, stateReverseTransition, commandsToState} from '../src/ansi/sgr-state.js';
 import {Commands} from '../src/ansi/sgr.js';
 
 test('SGR state transitions', async t => {

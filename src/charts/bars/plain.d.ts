@@ -27,7 +27,12 @@ export interface PlainBarOptions extends StackedChartOptions {
  * @param options - Options.
  * @returns The drawn string.
  */
-export function defaultDrawItem(datum: ChartDatum | null, size: number, info: DrawItemInfo, options: PlainBarOptions): string;
+export function defaultDrawItem(
+  datum: ChartDatum | null,
+  size: number,
+  info: DrawItemInfo,
+  options: PlainBarOptions
+): string;
 
 /** Options for `drawItemLabel()`. */
 export interface DrawItemLabelOptions {
@@ -48,7 +53,12 @@ export interface DrawItemLabelOptions {
  * @param options - Label options.
  * @returns The drawn string.
  */
-export function drawItemLabel(datum: ChartDatum | null, size: number, info: DrawItemInfo, options: DrawItemLabelOptions): string;
+export function drawItemLabel(
+  datum: ChartDatum | null,
+  size: number,
+  info: DrawItemInfo,
+  options: DrawItemLabelOptions
+): string;
 
 /** Draws a single stacked bar row.
  * @param data - Array of chart data items.

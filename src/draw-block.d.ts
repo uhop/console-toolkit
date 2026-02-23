@@ -30,12 +30,7 @@ export interface DrawBlockOptions {
  * @returns A Box containing the drawn block.
  * @see {@link https://github.com/uhop/console-toolkit/wiki/Module:-draw-block}
  */
-export function drawBlock(
-  width: number,
-  height: number,
-  blockTheme: LineTheme,
-  options?: DrawBlockOptions
-): Box;
+export function drawBlock(width: number, height: number, blockTheme: LineTheme, options?: DrawBlockOptions): Box;
 /** Draws a rectangular frame using a block theme. Same as `drawBlock()` but defaults the interior fill to space if `symbol` is not specified.
  * @param width - Interior width in columns.
  * @param height - Interior height in rows.
@@ -43,11 +38,6 @@ export function drawBlock(
  * @param options - Drawing options.
  * @returns A Box containing the drawn frame.
  */
-export function drawFrame(
-  width: number,
-  height: number,
-  blockTheme: LineTheme,
-  options?: DrawBlockOptions
-): Box;
+export function drawFrame(width: number, height: number, blockTheme: LineTheme, options?: DrawBlockOptions): Box;
 
 export default drawBlock;
