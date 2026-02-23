@@ -24,5 +24,6 @@ Run through this checklist before publishing a new version.
 7. Check that `wiki/Home.md` links to all module/package wiki pages.
 8. Check that `llms.txt` and `llms-full.txt` are up to date with any new or changed modules.
 9. Review `README.md` — update release history if needed.
+10. If `package.json` was modified, run `npm install` to generate new `package-lock.json` and update dependencies.
    // turbo
-10. Dry-run publish to verify package contents: `npm pack --dry-run`
+11. Dry-run publish to verify package contents: `npm pack --dry-run`
