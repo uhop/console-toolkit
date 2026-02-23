@@ -21,12 +21,13 @@ Follow these steps when adding a new public module or sub-package.
 7. Add a link to the new wiki page in `wiki/Home.md`.
 8. Update `ARCHITECTURE.md` — add the module to the project layout tree and dependency graph if applicable.
 9. Update `llms.txt` and `llms-full.txt` with a brief description of the new module.
-   // turbo
-10. Verify: `npm test`
+10. Update `AGENTS.md` if the module changes the architecture quick reference.
     // turbo
-11. Verify: `npm run ts-check`
+11. Verify: `npm test`
     // turbo
-12. Verify: `npm run lint`
+12. Verify: `npm run ts-check`
+    // turbo
+13. Verify: `npm run lint`
 
 ## Sub-package (e.g., `src/foo/index.js`)
 
@@ -43,9 +44,10 @@ Follow these steps when adding a new public module or sub-package.
 8. Add a link to the new wiki page in `wiki/Home.md`.
 9. Update `ARCHITECTURE.md` — add the package to the project layout tree and dependency graph.
 10. Update `llms.txt` and `llms-full.txt`.
+11. Update `AGENTS.md` if the package changes the architecture quick reference.
     // turbo
-11. Verify: `npm test`
+12. Verify: `npm test`
     // turbo
-12. Verify: `npm run ts-check`
+13. Verify: `npm run ts-check`
     // turbo
-13. Verify: `npm run lint`
+14. Verify: `npm run lint`
