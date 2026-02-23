@@ -3,7 +3,7 @@
 [npm-img]: https://img.shields.io/npm/v/console-toolkit.svg
 [npm-url]: https://npmjs.org/package/console-toolkit
 
-`console-toolkit` is a set of tools to create rich CLI-based applications. It provides:
+`console-toolkit` is a toolkit for building rich CLI/TUI applications. It provides:
 
 - Styles based on [ANSI escape sequences](https://en.wikipedia.org/wiki/ANSI_escape_code):
   - [SGR](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR): colors and text styles
@@ -77,14 +77,14 @@ const table = makeTable(tableData, lineTheme);
 for (const line of table.toStrings()) console.log(line);
 ```
 
-The output of the code is:
+Output:
 
 ![Code example](https://github.com/uhop/console-toolkit/wiki/images/example-code.png)
 
 ## Installation
 
 ```bash
-npm install --save console-toolkit
+npm install console-toolkit
 ```
 
 ## Modules
