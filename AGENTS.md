@@ -28,6 +28,10 @@ console-toolkit is a zero-dependency ESM JavaScript library for rich CLI/TUI out
 - Three text containers convert between each other: `strings` (string[]), `Box`, `Panel`.
 - SGR styling: `Style` class with fluent API; `s`/`c` tagged template literals.
 
+## Writing tests
+
+Tests use [tape-six](https://github.com/uhop/tape-six). For the full testing API, patterns, and conventions see `node_modules/tape-six/TESTING.md`.
+
 ## Verification commands
 
 - `npm test` — run the full test suite (tape-six)
