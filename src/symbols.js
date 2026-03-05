@@ -28,7 +28,7 @@ export const vBlocks8th = [' ', ...generateSequence(0x2581, 0, 7)];
 /** Horizontal block elements in 1/8th increments (index 0 = space, 7 = full block).
  * @type {string[]}
  */
-export const hBlocks8th = [' ', ...generateSequence(0x2588, 7, 0, -1)];
+export const hBlocks8th = [' ', ...generateSequence(0x2588, 7, 0)];
 /** Full block character (█). */
 export const fullBlock = '\u{2588}';
 

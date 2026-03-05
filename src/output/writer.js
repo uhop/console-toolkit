@@ -50,7 +50,9 @@ export class Writer {
    * @returns {boolean} True if supported.
    */
   hasColors(...args) {
-    return this.forceColorDepth ? args[0] <= Math.pow(2, this.forceColorDepth) : this.stream.hasColors?.(...args);
+    if (!this.forceColorDepth) return this.stream.hasColors?.(...args);
+    const count = typeof args[0] == 'number' ? args[0] : 2;
+    return count <= Math.pow(2, this.forceColorDepth);
   }
 
   /** Clears the current line.

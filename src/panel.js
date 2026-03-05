@@ -74,7 +74,7 @@ export class Panel {
    * @returns {string[]}
    */
   toStrings(options = {}) {
-    if (!this.height || !this.width) return Box.makeBlank(this.width, this.height);
+    if (!this.height || !this.width) return Box.makeBlank(this.width, this.height).box;
 
     let {emptySymbol = ' ', emptyState = RESET_STATE} = options;
     emptyState = toState(emptyState);
