@@ -38,8 +38,6 @@ export const drawRealHeightBlock = (width, realHeight, drawEmptyBorder) => {
     hasFrac = realHeight - intHeight > 0,
     drawBorder = hasFrac && (drawEmptyBorder || index > 0);
 
-  let result = fullBlock.repeat(intHeight);
-  if (drawBorder) result += hBlocks8th[index];
   return new Box(
     [...(drawBorder ? [vBlocks8th[index].repeat(width)] : []), ...new Array(intHeight).fill(fullBlock.repeat(width))],
     true
