@@ -43,6 +43,28 @@ test('Panel', async t => {
     t.deepEqual(p.box, []);
   });
 
+  await t.test('toStrings() with 0 dimensions', t => {
+    let s = new Panel(0, 0).toStrings();
+    t.ok(Array.isArray(s));
+    t.deepEqual(s, []);
+
+    s = new Panel(3, 0).toStrings();
+    t.ok(Array.isArray(s));
+    t.deepEqual(s, []);
+
+    s = new Panel(0, 2).toStrings();
+    t.ok(Array.isArray(s));
+    t.deepEqual(s, ['', '']);
+
+    s = Panel.make([]).toStrings();
+    t.ok(Array.isArray(s));
+    t.deepEqual(s, []);
+
+    s = Panel.make(['']).toStrings();
+    t.ok(Array.isArray(s));
+    t.deepEqual(s, ['']);
+  });
+
   await t.test('Panel.make()', t => {
     const p = Panel.make(['123', 'ab']);
 
