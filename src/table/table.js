@@ -188,8 +188,8 @@ export class Table {
           }
           const hAlign = getCellAlign(cell.align, 0) || this.options.hAlign[j] || 'left',
             vAlign = getCellAlign(cell.align, 1) || this.options.vAlign[i] || 'top',
-            dx = hAlign === 'l' || hAlign == 'left' ? 0 : hAlign === 'r' || hAlign === 'right' ? diffX : diffX >> 1,
-            dy = vAlign === 't' || vAlign == 'top' ? 0 : vAlign === 'b' || vAlign === 'bottom' ? diffY : diffY >> 1;
+            dx = hAlign === 'l' || hAlign === 'left' ? 0 : hAlign === 'r' || hAlign === 'right' ? diffX : diffX >> 1,
+            dy = vAlign === 't' || vAlign === 'top' ? 0 : vAlign === 'b' || vAlign === 'bottom' ? diffY : diffY >> 1;
           panel.put(x + dx, y + dy, cell.box);
         }
         x += hAxis[2 * j + 1] + (this.lineTheme['w_' + hAxis[2 * j + 2]] || 0);
