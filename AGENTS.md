@@ -35,6 +35,8 @@ Tests use [tape-six](https://github.com/uhop/tape-six). For the full testing API
 ## Verification commands
 
 - `npm test` — run the full test suite (tape-six)
+- `npm run test:bun` — run the full test suite on Bun
+- `npm run test:deno` — run the full test suite on Deno
 - `node tests/test-<name>.js` — run a single test file directly (no test runner needed)
 - Run selected test files by name:
   - `npm test -- test-foo.js test-bar.js` — run using workers
