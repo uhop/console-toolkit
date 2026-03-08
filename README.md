@@ -132,6 +132,7 @@ BSD 3-Clause License
 
 ## Release history
 
+- 1.2.13 _Fixed spinner .d.ts export, added TS type tests, stricter type checking, updated dev deps._
 - 1.2.12 _Minor bug fixes, improved test coverage, documentation corrections._
 - 1.2.11 _Improved docs for brevity and clarity, added script descriptions, added AI workflows._
 - 1.2.10 _Added TypeScript typings, JSDoc, minor bug fixes, updated dev deps._

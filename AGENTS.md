@@ -55,6 +55,7 @@ Tests use [tape-six](https://github.com/uhop/tape-six). For the full testing API
 - Source: `src/<name>.js` + `src/<name>.d.ts`
 - Sub-packages: `src/<pkg>/index.js` + `src/<pkg>/index.d.ts`
 - Tests: `tests/test-<name>.js`
+- TS type tests: `tests/test-types-<name>.ts`
 - Manual tests: `tests/manual/test-<name>.js`
 - Wiki docs: `wiki/` (git submodule)
 

@@ -93,6 +93,7 @@ Higher-level modules (`table`, `charts`, `plot`, `turtle`, `spinner`) depend on 
 - **Test files**: `tests/test-*.js` — automated unit tests
 - **Manual tests**: `tests/manual/` — visual verification scripts (run individually with `node`)
 - **Type checking**: `npm run ts-check` (runs `tsc --noEmit`)
+- **TS type tests**: `tests/test-types-*.ts` — verify `.d.ts` typings; run with `npm run ts-test`
 - **Linting**: `npm run lint` (Prettier check), `npm run lint:fix` (auto-format)
 
 ## Import paths
