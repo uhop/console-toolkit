@@ -41,6 +41,8 @@ Tests use [tape-six](https://github.com/uhop/tape-six). For the full testing API
 - Run selected test files by name:
   - `npm test -- test-foo.js test-bar.js` — run using workers
   - `npm run test:seq -- test-foo.js test-bar.js` — run sequentially
+  - `npm run test:seq:bun -- test-foo.js test-bar.js` — run sequentially with Bun
+  - `npm run test:seq:deno -- test-foo.js test-bar.js` — run sequentially with Deno
   - `npm run test:proc -- test-foo.js test-bar.js` — run using subprocesses
 - `npm run ts-check` — TypeScript type checking (tsc --noEmit)
 - `npm run lint` — Prettier format check
