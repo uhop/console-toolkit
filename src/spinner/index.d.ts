@@ -1,4 +1,5 @@
 export {Spinner} from './spinner.js';
-export {default as spin} from './spin.js';
+import spin from './spin.js';
 
+export {spin};
 export default spin;

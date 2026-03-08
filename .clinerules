@@ -46,6 +46,7 @@ Tests use [tape-six](https://github.com/uhop/tape-six). For the full testing API
   - `npm run test:seq:deno -- test-foo.js test-bar.js` — run sequentially with Deno
   - `npm run test:proc -- test-foo.js test-bar.js` — run using subprocesses
 - `npm run ts-check` — TypeScript type checking (tsc --noEmit)
+- `npm run ts-test` — run TS type tests (tests/test-\*.ts)
 - `npm run lint` — Prettier format check
 
 ## File layout
