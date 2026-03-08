@@ -1,14 +1,6 @@
 import test from 'tape-six';
-import {Table, draw, make} from 'console-toolkit/table';
-import type {
-  TableCellInput,
-  CellData,
-  CellPadding,
-  TableOptions,
-  TableDrawOptions,
-  GenerateAxesOptions,
-  MakeOptions
-} from 'console-toolkit/table/table.js';
+import {Table, make} from 'console-toolkit/table';
+import type {TableCellInput, CellData, TableOptions, GenerateAxesOptions} from 'console-toolkit/table/table.js';
 import {lineTheme as unicodeLineTheme} from 'console-toolkit/themes/lines/unicode.js';
 import Panel from 'console-toolkit/panel';
 import Box from 'console-toolkit/box';

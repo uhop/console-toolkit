@@ -1,8 +1,7 @@
 import test from 'tape-six';
 import Panel, {toPanel} from 'console-toolkit/panel';
-import type {PanelCell, PanelPutOptions, PanelToStringsOptions} from 'console-toolkit/panel';
+import type {PanelCell, PanelPutOptions} from 'console-toolkit/panel';
 import Box from 'console-toolkit/box';
-import type {SgrState} from 'console-toolkit/ansi/sgr-state.js';
 
 test('Panel constructor and properties', t => {
   const panel: Panel = new Panel(10, 5);

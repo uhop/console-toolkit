@@ -1,6 +1,6 @@
 import test from 'tape-six';
 import {toStrings, getLength, getMaxLength, clipStrings, clip} from 'console-toolkit/strings';
-import type {StringsInput, StringsValue, StringsFunction} from 'console-toolkit/strings';
+import type {StringsInput} from 'console-toolkit/strings';
 import {matchCsiNoGroups, matchCsiNoSgrNoGroups} from 'console-toolkit/strings';
 import Box from 'console-toolkit/box';
 

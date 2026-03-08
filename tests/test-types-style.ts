@@ -1,6 +1,5 @@
 import test from 'tape-six';
 import style, {Style, s, c, RESET_STATE} from 'console-toolkit/style';
-import type {SgrState} from 'console-toolkit/ansi/sgr-state.js';
 
 test('Style constructor signatures', t => {
   const s1: Style = new Style(null);

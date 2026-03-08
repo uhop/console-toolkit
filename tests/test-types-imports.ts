@@ -1,15 +1,12 @@
 import test from 'tape-six';
 
 import Box, {toBox} from 'console-toolkit/box';
-import type {BoxMakeOptions, AddBottomOptions, AddRightOptions} from 'console-toolkit/box';
 
 import Panel, {toPanel} from 'console-toolkit/panel';
-import type {PanelCell, PanelPutOptions, PanelToStringsOptions} from 'console-toolkit/panel';
 
-import style, {Style, s, c, RESET_STATE} from 'console-toolkit/style';
+import style, {Style, s, c} from 'console-toolkit/style';
 
 import {toStrings, getLength, getMaxLength, clipStrings, clip} from 'console-toolkit/strings';
-import type {StringsInput, StringsValue, StringsFunction} from 'console-toolkit/strings';
 
 import {ESC, CURSOR_DELETE, CURSOR_GO_UP1, CURSOR_SAVE, CURSOR_RESTORE} from 'console-toolkit/ansi';
 
