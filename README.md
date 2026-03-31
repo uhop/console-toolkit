@@ -132,6 +132,7 @@ BSD 3-Clause License
 
 ## Release history
 
+- 1.2.15 _TypeScript 6.0 compatibility, updated dev deps, CI, license year._
 - 1.2.14 _Updated dev deps._
 - 1.2.13 _Fixed spinner .d.ts export, added TS type tests, stricter type checking, updated dev deps._
 - 1.2.12 _Minor bug fixes, improved test coverage, documentation corrections._
