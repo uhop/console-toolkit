@@ -17,20 +17,21 @@ Run through this checklist before publishing a new version.
 7. Verify `package.json`:
    - `files` array includes all necessary entries (`./src`, `llms.txt`, `llms-full.txt`).
    - `exports` map covers any new modules added since the last release.
-8. Bump `version` in `package.json`.
-9. Update release history in `README.md`.
-10. Run `npm install` to regenerate `package-lock.json`.
+8. Check that the copyright year in `LICENSE` includes the current year (e.g., update `2024` → `2024-2026` or `2005-2024` → `2005-2026`).
+9. Bump `version` in `package.json`.
+10. Update release history in `README.md`.
+11. Run `npm install` to regenerate `package-lock.json`.
     // turbo
-11. Run the full test suite: `npm test`
+12. Run the full test suite: `npm test`
     // turbo
-12. Run tests on Bun: `npm run test:bun`
+13. Run tests on Bun: `npm run test:bun`
     // turbo
-13. Run tests on Deno: `npm run test:deno`
+14. Run tests on Deno: `npm run test:deno`
     // turbo
-14. Run TypeScript type checking: `npm run ts-check`
+15. Run TypeScript type checking: `npm run ts-check`
     // turbo
-15. Run TS type tests: `npm run ts-test`
+16. Run TS type tests: `npm run ts-test`
     // turbo
-16. Run Prettier lint check: `npm run lint`
+17. Run Prettier lint check: `npm run lint`
     // turbo
-17. Dry-run publish to verify package contents: `npm pack --dry-run`
+18. Dry-run publish to verify package contents: `npm pack --dry-run`
