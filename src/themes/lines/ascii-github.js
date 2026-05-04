@@ -1,6 +1,5 @@
 import {populateTheme} from '../utils.js';
 
-/** ASCII GitHub-style line theme. */
 export const lineTheme = {};
 
 const markdownGithub11 = {t: '|||', m: '|||', b: '|||', v: '|||', h: '---'},

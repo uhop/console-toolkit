@@ -10,9 +10,6 @@ import {
   matchSgr
 } from './sgr.js';
 
-/** The fully reset SGR state with all properties set to `null`.
- * @type {object}
- */
 export const RESET_STATE = {
   bold: null,
   dim: null,
@@ -33,11 +30,6 @@ const defaultState = Symbol('defaultState');
 
 let toState;
 
-/** Extracts the cumulative SGR state from a string by parsing all SGR sequences.
- * @param {string} s - The string to parse.
- * @param {object} [initState] - Initial state to build upon.
- * @returns {object} The resulting SGR state.
- */
 export const extractState = (s, initState = defaultState) => {
   let state = toState(initState);
   matchSgr.lastIndex = 0;
@@ -71,10 +63,6 @@ const getStateResets = state => {
   return resetCount;
 };
 
-/** Combines multiple SGR states, with later states overriding earlier ones.
- * @param {...(object|string)} states - States to combine.
- * @returns {object} The combined state.
- */
 export const combineStates = (...states) => {
   let state = {};
   for (const s of states) {
@@ -86,10 +74,6 @@ export const combineStates = (...states) => {
   return state;
 };
 
-/** Converts an array of SGR command strings into an SGR state object.
- * @param {string[]} commands - Array of SGR command strings.
- * @returns {object} The resulting state.
- */
 export const commandsToState = commands => {
   let state = {};
   for (let i = 0; i < commands.length; ++i) {
@@ -207,11 +191,6 @@ export const commandsToState = commands => {
   return state;
 };
 
-/** Adds SGR commands to an existing state.
- * @param {object} state - The current state.
- * @param {string[]} commands - Commands to add.
- * @returns {object} The updated state.
- */
 export const addCommandsToState = (state, commands) => combineStates(state, commandsToState(commands));
 
 const equalColors = (a, b) => {
@@ -238,10 +217,6 @@ const resetColorProperties = {
 
 const chainedStates = {bold: 1, dim: 1};
 
-/** Converts an SGR state to an array of SGR command strings.
- * @param {object|string} state - The state to convert.
- * @returns {string[]} The command strings.
- */
 export const stateToCommands = state => {
   state = toState(state);
   const commands = [];
@@ -282,11 +257,6 @@ export const stateToCommands = state => {
   return resetCount === TOTAL_RESETS ? [''] : commands;
 };
 
-/** Computes the minimal SGR commands needed to transition from one state to another.
- * @param {object|string} prev - The previous state.
- * @param {object|string} next - The next state.
- * @returns {string[]} The transition commands.
- */
 export const stateTransition = (prev, next) => {
   prev = toState(prev);
   next = toState(next);
@@ -348,11 +318,6 @@ export const stateTransition = (prev, next) => {
   return commands;
 };
 
-/** Computes the minimal SGR commands to reverse a state transition (from next back to prev).
- * @param {object|string} prev - The state to restore.
- * @param {object|string} next - The current state.
- * @returns {string[]} The reverse transition commands.
- */
 export const stateReverseTransition = (prev, next) => {
   prev = toState(prev);
   next = toState(next);
@@ -410,17 +375,8 @@ export const stateReverseTransition = (prev, next) => {
   return commands;
 };
 
-/** Converts an array of SGR commands to an escape sequence string, or empty string if no commands.
- * @param {string[]} commands
- * @returns {string}
- */
 export const stringifyCommands = commands => (commands?.length ? setCommands(commands) : '');
 
-/** Optimizes SGR sequences in a string by computing minimal state transitions.
- * @param {string} s - The string to optimize.
- * @param {object} [initState] - Initial state.
- * @returns {string} The optimized string.
- */
 export const optimize = (s, initState = defaultState) => {
   let state = toState(initState),
     result = '',

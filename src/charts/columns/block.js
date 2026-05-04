@@ -9,13 +9,6 @@ import defaultBlockTheme from '../../themes/blocks/unicode-half.js';
 // data = [datum]
 // datum = {value, colorState, symbol, state}
 
-/** Draws a single stacked column using block-drawing characters.
- * @param {object[]} data - Normalized data series.
- * @param {number} width - Total height.
- * @param {number} maxValue - Maximum value for scaling.
- * @param {object} [options] - Options including `reverse`, `blockTheme`, `rectSize`, `initState`.
- * @returns {string[]} The drawn column lines.
- */
 export const drawColumn = (data, width, maxValue, options = {}) => {
   const {reverse, blockTheme = defaultBlockTheme, rectSize = 0, initState = {}} = options,
     sizes = allocateSizes(data, maxValue, width),
@@ -39,12 +32,6 @@ export const drawColumn = (data, width, maxValue, options = {}) => {
   return result.map(line => optimize(line));
 };
 
-/** Draws a complete block stacked column chart.
- * @param {any[]} values - Chart data.
- * @param {number} width - Available height.
- * @param {object} [options] - Options.
- * @returns {string[]} Array of strings representing the chart.
- */
 export const drawChart = drawStackedChart(drawColumn);
 
 export default drawChart;

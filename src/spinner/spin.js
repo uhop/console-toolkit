@@ -1,10 +1,6 @@
 import {SpinnerBase} from './spinner.js';
 
-/** Internal composite spinner that handles multiple spinner parts and functions via tagged template literals. */
 class Spinner extends SpinnerBase {
-  /** @param {TemplateStringsArray} strings - Template literal strings.
-   * @param {any[]} args - Interpolated values.
-   */
   constructor(strings, args) {
     super(false);
     this.strings = strings;
@@ -12,9 +8,6 @@ class Spinner extends SpinnerBase {
     this.indices = new WeakMap();
   }
 
-  /** Returns the current composite frame string.
-   * @returns {string}
-   */
   getFrame() {
     let result = '';
     for (let i = 0; i < this.args.length; ++i) {
@@ -51,12 +44,6 @@ class Spinner extends SpinnerBase {
   }
 }
 
-/** Tagged template literal function that creates a composite spinner.
- * Arguments can be string arrays (cycled through), functions `(state) => string`, or SpinnerBase instances.
- * @param {TemplateStringsArray} strings - Template literal strings.
- * @param {...(string[]|Function|import('./spinner.js').SpinnerBase|*)} args - Interpolated values.
- * @returns {import('./spinner.js').SpinnerBase} A composite spinner.
- */
 const spin = (strings, ...args) => new Spinner(strings, args);
 
 export default spin;

@@ -11,13 +11,6 @@ import defaultTheme from '../themes/default.js';
 
 const defaultSymbol = hBlocks8th[7];
 
-/** Draws a single stacked column using plain symbols.
- * @param {object[]} data - Normalized data series.
- * @param {number} width - Total height.
- * @param {number} maxValue - Maximum value for scaling.
- * @param {object} [options] - Options including `reverse`, `rectSize`, `initState`, `theme`.
- * @returns {string[]} The drawn column lines.
- */
 export const drawColumn = (data, width, maxValue, options = {}) => {
   const {reverse, rectSize = 1, initState = {}, theme = defaultTheme} = options,
     {symbol = ' ', state = null, colorState} = theme?.empty || {},
@@ -41,12 +34,6 @@ export const drawColumn = (data, width, maxValue, options = {}) => {
   return result.map(line => optimize(line));
 };
 
-/** Draws a complete plain stacked column chart.
- * @param {any[]} values - Chart data.
- * @param {number} width - Available height.
- * @param {object} [options] - Options.
- * @returns {string[]} Array of strings representing the chart.
- */
 export const drawChart = drawStackedChart(drawColumn);
 
 export default drawChart;

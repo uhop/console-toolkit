@@ -1,6 +1,5 @@
 import {populateTheme} from '../utils.js';
 
-/** ASCII dots line theme. */
 export const lineTheme = {};
 
 const dots = {t: '...', m: '.:.', b: ':::', v: ':::', h: '...'};

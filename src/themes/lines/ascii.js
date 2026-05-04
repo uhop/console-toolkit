@@ -1,6 +1,5 @@
 import {populateTheme} from '../utils.js';
 
-/** ASCII line theme. */
 export const lineTheme = {};
 
 const table11 = {t: '+++', m: '+++', b: '+++', v: '|||', h: '---'},

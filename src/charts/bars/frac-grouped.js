@@ -7,13 +7,6 @@ import drawGroupedChart from './draw-grouped.js';
 // data = [datum]
 // datum = {value, colorState, symbol, state}
 
-/** Draws a single grouped bar row using fractional width block characters.
- * @param {object[]} data - Normalized data series.
- * @param {number} width - Total width.
- * @param {number} maxValue - Maximum value for scaling.
- * @param {object} [options] - Options including `reverse`, `rectSize`, `initState`.
- * @returns {string[]} The drawn row lines.
- */
 export const drawRow = (data, width, maxValue, options = {}) => {
   const {reverse, rectSize = 1, initState = {}} = options,
     blocks = data.map(datum => {
@@ -35,12 +28,6 @@ export const drawRow = (data, width, maxValue, options = {}) => {
   return result.map(line => optimize(line));
 };
 
-/** Draws a complete fractional grouped bar chart.
- * @param {any[]} values - Chart data.
- * @param {number} width - Available width.
- * @param {object} [options] - Options.
- * @returns {string[]} Array of strings representing the chart.
- */
 export const drawChart = drawGroupedChart(drawRow);
 
 export default drawChart;

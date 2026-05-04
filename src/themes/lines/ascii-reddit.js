@@ -1,6 +1,5 @@
 import {populateTheme} from '../utils.js';
 
-/** ASCII Reddit-style line theme. */
 export const lineTheme = {};
 
 const markdownReddit11 = {t: ' | ', m: ' | ', b: ' | ', v: ' | ', h: '---'},
