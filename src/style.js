@@ -332,10 +332,10 @@ export class Style {
     return this[colorDepthSymbol] > 8 ? this.bgHexTrueColor(hex) : this.bgHex256(hex);
   }
   decorationStdRgb256(r, g, b) {
-    return this.make(sgr.getDecorationStdColor256(r, g, b));
+    return this.make(sgr.getDecorationStdColor256(sgr.colorStdRgb(r, g, b)));
   }
   decorationBrightStdRgb256(r, g, b) {
-    return this.make(sgr.getDecorationBrightStdColor256(r, g, b));
+    return this.make(sgr.getDecorationBrightStdColor256(sgr.colorStdRgb(r, g, b)));
   }
   decorationColor(c) {
     return this.make(sgr.getDecorationRawColor256(c));

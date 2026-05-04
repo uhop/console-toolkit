@@ -187,24 +187,19 @@ export class Box {
         true
       );
 
-    let t = 0,
-      b = 0;
+    let t = 0;
     const diff = Math.abs(ah - bh);
     switch (align) {
       case 'top':
       case 't':
         t = 0;
-        b = diff;
         break;
       case 'bottom':
       case 'b':
         t = diff;
-        b = 0;
         break;
       default: // center
-        const half = diff >> 1;
-        t = half;
-        b = half + (diff & 1 ? 1 : 0);
+        t = diff >> 1;
         break;
     }
 
