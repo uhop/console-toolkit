@@ -17,7 +17,7 @@ export const defaultDrawItem = (datum, size, _, {initState = {}}) =>
         .addState(datum.colorState || {})
         .addState(datum.state || {})
         .text((datum.symbol || defaultSymbol).repeat(size))
-    : '';
+    : ' '.repeat(size);
 
 export const drawItemLabel = (datum, size, _, {reverse, truncate, useEllipsis = true, initState = {}}) => {
   if (!datum) return '';

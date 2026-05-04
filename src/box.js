@@ -67,7 +67,7 @@ export class Box {
   }
 
   static makeBlank(width, height, symbol = ' ') {
-    return new Box(height <= 0 ? [] : new Array(height).fill(symbol.repeat(width)), true);
+    return new Box(height <= 0 ? [] : new Array(height).fill(width <= 0 ? '' : symbol.repeat(width)), true);
   }
 
   toStrings() {
@@ -85,8 +85,9 @@ export class Box {
   // padding
 
   padLeftRight(left, right, symbol = ' ') {
-    const paddingLeft = symbol.repeat(left),
-      paddingRight = symbol.repeat(right);
+    if (left <= 0 && right <= 0) return this.clone();
+    const paddingLeft = left > 0 ? symbol.repeat(left) : '',
+      paddingRight = right > 0 ? symbol.repeat(right) : '';
     return new Box(
       this.box.map(s => paddingLeft + s + paddingRight),
       true
@@ -94,11 +95,15 @@ export class Box {
   }
 
   padTopBottom(top, bottom, symbol = ' ') {
-    const padding = symbol.repeat(this.width);
-    return new Box([...new Array(top).fill(padding), ...this.box, ...new Array(bottom).fill(padding)], true);
+    if (top <= 0 && bottom <= 0) return this.clone();
+    const padding = symbol.repeat(this.width),
+      t = top > 0 ? top : 0,
+      b = bottom > 0 ? bottom : 0;
+    return new Box([...new Array(t).fill(padding), ...this.box, ...new Array(b).fill(padding)], true);
   }
 
   padRight(n, symbol = ' ') {
+    if (n <= 0) return this.clone();
     const padding = symbol.repeat(n);
     return new Box(
       this.box.map(s => s + padding),
@@ -107,6 +112,7 @@ export class Box {
   }
 
   padLeft(n, symbol = ' ') {
+    if (n <= 0) return this.clone();
     const padding = symbol.repeat(n);
     return new Box(
       this.box.map(s => padding + s),
@@ -115,11 +121,13 @@ export class Box {
   }
 
   padTop(n, symbol = ' ') {
+    if (n <= 0) return this.clone();
     const padding = symbol.repeat(this.width);
     return new Box([...new Array(n).fill(padding), ...this.box], true);
   }
 
   padBottom(n, symbol = ' ') {
+    if (n <= 0) return this.clone();
     const padding = symbol.repeat(this.width);
     return new Box([...this.box, ...new Array(n).fill(padding)], true);
   }

@@ -38,6 +38,8 @@ export const allocateSizes = (data, maxValue, size) => {
   if (maxValue < 0) {
     maxValue = seriesValue;
     if (!maxValue) maxValue = 1;
+  } else if (!maxValue) {
+    maxValue = 1;
   }
   if (seriesValue < maxValue) {
     values.push({value: maxValue - seriesValue, index: -1}); // add an empty bin

@@ -8,6 +8,7 @@ import drawGroupedChart from './draw-grouped.js';
 // datum = {value, colorState, symbol, state}
 
 export const drawColumn = (data, width, maxValue, options = {}) => {
+  if (!maxValue) maxValue = 1;
   const {reverse, rectSize = 1, initState = {}} = options,
     blocks = data.map(datum => {
       if (!datum) return Box.makeBlank(rectSize, 0);

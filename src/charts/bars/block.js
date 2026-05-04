@@ -28,7 +28,7 @@ export const drawRow = (data, width, maxValue, options = {}) => {
         true
       );
     }),
-    result = new Array(blocks[0].box.length).fill('');
+    result = blocks.length ? new Array(blocks[0].box.length).fill('') : [];
   if (reverse) blocks.reverse();
   for (const block of blocks) {
     for (let i = 0; i < block.box.length; ++i) {

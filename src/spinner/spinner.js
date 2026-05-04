@@ -66,7 +66,7 @@ export class Spinner extends SpinnerBase {
     if (this.finished) return this.spinner.finished[this.nextFrameIndex(this.spinner.finished.length)];
     if (!this.active) return this.spinner.notStarted[this.nextFrameIndex(this.spinner.notStarted.length)];
     if (!this.paused) this.nextFrameIndex(this.spinner.frames.length);
-    return this.spinner.frames[this.frameIndex];
+    return this.spinner.frames[this.frameIndex % this.spinner.frames.length];
   }
 }
 

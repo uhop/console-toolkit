@@ -8,6 +8,7 @@ import drawGroupedChart from './draw-grouped.js';
 // datum = {value, colorState, symbol, state}
 
 export const drawRow = (data, width, maxValue, options = {}) => {
+  if (!maxValue) maxValue = 1;
   const {reverse, rectSize = 1, initState = {}} = options,
     blocks = data.map(datum => {
       if (!datum) return Box.makeBlank(0, rectSize);
@@ -18,7 +19,7 @@ export const drawRow = (data, width, maxValue, options = {}) => {
         true
       );
     }),
-    result = new Array(blocks[0].box.length).fill('');
+    result = blocks.length ? new Array(blocks[0].box.length).fill('') : [];
   if (reverse) blocks.reverse();
   for (const block of blocks) {
     for (let i = 0; i < block.box.length; ++i) {

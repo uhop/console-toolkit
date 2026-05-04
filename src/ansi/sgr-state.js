@@ -40,7 +40,7 @@ export const extractState = (s, initState = defaultState) => {
 toState = value => {
   switch (typeof value) {
     case 'object':
-      if (!value) return RESET_STATE;
+      if (!value) return {...RESET_STATE};
       if (typeof value.getState == 'function') return value.getState();
       return value;
     case 'string':
@@ -51,12 +51,13 @@ toState = value => {
 };
 export {toState};
 
-const TOTAL_RESETS = Array.from(Object.keys(RESET_STATE)).length;
+const RESET_KEYS = Object.keys(RESET_STATE);
+const TOTAL_RESETS = RESET_KEYS.length;
 
 const getStateResets = state => {
   let resetCount = 0;
 
-  for (const name of Object.keys(RESET_STATE)) {
+  for (const name of RESET_KEYS) {
     if (state[name] === null) ++resetCount;
   }
 
@@ -81,7 +82,7 @@ export const commandsToState = commands => {
     switch (currentCommand) {
       case '': // reset
       case Commands.RESET_ALL:
-        state = RESET_STATE;
+        state = {...RESET_STATE};
         continue;
       case Commands.BOLD:
         state.bold = currentCommand;
@@ -285,7 +286,7 @@ export const stateTransition = (prev, next) => {
   if (next.bold === null) ++resetCount;
   if (next.dim === null) ++resetCount;
 
-  for (const name of Object.keys(RESET_STATE)) {
+  for (const name of RESET_KEYS) {
     if (chainedStates[name] === 1) continue; // skip chained states
     const value = next[name];
     if (resetColorProperties.hasOwnProperty(name)) {
@@ -346,7 +347,7 @@ export const stateReverseTransition = (prev, next) => {
   if (prev.bold === null) ++resetCount;
   if (prev.dim === null) ++resetCount;
 
-  for (const name of Object.keys(RESET_STATE)) {
+  for (const name of RESET_KEYS) {
     if (chainedStates[name] === 1) continue; // skip chained states
     const value = prev[name];
     if (resetColorProperties.hasOwnProperty(name)) {

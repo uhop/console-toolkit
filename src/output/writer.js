@@ -125,9 +125,7 @@ export class Writer {
       return;
     }
 
-    let lines = Array.from(s)
-      .map(line => beforeLine + line + afterLine)
-      .join('\n');
+    let lines = s.map(line => beforeLine + line + afterLine).join('\n');
     if (!noLastNewLine) lines += '\n';
     await write(this.stream, lines);
   }
