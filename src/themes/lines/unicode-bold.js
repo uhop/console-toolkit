@@ -1,15 +1,10 @@
-import {populateTheme} from '../utils.js';
+import {makeLineTheme} from '../utils.js';
 
-export const lineTheme = {};
-
-const table11 = {t: '┌┬┐', m: '├┼┤', b: '└┴┘', v: '│││', h: '───'},
-  table12 = {t: '┎┰┒', m: '┠╂┨', b: '┖┸┚', v: '┃┃┃', h: '───'},
-  table21 = {t: '┍┯┑', m: '┝┿┥', b: '┕┷┙', v: '│││', h: '━━━'},
-  table22 = {t: '┏┳┓', m: '┣╋┫', b: '┗┻┛', v: '┃┃┃', h: '━━━'};
-
-populateTheme(lineTheme, table11, 1, 1);
-populateTheme(lineTheme, table12, 1, 2);
-populateTheme(lineTheme, table21, 2, 1);
-populateTheme(lineTheme, table22, 2, 2);
+export const lineTheme = makeLineTheme([
+  [{t: '┌┬┐', m: '├┼┤', b: '└┴┘', v: '│││', h: '───'}, 1, 1],
+  [{t: '┎┰┒', m: '┠╂┨', b: '┖┸┚', v: '┃┃┃', h: '───'}, 1, 2],
+  [{t: '┍┯┑', m: '┝┿┥', b: '┕┷┙', v: '│││', h: '━━━'}, 2, 1],
+  [{t: '┏┳┓', m: '┣╋┫', b: '┗┻┛', v: '┃┃┃', h: '━━━'}, 2, 2]
+]);
 
 export default lineTheme;

@@ -10,6 +10,12 @@
 
 // The default value for 'w': 1
 
+export const makeLineTheme = definitions => {
+  const lineTheme = {};
+  for (const [table, hTheme, vTheme] of definitions) populateTheme(lineTheme, table, hTheme, vTheme);
+  return lineTheme;
+};
+
 export const populateTheme = (lineTheme, tableDefinition, hTheme, vTheme) => {
   const w = tableDefinition.w || 1,
     s = [0, w, w << 1],

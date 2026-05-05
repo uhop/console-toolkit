@@ -1,9 +1,5 @@
-import {populateTheme} from '../utils.js';
+import {makeLineTheme} from '../utils.js';
 
-export const lineTheme = {};
-
-const dots = {t: '...', m: '.:.', b: ':::', v: ':::', h: '...'};
-
-populateTheme(lineTheme, dots, 1, 1);
+export const lineTheme = makeLineTheme([[{t: '...', m: '.:.', b: ':::', v: ':::', h: '...'}, 1, 1]]);
 
 export default lineTheme;

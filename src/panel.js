@@ -15,6 +15,15 @@ import split, {size} from './strings/split.js';
 import Box from './box.js';
 import {addAliases} from './meta.js';
 
+const normalizeState = state => {
+  if (typeof state == 'string') return commandsToState(state.split(';'));
+  if (Array.isArray(state)) return commandsToState(state);
+  return toState(state);
+};
+
+const normalizeRegionArgs = (panel, x, y, width, height, options) =>
+  typeof x === 'object' ? [0, 0, panel.width, panel.height, x] : [x, y, width, height, options];
+
 export class Panel {
   constructor(width, height) {
     this.box = new Array(height);
@@ -283,32 +292,14 @@ export class Panel {
       width = this.width;
       height = this.height;
     }
-    if (typeof state == 'string') {
-      state = commandsToState(state.split(';'));
-    } else if (Array.isArray(state)) {
-      state = commandsToState(state);
-    } else {
-      state = toState(state);
-    }
+    state = normalizeState(state);
     return this.applyFn(x, y, width, height, () => ({symbol, state}), options);
   }
 
   fillState(x, y, width, height, options) {
-    if (typeof x === 'object') {
-      options = x;
-      x = 0;
-      y = 0;
-      width = this.width;
-      height = this.height;
-    }
+    [x, y, width, height, options] = normalizeRegionArgs(this, x, y, width, height, options);
     let {state = {}, emptySymbol = ' '} = options || {};
-    if (typeof state == 'string') {
-      state = commandsToState(state.split(';'));
-    } else if (Array.isArray(state)) {
-      state = commandsToState(state);
-    } else {
-      state = toState(state);
-    }
+    state = normalizeState(state);
     return this.applyFn(
       x,
       y,
@@ -320,40 +311,16 @@ export class Panel {
   }
 
   fillNonEmptyState(x, y, width, height, options) {
-    if (typeof x === 'object') {
-      options = x;
-      x = 0;
-      y = 0;
-      width = this.width;
-      height = this.height;
-    }
+    [x, y, width, height, options] = normalizeRegionArgs(this, x, y, width, height, options);
     let {state = {}} = options || {};
-    if (typeof state == 'string') {
-      state = commandsToState(state.split(';'));
-    } else if (Array.isArray(state)) {
-      state = commandsToState(state);
-    } else {
-      state = toState(state);
-    }
+    state = normalizeState(state);
     return this.applyFn(x, y, width, height, (x, y, cell) => cell && {symbol: cell.symbol, state}, options);
   }
 
   combineStateBefore(x, y, width, height, options) {
-    if (typeof x === 'object') {
-      options = x;
-      x = 0;
-      y = 0;
-      width = this.width;
-      height = this.height;
-    }
+    [x, y, width, height, options] = normalizeRegionArgs(this, x, y, width, height, options);
     let {state = {}, emptySymbol = ' ', emptyState = RESET_STATE} = options || {};
-    if (typeof state == 'string') {
-      state = commandsToState(state.split(';'));
-    } else if (Array.isArray(state)) {
-      state = commandsToState(state);
-    } else {
-      state = toState(state);
-    }
+    state = normalizeState(state);
     return this.applyFn(
       x,
       y,
@@ -368,21 +335,9 @@ export class Panel {
   }
 
   combineStateAfter(x, y, width, height, options) {
-    if (typeof x === 'object') {
-      options = x;
-      x = 0;
-      y = 0;
-      width = this.width;
-      height = this.height;
-    }
+    [x, y, width, height, options] = normalizeRegionArgs(this, x, y, width, height, options);
     let {state = {}, emptySymbol = ' ', emptyState = RESET_STATE} = options || {};
-    if (typeof state == 'string') {
-      state = commandsToState(state.split(';'));
-    } else if (Array.isArray(state)) {
-      state = commandsToState(state);
-    } else {
-      state = toState(state);
-    }
+    state = normalizeState(state);
     return this.applyFn(
       x,
       y,

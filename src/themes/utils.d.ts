@@ -31,3 +31,9 @@ export function populateTheme(
   hTheme: number | string,
   vTheme: number | string
 ): void;
+
+/** Builds a line theme from an array of `[tableDefinition, hTheme, vTheme]` entries.
+ * @param definitions - Array of populate-theme arguments.
+ * @returns A populated line theme.
+ */
+export function makeLineTheme(definitions: Array<[TableDefinition, number | string, number | string]>): LineTheme;
