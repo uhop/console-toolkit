@@ -19,18 +19,23 @@ export interface OutOptions {
   colorDepth?: number;
 }
 
-/** Logs a text container to the console via `console.log()`. Strips ANSI codes if colorDepth < 4.
+/** Logs a text container via `console.log()`. Defaults to passing ANSI through (colorDepth = 24).
+ * Use this when you know your terminal supports the colors you're emitting.
+ * Strips ANSI when colorDepth < 4.
  * @param s - Input: Box, string, string array, or object with `toStrings()`.
  * @param options - Log options.
  */
 export function log(s: StringsInput, options?: LogOptions): void;
-/** Writes a text container to a stream (default: stdout).
+/** Writes a text container to any writable stream (default: stdout).
+ * Auto-detects colorDepth from `stream.isTTY` and `stream.getColorDepth()` when omitted.
+ * Strips ANSI when colorDepth < 4.
  * @param s - Input: Box, string, string array, or object with `toStrings()`.
  * @param options - Output options.
  */
 export function out(s: StringsInput, options?: OutOptions): void;
 
-/** Wraps a writable stream for outputting styled text. */
+/** Wraps a writable stream for outputting styled text. Caches `colorDepth` once at construction
+ * to avoid per-call detection — useful for tight write loops to the same stream. */
 export class Out {
   /** The underlying writable stream. */
   stream: Writable;

@@ -1,5 +1,5 @@
 import Box from '../box.js';
-import Panel from '../panel.js';
+import Panel, {EMPTY_CELL_SENTINEL} from '../panel.js';
 import {draw as drawBorder} from './draw-borders.js';
 import style, {RESET_STATE} from '../style.js';
 
@@ -146,8 +146,8 @@ export class Table {
 
     // draw table borders
 
-    const borderBox = drawBorder(this.lineTheme, hAxis, vAxis, {skip: this.skipList, symbol: '\x07'}),
-      panel = Panel.make(borderBox, '\x07');
+    const borderBox = drawBorder(this.lineTheme, hAxis, vAxis, {skip: this.skipList, symbol: EMPTY_CELL_SENTINEL}),
+      panel = Panel.make(borderBox);
     panel.fillNonEmptyState(0, 0, panel.width, panel.height, {state: lineState});
 
     // draw cells

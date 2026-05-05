@@ -51,11 +51,12 @@ export class Updater {
 
   getFrame(state, ...args) {
     if (typeof this.updater == 'function') return this.updater(state, ...args);
-    if (typeof this.updater?.getFrame == 'function') {
+    if (this.updater) {
       this.updater.state = state;
-      return this.updater.getFrame(...args);
+      if (typeof this.updater.nextFrame == 'function') return this.updater.nextFrame(...args);
+      if (typeof this.updater.getFrame == 'function') return this.updater.getFrame(...args);
     }
-    throw new TypeError('Updater must be a function or implement getFrame()');
+    throw new TypeError('Updater must be a function or implement nextFrame()/getFrame()');
   }
 
   async writeFrame(state, ...args) {

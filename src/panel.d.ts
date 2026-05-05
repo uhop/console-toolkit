@@ -2,6 +2,9 @@ import {SgrState} from './ansi/sgr-state.js';
 import Box from './box.js';
 import {StringsInput} from './strings.js';
 
+/** Sentinel character ('\x07' BELL) used to mark empty cells when placing text via `Panel.put()`. */
+export const EMPTY_CELL_SENTINEL: string;
+
 /** A single cell in a Panel. */
 export interface PanelCell {
   /** The character displayed in this cell. */
@@ -22,7 +25,7 @@ export interface PanelToStringsOptions {
 
 /** Options for `Panel.put()`. */
 export interface PanelPutOptions {
-  /** Character treated as an empty cell (default: '\x07' BELL). */
+  /** Character treated as an empty cell (default: `EMPTY_CELL_SENTINEL`, '\x07' BELL). */
   emptySymbol?: string;
   /** If true, ignore control symbols when calculating width. */
   ignoreControlSymbols?: boolean;
@@ -132,7 +135,7 @@ export class Panel {
    * @returns This Panel (mutated).
    */
   copyFrom(x: number, y: number, width: number, height: number, panel: Panel, x1?: number, y1?: number): Panel;
-  /** Places text onto this panel at the given position. Characters matching `emptySymbol` (default: '\x07' BELL) are treated as empty cells.
+  /** Places text onto this panel at the given position. Characters matching `emptySymbol` (default: `EMPTY_CELL_SENTINEL`, '\x07' BELL) are treated as empty cells.
    * @param x - Left column.
    * @param y - Top row.
    * @param text - Content to place (Panel, Box, string, or string array).
@@ -296,7 +299,9 @@ export class Panel {
    * @returns This Panel (mutated).
    */
   padTopBottom(n: number, m: number): Panel;
-  /** Pads using CSS-style shorthand.
+  /** Pads using CSS-style shorthand. Padding adds null cells (rendered later via the
+   * `emptySymbol`/`emptyState` options of `toStrings()`); unlike `Box.pad`, this method
+   * intentionally has no `symbol` parameter — set the rendering character at draw time.
    * @param t - Top.
    * @param r - Right.
    * @param b - Bottom.

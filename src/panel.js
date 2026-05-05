@@ -15,6 +15,8 @@ import split, {size} from './strings/split.js';
 import Box from './box.js';
 import {addAliases} from './meta.js';
 
+export const EMPTY_CELL_SENTINEL = '\x07';
+
 const normalizeState = state => {
   if (typeof state == 'string') return commandsToState(state.split(';'));
   if (Array.isArray(state)) return commandsToState(state);
@@ -194,7 +196,7 @@ export class Panel {
     if (y >= this.height) return this;
     if (y + height > this.height) height = this.height - y;
 
-    const {emptySymbol = '\x07'} = options;
+    const {emptySymbol = EMPTY_CELL_SENTINEL} = options;
 
     // copy characters
     let state = {};

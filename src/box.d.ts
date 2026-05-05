@@ -114,7 +114,10 @@ export class Box {
    * @returns A new padded Box.
    */
   padBottom(n: number, symbol?: string): Box;
-  /** Pads using CSS-style shorthand (top, right, bottom, left).
+  /** Pads using CSS-style shorthand (top, right, bottom, left). Box renders padding as
+   * literal characters, so `symbol` controls the visible padding character;
+   * `Panel.pad` has no `symbol` parameter because Panel pads with null cells whose
+   * rendering character is set later via `toStrings({emptySymbol})`.
    * @param t - Top padding.
    * @param r - Right padding (or symbol).
    * @param b - Bottom padding (or symbol).

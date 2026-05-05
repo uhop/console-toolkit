@@ -19,14 +19,19 @@ export interface UpdaterOptions {
   noLastNewLine?: boolean;
 }
 
-/** An object that can provide frames for the Updater. */
+/** An object that can provide frames for the Updater. Prefer implementing `nextFrame()`
+ * (advance + return) for spinners and progress bars; `getFrame()` is the read-only fallback. */
 export interface UpdaterTarget {
   /** Current state string. */
   state?: string;
-  /** Returns the current frame content.
+  /** Returns the next frame content (advance + return). Preferred entry point for spinners.
    * @returns Frame content (Box, string, or string array).
    */
-  getFrame(...args: unknown[]): StringsInput;
+  nextFrame?(...args: unknown[]): StringsInput;
+  /** Returns the current frame content. Used as fallback when `nextFrame()` is not implemented.
+   * @returns Frame content (Box, string, or string array).
+   */
+  getFrame?(...args: unknown[]): StringsInput;
 }
 
 /** Manages auto-refreshing console output for spinners, progress bars, etc. */

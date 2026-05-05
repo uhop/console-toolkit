@@ -2,25 +2,22 @@ import process from 'node:process';
 import {matchCsiNoGroups} from '../strings.js';
 import Box from '../box.js';
 
-export const log = (s, {endOfLineCommand = '\x1B[m', colorDepth = 24} = {}) => {
+const writeRows = (s, endOfLineCommand, colorDepth, write) => {
   s = Box.make(s);
   if (colorDepth < 4) {
     matchCsiNoGroups.lastIndex = 0;
-    s.box.forEach(row => console.log((row + endOfLineCommand).replace(matchCsiNoGroups, '')));
+    s.box.forEach(row => write((row + endOfLineCommand).replace(matchCsiNoGroups, '')));
     return;
   }
-  s.box.forEach(row => console.log(row + endOfLineCommand));
+  s.box.forEach(row => write(row + endOfLineCommand));
 };
 
+export const log = (s, {endOfLineCommand = '\x1B[m', colorDepth = 24} = {}) =>
+  writeRows(s, endOfLineCommand, colorDepth, row => console.log(row));
+
 export const out = (s, {stream = process.stdout, endOfLineCommand = '\x1B[m', colorDepth} = {}) => {
-  s = Box.make(s);
   if (typeof colorDepth != 'number' || isNaN(colorDepth)) colorDepth = stream.isTTY ? stream.getColorDepth() : 1;
-  if (colorDepth < 4) {
-    matchCsiNoGroups.lastIndex = 0;
-    s.box.forEach(row => stream.write((row + endOfLineCommand).replace(matchCsiNoGroups, '') + '\n'));
-    return;
-  }
-  s.box.forEach(row => stream.write(row + endOfLineCommand + '\n'));
+  writeRows(s, endOfLineCommand, colorDepth, row => stream.write(row + '\n'));
 };
 
 export class Out {

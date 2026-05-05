@@ -8,7 +8,7 @@ const spinner = spin`Spinner: [${new Spinner()}], ${new Spinner(bouncingBall)}, 
 
 let first = true;
 const frameInterval = setInterval(() => {
-  console.log((first ? '' : '\r' + CURSOR_UP1) + spinner.getFrame());
+  console.log((first ? '' : '\r' + CURSOR_UP1) + spinner.nextFrame());
   first = false;
 }, 100);
 

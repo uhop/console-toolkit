@@ -31,10 +31,19 @@ export class SpinnerBase {
    * @returns The next frame index.
    */
   nextFrameIndex(length: number): number;
-  /** Returns the current frame string.
+  /** Advances internal state by one step (state-aware: only advances when active+!paused or in finished/notStarted modes).
+   * Pure mutation — call `getFrame()` after to read the new frame.
+   * @returns This instance.
+   */
+  tick(): this;
+  /** Returns the frame string at the current index. Read-only — does not mutate.
    * @returns The frame string.
    */
   getFrame(): string;
+  /** Convenience: calls `tick()` then `getFrame()`. Equivalent to the pre-1.3 `getFrame()` advance-and-return.
+   * @returns The frame string at the new index.
+   */
+  nextFrame(): string;
 }
 
 /** Definition of spinner frame sets. */
@@ -60,7 +69,12 @@ export class Spinner extends SpinnerBase {
    */
   constructor(spinnerDefinition?: SpinnerDefinition, isStarted?: boolean);
 
-  /** Returns the current frame string based on state.
+  /** Advances frame index for the active state-array (frames / notStarted / finished).
+   * No-op in `paused` state. Read-only-call `getFrame()` after.
+   * @returns This instance.
+   */
+  tick(): this;
+  /** Returns the frame string at the current index for the active state-array. Read-only.
    * @returns The frame string.
    */
   getFrame(): string;

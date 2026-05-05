@@ -49,8 +49,17 @@ export class SpinnerBase {
     return (this.frameIndex = (this.frameIndex + 1) % length);
   }
 
+  tick() {
+    return this;
+  }
+
   getFrame() {
     return 'X';
+  }
+
+  nextFrame() {
+    this.tick();
+    return this.getFrame();
   }
 }
 
@@ -62,11 +71,20 @@ export class Spinner extends SpinnerBase {
     this.spinner = {...defaultSpinnerDefinition, ...spinnerDefinition};
   }
 
+  tick() {
+    if (this.finished) {
+      this.nextFrameIndex(this.spinner.finished.length);
+    } else if (!this.active) {
+      this.nextFrameIndex(this.spinner.notStarted.length);
+    } else if (!this.paused) {
+      this.nextFrameIndex(this.spinner.frames.length);
+    }
+    return this;
+  }
+
   getFrame() {
-    if (this.finished) return this.spinner.finished[this.nextFrameIndex(this.spinner.finished.length)];
-    if (!this.active) return this.spinner.notStarted[this.nextFrameIndex(this.spinner.notStarted.length)];
-    if (!this.paused) this.nextFrameIndex(this.spinner.frames.length);
-    return this.spinner.frames[this.frameIndex % this.spinner.frames.length];
+    const arr = this.finished ? this.spinner.finished : !this.active ? this.spinner.notStarted : this.spinner.frames;
+    return arr[this.frameIndex % arr.length];
   }
 }
 

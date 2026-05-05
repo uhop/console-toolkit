@@ -8,6 +8,28 @@ class Spinner extends SpinnerBase {
     this.indices = new WeakMap();
   }
 
+  tick() {
+    for (const arg of this.args) {
+      if (arg instanceof SpinnerBase) {
+        arg.active = this.active;
+        arg.paused = this.paused;
+        arg.finished = this.finished;
+        arg.tick();
+        continue;
+      }
+      if (Array.isArray(arg)) {
+        if (!this.indices.has(arg)) {
+          this.indices.set(arg, 0);
+          continue;
+        }
+        if (!this.finished && !this.paused && this.active) {
+          this.indices.set(arg, (this.indices.get(arg) + 1) % arg.length);
+        }
+      }
+    }
+    return this;
+  }
+
   getFrame() {
     let result = '';
     for (let i = 0; i < this.args.length; ++i) {
@@ -21,18 +43,12 @@ class Spinner extends SpinnerBase {
       }
 
       if (arg instanceof SpinnerBase) {
-        arg.active = this.active;
-        arg.paused = this.paused;
-        arg.finished = this.finished;
         result += arg.getFrame();
         continue;
       }
 
       if (Array.isArray(arg)) {
-        if (!this.indices.has(arg)) this.indices.set(arg, 0);
-        const index = this.indices.get(arg);
-        if (!this.finished && !this.paused && this.active) this.indices.set(arg, (index + 1) % arg.length);
-        result += String(arg[index]);
+        result += String(arg[this.indices.get(arg) ?? 0]);
         continue;
       }
 

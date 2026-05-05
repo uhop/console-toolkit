@@ -23,6 +23,8 @@ export const toStrings = s => {
         continue main;
       case 'number':
       case 'boolean':
+      case 'bigint':
+      case 'symbol':
         return [String(s)];
       case 'string':
         return String(s).split(/\r?\n/g);

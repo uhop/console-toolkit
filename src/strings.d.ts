@@ -25,6 +25,8 @@ export type StringsValue =
   | undefined
   | boolean
   | number
+  | bigint
+  | symbol
   | string
   | string[]
   | object
