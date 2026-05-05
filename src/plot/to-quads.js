@@ -18,7 +18,9 @@ export const toQuads = bmp => {
         }
       }
       if ((kBase + i) & 1) {
-        result.push(accumulator.map(i => quadrants[i]).join(''));
+        let row = '';
+        for (const k of accumulator) row += quadrants[k];
+        result.push(row);
         if (kBase + i + 1 < bmp.height) accumulator.fill(0);
       }
     }

@@ -16,7 +16,7 @@ export const drawChart =
     const newData = [];
     data.forEach(series => {
       newData.push(...series);
-      if (series.length < maxSeriesLength) newData.push(...new Array(maxSeriesLength - series.length).fill(null));
+      for (let i = series.length; i < maxSeriesLength; ++i) newData.push(null);
     });
 
     const max =

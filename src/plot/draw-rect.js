@@ -2,6 +2,15 @@ export const drawRect = (bmp, x0, y0, x1, y1, value = 1) => {
   if (x1 < x0) [x0, x1] = [x1, x0];
   if (y1 < y0) [y0, y1] = [y1, y0];
 
+  // hoist op-mode once: + = set (OR), - = toggle (XOR), 0 = clear (AND~)
+  const apply =
+    value > 0
+      ? (current, mask) => current | mask
+      : value < 0
+        ? (current, mask) => current ^ mask
+        : (current, mask) => current & ~mask;
+  const applyFull = value > 0 ? () => ~0 : value < 0 ? current => ~current : () => 0;
+
   let indexL = bmp.getWordIndex(x0, y0),
     indexR = bmp.getWordIndex(x1, y0);
 
@@ -22,12 +31,7 @@ export const drawRect = (bmp, x0, y0, x1, y1, value = 1) => {
       for (let i = 1; i < height; ++i) fullMask = (fullMask << bmp.blockWidth) | mask;
       fullMask <<= firstRowShift;
 
-      bmp.bitmap[indexL] =
-        value > 0
-          ? bmp.bitmap[indexL] | fullMask
-          : value < 0
-            ? bmp.bitmap[indexL] ^ fullMask
-            : bmp.bitmap[indexL] & ~fullMask;
+      bmp.bitmap[indexL] = apply(bmp.bitmap[indexL], fullMask);
       return;
     }
 
@@ -48,25 +52,9 @@ export const drawRect = (bmp, x0, y0, x1, y1, value = 1) => {
     fullMaskR <<= firstRowShift;
 
     // apply masks
-    bmp.bitmap[indexL] =
-      value > 0
-        ? bmp.bitmap[indexL] | fullMaskL
-        : value < 0
-          ? bmp.bitmap[indexL] ^ fullMaskL
-          : bmp.bitmap[indexL] & ~fullMaskL;
-    for (let index = indexL + 1; index < indexR; ++index)
-      bmp.bitmap[index] =
-        value > 0
-          ? bmp.bitmap[index] | fullMaskM
-          : value < 0
-            ? bmp.bitmap[index] ^ fullMaskM
-            : bmp.bitmap[index] & ~fullMaskM;
-    bmp.bitmap[indexR] =
-      value > 0
-        ? bmp.bitmap[indexR] | fullMaskR
-        : value < 0
-          ? bmp.bitmap[indexR] ^ fullMaskR
-          : bmp.bitmap[indexR] & ~fullMaskR;
+    bmp.bitmap[indexL] = apply(bmp.bitmap[indexL], fullMaskL);
+    for (let index = indexL + 1; index < indexR; ++index) bmp.bitmap[index] = apply(bmp.bitmap[index], fullMaskM);
+    bmp.bitmap[indexR] = apply(bmp.bitmap[indexR], fullMaskR);
     return;
   }
 
@@ -82,12 +70,7 @@ export const drawRect = (bmp, x0, y0, x1, y1, value = 1) => {
       let fullMask = mask;
       for (let i = 1, n = bmp.blockHeight - firstRows; i < n; ++i) fullMask = (fullMask << bmp.blockWidth) | mask;
       fullMask <<= firstRowShift;
-      bmp.bitmap[indexL] =
-        value > 0
-          ? bmp.bitmap[indexL] | fullMask
-          : value < 0
-            ? bmp.bitmap[indexL] ^ fullMask
-            : bmp.bitmap[indexL] & ~fullMask;
+      bmp.bitmap[indexL] = apply(bmp.bitmap[indexL], fullMask);
       indexL += bmp.lineSize;
     }
     if (fullLines) {
@@ -96,23 +79,13 @@ export const drawRect = (bmp, x0, y0, x1, y1, value = 1) => {
       for (let i = 1; i < bmp.blockHeight; ++i) fullMask = (fullMask << bmp.blockWidth) | mask;
       // apply the mask to full blocks
       for (let i = 0; i < fullLines; ++i, indexL += bmp.lineSize)
-        bmp.bitmap[indexL] =
-          value > 0
-            ? bmp.bitmap[indexL] | fullMask
-            : value < 0
-              ? bmp.bitmap[indexL] ^ fullMask
-              : bmp.bitmap[indexL] & ~fullMask;
+        bmp.bitmap[indexL] = apply(bmp.bitmap[indexL], fullMask);
     }
     if (lastRows) {
       // apply the mask to the last incomplete block
       let fullMask = mask;
       for (let i = 1; i < lastRows; ++i) fullMask = (fullMask << bmp.blockWidth) | mask;
-      bmp.bitmap[indexL] =
-        value > 0
-          ? bmp.bitmap[indexL] | fullMask
-          : value < 0
-            ? bmp.bitmap[indexL] ^ fullMask
-            : bmp.bitmap[indexL] & ~fullMask;
+      bmp.bitmap[indexL] = apply(bmp.bitmap[indexL], fullMask);
     }
     return;
   }
@@ -132,25 +105,9 @@ export const drawRect = (bmp, x0, y0, x1, y1, value = 1) => {
     }
     fullMaskL <<= firstRowShift;
     fullMaskR <<= firstRowShift;
-    bmp.bitmap[indexL] =
-      value > 0
-        ? bmp.bitmap[indexL] | fullMaskL
-        : value < 0
-          ? bmp.bitmap[indexL] ^ fullMaskL
-          : bmp.bitmap[indexL] & ~fullMaskL;
-    for (let index = indexL + 1; index < indexR; ++index)
-      bmp.bitmap[index] =
-        value > 0
-          ? bmp.bitmap[index] | fullMaskM
-          : value < 0
-            ? bmp.bitmap[index] ^ fullMaskM
-            : bmp.bitmap[index] & ~fullMaskM;
-    bmp.bitmap[indexR] =
-      value > 0
-        ? bmp.bitmap[indexR] | fullMaskR
-        : value < 0
-          ? bmp.bitmap[indexR] ^ fullMaskR
-          : bmp.bitmap[indexR] & ~fullMaskR;
+    bmp.bitmap[indexL] = apply(bmp.bitmap[indexL], fullMaskL);
+    for (let index = indexL + 1; index < indexR; ++index) bmp.bitmap[index] = apply(bmp.bitmap[index], fullMaskM);
+    bmp.bitmap[indexR] = apply(bmp.bitmap[indexR], fullMaskR);
     indexL += bmp.lineSize;
     indexR += bmp.lineSize;
   }
@@ -165,20 +122,9 @@ export const drawRect = (bmp, x0, y0, x1, y1, value = 1) => {
     }
     // apply masks
     for (let i = 0; i < fullLines; ++i, indexL += bmp.lineSize, indexR += bmp.lineSize) {
-      bmp.bitmap[indexL] =
-        value > 0
-          ? bmp.bitmap[indexL] | fullMaskL
-          : value < 0
-            ? bmp.bitmap[indexL] ^ fullMaskL
-            : bmp.bitmap[indexL] & ~fullMaskL;
-      for (let index = indexL + 1; index < indexR; ++index)
-        bmp.bitmap[index] = value > 0 ? ~0 : value < 0 ? ~bmp.bitmap[index] : 0;
-      bmp.bitmap[indexR] =
-        value > 0
-          ? bmp.bitmap[indexR] | fullMaskR
-          : value < 0
-            ? bmp.bitmap[indexR] ^ fullMaskR
-            : bmp.bitmap[indexR] & ~fullMaskR;
+      bmp.bitmap[indexL] = apply(bmp.bitmap[indexL], fullMaskL);
+      for (let index = indexL + 1; index < indexR; ++index) bmp.bitmap[index] = applyFull(bmp.bitmap[index]);
+      bmp.bitmap[indexR] = apply(bmp.bitmap[indexR], fullMaskR);
     }
   }
 
@@ -191,25 +137,9 @@ export const drawRect = (bmp, x0, y0, x1, y1, value = 1) => {
       fullMaskL = (fullMaskL << bmp.blockWidth) | maskL;
       fullMaskR = (fullMaskR << bmp.blockWidth) | maskR;
     }
-    bmp.bitmap[indexL] =
-      value > 0
-        ? bmp.bitmap[indexL] | fullMaskL
-        : value < 0
-          ? bmp.bitmap[indexL] ^ fullMaskL
-          : bmp.bitmap[indexL] & ~fullMaskL;
-    for (let index = indexL + 1; index < indexR; ++index)
-      bmp.bitmap[index] =
-        value > 0
-          ? bmp.bitmap[index] | fullMaskM
-          : value < 0
-            ? bmp.bitmap[index] ^ fullMaskM
-            : bmp.bitmap[index] & ~fullMaskM;
-    bmp.bitmap[indexR] =
-      value > 0
-        ? bmp.bitmap[indexR] | fullMaskR
-        : value < 0
-          ? bmp.bitmap[indexR] ^ fullMaskR
-          : bmp.bitmap[indexR] & ~fullMaskR;
+    bmp.bitmap[indexL] = apply(bmp.bitmap[indexL], fullMaskL);
+    for (let index = indexL + 1; index < indexR; ++index) bmp.bitmap[index] = apply(bmp.bitmap[index], fullMaskM);
+    bmp.bitmap[indexR] = apply(bmp.bitmap[indexR], fullMaskR);
   }
 };
 

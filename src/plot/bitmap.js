@@ -82,21 +82,22 @@ export class Bitmap {
   // }
 
   toBox(one = fullBlock, zero = ' ') {
-    const result = [];
+    const result = [],
+      chars = new Array(this.width);
     for (let k = 0, kBase = 0; k < this.lineCount; ++k, kBase += this.blockHeight) {
       const iLimit = Math.min(this.blockHeight, this.height - kBase);
       for (let i = 0; i < iLimit; ++i) {
-        let row = '';
+        let pos = 0;
         for (let j = 0, jBase = 0; j < this.lineSize; ++j, jBase += this.blockWidth) {
           const index = k * this.lineSize + j,
             word = this.bitmap[index],
             mLimit = Math.min(this.blockWidth, this.width - jBase);
           let mask = 1 << (this.blockWidth * i);
           for (let m = 0; m < mLimit; ++m, mask <<= 1) {
-            row += word & mask ? one : zero;
+            chars[pos++] = word & mask ? one : zero;
           }
         }
-        result.push(row);
+        result.push(chars.join(''));
       }
     }
     return new Box(result, true);

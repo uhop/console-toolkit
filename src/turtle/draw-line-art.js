@@ -15,32 +15,47 @@ const getIndex = cell => {
   return {skipFlag, hTheme, vTheme, hIndex, vIndex};
 };
 
-export const draw = (turtle, lineTheme, {ignore = ' '} = {}) =>
-  new Box(
+export const draw = (turtle, lineTheme, {ignore = ' '} = {}) => {
+  const wCache = {},
+    vCache = {},
+    hCache = {},
+    tCache = {};
+  return new Box(
     turtle.cells.map(row =>
       row
         .map(cell => {
           const {skipFlag, hTheme, vTheme, hIndex, vIndex} = getIndex(cell);
           if (skipFlag) return ignore;
           if (!hTheme) {
-            if (lineTheme['w_' + vTheme] !== 1)
+            let w = wCache[vTheme];
+            if (w === undefined) w = wCache[vTheme] = lineTheme['w_' + vTheme];
+            if (w !== 1)
               throw new TypeError(`Vertical theme "${vTheme}" should have width of 1 for all vertical elements`);
-            if (!lineTheme['v_' + vTheme]) throw new TypeError(`Style has no "v_${vTheme}" property`);
-            return lineTheme['v_' + vTheme][vIndex];
+            let v = vCache[vTheme];
+            if (v === undefined) v = vCache[vTheme] = lineTheme['v_' + vTheme];
+            if (!v) throw new TypeError(`Style has no "v_${vTheme}" property`);
+            return v[vIndex];
           }
           if (!vTheme) {
-            if (!lineTheme['h_' + hTheme]) throw new TypeError(`Style has no "h_${hTheme}" property`);
-            return lineTheme['h_' + hTheme][hIndex];
+            let h = hCache[hTheme];
+            if (h === undefined) h = hCache[hTheme] = lineTheme['h_' + hTheme];
+            if (!h) throw new TypeError(`Style has no "h_${hTheme}" property`);
+            return h[hIndex];
           }
-          if (lineTheme['w_' + vTheme] !== 1)
+          let w = wCache[vTheme];
+          if (w === undefined) w = wCache[vTheme] = lineTheme['w_' + vTheme];
+          if (w !== 1)
             throw new TypeError(`Vertical theme "${vTheme}" should have width of 1 for all vertical elements`);
-          if (!lineTheme['t_' + hTheme + '_' + vTheme])
-            throw new TypeError(`Style has no "t_${hTheme}_${vTheme}" property`);
-          return lineTheme['t_' + hTheme + '_' + vTheme][4 * hIndex + vIndex];
+          const tKey = hTheme + '_' + vTheme;
+          let t = tCache[tKey];
+          if (t === undefined) t = tCache[tKey] = lineTheme['t_' + hTheme + '_' + vTheme];
+          if (!t) throw new TypeError(`Style has no "t_${hTheme}_${vTheme}" property`);
+          return t[4 * hIndex + vIndex];
         })
         .join('')
     ),
     true
   );
+};
 
 export default draw;
