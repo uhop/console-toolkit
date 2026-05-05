@@ -1,4 +1,4 @@
-import {draw} from './draw-borders.js';
+import draw from './draw-borders.js';
 import Table from './table.js';
 
 export {Table, draw};

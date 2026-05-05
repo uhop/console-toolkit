@@ -1,5 +1,5 @@
 import Turtle from './turtle.js';
-import {draw} from './draw-unicode.js';
+import draw from './draw-unicode.js';
 import Box from '../box.js';
 
 declare module './turtle.js' {

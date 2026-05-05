@@ -165,7 +165,12 @@ class Panel {
 }
 
 function toPanel(s: any, options?: object): Panel;  // Alias for Panel.make()
+
+// Sentinel character ('\x07' BELL) used by Panel.put() to mark empty cells.
+const EMPTY_CELL_SENTINEL: string;
 ```
+
+When placing text via `panel.put()`, characters matching `emptySymbol` (default `EMPTY_CELL_SENTINEL`) become empty cells. The rendering character for empty cells is set later via `toStrings({emptySymbol})`.
 
 ---
 
@@ -399,13 +404,68 @@ import theme from 'console-toolkit/themes/blocks/unicode-thin.js';
 
 ## Package: spinner (`console-toolkit/spinner`)
 
-```ts
-import spin from 'console-toolkit/spinner';
+Spinners and updatable text components. Two layers:
 
-const stop = spin(message, options?);
-// ... do async work ...
-stop();
+- `SpinnerBase` / `Spinner` — frame-driven animations. Split API (since 1.3.0): `tick()` advances state, `getFrame()` reads current frame, `nextFrame()` is the convenience combo (`tick()` + `getFrame()`).
+- `spin` — tagged template literal that composes a `SpinnerBase`-shaped object from a template containing nested spinners, arrays, and state-aware functions.
+
+```ts
+import spin, {Spinner, SpinnerBase} from 'console-toolkit/spinner';
+
+class SpinnerBase {
+  active: boolean;
+  paused: boolean;
+  finished: boolean;
+  frameIndex: number;
+
+  readonly isStarted: boolean;
+  readonly isActive: boolean;
+  readonly isFinished: boolean;
+  state: '' | 'active' | 'paused' | 'finished';
+
+  reset(): void;
+  nextFrameIndex(length: number): number;
+
+  tick(): this;            // advance internal state by one step (state-aware)
+  getFrame(): string;      // read current frame, no mutation
+  nextFrame(): string;     // tick() + getFrame()
+}
+
+interface SpinnerDefinition {
+  frames?: string[];       // active-state frames (default: braille spinner)
+  notStarted?: string[];   // not-started frames (default: [' '])
+  finished?: string[];     // finished frames (default: ['✓'])
+}
+
+class Spinner extends SpinnerBase {
+  spinner: Required<SpinnerDefinition>;
+  constructor(spinnerDefinition?: SpinnerDefinition, isStarted?: boolean);
+  tick(): this;
+  getFrame(): string;
+}
+
+// Tagged template — composes nested Spinners, arrays, and (state) => string functions.
+function spin(strings: TemplateStringsArray, ...args: unknown[]): SpinnerBase;
 ```
+
+Usage with `Updater` (auto-refreshing terminal output):
+
+```js
+import spin, {Spinner} from 'console-toolkit/spinner';
+import {bouncingBall} from 'console-toolkit/spinner/spinners.js';
+import Updater from 'console-toolkit/output/updater.js';
+
+const spinner = spin`Loading: [${new Spinner()}], ${new Spinner(bouncingBall)}, state: ${state => state}`;
+const updater = new Updater(spinner);
+if (updater.writer.isTTY) {
+  updater.update();
+  updater.startRefreshing();
+}
+// ... async work ...
+await updater.final();
+```
+
+`Updater` calls `nextFrame()` on its target if available, falling back to `getFrame()`. Use `nextFrame()` directly when driving a spinner from your own render loop; use `getFrame()` to peek without advancing.
 
 ---
 

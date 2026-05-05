@@ -64,7 +64,7 @@ Line themes and block themes are plain objects with indexed sub-themes. They are
 
 - **ESM-only**: All files use `import`/`export`. The package uses `"type": "module"`.
 - **No build step**: Source JS is shipped directly. TypeScript `.d.ts` files are hand-written alongside `.js` files.
-- **JSDoc + `.d.ts` dual documentation**: Every `.js` file has JSDoc comments; every public module has a corresponding `.d.ts` file for IDE support.
+- **`.d.ts` is the only API contract**: Every public module has a hand-written `.d.ts` sidecar. JSDoc is intentionally not used in `.js` files (drift surface; the `.d.ts` is the source of truth).
 - **Immutable Box, mutable Panel**: `Box` methods return new instances. `Panel` methods mutate and return `this` for chaining.
 - **`addAlias` / `addAliases`**: Used to create method aliases on class prototypes (e.g., `toBox` → `clone`, `combineState` → `combineStateAfter`).
 - **CSS-style shorthand**: `pad(t, r, b, l)` on both Box and Panel follows CSS padding order.

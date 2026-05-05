@@ -9,7 +9,8 @@ console-toolkit is a zero-dependency ESM JavaScript library for rich CLI/TUI out
 - **ESM-only.** All imports must use `.js` extensions: `import Box from './box.js'`.
 - **No runtime dependencies.** Never add packages to `dependencies`. Only `devDependencies` are allowed.
 - **No build step.** Source JS in `src/` is shipped directly. Do not create build scripts or compiled output.
-- **Hand-written `.d.ts` files.** They are NOT generated. When modifying a public API, update both the `.js` and `.d.ts` files. Keep JSDoc in sync between them.
+- **Hand-written `.d.ts` files.** They are NOT generated. When modifying a public API, update both the `.js` and `.d.ts` files.
+- **No JSDoc in `.js` files.** API contracts live in the sidecar `.d.ts` only. Don't add `/** ... */` blocks to `src/*.js`; they duplicate the `.d.ts` and rot out of sync.
 - **Do not modify or delete test expectations** without understanding why they changed.
 - **Do not add comments or remove comments** unless explicitly asked.
 

@@ -1,6 +1,7 @@
 import {SgrState} from './ansi/sgr-state.js';
 import Box from './box.js';
 import {StringsInput} from './strings.js';
+import {SplitOptions} from './strings/split.js';
 
 /** Sentinel character ('\x07' BELL) used to mark empty cells when placing text via `Panel.put()`. */
 export const EMPTY_CELL_SENTINEL: string;
@@ -155,15 +156,14 @@ export class Panel {
    * @param width - Region width.
    * @param height - Region height.
    * @param fn - Cell transformation function.
-   * @param options - Reserved for future use.
+   * @param options - Grapheme split options forwarded to width detection (for wide-character support).
    * @returns This Panel (mutated).
    */
-  applyFn(x: number, y: number, width: number, height: number, fn: ApplyFn): Panel;
+  applyFn(x: number, y: number, width: number, height: number, fn: ApplyFn, options?: SplitOptions): Panel;
 
   /** Fills the entire panel with a symbol and optional state.
    * @param symbol - Fill character.
    * @param state - SGR state.
-   * @param options - Reserved.
    * @returns This Panel (mutated).
    */
   fill(symbol: string, state?: SgrState | string | string[]): Panel;
@@ -174,7 +174,7 @@ export class Panel {
    * @param height - Region height.
    * @param symbol - Fill character.
    * @param state - SGR state.
-   * @param options - Reserved.
+   * @param options - Grapheme split options forwarded to width detection.
    * @returns This Panel (mutated).
    */
   fill(
@@ -183,7 +183,8 @@ export class Panel {
     width: number,
     height: number,
     symbol: string,
-    state?: SgrState | string | string[]
+    state?: SgrState | string | string[],
+    options?: SplitOptions
   ): Panel;
 
   /** Fills all cells with the given state, using `emptySymbol` for empty cells' symbol.
@@ -262,10 +263,10 @@ export class Panel {
    * @param y - Top row.
    * @param width - Region width.
    * @param height - Region height.
-   * @param options - Options passed to `applyFn()`.
+   * @param options - Grapheme split options forwarded to width detection.
    * @returns This Panel (mutated).
    */
-  clear(x: number, y?: number, width?: number, height?: number): Panel;
+  clear(x: number, y?: number, width?: number, height?: number, options?: SplitOptions): Panel;
 
   /** Pads the left side.
    * @param n - Columns.
