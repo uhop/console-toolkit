@@ -132,6 +132,7 @@ BSD 3-Clause License
 
 ## Release history
 
+- 1.3.0 _Spinner API split (`tick`/`getFrame`/`nextFrame`), JSDoc removed from JS files, minor fixes._
 - 1.2.15 _TypeScript 6.0 compatibility, updated dev deps, CI, license year._
 - 1.2.14 _Updated dev deps._
 - 1.2.13 _Fixed spinner .d.ts export, added TS type tests, stricter type checking, updated dev deps._
@@ -151,3 +152,5 @@ BSD 3-Clause License
 - 1.1.1 _Minor bugfixes in `Table`, some improvements, updated deps._
 - 1.1.0 _Minor improvements, enhanced `Writer` and `Updater`._
 - 1.0.0 _Initial release._
+
+The full release notes are in the wiki: [Release notes](https://github.com/uhop/console-toolkit/wiki/Release-notes).
