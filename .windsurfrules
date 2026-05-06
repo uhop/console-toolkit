@@ -3,7 +3,7 @@
 
 ## Project identity
 
-console-toolkit is a zero-dependency ESM JavaScript library for rich CLI/TUI output: styled text, boxes, panels, tables, charts, plots, turtle graphics, and spinners. Node.js 20+, Bun, Deno.
+console-toolkit is a zero-dependency ESM JavaScript library for rich CLI/TUI output: styled text, boxes, panels, tables, charts, plots, turtle graphics, and spinners. Node.js 22+, Bun, Deno.
 
 ## Critical rules
 
