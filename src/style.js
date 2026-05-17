@@ -11,7 +11,7 @@ import {
   extractState
 } from './ansi/sgr-state.js';
 import {matchCsi} from './ansi/csi.js';
-import {capitalize, toCamelCase, fromSnakeCase, addGetter, addAliases, addGetters} from './meta.js';
+import {capitalize, toCamelCase, fromSnakeCase, addGetter, addAliases, addGetters, verifyStrings} from './meta.js';
 
 export {RESET_STATE};
 
@@ -570,15 +570,11 @@ const processStringConstant = (strings, i, result, stack, style) => {
   return {result, style};
 };
 
-const makeBq =
-  clear =>
-  (strings, ...args) => {
-    const callAsFunction = !Array.isArray(strings),
-      states = callAsFunction && strings;
-
-    const bq = (strings, ...args) => {
+const makeBq = (clear, options = {}) => {
+  const bq = (strings, ...args) => {
+    if (verifyStrings(strings)) {
       const stack = [];
-      let style = new Style(states?.initState, states?.setState),
+      let style = new Style(options.initState, options.setState),
         result = '';
       for (let i = 0; i < args.length; ++i) {
         // process a string constant
@@ -599,15 +595,15 @@ const makeBq =
       }
       ({result, style} = processStringConstant(strings, strings.length - 1, result, stack, style));
       if (clear) {
-        const cleanupCommands = stateReverseTransition(states?.initState, style[stateSymbol]);
+        const cleanupCommands = stateReverseTransition(options.initState, style[stateSymbol]);
         result += stringifyCommands(cleanupCommands);
       }
-      return optimize(result, states?.initState);
-    };
-
-    if (callAsFunction) return bq;
-    return bq(strings, ...args);
+      return optimize(result, options.initState);
+    }
+    return makeBq(clear, {...options, ...strings});
   };
+  return bq;
+};
 
 export const s = makeBq(false);
 export const c = makeBq(true);

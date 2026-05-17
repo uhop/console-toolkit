@@ -440,11 +440,12 @@ type BqFunction = {
    * @returns The styled string.
    */
   (strings: TemplateStringsArray, ...args: unknown[]): string;
-  /** Configured usage — returns a tagged template function with the given states.
+  /** Configured usage — returns a tagged template function with the given states merged.
+   * The returned function is itself a BqFunction, so configuration can chain.
    * @param states - Initial and current SGR state configuration.
-   * @returns A tagged template function.
+   * @returns A BqFunction with the merged configuration.
    */
-  (states: BqStates): (strings: TemplateStringsArray, ...args: unknown[]) => string;
+  (states: BqStates): BqFunction;
 };
 
 /** Tagged template literal for styled text. Style changes persist after the string.
