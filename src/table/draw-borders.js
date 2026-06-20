@@ -1,3 +1,4 @@
+// @ts-self-types="./draw-borders.d.ts"
 import Box from '../box.js';
 
 // An axis structure is an array:

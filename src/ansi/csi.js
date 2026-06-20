@@ -1,3 +1,4 @@
+// @ts-self-types="./csi.d.ts"
 // CSI (Control Sequence Introducer) commands definitions and helpers.
 // CSI is a part of Fe Escape sequences.
 // Type Fe is supported by C1 control codes.

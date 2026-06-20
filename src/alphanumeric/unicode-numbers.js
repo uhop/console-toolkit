@@ -1,3 +1,4 @@
+// @ts-self-types="./unicode-numbers.d.ts"
 import {SymbolRange, transcode as internalTranscode} from './utils.js';
 import {minus, multiplication, superscriptPlus, superscriptMinus} from '../symbols.js';
 

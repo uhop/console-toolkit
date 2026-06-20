@@ -1,3 +1,4 @@
+// @ts-self-types="./writer.d.ts"
 import process from 'node:process';
 
 import {CURSOR_DOWN1, CURSOR_RESTORE_POS, CURSOR_SAVE_POS} from '../ansi/csi.js';

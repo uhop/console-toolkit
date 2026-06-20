@@ -1,3 +1,4 @@
+// @ts-self-types="./rainbow.d.ts"
 import style from '../../style.js';
 
 // red, orange, yellow, green, blue, indigo, violet

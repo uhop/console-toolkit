@@ -1,3 +1,4 @@
+// @ts-self-types="./roman.d.ts"
 import {transcodeTables} from './unicode-numbers.js';
 
 const {roman, romanLower} = transcodeTables;

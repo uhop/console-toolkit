@@ -1,3 +1,4 @@
+// @ts-self-types="./parse.d.ts"
 export const matchCsiNoGroups = /\x1B\[[\x30-\x3F]*[\x20-\x2F]*[\x40-\x7E]/g;
 export const matchCsiNoSgrNoGroups = /\x1B\[[\x30-\x3F]*[\x20-\x2F]*[\x40-\x6C\x6E-\x7E]/g;
 

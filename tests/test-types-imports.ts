@@ -1,12 +1,12 @@
 import test from 'tape-six';
 
-import Box, {toBox} from 'console-toolkit/box';
+import Box, {toBox} from 'console-toolkit/box.js';
 
-import Panel, {toPanel} from 'console-toolkit/panel';
+import Panel, {toPanel} from 'console-toolkit/panel.js';
 
-import style, {Style, s, c} from 'console-toolkit/style';
+import style, {Style, s, c} from 'console-toolkit/style.js';
 
-import {toStrings, getLength, getMaxLength, clipStrings, clip} from 'console-toolkit/strings';
+import {toStrings, getLength, getMaxLength, clipStrings, clip} from 'console-toolkit/strings.js';
 
 import {ESC, CURSOR_DELETE, CURSOR_GO_UP1, CURSOR_SAVE, CURSOR_RESTORE} from 'console-toolkit/ansi';
 

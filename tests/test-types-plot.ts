@@ -1,6 +1,6 @@
 import test from 'tape-six';
 import Bitmap, {drawLine, drawRect, toQuads} from 'console-toolkit/plot';
-import Box from 'console-toolkit/box';
+import Box from 'console-toolkit/box.js';
 
 test('Bitmap constructor and properties', t => {
   const bm: Bitmap = new Bitmap(20, 10);

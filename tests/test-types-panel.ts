@@ -1,7 +1,7 @@
 import test from 'tape-six';
-import Panel, {toPanel} from 'console-toolkit/panel';
-import type {PanelCell, PanelPutOptions} from 'console-toolkit/panel';
-import Box from 'console-toolkit/box';
+import Panel, {toPanel} from 'console-toolkit/panel.js';
+import type {PanelCell, PanelPutOptions} from 'console-toolkit/panel.js';
+import Box from 'console-toolkit/box.js';
 
 test('Panel constructor and properties', t => {
   const panel: Panel = new Panel(10, 5);

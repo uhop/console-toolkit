@@ -101,7 +101,7 @@ Higher-level modules (`table`, `charts`, `plot`, `turtle`, `spinner`) depend on 
 The package uses subpath exports in `package.json`:
 
 ```js
-import Box from 'console-toolkit/box';
+import Box from 'console-toolkit/box.js';
 import {c} from 'console-toolkit/style.js';
 import makeTable from 'console-toolkit/table';
 import lineTheme from 'console-toolkit/themes/lines/unicode-rounded.js';

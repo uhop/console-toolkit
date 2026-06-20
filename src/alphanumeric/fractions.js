@@ -1,3 +1,4 @@
+// @ts-self-types="./fractions.d.ts"
 export const fractions = [
   [1, 7, '\u2150'],
   [1, 9, '\u2151'],

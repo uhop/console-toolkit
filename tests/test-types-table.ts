@@ -2,8 +2,8 @@ import test from 'tape-six';
 import {Table, make} from 'console-toolkit/table';
 import type {TableCellInput, CellData, TableOptions, GenerateAxesOptions} from 'console-toolkit/table/table.js';
 import {lineTheme as unicodeLineTheme} from 'console-toolkit/themes/lines/unicode.js';
-import Panel from 'console-toolkit/panel';
-import Box from 'console-toolkit/box';
+import Panel from 'console-toolkit/panel.js';
+import Box from 'console-toolkit/box.js';
 
 test('Table constructor', t => {
   const data: TableCellInput[][] = [

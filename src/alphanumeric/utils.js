@@ -1,3 +1,4 @@
+// @ts-self-types="./utils.d.ts"
 export class SymbolRange {
   constructor(fromSymbol, from = 0, to = 9, inputBase = '0') {
     this.from = from;

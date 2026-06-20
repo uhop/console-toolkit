@@ -1,3 +1,4 @@
+// @ts-self-types="./number-formatters.d.ts"
 // Initially copied from https://github.com/uhop/nano-bench
 
 const units = ['s', 'ms', 'μs', 'ns', 'ps'],

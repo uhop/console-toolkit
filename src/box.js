@@ -1,3 +1,4 @@
+// @ts-self-types="./box.d.ts"
 import {addAlias} from './meta.js';
 import {getLength, clipStrings, toStrings} from './strings.js';
 

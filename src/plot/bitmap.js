@@ -1,3 +1,4 @@
+// @ts-self-types="./bitmap.d.ts"
 import Box from '../box.js';
 import {addAlias} from '../meta.js';
 import {fullBlock} from '../symbols.js';

@@ -1,3 +1,4 @@
+// @ts-self-types="./symbols.d.ts"
 const generateSequence = (base, from, to) => {
   const result = [];
 

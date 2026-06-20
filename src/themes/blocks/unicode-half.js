@@ -1,3 +1,4 @@
+// @ts-self-types="./unicode-half.d.ts"
 import {populateTheme} from '../utils.js';
 
 export const blockTheme = {};

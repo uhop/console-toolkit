@@ -1,3 +1,4 @@
+// @ts-self-types="./to-quads.d.ts"
 import Box from '../box.js';
 import {quadrants} from '../symbols.js';
 

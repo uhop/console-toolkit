@@ -1,3 +1,4 @@
+// @ts-self-types="./index.d.ts"
 import Bitmap from './bitmap.js';
 import drawLine from './draw-line.js';
 import drawRect from './draw-rect.js';

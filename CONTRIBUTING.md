@@ -2,13 +2,13 @@
 
 ## Prerequisites
 
-- Node.js 20 or later
+- Node.js 22 or later
 - npm
 
 ## Setup
 
 ```bash
-git clone --recursive git@github.com:uhop/console-toolkit
+git clone --recursive https://github.com/uhop/console-toolkit
 cd console-toolkit
 npm install
 ```
@@ -71,8 +71,9 @@ node tests/manual/test-<name>.js
 
 - Every public `.js` module has a hand-written `.d.ts` file alongside it.
 - `.d.ts` files are NOT generated — edit them manually.
-- JSDoc in `.js` files must stay in sync with the corresponding `.d.ts` JSDoc.
-- When changing a public API, always update both files.
+- No JSDoc in `.js` files — the `.d.ts` sidecar is the sole source of types and docs.
+- Each `.js` carries `// @ts-self-types="./<file>.d.ts"` at the top so IDE hover defers to the `.d.ts`.
+- When changing a public API, always update both the `.js` and its `.d.ts`.
 
 ### Patterns
 
@@ -85,7 +86,7 @@ node tests/manual/test-<name>.js
 
 ### New public function in an existing module
 
-1. Add implementation to `src/<module>.js` with JSDoc.
+1. Add implementation to `src/<module>.js` (types go in the `.d.ts`, not JSDoc).
 2. Add type signature to `src/<module>.d.ts` with matching JSDoc.
 3. Add tests to `tests/test-<module>.js`.
 4. Run `npm test` and `npm run ts-check`.
@@ -102,3 +103,7 @@ node tests/manual/test-<name>.js
 2. If it's a sub-package, create `src/<name>/index.js` and `src/<name>/index.d.ts`.
 3. Add an export entry in `package.json` `"exports"` if it should be a named entry point.
 4. Add tests and update documentation.
+
+## License
+
+By contributing, you agree that your contributions will be licensed under the project's [BSD-3-Clause license](./LICENSE). No external contributions are accepted under licenses fundamentally incompatible with the BSD-3-Clause license this library is distributed under.

@@ -1,3 +1,4 @@
+// @ts-self-types="./draw-block.d.ts"
 import Box from './box.js';
 
 const getIndex = (h, v) => 4 * h + v;

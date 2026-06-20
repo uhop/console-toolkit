@@ -1,3 +1,4 @@
+// @ts-self-types="./draw-line-art.d.ts"
 import Box from '../box.js';
 
 const BEFORE = 1,

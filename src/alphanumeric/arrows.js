@@ -1,3 +1,4 @@
+// @ts-self-types="./arrows.d.ts"
 export const LEFT = 0,
   UP = 1,
   RIGHT = 2,

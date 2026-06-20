@@ -1,3 +1,4 @@
+// @ts-self-types="./sgr.d.ts"
 // SGR (Select Graphics Rendition) definitions and helpers.
 // SGR is a part of CSI (Control Sequence Introducer) sequences.
 // CSI is a part of Fe Escape sequences.

@@ -1,6 +1,6 @@
 import test from 'tape-six';
 import Turtle, {draw} from 'console-toolkit/turtle';
-import Box from 'console-toolkit/box';
+import Box from 'console-toolkit/box.js';
 
 test('Turtle static direction constants', t => {
   const r: 0 = Turtle.RIGHT;

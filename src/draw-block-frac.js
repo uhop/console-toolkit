@@ -1,3 +1,4 @@
+// @ts-self-types="./draw-block-frac.d.ts"
 import {fullBlock, hBlocks8th, vBlocks8th} from './symbols.js';
 import Box from './box.js';
 

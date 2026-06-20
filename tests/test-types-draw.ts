@@ -3,7 +3,7 @@ import {drawBlock, drawFrame} from 'console-toolkit/draw-block.js';
 import {drawRealWidthBlock, drawRealHeightBlock} from 'console-toolkit/draw-block-frac.js';
 import type {DrawBlockOptions} from 'console-toolkit/draw-block.js';
 import {blockTheme as unicodeBlockTheme} from 'console-toolkit/themes/blocks/unicode-thin.js';
-import Box from 'console-toolkit/box';
+import Box from 'console-toolkit/box.js';
 
 test('drawBlock signatures', t => {
   const r1: Box = drawBlock(5, 3, unicodeBlockTheme);

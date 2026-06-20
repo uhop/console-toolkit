@@ -19,8 +19,8 @@ npm install console-toolkit
 
 ```js
 import style, {c} from 'console-toolkit/style.js';
-import Box from 'console-toolkit/box';
-import Panel from 'console-toolkit/panel';
+import Box from 'console-toolkit/box.js';
+import Panel from 'console-toolkit/panel.js';
 import makeTable from 'console-toolkit/table';
 import lineTheme from 'console-toolkit/themes/lines/unicode-rounded.js';
 
@@ -39,7 +39,7 @@ for (const line of table.toStrings()) console.log(line);
 
 ---
 
-## Module: strings (`console-toolkit/strings`)
+## Module: strings (`console-toolkit/strings.js`)
 
 String array utilities. The simplest text container.
 
@@ -61,7 +61,7 @@ interface ClipOptions {
 
 ---
 
-## Module: Box (`console-toolkit/box`)
+## Module: Box (`console-toolkit/box.js`)
 
 Rectangular text container where all lines have equal display width. **Immutable** — all methods return new Box instances.
 
@@ -109,7 +109,7 @@ interface BoxMakeOptions {
 
 ---
 
-## Module: Panel (`console-toolkit/panel`)
+## Module: Panel (`console-toolkit/panel.js`)
 
 2D cell grid where each cell has a character symbol and an SGR state. **Mutable** — methods mutate `this` and return `this` for chaining.
 
@@ -174,7 +174,7 @@ When placing text via `panel.put()`, characters matching `emptySymbol` (default 
 
 ---
 
-## Module: Style (`console-toolkit/style`)
+## Module: Style (`console-toolkit/style.js`)
 
 Fluent API for ANSI SGR styling.
 

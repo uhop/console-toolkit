@@ -1,3 +1,4 @@
+// @ts-self-types="./draw-rect.d.ts"
 export const drawRect = (bmp, x0, y0, x1, y1, value = 1) => {
   if (x1 < x0) [x0, x1] = [x1, x0];
   if (y1 < y0) [y0, y1] = [y1, y0];

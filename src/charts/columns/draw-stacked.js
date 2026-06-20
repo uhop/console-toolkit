@@ -1,3 +1,4 @@
+// @ts-self-types="./draw-stacked.d.ts"
 import defaultTheme from '../themes/default.js';
 import {normalizeData, sumValues} from '../utils.js';
 import Panel from '../../panel.js';

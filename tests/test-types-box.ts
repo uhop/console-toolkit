@@ -1,6 +1,6 @@
 import test from 'tape-six';
-import Box, {toBox} from 'console-toolkit/box';
-import type {BoxMakeOptions, AddBottomOptions, AddRightOptions} from 'console-toolkit/box';
+import Box, {toBox} from 'console-toolkit/box.js';
+import type {BoxMakeOptions, AddBottomOptions, AddRightOptions} from 'console-toolkit/box.js';
 
 test('Box constructor signatures', t => {
   const fromString: Box = new Box('hello');

@@ -1,3 +1,4 @@
+// @ts-self-types="./ascii-compact.d.ts"
 import {makeLineTheme} from '../utils.js';
 
 export const lineTheme = makeLineTheme([

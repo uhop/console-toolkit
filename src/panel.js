@@ -1,3 +1,4 @@
+// @ts-self-types="./panel.d.ts"
 import {matchCsi} from './ansi/csi.js';
 import {
   RESET_STATE,

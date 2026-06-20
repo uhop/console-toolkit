@@ -1,3 +1,4 @@
+// @ts-self-types="./index.d.ts"
 import draw from './draw-borders.js';
 import Table from './table.js';
 

@@ -1,3 +1,4 @@
+// @ts-self-types="./table.d.ts"
 import Box from '../box.js';
 import Panel, {EMPTY_CELL_SENTINEL} from '../panel.js';
 import {draw as drawBorder} from './draw-borders.js';

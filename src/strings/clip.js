@@ -1,3 +1,4 @@
+// @ts-self-types="./clip.d.ts"
 import parse, {matchCsiNoGroups} from './parse.js';
 import {split} from './split.js';
 

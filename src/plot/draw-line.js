@@ -1,3 +1,4 @@
+// @ts-self-types="./draw-line.d.ts"
 // Drawing lines using Bresenham's line algorithm
 // The canonic version from https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
 

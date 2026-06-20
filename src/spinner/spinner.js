@@ -1,3 +1,4 @@
+// @ts-self-types="./spinner.d.ts"
 import {checkMarkHeavy} from '../symbols.js';
 
 export class SpinnerBase {

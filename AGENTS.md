@@ -12,13 +12,13 @@ console-toolkit is a zero-dependency ESM JavaScript library for rich CLI/TUI out
 - **Hand-written `.d.ts` files.** They are NOT generated. When modifying a public API, update both the `.js` and `.d.ts` files.
 - **No JSDoc in `.js` files.** API contracts live in the sidecar `.d.ts` only. Don't add `/** ... */` blocks to `src/*.js`; they duplicate the `.d.ts` and rot out of sync.
 - **Do not modify or delete test expectations** without understanding why they changed.
-- **Do not add comments or remove comments** unless explicitly asked.
 
 ## Code style
 
 - Prettier: 120 char width, single quotes, no bracket spacing, no trailing commas, arrow parens "avoid".
 - 2-space indentation (`.editorconfig`).
 - Imports at top of file. No dynamic imports unless necessary.
+- **Comments are _why_-markers only** — a non-trivial decision/constraint or an algorithm reference; never narration of _what_ the code does. Type docs live in the `.d.ts`, not as JSDoc in `.js`.
 
 ## Architecture quick reference
 

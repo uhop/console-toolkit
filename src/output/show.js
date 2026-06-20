@@ -1,3 +1,4 @@
+// @ts-self-types="./show.d.ts"
 import process from 'node:process';
 import {matchCsiNoGroups} from '../strings.js';
 import Box from '../box.js';

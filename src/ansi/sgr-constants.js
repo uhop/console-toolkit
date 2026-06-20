@@ -1,3 +1,4 @@
+// @ts-self-types="./sgr-constants.d.ts"
 // SGR commands as constants: some people prefer it this way
 
 import {Commands, Colors, setCommands, getColor, getBrightColor, getBgColor, getBgBrightColor} from './sgr.js';

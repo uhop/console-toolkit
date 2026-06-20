@@ -1,8 +1,8 @@
 import test from 'tape-six';
-import {toStrings, getLength, getMaxLength, clipStrings, clip} from 'console-toolkit/strings';
-import type {StringsInput} from 'console-toolkit/strings';
-import {matchCsiNoGroups, matchCsiNoSgrNoGroups} from 'console-toolkit/strings';
-import Box from 'console-toolkit/box';
+import {toStrings, getLength, getMaxLength, clipStrings, clip} from 'console-toolkit/strings.js';
+import type {StringsInput} from 'console-toolkit/strings.js';
+import {matchCsiNoGroups, matchCsiNoSgrNoGroups} from 'console-toolkit/strings.js';
+import Box from 'console-toolkit/box.js';
 
 test('getLength signature', t => {
   const len: number = getLength('hello');

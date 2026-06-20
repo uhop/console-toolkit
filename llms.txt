@@ -21,7 +21,7 @@ npm install console-toolkit
 
 ```js
 import style, {c} from 'console-toolkit/style.js';
-import Box from 'console-toolkit/box';
+import Box from 'console-toolkit/box.js';
 import makeTable from 'console-toolkit/table';
 import lineTheme from 'console-toolkit/themes/lines/unicode-rounded.js';
 
@@ -37,13 +37,13 @@ for (const line of table.toStrings()) console.log(line);
 
 ### Text containers
 
-- **strings** (`console-toolkit/strings`) — string array utilities: getLength, clip, toStrings.
-- **Box** (`console-toolkit/box`) — rectangular text container where all lines have equal display width. Immutable — methods return new Box instances. Supports padding, stacking, clipping, flipping.
-- **Panel** (`console-toolkit/panel`) — 2D cell grid where each cell has a character and SGR state. Mutable — methods return `this`. Supports fill, copy, apply, resize, rotate, flip, transpose.
+- **strings** (`console-toolkit/strings.js`) — string array utilities: getLength, clip, toStrings.
+- **Box** (`console-toolkit/box.js`) — rectangular text container where all lines have equal display width. Immutable — methods return new Box instances. Supports padding, stacking, clipping, flipping.
+- **Panel** (`console-toolkit/panel.js`) — 2D cell grid where each cell has a character and SGR state. Mutable — methods return `this`. Supports fill, copy, apply, resize, rotate, flip, transpose.
 
 ### Styling
 
-- **Style** (`console-toolkit/style`) — fluent API for ANSI SGR states. Provides `s` and `c` tagged template literals for inline styling. `c` auto-resets at end; `s` persists style changes.
+- **Style** (`console-toolkit/style.js`) — fluent API for ANSI SGR states. Provides `s` and `c` tagged template literals for inline styling. `c` auto-resets at end; `s` persists style changes.
 
 ### Drawing
 

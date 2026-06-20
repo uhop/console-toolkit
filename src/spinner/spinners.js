@@ -1,3 +1,4 @@
+// @ts-self-types="./spinners.d.ts"
 // Spinners are from https://github.com/sindresorhus/cli-spinners under the MIT license.
 // Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
 // See `cli-spinners` for more great options.

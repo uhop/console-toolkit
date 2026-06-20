@@ -50,8 +50,10 @@ export interface DrawItemInfo {
   width: number;
 }
 
-/** A chart theme: an array of ChartDatum defaults with an optional `empty` style. */
-export type ChartTheme = ChartDatum[] & {empty?: {symbol?: string; state?: SgrState | null; colorState?: SgrState}};
+/** A chart theme: per-series style defaults (no `value` — that always comes from the data) with an optional `empty` style. */
+export type ChartTheme = Partial<ChartDatum>[] & {
+  empty?: {symbol?: string; state?: SgrState | null; colorState?: SgrState};
+};
 
 /** Normalizes chart data, merging with default and custom themes.
  * @param data - Raw chart data (numbers, ChartDatum objects, or arrays thereof).

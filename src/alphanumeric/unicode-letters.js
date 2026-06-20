@@ -1,3 +1,4 @@
+// @ts-self-types="./unicode-letters.d.ts"
 import {SymbolRange, transcode as internalTranscode} from './utils.js';
 
 const range = (fromCapital, fromSmall) =>

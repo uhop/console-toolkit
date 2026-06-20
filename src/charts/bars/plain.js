@@ -1,3 +1,4 @@
+// @ts-self-types="./plain.d.ts"
 import style from '../../style.js';
 import {optimize} from '../../ansi/sgr-state.js';
 import {allocateSizes, makeBgFromFg} from '../utils.js';

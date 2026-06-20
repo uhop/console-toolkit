@@ -1,3 +1,4 @@
+// @ts-self-types="./block-grouped.d.ts"
 import {drawRow} from './block.js';
 import drawGroupedChart from './draw-grouped.js';
 

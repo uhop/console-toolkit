@@ -1,3 +1,4 @@
+// @ts-self-types="./style.d.ts"
 import * as sgr from './ansi/sgr.js';
 import {
   RESET_STATE,

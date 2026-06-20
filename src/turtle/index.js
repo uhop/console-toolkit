@@ -1,3 +1,4 @@
+// @ts-self-types="./index.d.ts"
 import Turtle from './turtle.js';
 import draw from './draw-unicode.js';
 

@@ -1,3 +1,4 @@
+// @ts-self-types="./utils.d.ts"
 import {Commands} from '../ansi/sgr.js';
 import defaultTheme from './themes/default.js';
 

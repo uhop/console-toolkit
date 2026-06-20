@@ -1,3 +1,4 @@
+// @ts-self-types="./sgr-state.d.ts"
 // Support for states based on SGR commands. See https://en.wikipedia.org/wiki/ANSI_escape_code for more details.
 
 import {

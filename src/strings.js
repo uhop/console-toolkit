@@ -1,3 +1,4 @@
+// @ts-self-types="./strings.d.ts"
 import {size} from './strings/split.js';
 import parse, {matchCsiNoGroups, matchCsiNoSgrNoGroups} from './strings/parse.js';
 import clip from './strings/clip.js';

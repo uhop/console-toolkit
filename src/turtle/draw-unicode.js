@@ -1,3 +1,4 @@
+// @ts-self-types="./draw-unicode.d.ts"
 import Box from '../box.js';
 
 const symbols =

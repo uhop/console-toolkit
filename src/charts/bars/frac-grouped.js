@@ -1,3 +1,4 @@
+// @ts-self-types="./frac-grouped.d.ts"
 import style from '../../style.js';
 import Box from '../../box.js';
 import {optimize} from '../../ansi/sgr-state.js';

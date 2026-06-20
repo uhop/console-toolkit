@@ -1,3 +1,4 @@
+// @ts-self-types="./draw-grouped.d.ts"
 import defaultTheme from '../themes/default.js';
 import {normalizeData} from '../utils.js';
 import Panel from '../../panel.js';

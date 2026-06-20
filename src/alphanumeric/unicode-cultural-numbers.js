@@ -1,3 +1,4 @@
+// @ts-self-types="./unicode-cultural-numbers.d.ts"
 import {SymbolRange} from './utils.js';
 
 export const transcodeTables = {

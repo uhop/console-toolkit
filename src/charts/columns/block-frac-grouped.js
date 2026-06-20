@@ -1,3 +1,4 @@
+// @ts-self-types="./block-frac-grouped.d.ts"
 import {drawColumn} from './block-frac.js';
 import drawGroupedChart from './draw-grouped.js';
 

@@ -91,17 +91,17 @@ npm install console-toolkit
 
 ### Text containers
 
-| Module      | Import                    | Description                                                    |
-| ----------- | ------------------------- | -------------------------------------------------------------- |
-| **strings** | `console-toolkit/strings` | String array utilities: `getLength`, `clip`, `toStrings`       |
-| **Box**     | `console-toolkit/box`     | Rectangular text container — all lines equal width. Immutable. |
-| **Panel**   | `console-toolkit/panel`   | 2D cell grid with per-cell SGR state. Mutable.                 |
+| Module      | Import                       | Description                                                    |
+| ----------- | ---------------------------- | -------------------------------------------------------------- |
+| **strings** | `console-toolkit/strings.js` | String array utilities: `getLength`, `clip`, `toStrings`       |
+| **Box**     | `console-toolkit/box.js`     | Rectangular text container — all lines equal width. Immutable. |
+| **Panel**   | `console-toolkit/panel.js`   | 2D cell grid with per-cell SGR state. Mutable.                 |
 
 ### Styling and drawing
 
 | Module              | Import                               | Description                                               |
 | ------------------- | ------------------------------------ | --------------------------------------------------------- |
-| **Style**           | `console-toolkit/style`              | Fluent SGR styling API + `s`/`c` tagged template literals |
+| **Style**           | `console-toolkit/style.js`           | Fluent SGR styling API + `s`/`c` tagged template literals |
 | **draw-block**      | `console-toolkit/draw-block.js`      | Draw filled blocks and frames with block themes           |
 | **draw-block-frac** | `console-toolkit/draw-block-frac.js` | Fractional-width/height blocks (1/8th Unicode steps)      |
 | **symbols**         | `console-toolkit/symbols.js`         | Curated Unicode constants (blocks, shades, math, marks)   |

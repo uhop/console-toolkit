@@ -1,3 +1,4 @@
+// @ts-self-types="./turtle.d.ts"
 import {addAliases} from '../meta.js';
 
 export class Turtle {

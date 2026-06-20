@@ -1,5 +1,5 @@
 import test from 'tape-six';
-import style, {Style, s, c, RESET_STATE} from 'console-toolkit/style';
+import style, {Style, s, c, RESET_STATE} from 'console-toolkit/style.js';
 
 test('Style constructor signatures', t => {
   const s1: Style = new Style(null);

@@ -1,3 +1,4 @@
+// @ts-self-types="./utils.d.ts"
 // A table definition matrix should define the following properties:
 //   - 't': top row (3 symbols),
 //   - 'm': middle row (3 symbols),

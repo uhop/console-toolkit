@@ -1,3 +1,4 @@
+// @ts-self-types="./split.d.ts"
 // Loosely adapted from https://www.npmjs.com/package/string-width by
 // [Sindre Sorhus](https://www.npmjs.com/~sindresorhus) under the MIT license.
 

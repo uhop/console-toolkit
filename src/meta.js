@@ -1,3 +1,4 @@
+// @ts-self-types="./meta.d.ts"
 export const verifyStrings = strings => Array.isArray(strings) && Array.isArray(strings.raw);
 
 export const capitalize = name => (name ? name[0].toUpperCase() + name.substring(1).toLowerCase() : name);

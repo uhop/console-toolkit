@@ -1,3 +1,4 @@
+// @ts-self-types="./spin.d.ts"
 import {SpinnerBase} from './spinner.js';
 
 class Spinner extends SpinnerBase {

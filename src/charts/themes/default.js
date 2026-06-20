@@ -1,3 +1,4 @@
+// @ts-self-types="./default.d.ts"
 import {capitalize} from '../../meta.js';
 import style from '../../style.js';
 

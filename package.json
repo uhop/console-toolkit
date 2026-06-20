@@ -10,11 +10,7 @@
     "./plot": "./src/plot/index.js",
     "./spinner": "./src/spinner/index.js",
     "./table": "./src/table/index.js",
-    "./turtle": "./src/turtle/index.js",
-    "./box": "./src/box.js",
-    "./panel": "./src/panel.js",
-    "./strings": "./src/strings.js",
-    "./style": "./src/style.js"
+    "./turtle": "./src/turtle/index.js"
   },
   "scripts": {
     "test": "tape6 --flags FO",
@@ -72,6 +68,8 @@
     "url": "https://github.com/uhop/console-toolkit/issues"
   },
   "homepage": "https://github.com/uhop/console-toolkit#readme",
+  "llms": "https://raw.githubusercontent.com/uhop/console-toolkit/main/llms.txt",
+  "llmsFull": "https://raw.githubusercontent.com/uhop/console-toolkit/main/llms-full.txt",
   "files": [
     "./src",
     "llms.txt",
