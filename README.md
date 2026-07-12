@@ -36,7 +36,7 @@
 ## Code example
 
 ```js
-import style, {c} from 'console-toolkit/style.js';
+import {style, c} from 'console-toolkit/style.js';
 import drawChart from 'console-toolkit/charts/bars/plain.js';
 import lineTheme from 'console-toolkit/themes/lines/unicode-rounded.js';
 import makeTable from 'console-toolkit/table';
@@ -122,7 +122,7 @@ npm install console-toolkit
 
 ## Documentation
 
-See [wiki](https://github.com/uhop/console-toolkit/wiki) for detailed usage docs.
+Full documentation is in the **[wiki](https://github.com/uhop/console-toolkit/wiki)** &mdash; browse the [index](https://github.com/uhop/console-toolkit/wiki/Home), or [search it](https://uhop.github.io/wiki-search/app/?wiki=uhop/console-toolkit) by name.
 
 For project internals see [ARCHITECTURE.md](./ARCHITECTURE.md). For development setup see [CONTRIBUTING.md](./CONTRIBUTING.md). For AI agent rules see [AGENTS.md](./AGENTS.md).
 

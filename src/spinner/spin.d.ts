@@ -10,4 +10,5 @@ type SpinArg = string[] | ((state: string) => string) | SpinnerBase | unknown;
  */
 declare function spin(strings: TemplateStringsArray, ...args: SpinArg[]): SpinnerBase;
 
+export {spin};
 export default spin;

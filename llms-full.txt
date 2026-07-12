@@ -18,7 +18,7 @@ npm install console-toolkit
 ## Quick start
 
 ```js
-import style, {c} from 'console-toolkit/style.js';
+import {style, c} from 'console-toolkit/style.js';
 import Box from 'console-toolkit/box.js';
 import Panel from 'console-toolkit/panel.js';
 import makeTable from 'console-toolkit/table';
@@ -410,7 +410,7 @@ Spinners and updatable text components. Two layers:
 - `spin` — tagged template literal that composes a `SpinnerBase`-shaped object from a template containing nested spinners, arrays, and state-aware functions.
 
 ```ts
-import spin, {Spinner, SpinnerBase} from 'console-toolkit/spinner';
+import {spin, Spinner, SpinnerBase} from 'console-toolkit/spinner';
 
 class SpinnerBase {
   active: boolean;
@@ -451,7 +451,7 @@ function spin(strings: TemplateStringsArray, ...args: unknown[]): SpinnerBase;
 Usage with `Updater` (auto-refreshing terminal output):
 
 ```js
-import spin, {Spinner} from 'console-toolkit/spinner';
+import {spin, Spinner} from 'console-toolkit/spinner';
 import {bouncingBall} from 'console-toolkit/spinner/spinners.js';
 import Updater from 'console-toolkit/output/updater.js';
 

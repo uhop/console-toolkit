@@ -61,6 +61,6 @@ class Spinner extends SpinnerBase {
   }
 }
 
-const spin = (strings, ...args) => new Spinner(strings, args);
+export const spin = (strings, ...args) => new Spinner(strings, args);
 
 export default spin;

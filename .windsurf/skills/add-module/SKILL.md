@@ -1,4 +1,5 @@
 ---
+name: add-module
 description: Checklist for adding a new public module or sub-package to console-toolkit
 ---
 
@@ -15,12 +16,12 @@ Follow these steps when adding a new public module or sub-package.
 2. Create `src/foo.d.ts` with hand-written type declarations and JSDoc.
 3. Create `tests/test-foo.js` with automated tests (tape-six).
 4. Run the new test: `node tests/test-foo.js`
-5. If the module should have a short import path (e.g., `console-toolkit/foo`), add an entry to `exports` in `package.json`.
+5. No `exports` entry is needed — the `./*` wildcard already exposes the module as `console-toolkit/foo.js`. Do not add file-shape substitutions like `"./foo": "./src/foo.js"`.
 6. Create `wiki/Module:-foo.md` with usage documentation.
 7. Add a link to the new wiki page in `wiki/Home.md`.
 8. Update `ARCHITECTURE.md` — add the module to the project layout tree and dependency graph if applicable.
 9. Update `llms.txt` and `llms-full.txt` with a brief description of the new module.
-10. Update `AGENTS.md` if the module changes the architecture quick reference. If `AGENTS.md` changed, run `/sync-ai-rules`.
+10. Update `AGENTS.md` if the module changes the architecture quick reference.
 11. Verify: `npm test`
 12. Verify: `npm run ts-check`
 13. Verify: `npm run lint`
@@ -39,7 +40,7 @@ Follow these steps when adding a new public module or sub-package.
 8. Add a link to the new wiki page in `wiki/Home.md`.
 9. Update `ARCHITECTURE.md` — add the package to the project layout tree and dependency graph.
 10. Update `llms.txt` and `llms-full.txt`.
-11. Update `AGENTS.md` if the package changes the architecture quick reference. If `AGENTS.md` changed, run `/sync-ai-rules`.
+11. Update `AGENTS.md` if the package changes the architecture quick reference.
 12. Verify: `npm test`
 13. Verify: `npm run ts-check`
 14. Verify: `npm run lint`

@@ -68,8 +68,6 @@
     "url": "https://github.com/uhop/console-toolkit/issues"
   },
   "homepage": "https://github.com/uhop/console-toolkit#readme",
-  "llms": "https://raw.githubusercontent.com/uhop/console-toolkit/main/llms.txt",
-  "llmsFull": "https://raw.githubusercontent.com/uhop/console-toolkit/main/llms-full.txt",
   "files": [
     "./src",
     "llms.txt",
