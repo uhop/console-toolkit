@@ -33,10 +33,10 @@ export interface CellPadding {
 
 /** Options for the Table constructor. */
 export interface TableOptions {
-  /** Horizontal axis definition (border/separator pattern). */
-  hAxis?: string | (string | number)[];
-  /** Vertical axis definition (border/separator pattern). */
-  vAxis?: string | (string | number)[];
+  /** Horizontal axis definition (border/separator pattern). A scalar is replicated for every column boundary. */
+  hAxis?: string | number | (string | number)[];
+  /** Vertical axis definition (border/separator pattern). A scalar is replicated for every row boundary. */
+  vAxis?: string | number | (string | number)[];
   /** Horizontal alignment per column. */
   hAlign?: string | string[];
   /** Vertical alignment per row. */
@@ -159,8 +159,8 @@ export class Table {
   skipList: {x: number; y: number; width: number; height: number}[];
   /** Resolved table options. */
   options: {
-    hAxis: string | (string | number)[];
-    vAxis: string | (string | number)[];
+    hAxis: string | number | (string | number)[];
+    vAxis: string | number | (string | number)[];
     hAlign: string[];
     vAlign: string[];
   };

@@ -166,16 +166,24 @@ export class Style {
    * @returns A new Style, or `this` if `fn` is provided.
    */
   mark(fn?: (style: Style) => void): Style;
-  /** Returns the initial state, or passes it to a callback.
-   * @param fn - Optional callback. If provided, returns `this` instead.
-   * @returns The initial SgrState, or `this` if `fn` is provided.
+  /** Returns the initial state.
+   * @returns The initial SgrState.
    */
-  getInitialState(fn?: (state: SgrState) => void): SgrState | Style;
-  /** Returns the current state, or passes it to a callback.
-   * @param fn - Optional callback. If provided, returns `this` instead.
-   * @returns The current SgrState, or `this` if `fn` is provided.
+  getInitialState(): SgrState;
+  /** Passes the initial state to a callback.
+   * @param fn - Callback receiving the state.
+   * @returns `this` for chaining.
    */
-  getState(fn?: (state: SgrState) => void): SgrState | Style;
+  getInitialState(fn: (state: SgrState) => void): Style;
+  /** Returns the current state.
+   * @returns The current SgrState.
+   */
+  getState(): SgrState;
+  /** Passes the current state to a callback.
+   * @param fn - Callback receiving the state.
+   * @returns `this` for chaining.
+   */
+  getState(fn: (state: SgrState) => void): Style;
 
   /** The color depth (1, 4, 8, or 24). */
   readonly colorDepth: number;

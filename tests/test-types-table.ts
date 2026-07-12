@@ -37,6 +37,19 @@ test('Table constructor with options', t => {
   t.ok(table instanceof Table, 'with options');
 });
 
+test('Table constructor with scalar axes', t => {
+  const data: TableCellInput[][] = [
+    ['A', 'B'],
+    [1, 2]
+  ];
+  const opts: TableOptions = {hAxis: 0, vAxis: 0};
+  const table: Table = new Table(data, unicodeLineTheme, opts);
+
+  t.ok(table instanceof Table, 'borderless table from scalar number axes');
+  t.equal(table.hAxis.length, 3, 'scalar hAxis replicated per column boundary');
+  t.equal(table.vAxis.length, 3, 'scalar vAxis replicated per row boundary');
+});
+
 test('Table draw/toPanel/toBox/toStrings', t => {
   const data: TableCellInput[][] = [
     ['A', 'B'],

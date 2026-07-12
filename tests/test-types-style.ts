@@ -1,5 +1,6 @@
 import test from 'tape-six';
 import style, {Style, s, c, RESET_STATE} from 'console-toolkit/style.js';
+import type {SgrState} from 'console-toolkit/ansi/sgr-state.js';
 
 test('Style constructor signatures', t => {
   const s1: Style = new Style(null);
@@ -209,4 +210,16 @@ test('RESET_STATE export', t => {
 
 test('style default export', t => {
   t.ok(style instanceof Style, 'default export is a Style instance');
+});
+
+test('getState/getInitialState overloads', t => {
+  const state: SgrState = style.bold.getState();
+  const initState: SgrState = style.bold.getInitialState();
+  const chained: Style = style.bold.getState(st => void st);
+  const chained2: Style = style.bold.getInitialState(st => void st);
+
+  t.equal(typeof state, 'object', 'no-arg getState returns SgrState');
+  t.equal(typeof initState, 'object', 'no-arg getInitialState returns SgrState');
+  t.ok(chained instanceof Style, 'getState with callback returns Style');
+  t.ok(chained2 instanceof Style, 'getInitialState with callback returns Style');
 });
