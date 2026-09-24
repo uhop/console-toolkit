@@ -49,6 +49,7 @@ for (const line of table.toStrings()) console.log(line);
 
 - **draw-block** (`console-toolkit/draw-block.js`) — draws filled blocks and frames using block themes.
 - **draw-block-frac** (`console-toolkit/draw-block-frac.js`) — draws blocks with fractional width/height using 1/8th Unicode block characters.
+- **progress-bar** (`console-toolkit/progress-bar.js`) — draws a one-line progress bar exactly `width` cells wide, with 1/8th-cell precision and optional fill/track characters and styles.
 - **symbols** (`console-toolkit/symbols.js`) — curated Unicode constants: block elements, quadrants, shades, math symbols, dashes, marks, ellipses.
 
 ### Packages

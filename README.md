@@ -104,6 +104,7 @@ npm install console-toolkit
 | **Style**           | `console-toolkit/style.js`           | Fluent SGR styling API + `s`/`c` tagged template literals |
 | **draw-block**      | `console-toolkit/draw-block.js`      | Draw filled blocks and frames with block themes           |
 | **draw-block-frac** | `console-toolkit/draw-block-frac.js` | Fractional-width/height blocks (1/8th Unicode steps)      |
+| **progress-bar**    | `console-toolkit/progress-bar.js`    | One-line progress bar with 1/8th-cell precision           |
 | **symbols**         | `console-toolkit/symbols.js`         | Curated Unicode constants (blocks, shades, math, marks)   |
 
 ### Packages

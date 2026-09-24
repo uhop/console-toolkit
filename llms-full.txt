@@ -265,6 +265,23 @@ function drawRealHeightBlock(width: number, realHeight: number, drawEmptyBorder?
 
 ---
 
+## Module: progress-bar (`console-toolkit/progress-bar.js`)
+
+```ts
+interface TextStyler { text(s: string): string; } // for example, a Style
+interface ProgressBarOptions {
+  fill?: string; // default fullBlock; 1/8th partial cells only with the default
+  track?: string; // default shadeLight (░)
+  fillStyle?: TextStyler;
+  trackStyle?: TextStyler;
+}
+function drawProgressBar(fraction: number, width: number, options?: ProgressBarOptions): string;
+```
+
+Returns a string exactly `width` cells wide; `fraction` is clamped to [0, 1], and a non-finite value draws an empty bar. `drawProgressBar(0.55, 10)` → `'█████▌░░░░'`.
+
+---
+
 ## Module: symbols (`console-toolkit/symbols.js`)
 
 Curated Unicode constants for drawing.
