@@ -101,6 +101,10 @@ test('Box', async t => {
     t.equal(b.width, 3);
     t.equal(b.height, 3);
     t.deepEqual(b.box, ['one', 'two', 'thr']);
+
+    const red = '\x1B[31mabc\x1B[39m';
+    t.deepEqual(new Box([red, 'plain']).clip(2).box, ['\x1B[31mab\x1B[39m', 'pl'], 'a cut style does not bleed');
+    t.deepEqual(new Box([red, 'plain']).clip(2, {preserveState: false}).box, ['\x1B[31mab', 'pl']);
   });
 
   await t.test('add bottom', t => {

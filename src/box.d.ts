@@ -71,7 +71,7 @@ export class Box {
   clone(): Box;
   /** Clips the box to a given width.
    * @param width - Maximum display width.
-   * @param options - Clip options.
+   * @param options - Clip options. `preserveState` defaults to true here.
    * @returns A new clipped Box.
    */
   clip(width: number, options?: ClipOptions): Box;

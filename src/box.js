@@ -80,7 +80,7 @@ export class Box {
   }
 
   clip(width, options) {
-    return Box.make(clipStrings(this.box, width, options));
+    return Box.make(clipStrings(this.box, width, {preserveState: true, ...options}));
   }
 
   // padding

@@ -5,6 +5,7 @@ import 'tape-six-fast-check';
 import {clip, getLength, matchCsiNoGroups} from '../src/strings.js';
 import Box from '../src/box.js';
 import style from '../src/style.js';
+import {extractState, stateTransition} from '../src/ansi/sgr-state.js';
 
 const plain = {text: s => s},
   styles = [plain, style.red, style.bold, style.bg.blue, style.bright.cyan, style.underline.green];
@@ -54,5 +55,26 @@ test('String properties', async t => {
       return box.height === lines.length && box.box.every(line => getLength(line) === width);
     },
     'every Box line has the same width'
+  );
+
+  const sameState = (a, b) => stateTransition(extractState(a), extractState(b)).length === 0;
+
+  await t.prop(
+    [styled, fc.integer({min: 0, max: 40})],
+    (s, width) => {
+      const prefix = clip(s, width),
+        result = clip(s, width, {preserveState: true});
+      return result.startsWith(prefix) && !stripped(result.substring(prefix.length)) && sameState(result, s);
+    },
+    'clip() with preserveState keeps the prefix and ends in the same SGR state as the whole string'
+  );
+
+  await t.prop(
+    [fc.array(styled, {minLength: 1, maxLength: 6}), fc.integer({min: 0, max: 40})],
+    (lines, width) => {
+      const box = Box.make(lines).clip(width);
+      return box.box.every((line, i) => sameState(line, lines[i]));
+    },
+    'every clipped Box line ends in the same SGR state as its source line'
   );
 });

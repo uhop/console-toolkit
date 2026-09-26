@@ -54,8 +54,11 @@ function toStrings(s: any): string[];
 
 ```ts
 interface ClipOptions {
-  ellipsis?: string;    // Ellipsis string (default: '…')
-  position?: 'right' | 'left' | 'center';  // Where to clip (default: 'right')
+  includeLastCommand?: boolean;    // Include the ANSI command at the clip boundary (default: false)
+  preserveState?: boolean;         // End in the same SGR state as the whole string (default: false; true in Box.clip())
+  matcher?: RegExp;                // Escape-sequence matcher (default: matchCsiNoGroups)
+  ignoreControlSymbols?: boolean;  // Ignore control symbols when calculating width
+  ambiguousAsWide?: boolean;       // Treat East Asian ambiguous-width characters as wide
 }
 ```
 

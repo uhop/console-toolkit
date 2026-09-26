@@ -72,10 +72,12 @@ test('Box pad methods return Box', t => {
 test('Box manipulation methods return Box', t => {
   const box = Box.make(['hello', 'world', 'test!']);
   const clipped: Box = box.clip(3);
+  const clippedOpen: Box = box.clip(3, {preserveState: false});
   const removed: Box = box.removeRows(0, 1);
   const flipped: Box = box.flipV();
 
   t.ok(clipped instanceof Box, 'clip');
+  t.ok(clippedOpen instanceof Box, 'clip with options');
   t.ok(removed instanceof Box, 'removeRows');
   t.ok(flipped instanceof Box, 'flipV');
 });

@@ -68,4 +68,28 @@ test('ANSI utilities', async t => {
     t.equal(clip(' ' + style.red.text(''), 0), '', 'found by a property test');
     t.equal(clip('ab' + text, -1), '', 'negative width');
   });
+
+  await t.test('Clip with preserveState', t => {
+    const options = {preserveState: true};
+
+    t.equal(clip('abc', 2, options), 'ab');
+    t.equal(clip('abc', 3, options), 'abc');
+
+    const red = '\x1B[31mabc\x1B[39m';
+    t.equal(clip(red, 2, options), '\x1B[31mab\x1B[39m');
+    t.equal(clip(red, 3, options), red, 'exact fit');
+    t.equal(clip(red, 4, options), red);
+    t.equal(clip(red, 3, {...options, includeLastCommand: true}), red);
+
+    const nested = '\x1B[44m\x1B[31mabc\x1B[39mdef\x1B[49m';
+    t.equal(clip(nested, 3, options), '\x1B[44m\x1B[31mabc\x1B[39;49m');
+    t.equal(clip(nested, 5, options), '\x1B[44m\x1B[31mabc\x1B[39mde\x1B[49m');
+
+    const open = '\x1B[31mabcdef';
+    t.equal(clip(open, 3, options), '\x1B[31mabc', 'a style left open stays open');
+
+    const s = style.bold.text('X') + 'Y';
+    t.equal(clip(s, 1, options), style.bold.text('X'));
+    t.equal(clip('\x1B[1mX\x1B[mY', 1, options), '\x1B[1mX\x1B[m', 'full reset');
+  });
 });

@@ -84,6 +84,8 @@ strings/parse ← strings/split ← strings/clip
                    ansi/sgr
 ```
 
+`strings/clip` also imports `ansi/sgr-state` for its `preserveState` option.
+
 Higher-level modules (`table`, `charts`, `plot`, `turtle`, `spinner`) depend on the core modules above.
 
 ## Testing

@@ -23,9 +23,11 @@ test('getMaxLength signature', t => {
 test('clipStrings signature', t => {
   const clipped: string[] = clipStrings(['hello world'], 5);
   const clipped2: string[] = clipStrings(['hello world'], 5, {includeLastCommand: true});
+  const clipped3: string[] = clipStrings(['hello world'], 5, {preserveState: true});
 
   t.ok(Array.isArray(clipped), 'clipStrings returns string[]');
   t.ok(Array.isArray(clipped2), 'clipStrings with options');
+  t.ok(Array.isArray(clipped3), 'clipStrings with preserveState');
 });
 
 test('clip function', t => {

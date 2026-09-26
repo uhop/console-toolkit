@@ -1,8 +1,9 @@
 // @ts-self-types="./clip.d.ts"
 import parse, {matchCsiNoGroups} from './parse.js';
 import {split} from './split.js';
+import {extractState, stateTransition, stringifyCommands} from '../ansi/sgr-state.js';
 
-export const clip = (s, width, options = {}) => {
+const clipPrefix = (s, width, options) => {
   const {includeLastCommand = false, matcher = matchCsiNoGroups} = options;
 
   let counter = 0;
@@ -25,6 +26,14 @@ export const clip = (s, width, options = {}) => {
   }
 
   return s;
+};
+
+export const clip = (s, width, options = {}) => {
+  const result = clipPrefix(s, width, options);
+  if (!options.preserveState || result.length === s.length) return result;
+  // the result is always a prefix of s
+  const state = extractState(result);
+  return result + stringifyCommands(stateTransition(state, extractState(s.substring(result.length), state)));
 };
 
 export default clip;
