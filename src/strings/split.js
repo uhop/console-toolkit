@@ -24,6 +24,14 @@ const isWideEmoji = (segment, codePoint) =>
     unqualifiedKeycap.test(segment) ||
     (segment.length <= 50 && segment.includes('\u200D') && (segment.match(pictographic)?.length ?? 0) > 1));
 
+// Default_Ignorable_Code_Point and Format, less the format characters glibc's wcwidth() draws with a width;
+// none lies in U+2070..U+FDFF but U+3164, which keeps box drawing and CJK off the regex (tested);
+// unquantified, since a quantified property pattern backtracks badly on huge clusters (after string-width)
+const visible =
+    /[^[\p{Default_Ignorable_Code_Point}\p{Format}]--[\u00AD\u0600-\u0605\u06DD\u070F\u0890\u0891\u08E2\u115F\uFFF9-\uFFFB\u{110BD}\u{110CD}\u{13430}-\u{1343F}]]/v,
+  isZeroWidth = (segment, codePoint) =>
+    codePoint >= 0xad && (codePoint < 0x2070 || codePoint >= 0xfe00 || codePoint === 0x3164) && !visible.test(segment);
+
 const segmenter = new Intl.Segmenter();
 
 export const split = (s, options = {}) => {
@@ -34,20 +42,23 @@ export const split = (s, options = {}) => {
     eastAsianWidthOptions = {ambiguousAsWide};
 
   const graphemes = [];
-  let width = 0;
+  let width = 0,
+    leading = '';
   for (const {segment} of segmenter.segment(s)) {
     const codePoint = segment.codePointAt(0);
     // Control characters: C0, C1
     if (ignoreControlSymbols && (codePoint < 0x20 || (codePoint >= 0x7f && codePoint <= 0x9f))) continue;
-    // Combining characters
+    // Combining and zero-width characters
     if (
       (codePoint >= 0x300 && codePoint <= 0x36f) ||
       (codePoint >= 0x1ab0 && codePoint <= 0x1aff) ||
       (codePoint >= 0x1dc0 && codePoint <= 0x1dff) ||
       (codePoint >= 0x20d0 && codePoint <= 0x20ff) ||
-      (codePoint >= 0xfe20 && codePoint <= 0xfe2f)
+      (codePoint >= 0xfe20 && codePoint <= 0xfe2f) ||
+      isZeroWidth(segment, codePoint)
     ) {
       if (graphemes.length) graphemes[graphemes.length - 1].symbol += segment;
+      else leading += segment;
       continue;
     }
     if (bunWidth) {
@@ -70,6 +81,7 @@ export const split = (s, options = {}) => {
     graphemes.push({symbol: segment, width: 1});
     ++width;
   }
+  if (leading && graphemes.length) graphemes[0].symbol = leading + graphemes[0].symbol;
   return {graphemes, width};
 };
 
@@ -85,13 +97,14 @@ export const size = (s, options = {}) => {
     const codePoint = segment.codePointAt(0);
     // Control characters: C0, C1
     if (ignoreControlSymbols && (codePoint < 0x20 || (codePoint >= 0x7f && codePoint <= 0x9f))) continue;
-    // Combining characters
+    // Combining and zero-width characters
     if (
       (codePoint >= 0x300 && codePoint <= 0x36f) ||
       (codePoint >= 0x1ab0 && codePoint <= 0x1aff) ||
       (codePoint >= 0x1dc0 && codePoint <= 0x1dff) ||
       (codePoint >= 0x20d0 && codePoint <= 0x20ff) ||
-      (codePoint >= 0xfe20 && codePoint <= 0xfe2f)
+      (codePoint >= 0xfe20 && codePoint <= 0xfe2f) ||
+      isZeroWidth(segment, codePoint)
     ) {
       continue;
     }

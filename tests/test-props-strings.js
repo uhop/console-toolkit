@@ -31,6 +31,12 @@ test('String properties', async t => {
   );
 
   await t.prop(
+    [text, fc.constantFrom('\u200B', '\u200E', '\u200F', '\u2060', '\u2066', '\u2069', '\uFEFF', '\u{E0001}'), text],
+    (a, z, b) => getLength(a + z + b) === getLength(a) + getLength(b),
+    'a zero-width format character adds no width'
+  );
+
+  await t.prop(
     [styled, fc.integer({min: 0, max: 40})],
     (s, width) => {
       const result = clip(s, width),

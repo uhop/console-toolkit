@@ -32,6 +32,30 @@ test('ANSI utilities', async t => {
     t.equal(getLength('#1'), 2, 'ASCII keycap bases alone');
   });
 
+  await t.test('Zero-width characters', t => {
+    const zeroWidthCandidate = /[\p{Default_Ignorable_Code_Point}\p{Format}]/v,
+      insideGap = [];
+    for (let cp = 0x2070; cp < 0xfe00; ++cp) {
+      if (cp !== 0x3164 && zeroWidthCandidate.test(String.fromCodePoint(cp))) insideGap.push(cp.toString(16));
+    }
+    t.deepEqual(insideGap, [], 'split.js skips U+2070..U+FDFF except U+3164');
+
+    t.equal(getLength('a\u200Bb'), 2, 'zero-width space');
+    t.equal(getLength('a\u2060b'), 2, 'word joiner');
+    t.equal(getLength('\uFEFFab'), 2, 'BOM');
+    t.equal(getLength('a\u200Eb\u200F'), 2, 'direction marks');
+    t.equal(getLength('a\u{E0001}b'), 2, 'language tag');
+    t.equal(getLength('a\u3164b'), 2, 'Hangul filler');
+    t.equal(getLength('a\u00ADb'), 3, 'soft hyphen keeps its cell, as in wcwidth()');
+    t.equal(getLength('a\u115Fb'), 4, 'Hangul choseong filler keeps two cells, as in wcwidth()');
+    t.equal(getLength('\u0600\u0628'), 1, 'a prepended mark joins its letter');
+
+    t.equal(clip('a\u200Bb', 1), 'a\u200B');
+    t.equal(clip('\uFEFFab', 1), '\uFEFFa', 'a leading zero-width character stays with the first grapheme');
+    t.equal(clip('\u0301ab', 1), '\u0301a', 'so does a leading combining mark');
+    t.equal(clip('\u200B', 0), '\u200B');
+  });
+
   await t.test('Get max length', t => {
     t.equal(getMaxLength(['abc', '']), 3);
     t.equal(getMaxLength(['', 'ab']), 2);

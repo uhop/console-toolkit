@@ -70,7 +70,7 @@ Line themes and block themes are plain objects with indexed sub-themes. They are
 - **Frozen shared objects**: every exported preset, theme, and table (spinner definitions, progress-bar skins, line/block/chart themes, SGR tables, alphanumeric tables, symbol arrays, `RESET_STATE`) is deep-frozen at import with `freezeDeep()` from `meta.js`; a new one goes through `freezeDeep([...])` at the end of its module. Style objects freeze themselves in their constructors (`Style` only when constructed directly, so subclasses can add fields). `Box` is immutable by API but not frozen: it is created on every operation and wraps the caller's array.
 - **`addAlias` / `addAliases`**: Used to create method aliases on class prototypes (e.g., `toBox` → `clone`, `combineState` → `combineStateAfter`).
 - **CSS-style shorthand**: `pad(t, r, b, l)` on both Box and Panel follows CSS padding order.
-- **Wide characters**: emoji widths are built in (`\p{RGI_Emoji}` plus unqualified keycaps and ZWJ sequences, after `string-width`); the optional peer `get-east-asian-width` is auto-detected at runtime for East Asian widths, with `Bun.stringWidth()` as the fallback on Bun without it.
+- **Wide characters**: emoji widths are built in (`\p{RGI_Emoji}` plus unqualified keycaps and ZWJ sequences, after `string-width`); invisible formatting characters are zero cells, with glibc `wcwidth()`'s exceptions; the optional peer `get-east-asian-width` is auto-detected at runtime for East Asian widths, with `Bun.stringWidth()` as the fallback on Bun without it.
 
 ## Module dependency graph (simplified)
 
