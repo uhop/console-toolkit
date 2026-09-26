@@ -60,7 +60,7 @@ for (const line of table.toStrings()) console.log(line);
 - **plot** (`console-toolkit/plot`) — bitmap plotting using quadrant and braille characters.
 - **turtle** (`console-toolkit/turtle`) — turtle graphics for vector line drawing.
 - **spinner** (`console-toolkit/spinner`) — spinner animations and updatable output.
-- **progress-bar** (`console-toolkit/progress-bar`) — draws a one-line progress bar exactly `width` cells wide, with skins (`console-toolkit/progress-bar/skins.js`: blocks, solid, capped, shades, halves, line, colorLine, dots, ascii, hash) and separate fill and track colors.
+- **progress-bar** (`console-toolkit/progress-bar`) — draws a one-line progress bar exactly `width` cells wide, with skins (`console-toolkit/progress-bar/skins.js`: blocks, solid, capped, shades, halves, line, colorLine, dots, ascii, hash) and separate fill and track colors; `makeIndeterminateBar(width, options)` makes a `Spinner` definition for work with no known total.
 - **output** — output helpers: Writer (streaming), Updater (in-place updates).
 - **alphanumeric** — decorative Unicode number and letter sets.
 

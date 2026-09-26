@@ -1,3 +1,5 @@
+import type {SpinnerDefinition} from '../spinner/spinner.js';
+
 /** Anything with a `text()` method, such as a `Style` from `console-toolkit/style.js`. */
 export interface TextStyler {
   /** Wraps a string in styling.
@@ -42,5 +44,22 @@ export interface ProgressBarOptions {
  * @returns The bar as a string (with SGR sequences when styles are given).
  */
 export function drawProgressBar(fraction: number, width: number, options?: ProgressBarOptions): string;
+
+/** Options for {@link makeIndeterminateBar}. */
+export interface IndeterminateBarOptions extends ProgressBarOptions {
+  /** Length of the moving segment in cells (default: a quarter of the bar, at least 1). */
+  segment?: number;
+  /** `'bounce'` moves the segment back and forth; `'loop'` slides it through and wraps around (default: `'bounce'`). */
+  motion?: 'bounce' | 'loop';
+}
+
+/** Makes a spinner definition for work with no known total: a segment of the skin's `fill` moving across its `track`, one cell a frame.
+ * Pass it to `Spinner` from `console-toolkit/spinner`. Uses the skin's `fill`, `track`, `left`, and `right`.
+ * @param width - Width in cells, end caps included.
+ * @param options - Skin, styles, segment length, and motion.
+ * @returns Frames, plus an empty bar for `notStarted` and a full bar for `finished`.
+ * @throws RangeError when `motion` is not `'bounce'` or `'loop'`.
+ */
+export function makeIndeterminateBar(width: number, options?: IndeterminateBarOptions): Required<SpinnerDefinition>;
 
 export default drawProgressBar;

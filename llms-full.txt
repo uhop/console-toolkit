@@ -421,6 +421,11 @@ interface ProgressBarOptions {
   trackStyle?: TextStyler; // the rest, for example style.white; a background also shows behind the partial cell
 }
 function drawProgressBar(fraction: number, width: number, options?: ProgressBarOptions): string;
+interface IndeterminateBarOptions extends ProgressBarOptions {
+  segment?: number; // moving segment length in cells; default: a quarter of the bar, at least 1
+  motion?: 'bounce' | 'loop'; // default 'bounce'; anything else throws RangeError
+}
+function makeIndeterminateBar(width: number, options?: IndeterminateBarOptions): Required<SpinnerDefinition>;
 ```
 
 Returns a string exactly `width` cells wide; `fraction` is clamped to [0, 1], and a non-finite value draws an empty bar. A step shows only once reached, so the bar is full only at 1. `drawProgressBar(0.55, 10)` → `'█████▌░░░░'`.
@@ -434,6 +439,8 @@ import style from 'console-toolkit/style.js';
 
 drawProgressBar(0.42, 30, {skin: colorLine, fillStyle: style.brightWhite, trackStyle: style.gray});
 ```
+
+For work with no known total, `makeIndeterminateBar()` returns a spinner definition (`frames`, an empty bar for `notStarted`, a full bar for `finished`): a segment of the skin's `fill` moving across its `track`, one cell a frame. Use it as `new Spinner(makeIndeterminateBar(20))` with `spin` or `Updater`.
 
 ---
 

@@ -13,13 +13,17 @@ const boundaryStyle = (fillStyle, trackStyle) => {
   return {text: s => withBackground.text(fillStyle.text(s))};
 };
 
-export const drawProgressBar = (fraction, width, {skin = blocks, fillStyle = plain, trackStyle = plain} = {}) => {
-  const {fill, partials = [], track, trackStart = '', head = '', left = '', right = ''} = skin;
+// caps are dropped when they do not fit, so the bar is always `width` cells wide
+const layout = (width, {left = '', right = ''}) => {
   width = Math.max(0, Math.floor(width));
+  const capsWidth = getLength(left) + getLength(right);
+  if (!capsWidth || capsWidth >= width) return {inner: width, frame: s => s};
+  return {inner: width - capsWidth, frame: s => left + s + right};
+};
 
-  const capsWidth = getLength(left) + getLength(right),
-    hasCaps = capsWidth && capsWidth < width,
-    inner = hasCaps ? width - capsWidth : width,
+export const drawProgressBar = (fraction, width, {skin = blocks, fillStyle = plain, trackStyle = plain} = {}) => {
+  const {fill, partials = [], track, trackStart = '', head = ''} = skin,
+    {inner, frame} = layout(width, skin),
     steps = partials.length + 1,
     // floor: full only at 1; the epsilon absorbs float error
     units = Math.floor((Number.isFinite(fraction) ? Math.min(1, Math.max(0, fraction)) : 0) * inner * steps + 1e-9),
@@ -42,7 +46,44 @@ export const drawProgressBar = (fraction, width, {skin = blocks, fillStyle = pla
     result += trackStyle.text(start + track.repeat(rest - (start ? 1 : 0)));
   }
 
-  return hasCaps ? left + result + right : result;
+  return frame(result);
+};
+
+export const makeIndeterminateBar = (
+  width,
+  {skin = blocks, segment, motion = 'bounce', fillStyle = plain, trackStyle = plain} = {}
+) => {
+  if (motion !== 'bounce' && motion !== 'loop') throw new RangeError(`Unknown motion: ${motion}`);
+
+  const {fill, track} = skin,
+    {inner, frame} = layout(width, skin),
+    length = Math.min(inner, Math.max(1, Math.floor(segment ?? inner / 4)));
+
+  const draw = start => {
+    const from = Math.max(0, start),
+      to = Math.min(inner, start + length);
+    return frame(
+      (from ? trackStyle.text(track.repeat(from)) : '') +
+        (to > from ? fillStyle.text(fill.repeat(to - from)) : '') +
+        (to < inner ? trackStyle.text(track.repeat(inner - to)) : '')
+    );
+  };
+
+  const starts = [];
+  if (motion === 'loop') {
+    for (let start = 1 - length; start < inner; ++start) starts.push(start);
+  } else {
+    const span = inner - length;
+    for (let start = 0; start <= span; ++start) starts.push(start);
+    for (let start = span - 1; start > 0; --start) starts.push(start);
+  }
+
+  const options = {skin, fillStyle, trackStyle};
+  return {
+    frames: starts.length ? starts.map(draw) : [draw(0)],
+    notStarted: [drawProgressBar(0, width, options)],
+    finished: [drawProgressBar(1, width, options)]
+  };
 };
 
 export default drawProgressBar;

@@ -117,7 +117,7 @@ npm install console-toolkit
 | **plot**         | `console-toolkit/plot`             | Bitmap plotting (quadrant and braille characters)            |
 | **turtle**       | `console-toolkit/turtle`           | Turtle graphics for vector line drawing                      |
 | **spinner**      | `console-toolkit/spinner`          | Spinner animations and updatable output                      |
-| **progress-bar** | `console-toolkit/progress-bar`     | One-line progress bars with skins and colors                 |
+| **progress-bar** | `console-toolkit/progress-bar`     | Progress bars with skins and colors, and indeterminate bars  |
 | **output**       | `console-toolkit/output/...`       | Output helpers: Writer (streaming), Updater (in-place)       |
 | **alphanumeric** | `console-toolkit/alphanumeric/...` | Decorative Unicode number and letter sets                    |
 

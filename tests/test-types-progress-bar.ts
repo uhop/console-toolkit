@@ -1,6 +1,12 @@
 import test from 'tape-six';
-import drawProgressBarDefault, {drawProgressBar} from 'console-toolkit/progress-bar';
-import type {ProgressBarOptions, ProgressBarSkin, TextStyler} from 'console-toolkit/progress-bar';
+import drawProgressBarDefault, {drawProgressBar, makeIndeterminateBar} from 'console-toolkit/progress-bar';
+import type {
+  IndeterminateBarOptions,
+  ProgressBarOptions,
+  ProgressBarSkin,
+  TextStyler
+} from 'console-toolkit/progress-bar';
+import {Spinner} from 'console-toolkit/spinner';
 import {ascii, colorLine} from 'console-toolkit/progress-bar/skins.js';
 import style from 'console-toolkit/style.js';
 
@@ -19,4 +25,12 @@ test('drawProgressBar signatures', t => {
   t.equal(typeof r3, 'string', 'default export');
   t.equal(typeof r4, 'string', 'preset skin with colors');
   t.equal(typeof r5, 'string', 'preset skin');
+
+  const indeterminate: IndeterminateBarOptions = {skin: ascii, segment: 3, motion: 'loop', fillStyle: style.green};
+  const definition = makeIndeterminateBar(20, indeterminate);
+  const frames: string[] = definition.frames;
+  const spinner = new Spinner(definition);
+
+  t.ok(frames.length > 0, 'indeterminate frames');
+  t.equal(typeof spinner.getFrame(), 'string', 'drives a Spinner');
 });
