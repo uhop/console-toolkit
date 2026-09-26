@@ -18,6 +18,7 @@ test('Draw a progress bar', async t => {
     t.equal(drawProgressBar(0.55, 10), fullBlock.repeat(5) + hBlocks8th[4] + shadeLight.repeat(4));
     t.equal(drawProgressBar(0.0125, 10), hBlocks8th[1] + shadeLight.repeat(9));
     t.equal(drawProgressBar(0.999, 10), fullBlock.repeat(9) + hBlocks8th[7], 'not full before 1');
+    t.equal(drawProgressBar(0.999999999, 1, {skin: {fill: '#', track: '.'}}), '.', 'not full a hair before 1');
     t.equal(
       drawProgressBar(0.3, 10),
       fullBlock.repeat(3) + shadeLight.repeat(7),

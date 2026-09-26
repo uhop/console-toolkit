@@ -26,6 +26,7 @@ Write or update tests using the tape-six testing library.
    - Cover: normal operation, edge cases, error conditions.
    - Use `t.equal` for primitives, `t.deepEqual` for objects/arrays, `t.throws` for errors, `await t.rejects` for async errors.
    - All `msg` arguments are optional but recommended for clarity.
+   - When a contract must hold for every input (a width, a bound, an order), add a property test in `tests/test-props-<area>.js`: `import 'tape-six-fast-check'`, then `await t.prop([arbitraries], predicate, msg)`, or `await t.scheduler(async s => …, msg)` for async interleavings (release scheduled work with `await s.waitFor(promise)`). Return `false` or throw inside the predicate; never call `t.*` there. Pin every counterexample it finds as an example test.
 4. Run the new test file directly to verify: `node tests/test-<name>.js`
 5. Run the full test suite to check for regressions: `npm test`
    - If debugging, use `npm run test:seq` (runs sequentially, easier to trace issues).

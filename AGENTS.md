@@ -33,6 +33,8 @@ console-toolkit is a zero-dependency ESM JavaScript library for rich CLI/TUI out
 
 Tests use [tape-six](https://github.com/uhop/tape-six). For the full testing API, patterns, and conventions see `node_modules/tape-six/TESTING.md`.
 
+Property-based tests use [fast-check](https://fast-check.dev/) through [tape-six-fast-check](https://github.com/uhop/tape-six-fast-check) (`t.prop()` for properties, `t.scheduler()` for async interleavings). They live in `tests/test-props-<area>.js` and check contracts over arbitrary input: display widths, `clip()` bounds, progress-bar widths, and `Updater` output order. Write one when a contract holds for every input, not for a few examples. Don't call `t.*` assertions inside a predicate; return `false` or throw. A failure prints the shrunk counterexample and a `seed` and `path` to replay it; pin the case as an example test next to the fix.
+
 ## Verification commands
 
 - `npm test` — run the full test suite (tape-six)
@@ -56,6 +58,7 @@ Tests use [tape-six](https://github.com/uhop/tape-six). For the full testing API
 - Source: `src/<name>.js` + `src/<name>.d.ts`
 - Sub-packages: `src/<pkg>/index.js` + `src/<pkg>/index.d.ts`
 - Tests: `tests/test-<name>.js`
+- Property-based tests: `tests/test-props-<area>.js`
 - TS type tests: `tests/test-types-<name>.ts`
 - Manual tests: `tests/manual/test-<name>.js`
 - Wiki docs: `wiki/` (git submodule)

@@ -7,7 +7,7 @@ export const drawLine = (bmp, x0, y0, x1, y1, value = 1) => {
     sx = x0 < x1 ? 1 : -1,
     dy = -Math.abs(y1 - y0),
     sy = y0 < y1 ? 1 : -1;
-  for (let error = dx + dy; ; ) {
+  for (let error = dx + dy; ;) {
     bmp.setBit(x0, y0, value);
     if (x0 == x1 && y0 == y1) break;
     const e2 = 2 * error;

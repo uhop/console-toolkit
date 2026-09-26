@@ -4,18 +4,19 @@
 
 let emojiRegex = null,
   eastAsianWidth = null;
-if (!globalThis.Bun) {
-  try {
-    emojiRegex = (await import('emoji-regex')).default();
-  } catch (error) {
-    // squelch
-  }
-  try {
-    eastAsianWidth = (await import('get-east-asian-width')).eastAsianWidth;
-  } catch (error) {
-    // squelch
-  }
+try {
+  emojiRegex = (await import('emoji-regex')).default();
+} catch {
+  // squelch
 }
+try {
+  eastAsianWidth = (await import('get-east-asian-width')).eastAsianWidth;
+} catch {
+  // squelch
+}
+
+// Bun's built-in is a fallback only: it miscounts some combining marks, so the packages win when present
+const bunWidth = !emojiRegex && !eastAsianWidth && globalThis.Bun ? globalThis.Bun.stringWidth : null;
 
 const segmenter = new Intl.Segmenter();
 
@@ -24,8 +25,7 @@ export const split = (s, options = {}) => {
   if (!s) return {graphemes: [], width: 0};
 
   const {ignoreControlSymbols = false, ambiguousAsWide = false} = options,
-    eastAsianWidthOptions = {ambiguousAsWide},
-    bunStringWidthOptions = {ambiguousAsNarrow: !ambiguousAsWide};
+    eastAsianWidthOptions = {ambiguousAsWide};
 
   const graphemes = [];
   let width = 0;
@@ -44,8 +44,8 @@ export const split = (s, options = {}) => {
       if (graphemes.length) graphemes[graphemes.length - 1].symbol += segment;
       continue;
     }
-    if (globalThis.Bun) {
-      const w = Bun.stringWidth(segment, bunStringWidthOptions);
+    if (bunWidth) {
+      const w = bunWidth(segment, {ambiguousAsNarrow: !ambiguousAsWide});
       graphemes.push({symbol: segment, width: w});
       width += w;
       continue;
@@ -72,8 +72,7 @@ export const size = (s, options = {}) => {
   if (!s) return 0;
 
   const {ignoreControlSymbols = false, ambiguousAsWide = false} = options,
-    eastAsianWidthOptions = {ambiguousAsWide},
-    bunStringWidthOptions = {ambiguousAsNarrow: !ambiguousAsWide};
+    eastAsianWidthOptions = {ambiguousAsWide};
 
   let width = 0;
   for (const {segment} of segmenter.segment(s)) {
@@ -90,8 +89,8 @@ export const size = (s, options = {}) => {
     ) {
       continue;
     }
-    if (globalThis.Bun) {
-      width += Bun.stringWidth(segment, bunStringWidthOptions);
+    if (bunWidth) {
+      width += bunWidth(segment, {ambiguousAsNarrow: !ambiguousAsWide});
       continue;
     }
     if (emojiRegex && ((emojiRegex.lastIndex = 0), emojiRegex.test(segment))) {

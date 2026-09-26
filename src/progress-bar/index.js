@@ -25,8 +25,9 @@ export const drawProgressBar = (fraction, width, {skin = blocks, fillStyle = pla
   const {fill, partials = [], track, trackStart = '', head = ''} = skin,
     {inner, frame} = layout(width, skin),
     steps = partials.length + 1,
-    // floor: full only at 1; the epsilon absorbs float error
-    units = Math.floor((Number.isFinite(fraction) ? Math.min(1, Math.max(0, fraction)) : 0) * inner * steps + 1e-9),
+    f = Number.isFinite(fraction) ? Math.min(1, Math.max(0, fraction)) : 0,
+    // floor, with an epsilon for float error that must not reach full before 1
+    units = f < 1 ? Math.max(0, Math.min(inner * steps - 1, Math.floor(f * inner * steps + 1e-9))) : inner * steps,
     whole = Math.floor(units / steps),
     part = units % steps;
 

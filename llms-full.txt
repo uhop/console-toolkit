@@ -530,4 +530,4 @@ For double-wide character support (CJK, emoji), optionally install:
 - `emoji-regex` — detects double-wide emojis
 - `get-east-asian-width` — East Asian character width detection
 
-These are auto-detected at runtime. Not required for basic usage.
+These are auto-detected at runtime on Node, Deno, and Bun. Not required for basic usage. On Bun without either package, widths fall back to `Bun.stringWidth()`.

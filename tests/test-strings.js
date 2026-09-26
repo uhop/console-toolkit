@@ -47,5 +47,9 @@ test('ANSI utilities', async t => {
     t.equal(clip(text, 2, {includeLastCommand: true}), '\x1B[31mre');
     t.equal(clip(text, 3, {includeLastCommand: true}), text);
     t.equal(clip(text, 4, {includeLastCommand: true}), text);
+
+    t.equal(clip('ab' + text, 0), '', 'no visible text before a command at width 0');
+    t.equal(clip(' ' + style.red.text(''), 0), '', 'found by a property test');
+    t.equal(clip('ab' + text, -1), '', 'negative width');
   });
 });
