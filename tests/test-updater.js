@@ -215,4 +215,15 @@ test('Updater', async t => {
 
     t.equal(stream.chunks.at(-1), 'ab\n');
   });
+
+  await t.test('reset() sends the prologue again', async t => {
+    const stream = makeTtyStream();
+    const updater = new Updater(() => 'x', {prologue: 'P', epilogue: 'E'}, new Writer(stream));
+
+    await updater.final();
+    updater.reset();
+    await updater.final();
+
+    t.deepEqual(stream.chunks, ['P', 'x\n', 'E', 'P', 'x\n', 'E'], 'each run is balanced');
+  });
 });

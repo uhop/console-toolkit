@@ -92,7 +92,9 @@ export class Updater {
    * @returns This Updater.
    */
   stopRefreshing(): this;
-  /** Resets the updater state.
+  /** Resets the updater to its initial state for a new run below the last frame: stops refreshing,
+   * clears `isDone`, forgets the last frame's size, and sends the prologue again with the next frame.
+   * The target (a spinner, for example) is not reset.
    * @returns This Updater.
    */
   reset(): this;

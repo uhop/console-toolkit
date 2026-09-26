@@ -53,6 +53,7 @@ export class Updater {
     this.isDone = false;
     this.lastHeight = 0;
     this.lastWidths = [];
+    this.first = true;
     this.donePromise = null;
     return this;
   }
