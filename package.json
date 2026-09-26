@@ -1,7 +1,7 @@
 {
   "name": "console-toolkit",
-  "version": "1.4.0",
-  "description": "Toolkit to produce a fancy console output (boxes, tables, charts, colors).",
+  "version": "1.5.0",
+  "description": "Toolkit to produce a fancy console output (boxes, tables, charts, colors, progress bars).",
   "type": "module",
   "types": "src/index.d.ts",
   "exports": {
@@ -56,6 +56,8 @@
     "plot",
     "turtle",
     "spinner",
+    "progress",
+    "progress-bar",
     "CLI",
     "TUI"
   ],

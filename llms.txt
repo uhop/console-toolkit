@@ -1,6 +1,6 @@
 # console-toolkit
 
-> A zero-dependency JavaScript toolkit for building rich CLI/TUI applications with styled text, boxes, tables, charts, plots, turtle graphics, and spinners.
+> A zero-dependency JavaScript toolkit for building rich CLI/TUI applications with styled text, boxes, tables, charts, plots, turtle graphics, spinners, and progress bars.
 
 ## Overview
 

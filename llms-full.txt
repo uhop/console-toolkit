@@ -1,12 +1,12 @@
 # console-toolkit
 
-> A zero-dependency JavaScript toolkit for building rich CLI/TUI applications with styled text, boxes, tables, charts, plots, turtle graphics, and spinners.
+> A zero-dependency JavaScript toolkit for building rich CLI/TUI applications with styled text, boxes, tables, charts, plots, turtle graphics, spinners, and progress bars.
 
 - NPM: https://npmjs.org/package/console-toolkit
 - GitHub: https://github.com/uhop/console-toolkit
 - Wiki: https://github.com/uhop/console-toolkit/wiki
 - License: BSD-3-Clause
-- Runtime: Node.js 20+, Bun, Deno
+- Runtime: Node.js 22+, Bun, Deno
 - Module system: ESM only (`"type": "module"`)
 
 ## Installation

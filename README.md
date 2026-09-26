@@ -13,6 +13,7 @@
 - Curated sets of Unicode symbols
 - Tables with themes
 - Bar and column charts with themes
+- Progress bars and spinners
 - Various helpers and examples
 
 ## Visual examples
@@ -133,6 +134,7 @@ BSD 3-Clause License
 
 ## Release history
 
+- 1.5.0 _Progress bars (`console-toolkit/progress-bar`), `Updater` redraw fixes, Unicode-accurate widths; presets and styles are now frozen._
 - 1.4.0 _Charts: zero values no longer collapse `block-frac`/`frac-grouped` columns; `ChartTheme` no longer requires `value`; trimmed file-name subpath exports (import `console-toolkit/box.js`, not `console-toolkit/box`)._
 - 1.3.0 _Spinner API split (`tick`/`getFrame`/`nextFrame`), JSDoc removed from JS files, minor fixes._
 - 1.2.15 _TypeScript 6.0 compatibility, updated dev deps, CI, license year._
