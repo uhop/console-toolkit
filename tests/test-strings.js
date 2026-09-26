@@ -33,12 +33,20 @@ test('ANSI utilities', async t => {
   });
 
   await t.test('Zero-width characters', t => {
-    const zeroWidthCandidate = /[\p{Default_Ignorable_Code_Point}\p{Format}]/v,
-      insideGap = [];
-    for (let cp = 0x2070; cp < 0xfe00; ++cp) {
-      if (cp !== 0x3164 && zeroWidthCandidate.test(String.fromCodePoint(cp))) insideGap.push(cp.toString(16));
+    const zeroWidth =
+        /[[\p{Nonspacing_Mark}\p{Enclosing_Mark}\p{Default_Ignorable_Code_Point}\p{Format}]--[\u00AD\u0600-\u0605\u06DD\u070F\u0890\u0891\u08E2\u115F\uFFF9-\uFFFB]]/v,
+      measured = [];
+    for (let cp = 0; cp < 0x10000; ++cp) {
+      if (cp >= 0xd800 && cp <= 0xdfff) continue;
+      const c = String.fromCodePoint(cp);
+      if (zeroWidth.test(c) && getLength(c)) measured.push(cp.toString(16));
     }
-    t.deepEqual(insideGap, [], 'split.js skips U+2070..U+FDFF except U+3164');
+    t.deepEqual(measured, [], 'the ranges split.js skips hold no zero-width character');
+
+    t.equal(getLength('\u05B0'), 0, 'Hebrew point');
+    t.equal(getLength('\u{1D167}'), 0, 'musical combining mark');
+    t.equal(getLength('\u3099'), 0, 'kana voicing mark');
+    t.equal(getLength('\u0301\u093F'), 1, 'a spacing mark after a lone mark is measured');
 
     t.equal(getLength('a\u200Bb'), 2, 'zero-width space');
     t.equal(getLength('a\u2060b'), 2, 'word joiner');

@@ -24,13 +24,30 @@ const isWideEmoji = (segment, codePoint) =>
     unqualifiedKeycap.test(segment) ||
     (segment.length <= 50 && segment.includes('\u200D') && (segment.match(pictographic)?.length ?? 0) > 1));
 
-// Default_Ignorable_Code_Point and Format, less the format characters glibc's wcwidth() draws with a width;
-// none lies in U+2070..U+FDFF but U+3164, which keeps box drawing and CJK off the regex (tested);
-// unquantified, since a quantified property pattern backtracks badly on huge clusters (after string-width)
+// zero-width as in glibc's wcwidth(): nonspacing and enclosing marks, Default_Ignorable_Code_Point, and Format,
+// less the format characters it draws with a width; unquantified, since a quantified property pattern
+// backtracks badly on huge clusters (after string-width)
 const visible =
-    /[^[\p{Default_Ignorable_Code_Point}\p{Format}]--[\u00AD\u0600-\u0605\u06DD\u070F\u0890\u0891\u08E2\u115F\uFFF9-\uFFFB\u{110BD}\u{110CD}\u{13430}-\u{1343F}]]/v,
-  isZeroWidth = (segment, codePoint) =>
-    codePoint >= 0xad && (codePoint < 0x2070 || codePoint >= 0xfe00 || codePoint === 0x3164) && !visible.test(segment);
+  /[^[\p{Nonspacing_Mark}\p{Enclosing_Mark}\p{Default_Ignorable_Code_Point}\p{Format}]--[\u00AD\u0600-\u0605\u06DD\u070F\u0890\u0891\u08E2\u115F\uFFF9-\uFFFB\u{110BD}\u{110CD}\u{13430}-\u{1343F}]]/v;
+
+// [start, end) ranges without such characters, sorted, so common scripts skip the regex (tested)
+const noInvisibles = [
+  0xae, 0x300, 0x370, 0x483, 0x48a, 0x591, 0x1e00, 0x200b, 0x2070, 0x20d0, 0x20f1, 0x2cef, 0x2e00, 0x302a, 0x302e,
+  0x3099, 0x309b, 0x3164, 0x3165, 0xa66f, 0xabee, 0xfb1e, 0xff00, 0xffa0
+];
+
+// an odd count of boundaries at or below codePoint puts it inside a range
+const mayBeInvisible = codePoint => {
+  if (codePoint < 0xad) return false;
+  let low = 0,
+    high = noInvisibles.length;
+  while (low < high) {
+    const middle = (low + high) >> 1;
+    if (noInvisibles[middle] <= codePoint) low = middle + 1;
+    else high = middle;
+  }
+  return !(low & 1);
+};
 
 const segmenter = new Intl.Segmenter();
 
@@ -45,21 +62,17 @@ export const split = (s, options = {}) => {
   let width = 0,
     leading = '';
   for (const {segment} of segmenter.segment(s)) {
-    const codePoint = segment.codePointAt(0);
+    let codePoint = segment.codePointAt(0);
     // Control characters: C0, C1
     if (ignoreControlSymbols && (codePoint < 0x20 || (codePoint >= 0x7f && codePoint <= 0x9f))) continue;
-    // Combining and zero-width characters
-    if (
-      (codePoint >= 0x300 && codePoint <= 0x36f) ||
-      (codePoint >= 0x1ab0 && codePoint <= 0x1aff) ||
-      (codePoint >= 0x1dc0 && codePoint <= 0x1dff) ||
-      (codePoint >= 0x20d0 && codePoint <= 0x20ff) ||
-      (codePoint >= 0xfe20 && codePoint <= 0xfe2f) ||
-      isZeroWidth(segment, codePoint)
-    ) {
-      if (graphemes.length) graphemes[graphemes.length - 1].symbol += segment;
-      else leading += segment;
-      continue;
+    if (mayBeInvisible(codePoint)) {
+      const index = segment.search(visible);
+      if (index < 0) {
+        if (graphemes.length) graphemes[graphemes.length - 1].symbol += segment;
+        else leading += segment;
+        continue;
+      }
+      codePoint = segment.codePointAt(index);
     }
     if (bunWidth) {
       const w = bunWidth(segment, {ambiguousAsNarrow: !ambiguousAsWide});
@@ -94,19 +107,13 @@ export const size = (s, options = {}) => {
 
   let width = 0;
   for (const {segment} of segmenter.segment(s)) {
-    const codePoint = segment.codePointAt(0);
+    let codePoint = segment.codePointAt(0);
     // Control characters: C0, C1
     if (ignoreControlSymbols && (codePoint < 0x20 || (codePoint >= 0x7f && codePoint <= 0x9f))) continue;
-    // Combining and zero-width characters
-    if (
-      (codePoint >= 0x300 && codePoint <= 0x36f) ||
-      (codePoint >= 0x1ab0 && codePoint <= 0x1aff) ||
-      (codePoint >= 0x1dc0 && codePoint <= 0x1dff) ||
-      (codePoint >= 0x20d0 && codePoint <= 0x20ff) ||
-      (codePoint >= 0xfe20 && codePoint <= 0xfe2f) ||
-      isZeroWidth(segment, codePoint)
-    ) {
-      continue;
+    if (mayBeInvisible(codePoint)) {
+      const index = segment.search(visible);
+      if (index < 0) continue;
+      codePoint = segment.codePointAt(index);
     }
     if (bunWidth) {
       width += bunWidth(segment, {ambiguousAsNarrow: !ambiguousAsWide});
