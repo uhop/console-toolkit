@@ -77,4 +77,4 @@ for (const line of table.toStrings()) console.log(line);
 Emoji widths are built in: a grapheme in Unicode's RGI emoji set (`\p{RGI_Emoji}`), an unqualified keycap, or a ZWJ sequence of two or more pictographs is two cells; a symbol with text presentation, such as ☃ without VS16, is one. Nonspacing and enclosing marks and invisible formatting characters (`Default_Ignorable_Code_Point` and `Format`, such as U+200B or U+FEFF) are zero cells, except those glibc's `wcwidth()` draws: the soft hyphen U+00AD, prepended number marks such as U+0600, and U+115F. A spacing mark adds its own width (Devanagari कि is two cells). For East Asian (CJK) widths, install optionally:
 - `get-east-asian-width` — East Asian character width detection.
 
-It is auto-detected at runtime on Node, Deno, and Bun. Not required for basic usage. On Bun without it, widths fall back to `Bun.stringWidth()`.
+It is auto-detected at runtime on Node, Deno, and Bun. Not required for basic usage. On Bun without it, the East Asian width of each character comes from `Bun.stringWidth()`; the other width rules are unchanged.

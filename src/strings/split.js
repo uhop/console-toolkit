@@ -9,8 +9,14 @@ try {
   // squelch
 }
 
-// Bun's built-in is a fallback only: it counts some spacing marks and U+0980 as zero, so the package wins when present
-const bunWidth = !eastAsianWidth && globalThis.Bun ? globalThis.Bun.stringWidth : null;
+// Bun's built-in is a fallback, asked only for one visible code point: on a whole cluster it drops spacing marks;
+// it counts U+0980 and some spacing marks as zero, and lags behind the package on new code points
+const bunWidth = !eastAsianWidth && globalThis.Bun ? globalThis.Bun.stringWidth : null,
+  bunNarrow = {ambiguousAsNarrow: true},
+  bunWide = {ambiguousAsNarrow: false};
+
+const fallbackWidth = (codePoint, ambiguousAsWide) =>
+  bunWidth ? Math.max(1, bunWidth(String.fromCodePoint(codePoint), ambiguousAsWide ? bunWide : bunNarrow)) : 1;
 
 const rgiEmoji = /^\p{RGI_Emoji}$/v,
   unqualifiedKeycap = /^[\d#*]\u20E3$/,
@@ -32,8 +38,8 @@ const visible =
 
 // [start, end) ranges without such characters, sorted, so common scripts skip the regex (tested)
 const noInvisibles = [
-  0xae, 0x300, 0x370, 0x483, 0x48a, 0x591, 0x1e00, 0x200b, 0x2070, 0x20d0, 0x20f1, 0x2cef, 0x2e00, 0x302a, 0x302e,
-  0x3099, 0x309b, 0x3164, 0x3165, 0xa66f, 0xabee, 0xfb1e, 0xff00, 0xffa0
+  0xae, 0x300, 0x370, 0x483, 0x48a, 0x591, 0x1e00, 0x200b, 0x2010, 0x202a, 0x202f, 0x2060, 0x2070, 0x20d0, 0x20f1,
+  0x2cef, 0x2e00, 0x302a, 0x302e, 0x3099, 0x309b, 0x3164, 0x3165, 0xa66f, 0xabee, 0xfb1e, 0xff00, 0xffa0
 ];
 
 // an odd count of boundaries at or below codePoint puts it inside a range
@@ -59,7 +65,10 @@ const trailingWidth = (segment, base, eastAsianWidthOptions) => {
   let width = 0;
   for (const c of segment.substring(next)) {
     if (spacingMark.test(c) || (c >= '\uff00' && c <= '\uffef')) {
-      width += eastAsianWidth ? eastAsianWidth(c.codePointAt(0), eastAsianWidthOptions) : 1;
+      const codePoint = c.codePointAt(0);
+      width += eastAsianWidth
+        ? eastAsianWidth(codePoint, eastAsianWidthOptions)
+        : fallbackWidth(codePoint, eastAsianWidthOptions.ambiguousAsWide);
     }
   }
   return width;
@@ -92,20 +101,14 @@ export const split = (s, options = {}) => {
       codePoint = segment.codePointAt(index);
       base = index;
     }
-    if (bunWidth) {
-      const w = bunWidth(segment, {ambiguousAsNarrow: !ambiguousAsWide});
-      graphemes.push({symbol: segment, width: w});
-      width += w;
-      continue;
-    }
     if (isWideEmoji(segment, codePoint)) {
       graphemes.push({symbol: segment, width: 2});
       width += 2;
       continue;
     }
     const w =
-      (eastAsianWidth ? eastAsianWidth(codePoint, eastAsianWidthOptions) : 1) +
-      trailingWidth(segment, base, eastAsianWidthOptions);
+      (eastAsianWidth ? eastAsianWidth(codePoint, eastAsianWidthOptions) : fallbackWidth(codePoint, ambiguousAsWide)) +
+      (segment.length > 1 ? trailingWidth(segment, base, eastAsianWidthOptions) : 0);
     graphemes.push({symbol: segment, width: w});
     width += w;
   }
@@ -132,17 +135,13 @@ export const size = (s, options = {}) => {
       codePoint = segment.codePointAt(index);
       base = index;
     }
-    if (bunWidth) {
-      width += bunWidth(segment, {ambiguousAsNarrow: !ambiguousAsWide});
-      continue;
-    }
     if (isWideEmoji(segment, codePoint)) {
       width += 2;
       continue;
     }
     width +=
-      (eastAsianWidth ? eastAsianWidth(codePoint, eastAsianWidthOptions) : 1) +
-      trailingWidth(segment, base, eastAsianWidthOptions);
+      (eastAsianWidth ? eastAsianWidth(codePoint, eastAsianWidthOptions) : fallbackWidth(codePoint, ambiguousAsWide)) +
+      (segment.length > 1 ? trailingWidth(segment, base, eastAsianWidthOptions) : 0);
   }
   return width;
 };
