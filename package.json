@@ -81,7 +81,6 @@
   },
   "devDependencies": {
     "@types/node": "^26.6.3",
-    "emoji-regex": "^11.0.0",
     "fast-check": "^4.10.2",
     "get-east-asian-width": "^1.7.0",
     "prettier": "^3.9.9",

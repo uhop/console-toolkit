@@ -2,21 +2,27 @@
 // Loosely adapted from https://www.npmjs.com/package/string-width by
 // [Sindre Sorhus](https://www.npmjs.com/~sindresorhus) under the MIT license.
 
-let emojiRegex = null,
-  eastAsianWidth = null;
-try {
-  emojiRegex = (await import('emoji-regex')).default();
-} catch {
-  // squelch
-}
+let eastAsianWidth = null;
 try {
   eastAsianWidth = (await import('get-east-asian-width')).eastAsianWidth;
 } catch {
   // squelch
 }
 
-// Bun's built-in is a fallback only: it miscounts some combining marks, so the packages win when present
-const bunWidth = !emojiRegex && !eastAsianWidth && globalThis.Bun ? globalThis.Bun.stringWidth : null;
+// Bun's built-in is a fallback only: it miscounts some combining marks, so the package wins when present
+const bunWidth = !eastAsianWidth && globalThis.Bun ? globalThis.Bun.stringWidth : null;
+
+const rgiEmoji = /^\p{RGI_Emoji}$/v,
+  unqualifiedKeycap = /^[\d#*]\u20E3$/,
+  pictographic = /\p{Extended_Pictographic}/gu;
+
+// after string-width: RGI emoji, plus unqualified keycaps and ZWJ sequences, which terminals also draw wide;
+// no single code point below U+00A9 is an emoji, and the length cap keeps pathological clusters cheap
+const isWideEmoji = (segment, codePoint) =>
+  (segment.length > 1 || codePoint >= 0xa9) &&
+  (rgiEmoji.test(segment) ||
+    unqualifiedKeycap.test(segment) ||
+    (segment.length <= 50 && segment.includes('\u200D') && (segment.match(pictographic)?.length ?? 0) > 1));
 
 const segmenter = new Intl.Segmenter();
 
@@ -50,7 +56,7 @@ export const split = (s, options = {}) => {
       width += w;
       continue;
     }
-    if (emojiRegex && ((emojiRegex.lastIndex = 0), emojiRegex.test(segment))) {
+    if (isWideEmoji(segment, codePoint)) {
       graphemes.push({symbol: segment, width: 2});
       width += 2;
       continue;
@@ -93,7 +99,7 @@ export const size = (s, options = {}) => {
       width += bunWidth(segment, {ambiguousAsNarrow: !ambiguousAsWide});
       continue;
     }
-    if (emojiRegex && ((emojiRegex.lastIndex = 0), emojiRegex.test(segment))) {
+    if (isWideEmoji(segment, codePoint)) {
       width += 2;
       continue;
     }

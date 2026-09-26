@@ -16,6 +16,22 @@ test('ANSI utilities', async t => {
     t.equal(getLength('字\u1F920\u1F407'), 6);
   });
 
+  await t.test('Emoji widths', t => {
+    t.equal(getLength('☃'), 1, 'text presentation without VS16');
+    t.equal(getLength('☃\uFE0F'), 2, 'with VS16');
+    t.equal(getLength('❤'), 1);
+    t.equal(getLength('❤️'), 2);
+    t.equal(getLength('©'), 1);
+    t.equal(getLength('👍'), 2, 'emoji presentation');
+    t.equal(getLength('👍🏽'), 2, 'skin tone');
+    t.equal(getLength('🇺🇸'), 2, 'flag');
+    t.equal(getLength('👨‍👩‍👧'), 2, 'ZWJ sequence');
+    t.equal(getLength('👨‍❤‍👨'), 2, 'unqualified ZWJ sequence');
+    t.equal(getLength('1️⃣'), 2, 'keycap');
+    t.equal(getLength('1⃣'), 2, 'unqualified keycap');
+    t.equal(getLength('#1'), 2, 'ASCII keycap bases alone');
+  });
+
   await t.test('Get max length', t => {
     t.equal(getMaxLength(['abc', '']), 3);
     t.equal(getMaxLength(['', 'ab']), 2);

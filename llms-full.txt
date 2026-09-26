@@ -526,10 +526,9 @@ import {eraseScreen, eraseLine} from 'console-toolkit/ansi';
 
 ---
 
-## Optional peer dependencies
+## Optional peer dependency
 
-For double-wide character support (CJK, emoji), optionally install:
-- `emoji-regex` — detects double-wide emojis
-- `get-east-asian-width` — East Asian character width detection
+Emoji widths are built in: a grapheme in Unicode's RGI emoji set (`\p{RGI_Emoji}`), an unqualified keycap, or a ZWJ sequence of two or more pictographs is two cells; a symbol with text presentation, such as ☃ without VS16, is one. For East Asian (CJK) widths, install optionally:
+- `get-east-asian-width` — East Asian character width detection.
 
-These are auto-detected at runtime on Node, Deno, and Bun. Not required for basic usage. On Bun without either package, widths fall back to `Bun.stringWidth()`.
+It is auto-detected at runtime on Node, Deno, and Bun. Not required for basic usage. On Bun without it, widths fall back to `Bun.stringWidth()`.
