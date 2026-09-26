@@ -9,7 +9,7 @@ try {
   // squelch
 }
 
-// Bun's built-in is a fallback only: it miscounts some combining marks, so the package wins when present
+// Bun's built-in is a fallback only: it counts some spacing marks and U+0980 as zero, so the package wins when present
 const bunWidth = !eastAsianWidth && globalThis.Bun ? globalThis.Bun.stringWidth : null;
 
 const rgiEmoji = /^\p{RGI_Emoji}$/v,
@@ -49,6 +49,22 @@ const mayBeInvisible = codePoint => {
   return !(low & 1);
 };
 
+const spacingMark = /\p{Spacing_Mark}/v;
+
+// glibc's wcwidth() and tmux draw a spacing mark in its own cells; U+FF00..U+FFEF covers the halfwidth
+// (semi-)voiced sound marks, which are not spacing marks (after string-width)
+const trailingWidth = (segment, base, eastAsianWidthOptions) => {
+  const next = base + (segment.codePointAt(base) > 0xffff ? 2 : 1);
+  if (next >= segment.length) return 0;
+  let width = 0;
+  for (const c of segment.substring(next)) {
+    if (spacingMark.test(c) || (c >= '\uff00' && c <= '\uffef')) {
+      width += eastAsianWidth ? eastAsianWidth(c.codePointAt(0), eastAsianWidthOptions) : 1;
+    }
+  }
+  return width;
+};
+
 const segmenter = new Intl.Segmenter();
 
 export const split = (s, options = {}) => {
@@ -62,7 +78,8 @@ export const split = (s, options = {}) => {
   let width = 0,
     leading = '';
   for (const {segment} of segmenter.segment(s)) {
-    let codePoint = segment.codePointAt(0);
+    let codePoint = segment.codePointAt(0),
+      base = 0;
     // Control characters: C0, C1
     if (ignoreControlSymbols && (codePoint < 0x20 || (codePoint >= 0x7f && codePoint <= 0x9f))) continue;
     if (mayBeInvisible(codePoint)) {
@@ -73,6 +90,7 @@ export const split = (s, options = {}) => {
         continue;
       }
       codePoint = segment.codePointAt(index);
+      base = index;
     }
     if (bunWidth) {
       const w = bunWidth(segment, {ambiguousAsNarrow: !ambiguousAsWide});
@@ -85,14 +103,11 @@ export const split = (s, options = {}) => {
       width += 2;
       continue;
     }
-    if (eastAsianWidth) {
-      const w = eastAsianWidth(codePoint, eastAsianWidthOptions);
-      graphemes.push({symbol: segment, width: w});
-      width += w;
-      continue;
-    }
-    graphemes.push({symbol: segment, width: 1});
-    ++width;
+    const w =
+      (eastAsianWidth ? eastAsianWidth(codePoint, eastAsianWidthOptions) : 1) +
+      trailingWidth(segment, base, eastAsianWidthOptions);
+    graphemes.push({symbol: segment, width: w});
+    width += w;
   }
   if (leading && graphemes.length) graphemes[0].symbol = leading + graphemes[0].symbol;
   return {graphemes, width};
@@ -107,13 +122,15 @@ export const size = (s, options = {}) => {
 
   let width = 0;
   for (const {segment} of segmenter.segment(s)) {
-    let codePoint = segment.codePointAt(0);
+    let codePoint = segment.codePointAt(0),
+      base = 0;
     // Control characters: C0, C1
     if (ignoreControlSymbols && (codePoint < 0x20 || (codePoint >= 0x7f && codePoint <= 0x9f))) continue;
     if (mayBeInvisible(codePoint)) {
       const index = segment.search(visible);
       if (index < 0) continue;
       codePoint = segment.codePointAt(index);
+      base = index;
     }
     if (bunWidth) {
       width += bunWidth(segment, {ambiguousAsNarrow: !ambiguousAsWide});
@@ -123,11 +140,9 @@ export const size = (s, options = {}) => {
       width += 2;
       continue;
     }
-    if (eastAsianWidth) {
-      width += eastAsianWidth(codePoint, eastAsianWidthOptions);
-      continue;
-    }
-    ++width;
+    width +=
+      (eastAsianWidth ? eastAsianWidth(codePoint, eastAsianWidthOptions) : 1) +
+      trailingWidth(segment, base, eastAsianWidthOptions);
   }
   return width;
 };

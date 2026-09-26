@@ -47,6 +47,27 @@ test('ANSI utilities', async t => {
     t.equal(getLength('\u{1D167}'), 0, 'musical combining mark');
     t.equal(getLength('\u3099'), 0, 'kana voicing mark');
     t.equal(getLength('\u0301\u093F'), 1, 'a spacing mark after a lone mark is measured');
+  });
+
+  await t.test('Spacing marks', t => {
+    const spacingMark = /\p{Spacing_Mark}/v,
+      mismatched = [];
+    for (let cp = 0; cp <= 0x10ffff; ++cp) {
+      if (cp >= 0xd800 && cp <= 0xdfff) continue;
+      const c = String.fromCodePoint(cp);
+      if (spacingMark.test(c) && (getLength(c) < 1 || getLength('a' + c) !== 1 + getLength(c))) {
+        mismatched.push(cp.toString(16));
+      }
+    }
+    t.deepEqual(mismatched, [], 'a spacing mark adds its own width, as in wcwidth()');
+
+    t.equal(getLength('\u0915\u093F'), 2, 'Devanagari ki');
+    t.equal(getLength('\u0B95\u0BCA'), 2, 'Tamil ko');
+    t.equal(getLength('\uFF76\uFF9E'), 2, 'halfwidth ga');
+    t.equal(getLength('\u{1D158}\u{1D165}\u{1D16E}'), 3, 'musical eighth note from parts');
+    t.equal(getLength('e\u0301'), 1, 'a nonspacing mark adds nothing');
+    t.equal(clip('\u0915\u093Fx', 1), '', 'a cluster is never cut');
+    t.equal(clip('\u0915\u093Fx', 2), '\u0915\u093F');
 
     t.equal(getLength('a\u200Bb'), 2, 'zero-width space');
     t.equal(getLength('a\u2060b'), 2, 'word joiner');
