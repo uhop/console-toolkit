@@ -54,7 +54,7 @@ export class Updater {
   afterLine: string;
   /** If true, omit the trailing newline on the last line. */
   noLastNewLine: boolean | undefined;
-  /** Height of the last written frame in rows. */
+  /** Height of the last written frame in rows, or 0 when no frame is on screen. */
   lastHeight: number;
   /** Whether the updater has been finalized. */
   isDone: boolean;
@@ -62,6 +62,10 @@ export class Updater {
   first: boolean;
   /** Handle for the auto-refresh interval, or null. */
   intervalHandle: ReturnType<typeof setInterval> | null;
+  /** The frame being written, or null. Later frames wait for it; refresh ticks skip while it is set. */
+  pendingFrame: Promise<void> | null;
+  /** The promise returned by `done()`, or null before the first call. */
+  donePromise: Promise<void> | null;
 
   /**
    * @param updater - A function or UpdaterTarget that provides frames.
@@ -96,13 +100,14 @@ export class Updater {
    * @returns Frame content.
    */
   getFrame(state: string, ...args: unknown[]): StringsInput;
-  /** Writes a frame to the stream.
+  /** Writes a frame to the stream. Frames are written in call order: a frame waits for the one before it.
    * @param state - State string.
    * @returns A promise that resolves when the frame is written.
    */
   writeFrame(state: string, ...args: unknown[]): Promise<void>;
-  /** Finishes updating: writes the epilogue and stops refreshing.
-   * @returns A promise that resolves when done.
+  /** Finishes updating: stops refreshing, waits for the pending frame, and writes the epilogue.
+   * Repeated calls return the same promise.
+   * @returns A promise that resolves when the epilogue is written.
    */
   done(): Promise<void>;
   /** Updates with a new state and writes the frame.
@@ -111,7 +116,8 @@ export class Updater {
    */
   update(state?: string, ...args: unknown[]): Promise<void>;
   /** Writes the final frame with state 'finished' and calls `done()`.
-   * @returns A promise that resolves when done.
+   * When already done, returns the `done()` promise without writing a frame.
+   * @returns A promise that resolves when the epilogue is written.
    */
   final(...args: unknown[]): Promise<void>;
 }

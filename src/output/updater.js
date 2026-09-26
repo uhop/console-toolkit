@@ -1,9 +1,11 @@
 // @ts-self-types="./updater.d.ts"
 import Writer from './writer.js';
 import {toStrings} from '../strings.js';
-import {cursorUp, setCommands} from '../ansi/csi.js';
+import {CLEAR_EOS, cursorUp, setCommands} from '../ansi/csi.js';
 
 const RESET = setCommands([]);
+
+const ignore = () => {};
 
 export class Updater {
   constructor(
@@ -24,6 +26,8 @@ export class Updater {
     this.isDone = false;
     this.first = true;
     this.intervalHandle = null;
+    this.pendingFrame = null;
+    this.donePromise = null;
   }
 
   get isRefreshing() {
@@ -32,7 +36,7 @@ export class Updater {
 
   startRefreshing(ms = 100) {
     if (this.intervalHandle || this.isDone || !this.writer.isTTY) return this;
-    this.intervalHandle = setInterval(this.update.bind(this), ms);
+    this.intervalHandle = setInterval(() => this.pendingFrame || this.update(), ms);
     return this;
   }
 
@@ -47,6 +51,7 @@ export class Updater {
     this.stopRefreshing();
     this.isDone = false;
     this.lastHeight = 0;
+    this.donePromise = null;
     return this;
   }
 
@@ -60,33 +65,50 @@ export class Updater {
     throw new TypeError('Updater must be a function or implement nextFrame()/getFrame()');
   }
 
-  async writeFrame(state, ...args) {
-    if (this.first) {
-      this.prologue && (await this.writer.writeString(this.prologue));
-      this.first = false;
-    }
+  writeFrame(state, ...args) {
+    const draw = async () => {
+      if (this.first) {
+        this.prologue && (await this.writer.writeString(this.prologue));
+        this.first = false;
+      }
 
-    const frame = toStrings(this.getFrame(state, ...args));
-    if (!frame) return;
+      const frame = toStrings(this.getFrame(state, ...args));
+      if (!frame) return;
 
-    if (this.lastHeight) await this.writer.writeString('\r' + cursorUp(this.lastHeight) + this.beforeFrame);
+      const previousHeight = this.lastHeight;
+      if (previousHeight) {
+        const up = this.noLastNewLine ? previousHeight - 1 : previousHeight;
+        await this.writer.writeString('\r' + (up > 0 ? cursorUp(up) : '') + this.beforeFrame);
+      }
 
-    this.lastHeight = frame.length;
-    if (this.noLastNewLine) --this.lastHeight;
+      this.lastHeight = frame.length;
 
-    await this.writer.write(frame, {
-      noLastNewLine: this.noLastNewLine,
-      beforeLine: this.beforeLine,
-      afterLine: this.afterLine
-    });
-    this.afterFrame && (await this.writer.writeString(this.afterFrame));
+      await this.writer.write(frame, {
+        noLastNewLine: this.noLastNewLine,
+        beforeLine: this.beforeLine,
+        afterLine: this.afterLine
+      });
+      if (this.lastHeight < previousHeight) await this.writer.writeString(CLEAR_EOS);
+      this.afterFrame && (await this.writer.writeString(this.afterFrame));
+    };
+
+    const current = this.pendingFrame ? this.pendingFrame.then(draw, draw) : draw();
+    this.pendingFrame = current;
+    const clear = () => {
+      if (this.pendingFrame === current) this.pendingFrame = null;
+    };
+    current.then(clear, clear);
+    return current;
   }
 
-  async done() {
-    if (this.isDone) return;
-    this.isDone = true;
-    this.stopRefreshing();
-    this.epilogue && (await this.writer.writeString(this.epilogue));
+  done() {
+    this.donePromise ??= (async () => {
+      this.isDone = true;
+      this.stopRefreshing();
+      if (this.pendingFrame) await this.pendingFrame.catch(ignore);
+      this.epilogue && (await this.writer.writeString(this.epilogue));
+    })();
+    return this.donePromise;
   }
 
   async update(state = 'active', ...args) {
@@ -95,7 +117,7 @@ export class Updater {
   }
 
   async final(...args) {
-    if (this.isDone) return;
+    if (this.isDone) return this.done();
     await this.writeFrame('finished', ...args);
     await this.done();
   }
