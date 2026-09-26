@@ -1,3 +1,10 @@
+/** Freezes an object or array and everything it holds, and returns it. Stops at objects that are already frozen.
+ * The toolkit uses it on its shared presets, themes, and tables.
+ * @param value - The value to freeze; primitives and functions are returned as is.
+ * @returns The same value.
+ */
+export function freezeDeep<T>(value: T): T;
+
 /** Capitalizes the first letter of a string and lowercases the rest.
  * @param name - The string to capitalize.
  * @returns The capitalized string.

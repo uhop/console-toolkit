@@ -1,4 +1,5 @@
 // @ts-self-types="./symbols.d.ts"
+import {freezeDeep} from './meta.js';
 const generateSequence = (base, from, to) => {
   const result = [];
 
@@ -130,3 +131,5 @@ export const checkMarkLight = '\u{1f5f8}';
 export const ballotX = '\u{2716}';
 export const ballotXHeavy = '\u{2717}';
 export const ballotXLight = '\u{1f5f7}';
+
+freezeDeep([hBlocks8th, quadrants, shades, vBlocks8th]);

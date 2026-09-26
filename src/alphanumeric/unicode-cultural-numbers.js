@@ -1,4 +1,5 @@
 // @ts-self-types="./unicode-cultural-numbers.d.ts"
+import {freezeDeep} from '../meta.js';
 import {SymbolRange} from './utils.js';
 
 export const transcodeTables = {
@@ -67,3 +68,5 @@ export const transcodeTables = {
   // ottomanSiyaqAlternative: new SymbolRange('𞴯', 2, 10),
   copticEpact: new SymbolRange('𐋡', 1, 10)
 };
+
+freezeDeep([transcodeTables]);

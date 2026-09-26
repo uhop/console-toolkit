@@ -1,5 +1,5 @@
 // @ts-self-types="./default.d.ts"
-import {capitalize} from '../../meta.js';
+import {capitalize, freezeDeep} from '../../meta.js';
 import style from '../../style.js';
 
 const seriesColors = 'cyan,magenta,blue,yellow,green,red'.split(',');
@@ -11,3 +11,5 @@ export const chartTheme = [
 chartTheme.empty = {state: style.reset.all.getState(), symbol: ' '};
 
 export default chartTheme;
+
+freezeDeep([chartTheme]);

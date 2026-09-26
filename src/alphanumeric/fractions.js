@@ -1,4 +1,5 @@
 // @ts-self-types="./fractions.d.ts"
+import {freezeDeep} from '../meta.js';
 export const fractions = [
   [1, 7, '\u2150'],
   [1, 9, '\u2151'],
@@ -81,3 +82,5 @@ export const getSixths = (value, useFractionForZero) => findSymbol(sixths, value
 export const getEighths = (value, useFractionForZero) => findSymbol(eighths, value, useFractionForZero);
 
 export {getQuarters as getFourths};
+
+freezeDeep([eighths, fifths, fractions, quarters, sixths, thirds]);

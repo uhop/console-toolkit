@@ -1,4 +1,5 @@
 // @ts-self-types="./sgr-state.d.ts"
+import {freezeDeep} from '../meta.js';
 // Support for states based on SGR commands. See https://en.wikipedia.org/wiki/ANSI_escape_code for more details.
 
 import {
@@ -399,3 +400,5 @@ export const optimize = (s, initState = defaultState) => {
   if (start < s.length) result += s.substring(start);
   return result;
 };
+
+freezeDeep([RESET_STATE]);

@@ -1,4 +1,5 @@
 // @ts-self-types="./spinners.d.ts"
+import {freezeDeep} from '../meta.js';
 // Spinners are from https://github.com/sindresorhus/cli-spinners under the MIT license.
 // Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
 // See `cli-spinners` for more great options.
@@ -62,3 +63,22 @@ export const bouncingBall = {
   notStarted: ['(      )'],
   finished: ['(●●●●●●)']
 };
+
+freezeDeep([
+  arc,
+  arrows,
+  bounce,
+  bouncingBall,
+  bouncingBar,
+  circleHalves,
+  circleQuarters,
+  clock,
+  dots,
+  growHorizontal,
+  growVertical,
+  line,
+  noise,
+  pipe,
+  sand,
+  squareQuarters
+]);

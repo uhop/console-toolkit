@@ -13,7 +13,7 @@ src/                  # All source code (shipped via npm)
 ├── symbols.js / .d.ts      # Curated Unicode symbol constants
 ├── draw-block.js / .d.ts   # Block drawing with themes
 ├── draw-block-frac.js / .d.ts  # Fractional block drawing (1/8th steps)
-├── meta.js / .d.ts         # Name-casing helpers, addAlias/addGetter utilities
+├── meta.js / .d.ts         # Name-casing helpers, addAlias/addGetter utilities, freezeDeep
 ├── ansi/                    # Low-level ANSI escape sequence handling
 │   ├── csi.js               # CSI sequence parsing/generation
 │   ├── sgr.js               # SGR command constants
@@ -67,6 +67,7 @@ Line themes and block themes are plain objects with indexed sub-themes. They are
 - **No build step**: Source JS is shipped directly. TypeScript `.d.ts` files are hand-written alongside `.js` files.
 - **`.d.ts` is the only API contract**: Every public module has a hand-written `.d.ts` sidecar. JSDoc is intentionally not used in `.js` files (drift surface; the `.d.ts` is the source of truth).
 - **Immutable Box, mutable Panel**: `Box` methods return new instances. `Panel` methods mutate and return `this` for chaining.
+- **Frozen shared objects**: every exported preset, theme, and table (spinner definitions, progress-bar skins, line/block/chart themes, SGR tables, alphanumeric tables, symbol arrays, `RESET_STATE`) is deep-frozen at import with `freezeDeep()` from `meta.js`; a new one goes through `freezeDeep([...])` at the end of its module. Style objects freeze themselves in their constructors (`Style` only when constructed directly, so subclasses can add fields). `Box` is immutable by API but not frozen: it is created on every operation and wraps the caller's array.
 - **`addAlias` / `addAliases`**: Used to create method aliases on class prototypes (e.g., `toBox` → `clone`, `combineState` → `combineStateAfter`).
 - **CSS-style shorthand**: `pad(t, r, b, l)` on both Box and Panel follows CSS padding order.
 - **Optional peer deps for wide chars**: `emoji-regex` and `get-east-asian-width` are auto-detected at runtime for double-wide character support.

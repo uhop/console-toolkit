@@ -1,4 +1,5 @@
 // @ts-self-types="./unicode-letters.d.ts"
+import {freezeDeep} from '../meta.js';
 import {SymbolRange, transcode as internalTranscode} from './utils.js';
 
 const range = (fromCapital, fromSmall) =>
@@ -62,3 +63,5 @@ export const transcode = (s, name, options) => {
   if (!tables) throw new Error(`There is no transcode table "${name}"`);
   return internalTranscode(s, tables, options);
 };
+
+freezeDeep([transcodeTables]);

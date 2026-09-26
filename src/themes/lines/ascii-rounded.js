@@ -1,4 +1,5 @@
 // @ts-self-types="./ascii-rounded.d.ts"
+import {freezeDeep} from '../../meta.js';
 import {makeLineTheme} from '../utils.js';
 
 export const lineTheme = makeLineTheme([
@@ -7,3 +8,5 @@ export const lineTheme = makeLineTheme([
 ]);
 
 export default lineTheme;
+
+freezeDeep([lineTheme]);

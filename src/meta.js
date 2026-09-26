@@ -1,6 +1,15 @@
 // @ts-self-types="./meta.d.ts"
 export const verifyStrings = strings => Array.isArray(strings) && Array.isArray(strings.raw);
 
+// stops at frozen objects, which also guards against cycles
+export const freezeDeep = value => {
+  if (value && typeof value == 'object' && !Object.isFrozen(value)) {
+    Object.freeze(value);
+    for (const key of Reflect.ownKeys(value)) freezeDeep(value[key]);
+  }
+  return value;
+};
+
 export const capitalize = name => (name ? name[0].toUpperCase() + name.substring(1).toLowerCase() : name);
 
 export const toCamelCase = names =>

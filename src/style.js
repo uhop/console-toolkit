@@ -28,6 +28,7 @@ class ExtendedColor {
     this[styleSymbol] = styleObject;
     this[optionsSymbol] = options;
     this[isBrightSymbol] = isBright;
+    Object.freeze(this);
   }
   make(newCommands) {
     if (Array.isArray(newCommands)) newCommands[0] = this[optionsSymbol].extended;
@@ -133,6 +134,7 @@ class Bright {
   constructor(styleObject, isBright) {
     this[styleSymbol] = styleObject;
     this[isBrightSymbol] = isBright;
+    Object.freeze(this);
   }
   make(newCommands) {
     return this[styleSymbol].make(newCommands);
@@ -162,6 +164,7 @@ class Bright {
 class Reset {
   constructor(styleObject) {
     this[styleSymbol] = styleObject;
+    Object.freeze(this);
   }
   make(newCommands) {
     return this[styleSymbol].make(newCommands);
@@ -183,6 +186,7 @@ export class Style {
     this[initStateSymbol] = toState(initState);
     this[stateSymbol] = currentState ? toState(currentState) : this[initStateSymbol];
     this[colorDepthSymbol] = colorDepth;
+    if (new.target === Style) Object.freeze(this);
   }
   make(newCommands = []) {
     if (!Array.isArray(newCommands)) newCommands = [newCommands];

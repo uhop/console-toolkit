@@ -1,4 +1,5 @@
 // @ts-self-types="./arrows.d.ts"
+import {freezeDeep} from '../meta.js';
 export const LEFT = 0,
   UP = 1,
   RIGHT = 2,
@@ -30,3 +31,25 @@ export const openHeaded = makeArrowsH(0x21fd);
 export const withBarbUp = toSymbol(0x21bc, 0x21be, 0x21c1, 0x21c3);
 export const withBarbDown = toSymbol(0x21bd, 0x21bf, 0x21c0, 0x21c2);
 export const doubleWithStroke = toSymbol(0x21cd, ' ', 0x21cf, ' ');
+
+freezeDeep([
+  dashed,
+  double,
+  doubleWithStroke,
+  fromBar,
+  openHeaded,
+  simple,
+  squiggle,
+  toBar,
+  triple,
+  twoHeaded,
+  wave,
+  white,
+  withBarbDown,
+  withBarbUp,
+  withDoubleVStroke,
+  withLoop,
+  withStroke,
+  withTail,
+  withVStroke
+]);

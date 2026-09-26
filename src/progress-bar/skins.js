@@ -1,4 +1,5 @@
 // @ts-self-types="./skins.d.ts"
+import {freezeDeep} from '../meta.js';
 import {fullBlock, hBlocks8th, lHalf, shadeDark, shadeLight, shadeMedium} from '../symbols.js';
 
 const eighths = hBlocks8th.slice(1, 8);
@@ -13,3 +14,5 @@ export const colorLine = {fill: '━', partials: ['╸'], track: '━', trackSta
 export const dots = {fill: '⣿', partials: [...'⡀⡄⡆⡇⣇⣧⣷'], track: '⣀'};
 export const ascii = {fill: '=', head: '>', track: ' ', left: '[', right: ']'};
 export const hash = {fill: '#', track: '-', left: '[', right: ']'};
+
+freezeDeep([ascii, blocks, capped, colorLine, dots, halves, hash, line, shades, solid]);

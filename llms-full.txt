@@ -176,7 +176,7 @@ When placing text via `panel.put()`, characters matching `emptySymbol` (default 
 
 ## Module: Style (`console-toolkit/style.js`)
 
-Fluent API for ANSI SGR styling.
+Fluent API for ANSI SGR styling. Style objects are frozen: save and reuse them freely; writing to one throws a `TypeError`.
 
 ```ts
 class Style {
@@ -377,6 +377,8 @@ Variants: `plain`, `block`, `block-frac`, `frac`, `plain-stacked`, `block-stacke
 ---
 
 ## Themes
+
+Themes, like every exported preset and table in the toolkit (spinner definitions, progress-bar skins, SGR tables, symbol arrays), are deep-frozen. To customize one, copy it: `{...theme, …}`.
 
 ### Line themes (for tables)
 

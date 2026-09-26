@@ -1,4 +1,5 @@
 // @ts-self-types="./unicode-numbers.d.ts"
+import {freezeDeep} from '../meta.js';
 import {SymbolRange, transcode as internalTranscode} from './utils.js';
 import {minus, multiplication, superscriptPlus, superscriptMinus} from '../symbols.js';
 
@@ -74,3 +75,5 @@ export const numberExponent = (s, {useSpecialMinus} = {}) => {
         transcode(r[4], transcodeTables.superscript)
     : s;
 };
+
+freezeDeep([transcodeTables]);
