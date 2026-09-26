@@ -56,6 +56,8 @@ export class Updater {
   noLastNewLine: boolean | undefined;
   /** Height of the last written frame in rows, or 0 when no frame is on screen. */
   lastHeight: number;
+  /** Display width of each line of the last written frame; a line drawn narrower than its predecessor gets `CLEAR_EOL`. */
+  lastWidths: number[];
   /** Whether the updater has been finalized. */
   isDone: boolean;
   /** Whether this is the first frame. */

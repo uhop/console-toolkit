@@ -1,7 +1,7 @@
 // @ts-self-types="./updater.d.ts"
 import Writer from './writer.js';
-import {toStrings} from '../strings.js';
-import {CLEAR_EOS, cursorUp, setCommands} from '../ansi/csi.js';
+import {getLength, toStrings} from '../strings.js';
+import {CLEAR_EOL, CLEAR_EOS, cursorUp, setCommands} from '../ansi/csi.js';
 
 const RESET = setCommands([]);
 
@@ -23,6 +23,7 @@ export class Updater {
     this.afterLine = afterLine || '';
     this.noLastNewLine = noLastNewLine;
     this.lastHeight = 0;
+    this.lastWidths = [];
     this.isDone = false;
     this.first = true;
     this.intervalHandle = null;
@@ -51,6 +52,7 @@ export class Updater {
     this.stopRefreshing();
     this.isDone = false;
     this.lastHeight = 0;
+    this.lastWidths = [];
     this.donePromise = null;
     return this;
   }
@@ -75,15 +77,19 @@ export class Updater {
       const frame = toStrings(this.getFrame(state, ...args));
       if (!frame) return;
 
-      const previousHeight = this.lastHeight;
+      const previousHeight = this.lastHeight,
+        previousWidths = this.lastWidths;
       if (previousHeight) {
         const up = this.noLastNewLine ? previousHeight - 1 : previousHeight;
         await this.writer.writeString('\r' + (up > 0 ? cursorUp(up) : '') + this.beforeFrame);
       }
 
+      const widths = frame.map(line => getLength(this.beforeLine + line + this.afterLine));
       this.lastHeight = frame.length;
+      this.lastWidths = widths;
 
-      await this.writer.write(frame, {
+      const lines = frame.map((line, i) => (widths[i] < (previousWidths[i] ?? 0) ? line + CLEAR_EOL : line));
+      await this.writer.write(lines, {
         noLastNewLine: this.noLastNewLine,
         beforeLine: this.beforeLine,
         afterLine: this.afterLine

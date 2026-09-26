@@ -509,6 +509,8 @@ await updater.final();
 
 `Updater` calls `nextFrame()` on its target if available, falling back to `getFrame()`. Use `nextFrame()` directly when driving a spinner from your own render loop; use `getFrame()` to peek without advancing.
 
+`Updater` writes frames in call order and skips timer ticks while a frame is being written. On a redraw it clears what the new frame no longer covers, only when needed: `CLEAR_EOS` after a frame with fewer lines, `CLEAR_EOL` after a line narrower than the one it replaces (widths count `beforeLine`/`afterLine`, ignore escape codes, and treat wide characters as two cells). Passing `afterLine: CLEAR_EOL` for that is no longer necessary.
+
 ---
 
 ## Package: ansi (`console-toolkit/ansi`)

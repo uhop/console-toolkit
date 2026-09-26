@@ -3,7 +3,8 @@ import {Writable} from 'node:stream';
 
 import Writer from '../src/output/writer.js';
 import Updater from '../src/output/updater.js';
-import {CLEAR_EOS, cursorUp} from '../src/ansi/csi.js';
+import {CLEAR_EOL, CLEAR_EOS, cursorUp} from '../src/ansi/csi.js';
+import style from '../src/style.js';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -162,5 +163,56 @@ test('Updater', async t => {
 
     t.ok(stream.chunks.includes('ok\n'));
     t.equal(stream.chunks.at(-1), 'E');
+  });
+
+  await t.test('a narrower line clears the rest of the old line', async t => {
+    const stream = makeTtyStream();
+    let lines = ['100%', 'same', 'abc'];
+    const updater = new Updater(() => lines, {}, new Writer(stream));
+
+    await updater.update();
+    lines = ['5%', 'same', 'abcdef'];
+    await updater.update();
+
+    t.equal(stream.chunks.at(-1), '5%' + CLEAR_EOL + '\nsame\nabcdef\n', 'only the narrower line is cleared');
+    t.deepEqual(updater.lastWidths, [2, 4, 6]);
+  });
+
+  await t.test('widths ignore escape codes', async t => {
+    const stream = makeTtyStream();
+    let line = style.red.text('abc');
+    const updater = new Updater(() => line, {}, new Writer(stream));
+
+    await updater.update();
+    line = 'abc';
+    await updater.update();
+
+    t.equal(count(stream.chunks, 'abc\n'), 1, 'same width, no clearing');
+    t.equal(stream.chunks.at(-1), 'abc\n');
+  });
+
+  await t.test('beforeLine and afterLine count toward the width', async t => {
+    const stream = makeTtyStream();
+    let line = 'abcd';
+    const updater = new Updater(() => line, {beforeLine: '[', afterLine: ']'}, new Writer(stream));
+
+    await updater.update();
+    line = 'ab';
+    await updater.update();
+
+    t.equal(stream.chunks.at(-1), '[ab' + CLEAR_EOL + ']\n', 'cleared before afterLine is drawn');
+  });
+
+  await t.test('the first frame after reset() clears nothing', async t => {
+    const stream = makeTtyStream();
+    let line = 'abcdef';
+    const updater = new Updater(() => line, {}, new Writer(stream));
+
+    await updater.update();
+    updater.reset();
+    line = 'ab';
+    await updater.update();
+
+    t.equal(stream.chunks.at(-1), 'ab\n');
   });
 });
