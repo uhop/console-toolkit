@@ -21,7 +21,8 @@ import spin from 'console-toolkit/spinner';
 
 import {drawBlock, drawFrame} from 'console-toolkit/draw-block.js';
 import {drawRealWidthBlock, drawRealHeightBlock} from 'console-toolkit/draw-block-frac.js';
-import {drawProgressBar} from 'console-toolkit/progress-bar.js';
+import {drawProgressBar} from 'console-toolkit/progress-bar';
+import {blocks} from 'console-toolkit/progress-bar/skins.js';
 
 test('default imports are the expected types', t => {
   t.ok(Box instanceof Function, 'Box is a function');
@@ -59,5 +60,6 @@ test('named imports are defined', t => {
   t.equal(typeof drawFrame, 'function', 'drawFrame');
   t.equal(typeof drawRealWidthBlock, 'function', 'drawRealWidthBlock');
   t.equal(typeof drawProgressBar, 'function', 'drawProgressBar');
+  t.equal(typeof blocks, 'object', 'progress bar skins');
   t.equal(typeof drawRealHeightBlock, 'function', 'drawRealHeightBlock');
 });

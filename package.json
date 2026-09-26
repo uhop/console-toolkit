@@ -8,6 +8,7 @@
     "./*": "./src/*",
     "./ansi": "./src/ansi/index.js",
     "./plot": "./src/plot/index.js",
+    "./progress-bar": "./src/progress-bar/index.js",
     "./spinner": "./src/spinner/index.js",
     "./table": "./src/table/index.js",
     "./turtle": "./src/turtle/index.js"

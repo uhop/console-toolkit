@@ -49,7 +49,6 @@ for (const line of table.toStrings()) console.log(line);
 
 - **draw-block** (`console-toolkit/draw-block.js`) — draws filled blocks and frames using block themes.
 - **draw-block-frac** (`console-toolkit/draw-block-frac.js`) — draws blocks with fractional width/height using 1/8th Unicode block characters.
-- **progress-bar** (`console-toolkit/progress-bar.js`) — draws a one-line progress bar exactly `width` cells wide, with 1/8th-cell precision and optional fill/track characters and styles.
 - **symbols** (`console-toolkit/symbols.js`) — curated Unicode constants: block elements, quadrants, shades, math symbols, dashes, marks, ellipses.
 
 ### Packages
@@ -61,6 +60,7 @@ for (const line of table.toStrings()) console.log(line);
 - **plot** (`console-toolkit/plot`) — bitmap plotting using quadrant and braille characters.
 - **turtle** (`console-toolkit/turtle`) — turtle graphics for vector line drawing.
 - **spinner** (`console-toolkit/spinner`) — spinner animations and updatable output.
+- **progress-bar** (`console-toolkit/progress-bar`) — draws a one-line progress bar exactly `width` cells wide, with skins (`console-toolkit/progress-bar/skins.js`: blocks, solid, capped, shades, halves, line, colorLine, dots, ascii, hash) and separate fill and track colors.
 - **output** — output helpers: Writer (streaming), Updater (in-place updates).
 - **alphanumeric** — decorative Unicode number and letter sets.
 

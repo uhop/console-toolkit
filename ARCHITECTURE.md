@@ -13,7 +13,6 @@ src/                  # All source code (shipped via npm)
 ├── symbols.js / .d.ts      # Curated Unicode symbol constants
 ├── draw-block.js / .d.ts   # Block drawing with themes
 ├── draw-block-frac.js / .d.ts  # Fractional block drawing (1/8th steps)
-├── progress-bar.js / .d.ts  # One-line progress bar (1/8th-cell precision)
 ├── meta.js / .d.ts         # Name-casing helpers, addAlias/addGetter utilities
 ├── ansi/                    # Low-level ANSI escape sequence handling
 │   ├── csi.js               # CSI sequence parsing/generation
@@ -31,6 +30,7 @@ src/                  # All source code (shipped via npm)
 ├── plot/                    # Bitmap plotting (quadrant/braille)
 ├── turtle/                  # Turtle graphics (vector line drawing)
 ├── spinner/                 # Spinner animations + updatable output
+├── progress-bar/            # One-line progress bars + skins (skins.js)
 ├── output/                  # Output helpers (Writer, Updater)
 └── alphanumeric/            # Decorative Unicode number/letter sets
 tests/                # Automated tests (tape-six framework)

@@ -104,7 +104,6 @@ npm install console-toolkit
 | **Style**           | `console-toolkit/style.js`           | Fluent SGR styling API + `s`/`c` tagged template literals |
 | **draw-block**      | `console-toolkit/draw-block.js`      | Draw filled blocks and frames with block themes           |
 | **draw-block-frac** | `console-toolkit/draw-block-frac.js` | Fractional-width/height blocks (1/8th Unicode steps)      |
-| **progress-bar**    | `console-toolkit/progress-bar.js`    | One-line progress bar with 1/8th-cell precision           |
 | **symbols**         | `console-toolkit/symbols.js`         | Curated Unicode constants (blocks, shades, math, marks)   |
 
 ### Packages
@@ -118,6 +117,7 @@ npm install console-toolkit
 | **plot**         | `console-toolkit/plot`             | Bitmap plotting (quadrant and braille characters)            |
 | **turtle**       | `console-toolkit/turtle`           | Turtle graphics for vector line drawing                      |
 | **spinner**      | `console-toolkit/spinner`          | Spinner animations and updatable output                      |
+| **progress-bar** | `console-toolkit/progress-bar`     | One-line progress bars with skins and colors                 |
 | **output**       | `console-toolkit/output/...`       | Output helpers: Writer (streaming), Updater (in-place)       |
 | **alphanumeric** | `console-toolkit/alphanumeric/...` | Decorative Unicode number and letter sets                    |
 

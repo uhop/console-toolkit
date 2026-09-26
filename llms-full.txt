@@ -265,23 +265,6 @@ function drawRealHeightBlock(width: number, realHeight: number, drawEmptyBorder?
 
 ---
 
-## Module: progress-bar (`console-toolkit/progress-bar.js`)
-
-```ts
-interface TextStyler { text(s: string): string; } // for example, a Style
-interface ProgressBarOptions {
-  fill?: string; // default fullBlock; 1/8th partial cells only with the default
-  track?: string; // default shadeLight (░)
-  fillStyle?: TextStyler;
-  trackStyle?: TextStyler;
-}
-function drawProgressBar(fraction: number, width: number, options?: ProgressBarOptions): string;
-```
-
-Returns a string exactly `width` cells wide; `fraction` is clamped to [0, 1], and a non-finite value draws an empty bar. `drawProgressBar(0.55, 10)` → `'█████▌░░░░'`.
-
----
-
 ## Module: symbols (`console-toolkit/symbols.js`)
 
 Curated Unicode constants for drawing.
@@ -415,6 +398,41 @@ import theme from 'console-toolkit/themes/lines/ascii-rounded.js';
 ```ts
 import theme from 'console-toolkit/themes/blocks/unicode-half.js';
 import theme from 'console-toolkit/themes/blocks/unicode-thin.js';
+```
+
+---
+
+## Package: progress-bar (`console-toolkit/progress-bar`)
+
+```ts
+interface TextStyler { text(s: string): string; } // for example, a Style
+interface ProgressBarSkin {
+  fill: string; // a filled cell
+  partials?: string[]; // partly filled cells, least to most; each adds a step per cell
+  track: string; // an unfilled cell
+  trackStart?: string; // first unfilled cell after whole filled cells
+  head?: string; // last filled cell of an unfinished bar without a partial cell
+  left?: string; // end caps, counted in the width; dropped when they do not fit
+  right?: string;
+}
+interface ProgressBarOptions {
+  skin?: ProgressBarSkin; // default: blocks
+  fillStyle?: TextStyler; // the done part, for example style.green
+  trackStyle?: TextStyler; // the rest, for example style.white; a background also shows behind the partial cell
+}
+function drawProgressBar(fraction: number, width: number, options?: ProgressBarOptions): string;
+```
+
+Returns a string exactly `width` cells wide; `fraction` is clamped to [0, 1], and a non-finite value draws an empty bar. A step shows only once reached, so the bar is full only at 1. `drawProgressBar(0.55, 10)` → `'█████▌░░░░'`.
+
+Skins in `console-toolkit/progress-bar/skins.js`: `blocks` (default, `█████▌░░░░`), `solid` (blank track for a background color), `capped` (`▕█████▌    ▏`), `shades`, `halves`, `line` (`━━━━━╸────`), `colorLine` (`━━━━━╸━━━━`, told apart by colors), `dots` (`⣿⣿⣿⣿⣿⡇⣀⣀⣀⣀`), `ascii` (`[====>     ]`), `hash` (`[#####-----]`).
+
+```js
+import {drawProgressBar} from 'console-toolkit/progress-bar';
+import {colorLine} from 'console-toolkit/progress-bar/skins.js';
+import style from 'console-toolkit/style.js';
+
+drawProgressBar(0.42, 30, {skin: colorLine, fillStyle: style.brightWhite, trackStyle: style.gray});
 ```
 
 ---
